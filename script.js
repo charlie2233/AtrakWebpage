@@ -37,6 +37,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 let lastScroll = 0;
 let ticking = false;
 const navbar = document.querySelector('.navbar');
+const floatingCards = document.querySelectorAll('.floating-card');
+const sections = document.querySelectorAll('section[id]');
+const navItems = document.querySelectorAll('.nav-links a');
 
 function handleScroll() {
     const currentScroll = window.pageYOffset;
@@ -49,15 +52,12 @@ function handleScroll() {
     }
     
     // Parallax effect for hero visual
-    const floatingCards = document.querySelectorAll('.floating-card');
     floatingCards.forEach((card, index) => {
         const speed = 0.5 + (index * 0.1);
         card.style.transform = `translateY(${currentScroll * speed}px)`;
     });
     
     // Active navigation highlighting
-    const sections = document.querySelectorAll('section[id]');
-    const navItems = document.querySelectorAll('.nav-links a');
     let current = '';
     
     sections.forEach(section => {
@@ -80,10 +80,10 @@ function handleScroll() {
 
 window.addEventListener('scroll', () => {
     if (!ticking) {
+        ticking = true;
         window.requestAnimationFrame(() => {
             handleScroll();
         });
-        ticking = true;
     }
 });
 
@@ -121,7 +121,7 @@ const animateStats = () => {
         const isNumber = /^\d+/.test(target);
         
         if (isNumber) {
-            const number = parseInt(target);
+            const number = parseInt(target, 10);
             const increment = number / 50;
             let current = 0;
             
@@ -199,9 +199,37 @@ const cursor = document.createElement('div');
 cursor.className = 'custom-cursor';
 document.body.appendChild(cursor);
 
+let cursorX = 0;
+let cursorY = 0;
+let cursorTicking = false;
+
+function updateCursor() {
+    cursor.style.left = cursorX + 'px';
+    cursor.style.top = cursorY + 'px';
+    cursorTicking = false;
+}
+
 document.addEventListener('mousemove', (e) => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
+    cursorX = e.clientX;
+    cursorY = e.clientY;
+    
+    if (!cursorTicking) {
+        cursorTicking = true;
+        window.requestAnimationFrame(updateCursor);
+    }
+});
+
+// Add hover effects
+document.querySelectorAll('a, button').forEach(element => {
+    element.addEventListener('mouseenter', () => {
+        cursor.style.transform = 'scale(1.5)';
+        cursor.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+    });
+    
+    element.addEventListener('mouseleave', () => {
+        cursor.style.transform = 'scale(1)';
+        cursor.style.backgroundColor = 'transparent';
+    });
 });
 
 // Add custom cursor styles
@@ -223,12 +251,6 @@ style.textContent = `
         .custom-cursor {
             display: block;
         }
-    }
-    
-    a:hover ~ .custom-cursor,
-    button:hover ~ .custom-cursor {
-        transform: scale(1.5);
-        background-color: rgba(59, 130, 246, 0.1);
     }
 `;
 document.head.appendChild(style);
