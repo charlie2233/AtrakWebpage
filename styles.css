@@ -304,31 +304,23 @@ body {
     border: 1px solid var(--border-color);
     border-radius: 16px;
     backdrop-filter: blur(10px);
-    animation: float 6s ease-in-out infinite;
+    will-change: transform;
 }
 
 .card-1 {
-    animation-delay: 0s;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .card-2 {
-    animation-delay: 2s;
     bottom: 0;
     left: 0;
 }
 
 .card-3 {
-    animation-delay: 4s;
     bottom: 0;
     right: 0;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
 }
 
 @keyframes fadeInUp {

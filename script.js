@@ -33,20 +33,58 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Navbar Scroll Effect
+// Consolidated Scroll Handler with Throttling
 let lastScroll = 0;
+let ticking = false;
 const navbar = document.querySelector('.navbar');
 
-window.addEventListener('scroll', () => {
+function handleScroll() {
     const currentScroll = window.pageYOffset;
     
+    // Navbar effect
     if (currentScroll <= 0) {
         navbar.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
     } else {
         navbar.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
     }
     
+    // Parallax effect for hero visual
+    const floatingCards = document.querySelectorAll('.floating-card');
+    floatingCards.forEach((card, index) => {
+        const speed = 0.5 + (index * 0.1);
+        card.style.transform = `translateY(${currentScroll * speed}px)`;
+    });
+    
+    // Active navigation highlighting
+    const sections = document.querySelectorAll('section[id]');
+    const navItems = document.querySelectorAll('.nav-links a');
+    let current = '';
+    
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (currentScroll >= sectionTop - 150) {
+            current = section.getAttribute('id');
+        }
+    });
+    
+    navItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('href') === `#${current}`) {
+            item.classList.add('active');
+        }
+    });
+    
     lastScroll = currentScroll;
+    ticking = false;
+}
+
+window.addEventListener('scroll', () => {
+    if (!ticking) {
+        window.requestAnimationFrame(() => {
+            handleScroll();
+        });
+        ticking = true;
+    }
 });
 
 // Intersection Observer for Fade-in Animations
@@ -64,24 +102,13 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe all cards and sections
+// Observer all cards and sections
 const observeElements = document.querySelectorAll('.project-card, .leader-card, .stat-item, .feature');
 observeElements.forEach(el => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(30px)';
     el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
     observer.observe(el);
-});
-
-// Parallax Effect for Hero Visual
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const floatingCards = document.querySelectorAll('.floating-card');
-    
-    floatingCards.forEach((card, index) => {
-        const speed = 0.5 + (index * 0.1);
-        card.style.transform = `translateY(${scrolled * speed}px)`;
-    });
 });
 
 // Dynamic Stats Counter
@@ -124,30 +151,6 @@ const statsSection = document.querySelector('.stats');
 if (statsSection) {
     statsObserver.observe(statsSection);
 }
-
-// Add active state to navigation based on scroll position
-const sections = document.querySelectorAll('section[id]');
-const navItems = document.querySelectorAll('.nav-links a');
-
-window.addEventListener('scroll', () => {
-    let current = '';
-    
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        
-        if (window.pageYOffset >= sectionTop - 150) {
-            current = section.getAttribute('id');
-        }
-    });
-    
-    navItems.forEach(item => {
-        item.classList.remove('active');
-        if (item.getAttribute('href') === `#${current}`) {
-            item.classList.add('active');
-        }
-    });
-});
 
 // Project Card Tilt Effect
 const projectCards = document.querySelectorAll('.project-card');
