@@ -14,8 +14,11 @@ if (mobileMenuBtn) {
 // Smooth Scroll for Navigation Links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (!href || href === '#') return;
+
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
+        const target = document.querySelector(href);
         
         if (target) {
             const offsetTop = target.offsetTop - 80;
@@ -193,6 +196,65 @@ leaderCards.forEach(card => {
         });
     });
 });
+
+// Anonymous Suggestion Box (Formspree)
+const suggestionForm = document.querySelector('#suggestion-form');
+if (suggestionForm) {
+    const statusEl = document.querySelector('#suggestion-status');
+    const submitButton = suggestionForm.querySelector('button[type="submit"]');
+
+    const setStatus = (message, state) => {
+        if (!statusEl) return;
+        statusEl.textContent = message || '';
+        statusEl.classList.remove('is-success', 'is-error', 'is-pending');
+        if (state) statusEl.classList.add(state);
+    };
+
+    suggestionForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const endpoint = suggestionForm.dataset.endpoint || suggestionForm.action || '';
+        if (!endpoint || endpoint.includes('REPLACE_ME')) {
+            setStatus('Suggestion box is not configured yet.', 'is-error');
+            return;
+        }
+
+        if (submitButton) submitButton.disabled = true;
+        suggestionForm.setAttribute('aria-busy', 'true');
+        setStatus('Sending…', 'is-pending');
+
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                body: new FormData(suggestionForm),
+                headers: { Accept: 'application/json' }
+            });
+
+            if (response.ok) {
+                suggestionForm.reset();
+                setStatus('Thanks — your anonymous suggestion was sent.', 'is-success');
+                return;
+            }
+
+            let errorMessage = 'Something went wrong. Please try again.';
+            try {
+                const data = await response.json();
+                if (data && Array.isArray(data.errors) && data.errors[0] && data.errors[0].message) {
+                    errorMessage = data.errors[0].message;
+                }
+            } catch (_) {
+                // ignore JSON parsing errors
+            }
+
+            setStatus(errorMessage, 'is-error');
+        } catch (_) {
+            setStatus('Network error. Please try again.', 'is-error');
+        } finally {
+            if (submitButton) submitButton.disabled = false;
+            suggestionForm.removeAttribute('aria-busy');
+        }
+    });
+}
 
 // Cursor Follow Effect (Optional - for enhanced UX)
 const cursor = document.createElement('div');

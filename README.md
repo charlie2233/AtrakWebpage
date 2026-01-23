@@ -1,6 +1,6 @@
 # LunarWeb
 
-A modern, minimal tech group portfolio website featuring a clean startup aesthetic inspired by Vercel and Cursor. Built with pure HTML5, CSS3, and JavaScript.
+A modern, minimal portfolio website featuring a clean startup aesthetic inspired by Vercel and Cursor. Built with pure HTML5, CSS3, and JavaScript.
 
 ## ✨ Features
 
@@ -14,10 +14,10 @@ A modern, minimal tech group portfolio website featuring a clean startup aesthet
 ### Sections
 - 🏠 **Hero Section**: Eye-catching landing with gradient text and floating card animations
 - 📊 **Stats Display**: Animated counter showing key metrics
-- 🚀 **Projects Showcase**: 6 featured projects with modern card layouts
+- 🚀 **Projects Showcase**: Notable technical projects with modern card layouts
 - 📖 **About Section**: Company information with interactive code preview
 - 👥 **Leadership Team**: Team member profiles with social links
-- 📧 **Contact CTA**: Call-to-action for user engagement
+- 📬 **Anonymous Suggestion Box**: Visitors can send feedback without sharing identity
 - 🔗 **Footer**: Comprehensive navigation and information
 
 ### Performance
@@ -46,6 +46,14 @@ A modern, minimal tech group portfolio website featuring a clean startup aesthet
    ```
 
 3. **Visit** `http://localhost:8080`
+
+## 📬 Suggestion Box Setup (Anonymous Email)
+
+The site includes an anonymous suggestion form that posts to a backend endpoint (recommended: Formspree) so your email address is not displayed on the page.
+
+1. Create a form at `https://formspree.io` and set the recipient to your inbox.
+2. Copy your Formspree endpoint URL (looks like `https://formspree.io/f/xxxxxx`).
+3. Update `index.html` and replace `REPLACE_ME` in the `#suggestion-form` `action` and `data-endpoint` attributes.
 
 ## 📁 Project Structure
 

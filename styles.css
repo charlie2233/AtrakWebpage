@@ -751,6 +751,83 @@ section {
     justify-content: center;
 }
 
+/* Suggestion Box */
+.suggestion-box {
+    max-width: 720px;
+    margin: 0 auto 32px;
+    padding: 32px;
+    border-radius: 16px;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.suggestion-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.suggestion-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.suggestion-form textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 14px 16px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 15px;
+    line-height: 1.6;
+    resize: vertical;
+}
+
+.suggestion-form textarea::placeholder {
+    color: var(--text-tertiary);
+}
+
+.suggestion-form button[disabled] {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.suggestion-honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.form-status {
+    min-height: 20px;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.form-status.is-success {
+    color: #22c55e;
+}
+
+.form-status.is-error {
+    color: #ef4444;
+}
+
+.form-status.is-pending {
+    color: var(--text-secondary);
+}
+
+.form-disclaimer {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: -8px;
+}
+
 /* Footer */
 .footer {
     background-color: var(--bg-secondary);
