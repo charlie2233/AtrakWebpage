@@ -124,15 +124,10 @@
             }
 
             try {
-                const project = await window.GitHubProjects.getProjectDetails(repoFullName);
-                const techStack = window.GitHubProjects.getTechStack(project);
-                const formatDate = window.GitHubProjects.formatDate;
-
-                // Update page title
-                const displayName = project.name
-                    .split(/[-_]/)
-                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(' ');
+                const { getProjectDetails, getTechStack, formatDate, formatDisplayName } = window.GitHubProjects;
+                const project = await getProjectDetails(repoFullName);
+                const techStack = getTechStack(project);
+                const displayName = formatDisplayName(project.name);
                 
                 document.title = `${displayName} — Atrak`;
 

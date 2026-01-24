@@ -98,14 +98,21 @@ function formatDate(date) {
 }
 
 /**
+ * Format repository name for display
+ */
+function formatDisplayName(name) {
+    return name
+        .split(/[-_]/)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
+
+/**
  * Create HTML for a project card
  */
 function createProjectCard(project) {
     const techStack = getTechStack(project);
-    const displayName = project.name
-        .split(/[-_]/)
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
+    const displayName = formatDisplayName(project.name);
     
     const tagsHTML = techStack.length > 0
         ? techStack.map(tech => `<span class="tag">${tech}</span>`).join('')
@@ -199,12 +206,9 @@ async function getProjectDetails(fullRepoName) {
             stars: repo.stargazers_count,
             forks: repo.forks_count,
             watchers: repo.watchers_count,
-            openIssues: repo.open_issues_count,
             createdAt: new Date(repo.created_at),
             updatedAt: new Date(repo.updated_at),
             pushedAt: repo.pushed_at ? new Date(repo.pushed_at) : null,
-            size: repo.size,
-            defaultBranch: repo.default_branch,
             license: repo.license ? repo.license.name : null
         };
     } catch (error) {
@@ -220,6 +224,7 @@ window.GitHubProjects = {
     fetchGitHubRepositories,
     getTechStack,
     formatDate,
+    formatDisplayName,
     GITHUB_USERNAME
 };
 
