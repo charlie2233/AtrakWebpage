@@ -19,6 +19,7 @@
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#leadership">Team</a></li>
+                <li><a href="join.html">Join</a></li>
                 <li><a href="#contact" class="nav-cta">Suggestion Box</a></li>
             </ul>
             <button class="mobile-menu-btn" aria-label="Toggle menu">
@@ -265,10 +266,14 @@
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">Our Team</span>
-                <h2 class="section-title">Leadership & Focus</h2>
+                <h2 class="section-title">Team</h2>
                 <p class="section-description">
-                    The people and pillars behind LunarWeb
+                    Meet the team and the roles we’re building next
                 </p>
+                <div class="section-actions">
+                    <a href="join.html" class="btn btn-primary">Join the Team</a>
+                    <a href="join.html#contact" class="btn btn-secondary">Contact</a>
+                </div>
             </div>
 
             <div class="leadership-grid">
@@ -279,8 +284,8 @@
                     <h3 class="leader-name">Charlie Han</h3>
                     <p class="leader-role">Team Leader</p>
                     <p class="leader-bio">
-                        Class of 2028. Currently competing in USACO Gold and FBLA, and plays basketball.
-                        Leads LunarWeb and focuses on shipping practical AI products with real users.
+                        Leads LunarWeb. Class of 2028. Competes in USACO Gold and FBLA, and plays basketball.
+                        Traits: disciplined, team-first, and focused on shipping useful products.
                     </p>
                     <div class="leader-social">
                         <a href="#" aria-label="LinkedIn">
@@ -388,6 +393,25 @@
                     </div>
                 </div>
             </div>
+
+            <div class="team-roster">
+                <div class="team-roster-header">
+                    <h3 class="team-roster-title">Roster</h3>
+                    <p class="team-roster-subtitle">Team members and roles (more coming soon)</p>
+                </div>
+                <div class="team-roster-list">
+                    <div class="team-roster-item">
+                        <div class="team-roster-name">Charlie Han</div>
+                        <div class="team-roster-role">Team Leader</div>
+                        <div class="team-roster-meta">USACO Gold • FBLA • Basketball</div>
+                    </div>
+                    <div class="team-roster-item is-placeholder">
+                        <div class="team-roster-name">Open Seats</div>
+                        <div class="team-roster-role">Engineering • Design • Product</div>
+                        <div class="team-roster-meta"><a href="join.html">Apply on the Join page</a></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -401,9 +425,12 @@
                 </p>
 
                 <div class="suggestion-box">
-                    <form id="suggestion-form" class="suggestion-form" action="https://formspree.io/f/REPLACE_ME" method="POST" data-endpoint="https://formspree.io/f/REPLACE_ME" novalidate>
+                    <form id="suggestion-form" class="suggestion-form" action="https://formspree.io/f/REPLACE_ME" method="POST" data-endpoint-key="suggestion" data-endpoint="https://formspree.io/f/REPLACE_ME" novalidate>
                         <label for="suggestion-message" class="suggestion-label">Your message</label>
                         <textarea id="suggestion-message" name="message" rows="6" maxlength="1200" required placeholder="Write your suggestion..."></textarea>
+                        <div class="form-meta">
+                            <span class="form-count" data-char-count="suggestion-message">0/1200</span>
+                        </div>
                         <input type="text" name="_gotcha" class="suggestion-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
                         <button type="submit" class="btn btn-primary">Send anonymously</button>
                         <p id="suggestion-status" class="form-status" role="status" aria-live="polite"></p>
@@ -436,6 +463,7 @@
                         <a href="#projects">Projects</a>
                         <a href="#about">About</a>
                         <a href="#leadership">Team</a>
+                        <a href="join.html">Join</a>
                     </div>
                     <div class="footer-column">
                         <h4>Connect</h4>
@@ -457,6 +485,7 @@
         </div>
     </footer>
 
+    <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

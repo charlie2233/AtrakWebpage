@@ -197,42 +197,131 @@ leaderCards.forEach(card => {
     });
 });
 
-// Anonymous Suggestion Box (Formspree)
-const suggestionForm = document.querySelector('#suggestion-form');
-if (suggestionForm) {
-    const statusEl = document.querySelector('#suggestion-status');
-    const submitButton = suggestionForm.querySelector('button[type="submit"]');
+// Forms (Suggestion Box + Join/Contact)
+const formConfig = window.LUNARWEB_CONFIG && typeof window.LUNARWEB_CONFIG === 'object' ? window.LUNARWEB_CONFIG : {};
+const configuredFormEndpoints = formConfig.forms && typeof formConfig.forms === 'object' ? formConfig.forms : {};
 
-    const setStatus = (message, state) => {
-        if (!statusEl) return;
-        statusEl.textContent = message || '';
-        statusEl.classList.remove('is-success', 'is-error', 'is-pending');
-        if (state) statusEl.classList.add(state);
-    };
+const getFormEndpoint = (form) => {
+    const endpointKey = (form.dataset.endpointKey || '').trim();
+    if (endpointKey && typeof configuredFormEndpoints[endpointKey] === 'string') {
+        const configured = configuredFormEndpoints[endpointKey].trim();
+        if (configured) return configured;
+    }
 
-    suggestionForm.addEventListener('submit', async (e) => {
+    if (typeof configuredFormEndpoints.default === 'string') {
+        const configuredDefault = configuredFormEndpoints.default.trim();
+        if (configuredDefault) return configuredDefault;
+    }
+
+    const datasetEndpoint = (form.dataset.endpoint || '').trim();
+    if (datasetEndpoint) return datasetEndpoint;
+
+    return (form.action || '').trim();
+};
+
+const setFormStatus = (statusEl, message, state) => {
+    if (!statusEl) return;
+    statusEl.textContent = message || '';
+    statusEl.classList.remove('is-success', 'is-error', 'is-pending');
+    if (state) statusEl.classList.add(state);
+};
+
+const setupCharCounters = (form) => {
+    const counters = Array.from(form.querySelectorAll('[data-char-count]'));
+    const updates = [];
+
+    counters.forEach(counter => {
+        const targetId = counter.getAttribute('data-char-count');
+        if (!targetId) return;
+
+        const target = document.getElementById(targetId);
+        if (!target) return;
+
+        const max = Number.parseInt(target.getAttribute('maxlength') || '', 10) || target.maxLength || 0;
+        const update = () => {
+            const length = (target.value || '').length;
+            counter.textContent = max ? `${length}/${max}` : `${length}`;
+        };
+
+        target.addEventListener('input', update);
+        updates.push(update);
+        update();
+    });
+
+    return () => updates.forEach(fn => fn());
+};
+
+const wireAsyncForm = (form, options) => {
+    if (!form) return;
+
+    const statusEl = form.querySelector('.form-status');
+    const submitButton = form.querySelector('button[type="submit"]');
+    const messageEl = form.querySelector('textarea[name="message"]');
+    const minMessageLength = Number.isFinite(options.minMessageLength) ? options.minMessageLength : 10;
+    const successMessage = options.successMessage || 'Sent.';
+    const updateCharCounts = setupCharCounters(form);
+
+    const setStatus = (message, state) => setFormStatus(statusEl, message, state);
+
+    form.addEventListener('input', () => {
+        if (statusEl && statusEl.classList.contains('is-error')) {
+            setStatus('', null);
+        }
+    });
+
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const endpoint = suggestionForm.dataset.endpoint || suggestionForm.action || '';
-        if (!endpoint || endpoint.includes('REPLACE_ME')) {
-            setStatus('Suggestion box is not configured yet.', 'is-error');
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            setStatus('Please check the highlighted fields.', 'is-error');
             return;
         }
 
-        if (submitButton) submitButton.disabled = true;
-        suggestionForm.setAttribute('aria-busy', 'true');
+        if (messageEl) {
+            const message = messageEl.value.trim();
+            if (message.length < minMessageLength) {
+                setStatus(`Please write at least ${minMessageLength} characters.`, 'is-error');
+                messageEl.focus();
+                return;
+            }
+        }
+
+        const honeypot = form.querySelector('input[name="_gotcha"]');
+        if (honeypot && honeypot.value) {
+            form.reset();
+            updateCharCounts();
+            setStatus(successMessage, 'is-success');
+            return;
+        }
+
+        const endpoint = getFormEndpoint(form);
+        if (!endpoint || endpoint.includes('REPLACE_ME')) {
+            setStatus('This form is not available yet. Please try again later.', 'is-error');
+            return;
+        }
+
+        if (form.action !== endpoint) form.action = endpoint;
+
+        const originalButtonText = submitButton ? submitButton.textContent : '';
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = 'Sending…';
+        }
+        form.setAttribute('aria-busy', 'true');
         setStatus('Sending…', 'is-pending');
 
         try {
             const response = await fetch(endpoint, {
                 method: 'POST',
-                body: new FormData(suggestionForm),
+                body: new FormData(form),
                 headers: { Accept: 'application/json' }
             });
 
             if (response.ok) {
-                suggestionForm.reset();
-                setStatus('Thanks — your anonymous suggestion was sent.', 'is-success');
+                form.reset();
+                updateCharCounts();
+                setStatus(successMessage, 'is-success');
                 return;
             }
 
@@ -250,11 +339,24 @@ if (suggestionForm) {
         } catch (_) {
             setStatus('Network error. Please try again.', 'is-error');
         } finally {
-            if (submitButton) submitButton.disabled = false;
-            suggestionForm.removeAttribute('aria-busy');
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
+            }
+            form.removeAttribute('aria-busy');
         }
     });
-}
+};
+
+wireAsyncForm(document.querySelector('#suggestion-form'), {
+    minMessageLength: 10,
+    successMessage: 'Thanks — your suggestion was sent.'
+});
+
+wireAsyncForm(document.querySelector('#join-form'), {
+    minMessageLength: 20,
+    successMessage: 'Thanks — your message was sent. We’ll reply soon.'
+});
 
 // Cursor Follow Effect (Optional - for enhanced UX)
 const cursor = document.createElement('div');

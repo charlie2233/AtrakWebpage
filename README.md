@@ -53,13 +53,15 @@ The site includes an anonymous suggestion form that posts to a backend endpoint 
 
 1. Create a form at `https://formspree.io` and set the recipient to your inbox.
 2. Copy your Formspree endpoint URL (looks like `https://formspree.io/f/xxxxxx`).
-3. Update `index.html` and replace `REPLACE_ME` in the `#suggestion-form` `action` and `data-endpoint` attributes.
+3. Update `config.js` and replace `REPLACE_ME` in `window.LUNARWEB_CONFIG.forms.default` (used by both the Suggestion Box and Join/Contact form).
 
 ## 📁 Project Structure
 
 ```
 LunarWeb/
+├── config.js       # Runtime config (form endpoints)
 ├── index.html      # Main HTML structure
+├── join.html       # Join/Contact page
 ├── styles.css      # All styles with CSS variables
 ├── script.js       # Interactive functionality
 ├── projects/       # Project detail pages

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Join LunarWeb — student tech team building real projects">
+    <title>Join LunarWeb</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a class="logo" href="index.html">
+                <span class="logo-icon">🌙</span>
+                <span class="logo-text">LunarWeb</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#leadership">Team</a></li>
+                <li><a href="#join">Join</a></li>
+                <li><a href="#contact" class="nav-cta">Contact</a></li>
+            </ul>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <section id="join" class="page-hero">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">Join</span>
+                    <h1 class="section-title">Join LunarWeb</h1>
+                    <p class="section-description">
+                        LunarWeb is a student tech team building AI, accessibility, and real-world software projects.
+                        If you like shipping and learning fast, we’d love to work with you.
+                    </p>
+                    <div class="section-actions">
+                        <a href="#contact" class="btn btn-primary">Apply / Contact</a>
+                        <a href="index.html#projects" class="btn btn-secondary">See Projects</a>
+                    </div>
+                </div>
+
+                <div class="project-detail-grid">
+                    <div class="glass-card project-detail-card">
+                        <h3>Engineering</h3>
+                        <p>Backend, automation, and ML/CV pipelines that are reliable and fast.</p>
+                        <ul>
+                            <li>Build features end-to-end</li>
+                            <li>Ship clean, tested code</li>
+                            <li>Own performance and reliability</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card project-detail-card">
+                        <h3>Design</h3>
+                        <p>UI/UX, visuals, and accessibility-first product design.</p>
+                        <ul>
+                            <li>Create polished interfaces</li>
+                            <li>Improve clarity and usability</li>
+                            <li>Design flows for real users</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card project-detail-card">
+                        <h3>Product & Ops</h3>
+                        <p>Roadmaps, docs, demos, and keeping projects organized.</p>
+                        <ul>
+                            <li>Write docs and guides</li>
+                            <li>Run demos and collect feedback</li>
+                            <li>Keep execution on track</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card project-detail-card">
+                        <h3>What We Look For</h3>
+                        <p>People who are curious, consistent, and collaborative.</p>
+                        <ul>
+                            <li>Show your work (projects, repos, designs)</li>
+                            <li>Communicate clearly</li>
+                            <li>Take ownership and follow through</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <div class="container">
+                <div class="contact-content">
+                    <h2 class="contact-title">Apply / Contact</h2>
+                    <p class="contact-description">
+                        Send a message to the team. We’ll reply to the email you provide.
+                    </p>
+
+                    <div class="suggestion-box">
+                        <form id="join-form" class="suggestion-form" action="https://formspree.io/f/REPLACE_ME" method="POST" data-endpoint-key="contact" novalidate>
+                            <div class="form-grid">
+                                <div class="form-field">
+                                    <label for="join-name" class="suggestion-label">Name</label>
+                                    <input id="join-name" name="name" type="text" autocomplete="name" required placeholder="Your name">
+                                </div>
+                                <div class="form-field">
+                                    <label for="join-email" class="suggestion-label">Email</label>
+                                    <input id="join-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+                                </div>
+                            </div>
+
+                            <label for="join-interest" class="suggestion-label">Interest</label>
+                            <select id="join-interest" name="interest" required>
+                                <option value="" disabled selected>Select one</option>
+                                <option>Engineering</option>
+                                <option>Design</option>
+                                <option>Product & Ops</option>
+                                <option>Other</option>
+                            </select>
+
+                            <label for="join-message" class="suggestion-label">Message</label>
+                            <textarea id="join-message" name="message" rows="7" maxlength="1600" required placeholder="Tell us what you want to work on and any links you’d like to share."></textarea>
+                            <div class="form-meta">
+                                <span class="form-count" data-char-count="join-message">0/1600</span>
+                            </div>
+
+                            <input type="text" name="_gotcha" class="suggestion-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+                            <button type="submit" class="btn btn-primary">Send</button>
+                            <p id="join-status" class="form-status" role="status" aria-live="polite"></p>
+                            <p class="form-disclaimer">We’ll only use your email to reply.</p>
+                        </form>
+                    </div>
+
+                    <div class="contact-buttons">
+                        <a href="index.html" class="btn btn-secondary">Back to Home</a>
+                        <a href="index.html#projects" class="btn btn-secondary">View Projects</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a class="logo" href="index.html">
+                        <span class="logo-icon">🌙</span>
+                        <span class="logo-text">LunarWeb</span>
+                    </a>
+                    <p class="footer-tagline">Building real products together</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Navigate</h4>
+                        <a href="index.html#projects">Projects</a>
+                        <a href="index.html#about">About</a>
+                        <a href="index.html#leadership">Team</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Get Involved</h4>
+                        <a href="#join">Join</a>
+                        <a href="#contact">Contact</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Connect</h4>
+                        <a href="https://github.com/charlie2233" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 LunarWeb. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

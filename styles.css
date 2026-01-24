@@ -466,6 +466,13 @@ section {
     margin: 0 auto;
 }
 
+.section-actions {
+    margin-top: 32px;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
+
 /* Projects Section */
 .projects {
     background-color: var(--bg-secondary);
@@ -562,6 +569,12 @@ section {
 }
 
 /* Project Detail Pages */
+.page-hero {
+    background-color: var(--bg-secondary);
+    padding-top: 140px;
+    padding-bottom: 80px;
+}
+
 .project-hero {
     background-color: var(--bg-secondary);
     padding-top: 140px;
@@ -825,6 +838,75 @@ section {
     color: var(--accent-primary);
 }
 
+.team-roster {
+    margin-top: 64px;
+}
+
+.team-roster-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.team-roster-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.team-roster-subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.team-roster-list {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.team-roster-item {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 18px 20px;
+}
+
+.team-roster-item.is-placeholder {
+    opacity: 0.85;
+}
+
+.team-roster-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.team-roster-role {
+    font-size: 13px;
+    color: var(--accent-primary);
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.team-roster-meta {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.team-roster-meta a {
+    color: var(--accent-primary);
+    text-decoration: none;
+}
+
+.team-roster-meta a:hover {
+    text-decoration: underline;
+}
+
 /* Contact Section */
 .contact {
     background-color: var(--bg-primary);
@@ -873,12 +955,26 @@ section {
     gap: 16px;
 }
 
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
 .suggestion-label {
     font-size: 14px;
     font-weight: 600;
     color: var(--text-primary);
 }
 
+.suggestion-form input,
+.suggestion-form select,
 .suggestion-form textarea {
     width: 100%;
     min-height: 140px;
@@ -892,7 +988,33 @@ section {
     resize: vertical;
 }
 
+.suggestion-form input,
+.suggestion-form select {
+    min-height: auto;
+    height: 48px;
+    resize: none;
+}
+
+.suggestion-form select {
+    appearance: none;
+}
+
 .suggestion-form textarea::placeholder {
+    color: var(--text-tertiary);
+}
+
+.suggestion-form input::placeholder {
+    color: var(--text-tertiary);
+}
+
+.form-meta {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -10px;
+}
+
+.form-count {
+    font-size: 12px;
     color: var(--text-tertiary);
 }
 
@@ -1122,6 +1244,10 @@ section {
     .btn {
         width: 100%;
     }
+
+    .section-actions {
+        flex-direction: column;
+    }
     
     .section-title {
         font-size: 36px;
@@ -1140,6 +1266,11 @@ section {
         grid-template-columns: 1fr;
     }
 
+    .page-hero {
+        padding-top: 120px;
+        padding-bottom: 60px;
+    }
+
     .project-hero {
         padding-top: 120px;
         padding-bottom: 60px;
@@ -1148,8 +1279,16 @@ section {
     .project-detail-grid {
         grid-template-columns: 1fr;
     }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
     
     .leadership-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .team-roster-list {
         grid-template-columns: 1fr;
     }
     
