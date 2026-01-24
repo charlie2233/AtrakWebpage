@@ -8,6 +8,25 @@
     <link rel="icon" type="image/png" href="../assets/logo.png">
     <link rel="apple-touch-icon" href="../assets/logo.png">
     <link rel="stylesheet" href="../styles.css">
+    <style>
+        .project-header-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 24px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .project-header-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -39,7 +58,10 @@
                 <a class="project-back-link" href="../index.html#projects">← Back to Projects</a>
 
                 <div class="project-header">
-                    <span class="section-tag">Project</span>
+                    <div class="project-header-icon">
+                        <img src="../assets/ten-seconds-icon.jpg" alt="Ten Seconds Icon">
+                    </div>
+                    <span class="section-tag">Internal Project</span>
                     <h1 class="section-title">Ten Seconds VIP Manager</h1>
                     <p class="section-description">
                         Placeholder project page. Detailed write-up (features, deployment, and ops learnings) coming soon.
