@@ -508,6 +508,38 @@ if (enableHoverEffects) {
 console.log('%cAtrak ', 'background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); color: white; padding: 8px 16px; border-radius: 4px; font-size: 16px; font-weight: bold;');
 console.log('%cBuilding the future, one line of code at a time.', 'color: #a0a0a0; font-size: 12px;');
 
+// Helper to initialize a single timeline item's interactions
+const initTimelineItem = (item, node) => {
+    const toggleExpand = () => {
+        const isExpanded = item.getAttribute('data-expanded') === 'true';
+        item.setAttribute('data-expanded', !isExpanded);
+        node.setAttribute('aria-expanded', !isExpanded);
+        
+        // Announce change for screen readers
+        const title = item.querySelector('.update-title')?.textContent || 'Timeline item';
+        const announcement = !isExpanded ? `${title} expanded` : `${title} collapsed`;
+        announceToScreenReader(announcement);
+    };
+    
+    // Click event
+    node.addEventListener('click', toggleExpand);
+    
+    // Keyboard support (Enter and Space)
+    node.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleExpand();
+        }
+    });
+    
+    // Enhanced hover effects
+    node.addEventListener('mouseenter', () => {
+        if (!prefersReducedMotion) {
+            item.style.transition = 'all 0.3s ease';
+        }
+    });
+};
+
 // Timeline Interactive Features
 const initTimeline = () => {
     const timelineItems = document.querySelectorAll('.timeline-item');
@@ -515,36 +547,9 @@ const initTimeline = () => {
     
     timelineNodes.forEach((node, index) => {
         const item = timelineItems[index];
-        
-        // Click handler for expanding/collapsing
-        const toggleExpand = () => {
-            const isExpanded = item.getAttribute('data-expanded') === 'true';
-            item.setAttribute('data-expanded', !isExpanded);
-            node.setAttribute('aria-expanded', !isExpanded);
-            
-            // Announce change for screen readers
-            const title = item.querySelector('.update-title')?.textContent || 'Timeline item';
-            const announcement = !isExpanded ? `${title} expanded` : `${title} collapsed`;
-            announceToScreenReader(announcement);
-        };
-        
-        // Click event
-        node.addEventListener('click', toggleExpand);
-        
-        // Keyboard support (Enter and Space)
-        node.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                toggleExpand();
-            }
-        });
-        
-        // Enhanced hover effects
-        node.addEventListener('mouseenter', () => {
-            if (!prefersReducedMotion) {
-                item.style.transition = 'all 0.3s ease';
-            }
-        });
+        if (item) {
+            initTimelineItem(item, node);
+        }
     });
 };
 
@@ -583,7 +588,8 @@ document.querySelectorAll('.timeline-item').forEach(item => {
 });
 
 // Dynamic timeline update function
-window.addTimelineItem = function(data) {
+// Adds a new timeline item. Position can be 'start' (default) or 'end'
+window.addTimelineItem = function(data, position = 'start') {
     const container = document.querySelector('.timeline-container');
     if (!container) return;
     
@@ -611,10 +617,18 @@ window.addTimelineItem = function(data) {
         </div>
     `;
     
-    container.insertBefore(item, container.firstChild);
+    // Insert at specified position
+    if (position === 'end') {
+        container.appendChild(item);
+    } else {
+        container.insertBefore(item, container.firstChild);
+    }
     
-    // Re-initialize interactions for new item
-    initTimeline();
+    // Initialize interactions for the new item only
+    const node = item.querySelector('.timeline-node');
+    if (node) {
+        initTimelineItem(item, node);
+    }
     
     // Announce addition to screen readers
     announceToScreenReader(`New timeline item added: ${data.title}`);

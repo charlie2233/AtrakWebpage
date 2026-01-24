@@ -27,6 +27,9 @@
     --section-padding: 120px;
     --section-padding-mobile: 60px;
     
+    /* Timeline */
+    --timeline-detail-max-height: 500px;
+    
     /* Typography */
     --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', monospace;
@@ -862,7 +865,7 @@ section {
     height: 100%;
     background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
     border-radius: 50%;
-    border: 3px solid #000;
+    border: 3px solid var(--bg-primary);
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
     transition: all 0.3s ease;
 }
@@ -1020,7 +1023,7 @@ section {
 }
 
 .timeline-item[data-expanded="true"] .timeline-details {
-    max-height: 500px;
+    max-height: var(--timeline-detail-max-height);
     opacity: 1;
     padding-top: 16px;
     border-top-color: rgba(59, 130, 246, 0.2);
@@ -1077,14 +1080,7 @@ section {
     }
 }
 
-/* Legacy grid styles - remove if not used elsewhere */
-.updates-grid {
-    display: none;
-}
 
-.update-card {
-    display: none;
-}
 
 /* Project Detail Pages */
 .page-hero {
