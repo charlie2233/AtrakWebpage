@@ -652,3 +652,29 @@ window.addEventListener('load', () => {
 if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
     document.body.classList.add('reduce-motion');
 }
+
+// Project Tabs Functionality
+const projectTabs = document.querySelectorAll('.project-tab');
+const projectTabContents = document.querySelectorAll('.project-tab-content');
+
+projectTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        const targetTab = tab.getAttribute('data-tab');
+        
+        // Remove active class from all tabs and contents
+        projectTabs.forEach(t => t.classList.remove('active'));
+        projectTabContents.forEach(content => content.classList.remove('active'));
+        
+        // Add active class to clicked tab and corresponding content
+        tab.classList.add('active');
+        const targetContent = document.getElementById(`${targetTab}-tab`);
+        if (targetContent) {
+            targetContent.classList.add('active');
+            
+            // Load GitHub projects when switching to More Projects tab
+            if (targetTab === 'more' && window.GitHubProjects && typeof window.GitHubProjects.renderMoreProjects === 'function') {
+                window.GitHubProjects.renderMoreProjects();
+            }
+        }
+    });
+});

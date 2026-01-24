@@ -154,6 +154,12 @@ async function renderMoreProjects() {
         return;
     }
 
+    // Skip if already loaded (has children other than loading/error messages)
+    const hasProjectCards = container.querySelector('.project-card');
+    if (hasProjectCards) {
+        return;
+    }
+
     // Show loading state
     container.innerHTML = '<p class="loading-message">Loading projects from GitHub...</p>';
 
@@ -228,15 +234,23 @@ window.GitHubProjects = {
     GITHUB_USERNAME
 };
 
-// Auto-initialize if the More Projects section exists
+// Auto-initialize if the More Projects section exists and is visible
+// Note: With tabbed interface, we don't auto-load on page load since the tab may be hidden
+// The renderMoreProjects function will be called when the tab is activated
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        if (document.getElementById('more-projects-grid')) {
+        const moreProjectsGrid = document.getElementById('more-projects-grid');
+        const moreTab = document.getElementById('more-tab');
+        // Only auto-load if the tab is active (visible) on page load
+        if (moreProjectsGrid && moreTab && moreTab.classList.contains('active')) {
             renderMoreProjects();
         }
     });
 } else {
-    if (document.getElementById('more-projects-grid')) {
+    const moreProjectsGrid = document.getElementById('more-projects-grid');
+    const moreTab = document.getElementById('more-tab');
+    // Only auto-load if the tab is active (visible) on page load
+    if (moreProjectsGrid && moreTab && moreTab.classList.contains('active')) {
         renderMoreProjects();
     }
 }
