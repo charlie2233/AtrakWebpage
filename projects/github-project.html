@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GitHub Project Details — Atrak">
+    <title>Project Details — Atrak</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="apple-touch-icon" href="../assets/logo.png">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a class="logo" href="../index.html">
+                <span class="logo-icon">
+                    <img src="../assets/logo.png" alt="Atrak Logo">
+                </span>
+                <span class="logo-text">Atrak</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="../index.html#projects">Projects</a></li>
+                <li><a href="../index.html#more-projects">More Projects</a></li>
+                <li><a href="../index.html#about">About</a></li>
+                <li><a href="../index.html#leadership">Team</a></li>
+                <li><a href="../join.html">Join</a></li>
+                <li><a href="../index.html#contact" class="nav-cta">Suggestion Box</a></li>
+            </ul>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <section class="project-hero">
+            <div class="container">
+                <!-- Breadcrumb Navigation -->
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <ol>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="../index.html#more-projects">More Projects</a></li>
+                        <li id="breadcrumb-project">Loading...</li>
+                    </ol>
+                </nav>
+
+                <a class="project-back-link" href="../index.html#more-projects">← Back to More Projects</a>
+
+                <div class="project-header" id="project-header">
+                    <span class="section-tag">GitHub Project</span>
+                    <h1 class="section-title" id="project-title">Loading...</h1>
+                    <p class="section-description" id="project-description">
+                        Loading project details...
+                    </p>
+                </div>
+
+                <div class="project-detail-grid" id="project-details">
+                    <!-- Project details will be loaded here dynamically -->
+                    <div class="glass-card project-detail-card">
+                        <p class="loading-message">Loading project information from GitHub...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a class="logo" href="../index.html">
+                        <span class="logo-icon">
+                            <img src="../assets/logo.png" alt="Atrak Logo">
+                        </span>
+                        <span class="logo-text">Atrak</span>
+                    </a>
+                    <p class="footer-tagline">Building real products together</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Navigate</h4>
+                        <a href="../index.html#projects">Projects</a>
+                        <a href="../index.html#more-projects">More Projects</a>
+                        <a href="../index.html#about">About</a>
+                        <a href="../index.html#contact">Suggestion Box</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Connect</h4>
+                        <a href="https://github.com/charlie2233" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Pages</h4>
+                        <a href="../index.html">Home</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Atrak. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../github-projects.js"></script>
+    <script src="../script.js"></script>
+    <script>
+        // Load project details on page load
+        (async function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const repoFullName = urlParams.get('repo');
+
+            if (!repoFullName) {
+                document.getElementById('project-title').textContent = 'Project Not Found';
+                document.getElementById('project-description').textContent = 'No project specified in the URL.';
+                document.getElementById('breadcrumb-project').textContent = 'Error';
+                document.getElementById('project-details').innerHTML = `
+                    <div class="glass-card project-detail-card">
+                        <h3>Error</h3>
+                        <p>Please select a project from the <a href="../index.html#more-projects">More Projects</a> section.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const { getProjectDetails, getTechStack, formatDate, formatDisplayName } = window.GitHubProjects;
+                const project = await getProjectDetails(repoFullName);
+                const techStack = getTechStack(project);
+                const displayName = formatDisplayName(project.name);
+                
+                document.title = `${displayName} — Atrak`;
+
+                // Update breadcrumb
+                document.getElementById('breadcrumb-project').textContent = displayName;
+
+                // Update header
+                document.getElementById('project-title').textContent = displayName;
+                document.getElementById('project-description').textContent = project.description;
+
+                // Build details grid
+                const tagsHTML = techStack.length > 0
+                    ? techStack.map(tech => `<span class="tag">${tech}</span>`).join('')
+                    : '<span class="tag">General</span>';
+
+                document.getElementById('project-details').innerHTML = `
+                    <div class="glass-card project-detail-card">
+                        <h3>📋 Overview</h3>
+                        <p><strong>Description:</strong> ${project.description}</p>
+                        <p><strong>Project Manager:</strong> Charlie Han</p>
+                        <p><strong>Role:</strong> Developer & Maintainer</p>
+                    </div>
+
+                    <div class="glass-card project-detail-card">
+                        <h3>🛠️ Technology Stack</h3>
+                        <div class="project-tags">
+                            ${tagsHTML}
+                        </div>
+                        ${project.language ? `<p><strong>Primary Language:</strong> ${project.language}</p>` : ''}
+                        ${project.topics.length > 0 ? `<p><strong>Topics:</strong> ${project.topics.join(', ')}</p>` : ''}
+                    </div>
+
+                    <div class="glass-card project-detail-card">
+                        <h3>📅 Timeline</h3>
+                        <p><strong>Created:</strong> ${formatDate(project.createdAt)}</p>
+                        <p><strong>Last Updated:</strong> ${formatDate(project.updatedAt)}</p>
+                        ${project.pushedAt ? `<p><strong>Last Commit:</strong> ${formatDate(project.pushedAt)}</p>` : ''}
+                    </div>
+
+                    <div class="glass-card project-detail-card">
+                        <h3>📊 Repository Stats</h3>
+                        <p><strong>Stars:</strong> ⭐ ${project.stars}</p>
+                        <p><strong>Forks:</strong> 🍴 ${project.forks}</p>
+                        <p><strong>Watchers:</strong> 👀 ${project.watchers}</p>
+                        ${project.license ? `<p><strong>License:</strong> ${project.license}</p>` : ''}
+                    </div>
+
+                    <div class="glass-card project-detail-card project-actions-card">
+                        <h3>🔗 Links</h3>
+                        <div class="project-actions">
+                            <a href="${project.url}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                View on GitHub
+                            </a>
+                            ${project.homepage ? `
+                                <a href="${project.homepage}" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+                                    Visit Website
+                                </a>
+                            ` : ''}
+                        </div>
+                        <p class="project-note">Full repository: <a href="${project.url}" target="_blank">${project.fullName}</a></p>
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error('Failed to load project details:', error);
+                document.getElementById('project-title').textContent = 'Failed to Load Project';
+                document.getElementById('project-description').textContent = 'Could not fetch project details from GitHub.';
+                document.getElementById('breadcrumb-project').textContent = 'Error';
+                document.getElementById('project-details').innerHTML = `
+                    <div class="glass-card project-detail-card">
+                        <h3>Error</h3>
+                        <p>Unable to load project details. Please try again later or visit the <a href="../index.html#more-projects">More Projects</a> section.</p>
+                    </div>
+                `;
+            }
+        })();
+    </script>
+</body>
+</html>
