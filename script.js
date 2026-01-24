@@ -542,6 +542,11 @@ projectTabs.forEach(tab => {
         const targetContent = document.getElementById(`${targetTab}-tab`);
         if (targetContent) {
             targetContent.classList.add('active');
+            
+            // Load GitHub projects when switching to More Projects tab
+            if (targetTab === 'more' && window.GitHubProjects && typeof window.GitHubProjects.renderMoreProjects === 'function') {
+                window.GitHubProjects.renderMoreProjects();
+            }
         }
     });
 });
