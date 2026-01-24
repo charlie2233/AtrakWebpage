@@ -62,6 +62,11 @@ LunarWeb/
 ├── index.html      # Main HTML structure
 ├── styles.css      # All styles with CSS variables
 ├── script.js       # Interactive functionality
+├── projects/       # Project detail pages
+│   ├── guidepup.html
+│   ├── hoops-clips.html
+│   ├── lunar.html
+│   └── ten-seconds-vip-manager.html
 └── README.md       # This file
 ```
 
