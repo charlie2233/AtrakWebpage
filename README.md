@@ -1,6 +1,6 @@
 # LunarWeb
 
-A modern, minimal portfolio website featuring a clean startup aesthetic inspired by Vercel and Cursor. Built with pure HTML5, CSS3, and JavaScript.
+A modern, minimal tech team website + project hub featuring a clean startup aesthetic inspired by Vercel and Cursor. Built with pure HTML5, CSS3, and JavaScript.
 
 ## ✨ Features
 
