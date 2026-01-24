@@ -1,5 +1,8 @@
 // Atrak - Modern Tech Team Website JavaScript
 
+// Enable JS animations
+document.body.classList.add('js-enabled');
+
 const prefersReducedMotion = typeof window !== 'undefined'
     && typeof window.matchMedia === 'function'
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -51,16 +54,26 @@ document.querySelectorAll('.glass-card, .project-card, .stat-item').forEach(card
 });
 
 // Scroll Reveal
-const revealElements = document.querySelectorAll('.reveal');
 const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('active');
+            // Stop observing once revealed
+            revealObserver.unobserve(entry.target);
         }
     });
 }, { threshold: 0.1 });
 
+// Select elements that should have reveal animation
+const revealElements = document.querySelectorAll('.reveal');
 revealElements.forEach(el => revealObserver.observe(el));
+
+// Automatically add reveal class to cards if they don't have it
+const autoRevealElements = document.querySelectorAll('.project-card, .leader-card, .stat-item, .feature');
+autoRevealElements.forEach(el => {
+    el.classList.add('reveal');
+    revealObserver.observe(el);
+});
 
 // Hero Parallax
 const hero = document.querySelector('.hero');
@@ -174,30 +187,6 @@ window.addEventListener('scroll', () => {
             handleScroll();
         });
     }
-});
-
-// Intersection Observer for Fade-in Animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
-    });
-}, observerOptions);
-
-// Observer all cards and sections
-const observeElements = document.querySelectorAll('.project-card, .leader-card, .stat-item, .feature');
-observeElements.forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(30px)';
-    el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-    observer.observe(el);
 });
 
 // Dynamic Stats Counter

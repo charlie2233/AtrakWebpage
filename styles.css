@@ -81,9 +81,16 @@
 
 /* Reveal Animations */
 .reveal {
+    /* Fallback: visible by default */
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Only hide if JS is active and element hasn't been revealed yet */
+body.js-enabled .reveal:not(.active) {
     opacity: 0;
     transform: translateY(30px);
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .reveal.active {
