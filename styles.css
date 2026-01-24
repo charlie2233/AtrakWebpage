@@ -568,6 +568,85 @@ section {
     gap: 12px;
 }
 
+.project-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.btn-sm {
+    padding: 8px 16px;
+    font-size: 13px;
+    border-radius: 6px;
+}
+
+.btn-sm:disabled {
+    opacity: 0.5;
+}
+
+/* Updates / Build Log Section */
+.updates {
+    padding: var(--section-padding) 0;
+    background-color: var(--bg-secondary);
+}
+
+@media (max-width: 768px) {
+    .updates {
+        padding: var(--section-padding-mobile) 0;
+    }
+}
+
+.updates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-top: 48px;
+}
+
+.update-card {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    transition: all var(--transition-base);
+}
+
+.update-card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.update-date {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.update-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.update-description {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.update-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
 /* Project Detail Pages */
 .page-hero {
     background-color: var(--bg-secondary);

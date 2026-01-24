@@ -17,6 +17,7 @@
             </div>
             <ul class="nav-links">
                 <li><a href="#projects">Projects</a></li>
+                <li><a href="#updates">Updates</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#leadership">Team</a></li>
                 <li><a href="join.html">Join</a></li>
@@ -85,6 +86,81 @@
         </div>
     </section>
 
+    <!-- Updates / Build Log Section -->
+    <section id="updates" class="updates">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Progress Timeline</span>
+                <h2 class="section-title">Updates & Build Log</h2>
+                <p class="section-description">
+                    Recent milestones and development momentum — shipping real products, one build at a time.
+                </p>
+            </div>
+            
+            <div class="updates-grid">
+                <div class="update-card">
+                    <div class="update-date">Jan 2026</div>
+                    <h3 class="update-title">Shipped atrak.dev</h3>
+                    <p class="update-description">
+                        Launched new team website with modern design, showcasing projects and building public presence.
+                    </p>
+                    <div class="update-tags">
+                        <span class="tag">Website</span>
+                        <span class="tag">Launch</span>
+                    </div>
+                </div>
+                
+                <div class="update-card">
+                    <div class="update-date">Dec 2025</div>
+                    <h3 class="update-title">Submitted GuidePup</h3>
+                    <p class="update-description">
+                        Completed and submitted AI vision assistant app to App Store — accessibility-first mobile experience.
+                    </p>
+                    <div class="update-tags">
+                        <span class="tag">Mobile</span>
+                        <span class="tag">App Store</span>
+                    </div>
+                </div>
+                
+                <div class="update-card">
+                    <div class="update-date">Nov 2025</div>
+                    <h3 class="update-title">Built Hoops Clips Pipeline</h3>
+                    <p class="update-description">
+                        Developed end-to-end basketball highlights system with action detection and automated clip generation.
+                    </p>
+                    <div class="update-tags">
+                        <span class="tag">Computer Vision</span>
+                        <span class="tag">Pipeline</span>
+                    </div>
+                </div>
+                
+                <div class="update-card">
+                    <div class="update-date">Oct 2025</div>
+                    <h3 class="update-title">Lunar Prototype</h3>
+                    <p class="update-description">
+                        Created working prototype of local-first desktop AI agent integrating multiple LLMs and APIs.
+                    </p>
+                    <div class="update-tags">
+                        <span class="tag">AI Agent</span>
+                        <span class="tag">Desktop</span>
+                    </div>
+                </div>
+                
+                <div class="update-card">
+                    <div class="update-date">Sep 2025</div>
+                    <h3 class="update-title">Deployed VIP Manager</h3>
+                    <p class="update-description">
+                        Launched internal restaurant management system for daily business operations — live in production.
+                    </p>
+                    <div class="update-tags">
+                        <span class="tag">Full-Stack</span>
+                        <span class="tag">Deployment</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Projects Section -->
     <section id="projects" class="projects">
         <div class="container">
@@ -97,7 +173,7 @@
             </div>
             
             <div class="projects-grid">
-                <a class="project-card" href="projects/guidepup.html" aria-label="Open project: GuidePup — AI Vision Assistant">
+                <div class="project-card" data-project="guidepup">
                     <div class="project-image">
                         <div class="project-icon">🦮</div>
                     </div>
@@ -112,16 +188,15 @@
                             <span class="tag">Computer Vision</span>
                             <span class="tag">Mobile</span>
                         </div>
-                        <div class="project-link">
-                            Project details
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
+                        <div class="project-actions">
+                            <a href="projects/guidepup.html" class="btn btn-secondary btn-sm">Details</a>
+                            <a href="https://github.com/charlie2233/rork-guide-pup--vision-assistant" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Repo</a>
+                            <button class="btn btn-secondary btn-sm" disabled>Demo (Soon)</button>
                         </div>
                     </div>
-                </a>
+                </div>
 
-                <a class="project-card" href="projects/hoops-clips.html" aria-label="Open project: Hoops Clips — AI Highlights System">
+                <div class="project-card" data-project="hoopsClips">
                     <div class="project-image">
                         <div class="project-icon">🏀</div>
                     </div>
@@ -136,16 +211,15 @@
                             <span class="tag">Computer Vision</span>
                             <span class="tag">Automation</span>
                         </div>
-                        <div class="project-link">
-                            Project details
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
+                        <div class="project-actions">
+                            <a href="projects/hoops-clips.html" class="btn btn-secondary btn-sm">Details</a>
+                            <a href="https://github.com/charlie2233/Basketball_action_recoginition_sever" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Repo</a>
+                            <button class="btn btn-secondary btn-sm" disabled>Demo (Soon)</button>
                         </div>
                     </div>
-                </a>
+                </div>
 
-                <a class="project-card" href="projects/lunar.html" aria-label="Open project: Lunar — Desktop AI Agent">
+                <div class="project-card" data-project="lunar">
                     <div class="project-image">
                         <div class="project-icon">🌙</div>
                     </div>
@@ -160,16 +234,15 @@
                             <span class="tag">Desktop</span>
                             <span class="tag">Productivity</span>
                         </div>
-                        <div class="project-link">
-                            Project details
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
+                        <div class="project-actions">
+                            <a href="projects/lunar.html" class="btn btn-secondary btn-sm">Details</a>
+                            <button class="btn btn-secondary btn-sm" disabled>Repo (Soon)</button>
+                            <button class="btn btn-secondary btn-sm" disabled>Demo (Soon)</button>
                         </div>
                     </div>
-                </a>
+                </div>
 
-                <a class="project-card" href="projects/ten-seconds-vip-manager.html" aria-label="Open project: Ten Seconds VIP Manager">
+                <div class="project-card" data-project="tenSecondsVip">
                     <div class="project-image">
                         <div class="project-icon">🍽️</div>
                     </div>
@@ -184,14 +257,13 @@
                             <span class="tag">Operations</span>
                             <span class="tag">Database</span>
                         </div>
-                        <div class="project-link">
-                            Project details
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
+                        <div class="project-actions">
+                            <a href="projects/ten-seconds-vip-manager.html" class="btn btn-secondary btn-sm">Details</a>
+                            <button class="btn btn-secondary btn-sm" disabled>Repo (Private)</button>
+                            <button class="btn btn-secondary btn-sm" disabled>Demo (Private)</button>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
     </section>
