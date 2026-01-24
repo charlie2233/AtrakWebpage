@@ -568,7 +568,7 @@ section {
     gap: 12px;
 }
 
-.project-actions {
+.project-card .project-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
