@@ -99,6 +99,15 @@ body {
 
 .logo-icon {
     font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-icon img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
 }
 
 .nav-links {
@@ -187,6 +196,7 @@ body {
 /* Hero Section */
 .hero {
     min-height: 100vh;
+    min-height: 100svh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -325,13 +335,15 @@ body {
     border: 1px solid var(--border-color);
     border-radius: 16px;
     backdrop-filter: blur(10px);
+    --parallax-y: 0px;
+    transform: translateY(var(--parallax-y, 0px));
     will-change: transform;
 }
 
 .card-1 {
     top: 0;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateY(var(--parallax-y, 0px));
 }
 
 .card-2 {
@@ -516,6 +528,15 @@ section {
 
 .project-icon {
     font-size: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-icon img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
 }
 
 .project-content {
@@ -1168,6 +1189,18 @@ section {
     :root {
         --section-padding: 60px;
     }
+
+    .container {
+        padding: 0 16px;
+    }
+
+    .nav-container {
+        padding: 16px 16px;
+    }
+
+    .hero-container {
+        padding: 0 16px;
+    }
     
     .nav-links {
         position: absolute;
@@ -1245,6 +1278,10 @@ section {
         width: 100%;
     }
 
+    .stats {
+        padding: 60px 0;
+    }
+
     .section-actions {
         flex-direction: column;
     }
@@ -1283,6 +1320,19 @@ section {
     .form-grid {
         grid-template-columns: 1fr;
     }
+
+    .project-card,
+    .leader-card,
+    .glass-card,
+    .suggestion-box {
+        padding: 24px;
+    }
+
+    .suggestion-form input,
+    .suggestion-form select,
+    .suggestion-form textarea {
+        font-size: 16px;
+    }
     
     .leadership-grid {
         grid-template-columns: 1fr;
@@ -1299,6 +1349,66 @@ section {
     
     .contact-buttons {
         flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .badge {
+        font-size: 12px;
+        padding: 6px 12px;
+        margin-bottom: 18px;
+    }
+
+    .hero-title {
+        font-size: 34px;
+    }
+
+    .hero-description {
+        font-size: 15px;
+    }
+
+    .hero-visual,
+    .scroll-indicator {
+        display: none;
+    }
+
+    .section-header {
+        margin-bottom: 44px;
+    }
+
+    .section-title {
+        font-size: 30px;
+    }
+
+    .section-description {
+        font-size: 16px;
+    }
+
+    .contact-title {
+        font-size: 32px;
+    }
+
+    .contact-description {
+        font-size: 16px;
+    }
+
+    .project-image {
+        height: 140px;
+    }
+
+    .project-title {
+        font-size: 20px;
+    }
+
+    .project-card,
+    .leader-card,
+    .glass-card,
+    .suggestion-box {
+        padding: 20px;
+    }
+
+    .footer {
+        padding: 60px 0 24px;
     }
 }
 
