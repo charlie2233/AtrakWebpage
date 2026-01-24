@@ -508,6 +508,120 @@ if (enableHoverEffects) {
 console.log('%cAtrak ', 'background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); color: white; padding: 8px 16px; border-radius: 4px; font-size: 16px; font-weight: bold;');
 console.log('%cBuilding the future, one line of code at a time.', 'color: #a0a0a0; font-size: 12px;');
 
+// Timeline Interactive Features
+const initTimeline = () => {
+    const timelineItems = document.querySelectorAll('.timeline-item');
+    const timelineNodes = document.querySelectorAll('.timeline-node');
+    
+    timelineNodes.forEach((node, index) => {
+        const item = timelineItems[index];
+        
+        // Click handler for expanding/collapsing
+        const toggleExpand = () => {
+            const isExpanded = item.getAttribute('data-expanded') === 'true';
+            item.setAttribute('data-expanded', !isExpanded);
+            node.setAttribute('aria-expanded', !isExpanded);
+            
+            // Announce change for screen readers
+            const title = item.querySelector('.update-title')?.textContent || 'Timeline item';
+            const announcement = !isExpanded ? `${title} expanded` : `${title} collapsed`;
+            announceToScreenReader(announcement);
+        };
+        
+        // Click event
+        node.addEventListener('click', toggleExpand);
+        
+        // Keyboard support (Enter and Space)
+        node.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleExpand();
+            }
+        });
+        
+        // Enhanced hover effects
+        node.addEventListener('mouseenter', () => {
+            if (!prefersReducedMotion) {
+                item.style.transition = 'all 0.3s ease';
+            }
+        });
+    });
+};
+
+// Helper function to announce changes to screen readers
+const announceToScreenReader = (message) => {
+    const announcement = document.createElement('div');
+    announcement.setAttribute('role', 'status');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.className = 'sr-only';
+    announcement.textContent = message;
+    document.body.appendChild(announcement);
+    
+    setTimeout(() => {
+        document.body.removeChild(announcement);
+    }, 1000);
+};
+
+// Initialize timeline when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTimeline);
+} else {
+    initTimeline();
+}
+
+// Add timeline items to intersection observer for reveal animations
+const timelineItemsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.animationPlayState = 'running';
+        }
+    });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.timeline-item').forEach(item => {
+    timelineItemsObserver.observe(item);
+});
+
+// Dynamic timeline update function
+window.addTimelineItem = function(data) {
+    const container = document.querySelector('.timeline-container');
+    if (!container) return;
+    
+    const item = document.createElement('div');
+    item.className = 'timeline-item';
+    item.setAttribute('data-expanded', 'false');
+    
+    item.innerHTML = `
+        <div class="timeline-node" tabindex="0" role="button" aria-expanded="false" aria-label="${data.date} - ${data.title}">
+            <div class="node-dot"></div>
+            <div class="node-glow"></div>
+        </div>
+        <div class="timeline-content">
+            <div class="timeline-header">
+                <div class="update-date">${data.date}</div>
+                <h3 class="update-title">${data.title}</h3>
+            </div>
+            <p class="update-description">${data.description}</p>
+            <div class="update-tags">
+                ${data.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            </div>
+            <div class="timeline-details">
+                <p>${data.details || ''}</p>
+            </div>
+        </div>
+    `;
+    
+    container.insertBefore(item, container.firstChild);
+    
+    // Re-initialize interactions for new item
+    initTimeline();
+    
+    // Announce addition to screen readers
+    announceToScreenReader(`New timeline item added: ${data.title}`);
+    
+    return item;
+};
+
 // Prevent default link behavior for demo links
 document.querySelectorAll('a[href="#"]').forEach(link => {
     link.addEventListener('click', (e) => {
