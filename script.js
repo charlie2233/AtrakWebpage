@@ -1,4 +1,4 @@
-// LunarWeb - Modern Tech Portfolio JavaScript
+// Atrak - Modern Tech Team Website JavaScript
 
 // Mobile Menu Toggle
 const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
@@ -198,7 +198,11 @@ leaderCards.forEach(card => {
 });
 
 // Forms (Suggestion Box + Join/Contact)
-const formConfig = window.LUNARWEB_CONFIG && typeof window.LUNARWEB_CONFIG === 'object' ? window.LUNARWEB_CONFIG : {};
+const formConfig = (window.ATRAK_CONFIG && typeof window.ATRAK_CONFIG === 'object')
+    ? window.ATRAK_CONFIG
+    : (window.LUNARWEB_CONFIG && typeof window.LUNARWEB_CONFIG === 'object')
+        ? window.LUNARWEB_CONFIG
+        : {};
 const configuredFormEndpoints = formConfig.forms && typeof formConfig.forms === 'object' ? formConfig.forms : {};
 
 const getFormEndpoint = (form) => {
@@ -420,7 +424,7 @@ style.textContent = `
 document.head.appendChild(style);
 
 // Console Message
-console.log('%c🌙 LunarWeb ', 'background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); color: white; padding: 8px 16px; border-radius: 4px; font-size: 16px; font-weight: bold;');
+console.log('%cAtrak ', 'background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); color: white; padding: 8px 16px; border-radius: 4px; font-size: 16px; font-weight: bold;');
 console.log('%cBuilding the future, one line of code at a time.', 'color: #a0a0a0; font-size: 12px;');
 
 // Prevent default link behavior for demo links

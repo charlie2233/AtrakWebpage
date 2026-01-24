@@ -1,6 +1,6 @@
-# LunarWeb
+# Atrak
 
-A modern, minimal tech team website + project hub featuring a clean startup aesthetic inspired by Vercel and Cursor. Built with pure HTML5, CSS3, and JavaScript.
+A modern, minimal tech team website + project hub (atrak.dev) featuring a clean startup aesthetic inspired by Vercel and Cursor. Built with pure HTML5, CSS3, and JavaScript.
 
 ## ✨ Features
 
@@ -30,8 +30,8 @@ A modern, minimal tech team website + project hub featuring a clean startup aest
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/charlie2233/LunarWeb.git
-   cd LunarWeb
+   git clone <repo-url>
+   cd <repo-folder>
    ```
 
 2. **Open in browser**
@@ -53,12 +53,12 @@ The site includes an anonymous suggestion form that posts to a backend endpoint 
 
 1. Create a form at `https://formspree.io` and set the recipient to your inbox.
 2. Copy your Formspree endpoint URL (looks like `https://formspree.io/f/xxxxxx`).
-3. Update `config.js` and replace `REPLACE_ME` in `window.LUNARWEB_CONFIG.forms.default` (used by both the Suggestion Box and Join/Contact form).
+3. Update `config.js` and replace `REPLACE_ME` in `window.ATRAK_CONFIG.forms.default` (used by both the Suggestion Box and Join/Contact form).
 
 ## 📁 Project Structure
 
 ```
-LunarWeb/
+Atrak/
 ├── config.js       # Runtime config (form endpoints)
 ├── index.html      # Main HTML structure
 ├── join.html       # Join/Contact page
@@ -109,6 +109,6 @@ Contributions are welcome! Feel free to open issues or submit pull requests.
 
 ---
 
-**Built with ❤️ by the LunarWeb Team**
+**Built with ❤️ by the Atrak Team**
 
-*Building tomorrow's technology today* 🌙
+*atrak.dev*
