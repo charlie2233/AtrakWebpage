@@ -119,6 +119,7 @@ body.js-enabled .reveal:not(.active) {
     background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.06), transparent 40%);
     opacity: 0;
     transition: opacity 0.5s;
+    pointer-events: none;
 }
 
 .glass-card:hover::before {
