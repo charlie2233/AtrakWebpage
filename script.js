@@ -1,5 +1,14 @@
 // Atrak - Modern Tech Team Website JavaScript
 
+const prefersReducedMotion = typeof window !== 'undefined'
+    && typeof window.matchMedia === 'function'
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const hasFinePointer = typeof window !== 'undefined'
+    && typeof window.matchMedia === 'function'
+    && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+const enableHoverEffects = hasFinePointer && !prefersReducedMotion;
+const enableHeroParallax = enableHoverEffects;
+
 // Custom Cursor
 const cursorDot = document.querySelector('.cursor-dot');
 const cursorOutline = document.querySelector('.cursor-outline');
@@ -72,15 +81,6 @@ if (hero && enableHeroParallax) {
 const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
 const navLinks = document.querySelector('.nav-links');
 const navbar = document.querySelector('.navbar');
-
-const prefersReducedMotion = typeof window !== 'undefined'
-    && typeof window.matchMedia === 'function'
-    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const hasFinePointer = typeof window !== 'undefined'
-    && typeof window.matchMedia === 'function'
-    && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-const enableHoverEffects = hasFinePointer && !prefersReducedMotion;
-const enableHeroParallax = enableHoverEffects;
 
 if (mobileMenuBtn && navLinks) {
     mobileMenuBtn.addEventListener('click', () => {
