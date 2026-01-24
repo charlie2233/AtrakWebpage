@@ -6,9 +6,14 @@
     <meta name="description" content="Atrak — student tech team building AI, accessibility, and real-world software projects">
     <title>Atrak — Tech Team</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="apple-touch-icon" href="assets/logo.png">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+    <div class="noise"></div>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -37,7 +42,7 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-container">
-            <div class="hero-content">
+            <div class="hero-content reveal">
                 <div class="badge">Student Tech Team • Building With Impact</div>
                 <h1 class="hero-title">
                     Building Real
@@ -53,7 +58,7 @@
                     <a href="#contact" class="btn btn-secondary">Suggestion Box</a>
                 </div>
             </div>
-            <div class="hero-visual">
+            <div class="hero-visual reveal">
                 <div class="floating-card card-1"></div>
                 <div class="floating-card card-2"></div>
                 <div class="floating-card card-3"></div>
@@ -66,22 +71,22 @@
     </section>
 
     <!-- Stats Section -->
-    <section class="stats">
+    <section class="stats reveal">
         <div class="container">
             <div class="stats-grid">
-                <div class="stat-item">
+                <div class="stat-item glass-card">
                     <div class="stat-number">4+</div>
                     <div class="stat-label">Notable Projects</div>
                 </div>
-                <div class="stat-item">
+                <div class="stat-item glass-card">
                     <div class="stat-number">1</div>
                     <div class="stat-label">App Store Submission</div>
                 </div>
-                <div class="stat-item">
+                <div class="stat-item glass-card">
                     <div class="stat-number">1</div>
                     <div class="stat-label">Live Business Deployment</div>
                 </div>
-                <div class="stat-item">
+                <div class="stat-item glass-card">
                     <div class="stat-number">3+</div>
                     <div class="stat-label">Open-Source Repos</div>
                 </div>
@@ -90,7 +95,7 @@
     </section>
 
     <!-- Updates / Build Log Section -->
-    <section id="updates" class="updates">
+    <section id="updates" class="updates reveal">
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">Progress Timeline</span>
@@ -125,6 +130,18 @@
                     </div>
                 </div>
                 
+                <div class="update-card">
+                    <div class="update-date">Nov 2025</div>
+                    <h3 class="update-title">AI Predator Simulation</h3>
+                    <p class="update-description">
+                        Completed a multi-agent simulation where entities learn to hunt and survive using emergent behaviors and AI logic.
+                    </p>
+                    <div class="update-tags">
+                        <span class="tag">AI</span>
+                        <span class="tag">Simulation</span>
+                    </div>
+                </div>
+
                 <div class="update-card">
                     <div class="update-date">Nov 2025</div>
                     <h3 class="update-title">Built Hoops Clips Pipeline</h3>
@@ -165,7 +182,7 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="projects" class="projects">
+    <section id="projects" class="projects reveal">
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">Notable Work</span>
@@ -176,7 +193,7 @@
             </div>
             
             <div class="projects-grid">
-                <div class="project-card">
+                <div class="project-card reveal glass-card">
                     <div class="project-image">
                         <div class="project-icon">🦮</div>
                     </div>
@@ -199,7 +216,7 @@
                     </div>
                 </div>
 
-                <div class="project-card">
+                <div class="project-card reveal glass-card">
                     <div class="project-image">
                         <div class="project-icon">🏀</div>
                     </div>
@@ -222,7 +239,7 @@
                     </div>
                 </div>
 
-                <div class="project-card">
+                <div class="project-card reveal glass-card">
                     <div class="project-image">
                         <div class="project-icon">
                             <img src="assets/logo.png" alt="Lunar Icon">
@@ -247,7 +264,7 @@
                     </div>
                 </div>
 
-                <div class="project-card">
+                <div class="project-card reveal glass-card">
                     <div class="project-image">
                         <div class="project-icon">🍽️</div>
                     </div>
@@ -269,12 +286,35 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="project-card reveal glass-card">
+                    <div class="project-image">
+                        <div class="project-icon">🦊</div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">AI Predator Simulation</h3>
+                        <p class="project-description">
+                            Multi-agent survival simulation featuring complex AI behaviors, hunting mechanics, 
+                            and ecological balancing in a dynamic environment.
+                        </p>
+                        <div class="project-tags">
+                            <span class="tag">AI</span>
+                            <span class="tag">Simulation</span>
+                            <span class="tag">Python</span>
+                        </div>
+                        <div class="project-actions">
+                            <a href="projects/ai-predator-simulation.html" class="btn btn-secondary btn-sm">Details</a>
+                            <a href="https://github.com/charlie2233/AI-predator-simulation" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Repo</a>
+                            <button class="btn btn-secondary btn-sm" disabled>Demo (Soon)</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- About Section -->
-    <section id="about" class="about">
+    <section id="about" class="about reveal">
         <div class="container">
             <div class="about-grid">
                 <div class="about-content">
@@ -289,21 +329,21 @@
                         open-source what we can so others can learn and build alongside us.
                     </p>
                     <div class="about-features">
-                        <div class="feature">
+                        <div class="feature reveal">
                             <div class="feature-icon">💡</div>
                             <div>
                                 <h4>Build Fast</h4>
                                 <p>Prototype quickly, then harden for real use</p>
                             </div>
                         </div>
-                        <div class="feature">
+                        <div class="feature reveal">
                             <div class="feature-icon">🤝</div>
                             <div>
                                 <h4>Team-Driven</h4>
                                 <p>Collaborate, review, and keep standards high</p>
                             </div>
                         </div>
-                        <div class="feature">
+                        <div class="feature reveal">
                             <div class="feature-icon">🎯</div>
                             <div>
                                 <h4>Impact-Focused</h4>
@@ -312,7 +352,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="about-visual">
+                <div class="about-visual reveal">
                     <div class="glass-card">
                         <div class="code-preview">
                             <div class="code-header">
@@ -339,7 +379,7 @@
     </section>
 
     <!-- Leadership Section -->
-    <section id="leadership" class="leadership">
+    <section id="leadership" class="leadership reveal">
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">Our Team</span>
@@ -354,7 +394,7 @@
             </div>
 
             <div class="leadership-grid">
-                <div class="leader-card">
+                <div class="leader-card reveal glass-card">
                     <div class="leader-avatar">
                         <div class="avatar-placeholder">CH</div>
                     </div>
@@ -383,7 +423,7 @@
                     </div>
                 </div>
 
-                <div class="leader-card">
+                <div class="leader-card reveal glass-card">
                     <div class="leader-avatar">
                         <div class="avatar-placeholder">EN</div>
                     </div>
@@ -412,7 +452,7 @@
                     </div>
                 </div>
 
-                <div class="leader-card">
+                <div class="leader-card reveal glass-card">
                     <div class="leader-avatar">
                         <div class="avatar-placeholder">UX</div>
                     </div>
@@ -441,7 +481,7 @@
                     </div>
                 </div>
 
-                <div class="leader-card">
+                <div class="leader-card reveal glass-card">
                     <div class="leader-avatar">
                         <div class="avatar-placeholder">OP</div>
                     </div>
@@ -493,15 +533,15 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="contact">
+    <section id="contact" class="contact reveal">
         <div class="container">
-            <div class="contact-content">
+            <div class="contact-content reveal">
                 <h2 class="contact-title">Suggestion Box</h2>
                 <p class="contact-description">
                     Send anonymous feedback, ideas, or bug reports. No name or contact info required.
                 </p>
 
-                <div class="suggestion-box">
+                <div class="suggestion-box glass-card reveal">
                     <form id="suggestion-form" class="suggestion-form" action="https://formspree.io/f/REPLACE_ME" method="POST" data-endpoint-key="suggestion" data-endpoint="https://formspree.io/f/REPLACE_ME" novalidate>
                         <label for="suggestion-message" class="suggestion-label">Your message</label>
                         <textarea id="suggestion-message" name="message" rows="6" maxlength="1200" required placeholder="Write your suggestion..."></textarea>
@@ -515,7 +555,7 @@
                     </form>
                 </div>
 
-                <div class="contact-buttons">
+                <div class="contact-buttons reveal">
                     <a href="https://github.com/charlie2233" class="btn btn-primary" target="_blank" rel="noopener noreferrer">GitHub</a>
                     <a href="#projects" class="btn btn-secondary">View Projects</a>
                 </div>
@@ -524,7 +564,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer reveal">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">

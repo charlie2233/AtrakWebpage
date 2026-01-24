@@ -1,5 +1,73 @@
 // Atrak - Modern Tech Team Website JavaScript
 
+// Custom Cursor
+const cursorDot = document.querySelector('.cursor-dot');
+const cursorOutline = document.querySelector('.cursor-outline');
+
+if (cursorDot && cursorOutline && !prefersReducedMotion && hasFinePointer) {
+    window.addEventListener('mousemove', (e) => {
+        const posX = e.clientX;
+        const posY = e.clientY;
+
+        cursorDot.style.left = `${posX}px`;
+        cursorDot.style.top = `${posY}px`;
+
+        cursorOutline.animate({
+            left: `${posX}px`,
+            top: `${posY}px`
+        }, { duration: 500, fill: "forwards" });
+    });
+
+    document.querySelectorAll('a, button, .project-card').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursorDot.classList.add('active');
+            cursorOutline.classList.add('active');
+        });
+        el.addEventListener('mouseleave', () => {
+            cursorDot.classList.remove('active');
+            cursorOutline.classList.remove('active');
+        });
+    });
+}
+
+// Glass Card Mouse Tracker
+document.querySelectorAll('.glass-card, .project-card, .stat-item').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+    });
+});
+
+// Scroll Reveal
+const revealElements = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+        }
+    });
+}, { threshold: 0.1 });
+
+revealElements.forEach(el => revealObserver.observe(el));
+
+// Hero Parallax
+const hero = document.querySelector('.hero');
+if (hero && enableHeroParallax) {
+    window.addEventListener('mousemove', (e) => {
+        const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+        const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+        
+        const cards = hero.querySelectorAll('.floating-card');
+        cards.forEach((card, index) => {
+            const depth = (index + 1) * 0.5;
+            card.style.transform = `translate(${moveX * depth}px, ${moveY * depth}px) rotate(${moveX * 0.5}px)`;
+        });
+    });
+}
+
 // Mobile Menu Toggle
 const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
 const navLinks = document.querySelector('.nav-links');
