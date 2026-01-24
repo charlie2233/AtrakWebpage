@@ -25,7 +25,6 @@
             </div>
             <ul class="nav-links">
                 <li><a href="#projects">Projects</a></li>
-                <li><a href="#more-projects">More Projects</a></li>
                 <li><a href="#updates">Updates</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#leadership">Team</a></li>
@@ -189,11 +188,19 @@
                 <span class="section-tag">Notable Work</span>
                 <h2 class="section-title">Technical Projects</h2>
                 <p class="section-description">
-                    A few builds spanning accessibility, computer vision, and local-first AI. Click a project for details and access links.
+                    Explore our featured projects and browse additional work from GitHub.
                 </p>
             </div>
             
-            <div class="projects-grid">
+            <!-- Project Tabs -->
+            <div class="project-tabs">
+                <button class="project-tab active" data-tab="featured">Featured Projects</button>
+                <button class="project-tab" data-tab="more">More Projects</button>
+            </div>
+            
+            <!-- Featured Projects Tab Content -->
+            <div class="project-tab-content active" id="featured-tab">
+                <div class="projects-grid">
                 <div class="project-card reveal glass-card">
                     <div class="project-image">
                         <div class="project-icon">🦮</div>
@@ -328,28 +335,18 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- More Projects Section -->
-    <section id="more-projects" class="more-projects reveal">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">GitHub Portfolio</span>
-                <h2 class="section-title">More Projects</h2>
-                <p class="section-description">
-                    Additional projects from GitHub — exploring different technologies, experiments, and open-source contributions.
-                </p>
-            </div>
             
-            <div class="projects-grid" id="more-projects-grid">
-                <!-- Projects will be loaded dynamically from GitHub API -->
-            </div>
-
-            <div class="section-actions reveal">
-                <a href="https://github.com/charlie2233?tab=repositories" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
-                    View All on GitHub
-                </a>
+            <!-- More Projects Tab Content -->
+            <div class="project-tab-content" id="more-tab">
+                <div class="projects-grid" id="more-projects-grid">
+                    <!-- Projects will be loaded dynamically from GitHub API -->
+                </div>
+                
+                <div class="section-actions reveal">
+                    <a href="https://github.com/charlie2233?tab=repositories" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+                        View All on GitHub
+                    </a>
+                </div>
             </div>
         </div>
     </section>
