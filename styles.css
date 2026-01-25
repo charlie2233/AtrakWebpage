@@ -906,7 +906,7 @@ section {
     position: absolute;
     left: 24px;
     right: 24px;
-    top: 24px;
+    top: 50%; /* Center the line vertically */
     height: 3px;
     border-radius: 999px;
     background: linear-gradient(90deg,
@@ -918,6 +918,8 @@ section {
     );
     box-shadow: 0 0 18px rgba(59, 130, 246, 0.22),
                 0 0 40px rgba(139, 92, 246, 0.16);
+    transform: translateY(-50%);
+    z-index: 0;
 }
 
 .timeline-container::after {
@@ -925,7 +927,7 @@ section {
     position: absolute;
     left: 24px;
     right: 24px;
-    top: 24px;
+    top: 50%; /* Center the scanline */
     height: 3px;
     border-radius: 999px;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
@@ -933,46 +935,80 @@ section {
     opacity: 0.25;
     animation: timeline-scan 6s linear infinite;
     pointer-events: none;
-}
-
-@keyframes timeline-scan {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .timeline-container::after {
-        animation: none;
-    }
+    transform: translateY(-50%);
+    z-index: 0;
 }
 
 .timeline-item {
     position: relative;
     flex: 0 0 360px;
-    padding-top: 56px;
-    scroll-snap-align: start;
+    padding-top: 0; /* Remove top padding */
+    scroll-snap-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 400px; /* Ensure enough height for alternating layout */
 }
 
+/* Connector Line */
 .timeline-item::before {
     content: '';
     position: absolute;
-    top: 36px;
     left: 50%;
     width: 2px;
-    height: 20px;
+    height: 50%; /* Connect to center */
     transform: translateX(-50%);
     background: linear-gradient(to bottom, rgba(59, 130, 246, 0.55), rgba(139, 92, 246, 0.0));
-    opacity: 0.9;
+    opacity: 0.5;
+    z-index: 0;
+}
+
+/* Alternating Layout: Top Items */
+.timeline-item:nth-child(odd) {
+    justify-content: flex-start;
+}
+
+.timeline-item:nth-child(odd)::before {
+    top: 50%; /* Line goes down from center */
+    bottom: auto;
+    background: linear-gradient(to bottom, rgba(59, 130, 246, 0.55), transparent);
+}
+
+.timeline-item:nth-child(odd) .timeline-content {
+    margin-top: 40px; /* Push content down below center line */
+}
+
+.timeline-item:nth-child(odd) .timeline-node {
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Alternating Layout: Bottom Items */
+.timeline-item:nth-child(even) {
+    justify-content: flex-end;
+}
+
+.timeline-item:nth-child(even)::before {
+    bottom: 50%; /* Line goes up from center */
+    top: auto;
+    background: linear-gradient(to top, rgba(59, 130, 246, 0.55), transparent);
+}
+
+.timeline-item:nth-child(even) .timeline-content {
+    margin-bottom: 40px; /* Push content up above center line */
+}
+
+.timeline-item:nth-child(even) .timeline-node {
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .timeline-node {
     position: absolute;
-    top: 12px;
     left: 50%;
     width: 24px;
     height: 24px;
-    transform: translateX(-50%);
-    z-index: 1;
+    z-index: 2; /* Bring above lines */
     cursor: pointer;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1149,7 +1185,21 @@ section {
     font-size: 14px;
     color: rgba(255, 255, 255, 0.7);
     line-height: 1.7;
-    margin: 0;
+    margin: 0 0 12px 0;
+}
+
+.timeline-link {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.timeline-link:hover {
+    color: var(--accent-secondary);
+    text-decoration: underline;
 }
 
 @media (max-width: 768px) {
