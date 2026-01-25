@@ -44,6 +44,7 @@
 /* Custom Cursor */
 .cursor-dot,
 .cursor-outline {
+    display: none;
     pointer-events: none;
     position: fixed;
     top: 0;
@@ -52,6 +53,11 @@
     border-radius: 50%;
     z-index: 9999;
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+body.cursor-enabled .cursor-dot,
+body.cursor-enabled .cursor-outline {
+    display: block;
 }
 
 .cursor-dot {
@@ -910,9 +916,9 @@ section {
 .timeline-container {
     display: flex;
     flex-wrap: nowrap;
-    align-items: flex-start;
+    align-items: stretch; /* CRITICAL: Items fill full height for alternating layout */
     gap: 24px;
-    padding: 12px 24px 28px;
+    padding: 20px 24px;
     position: relative;
     width: max-content;
     min-width: 100%;
@@ -959,12 +965,11 @@ section {
 .timeline-item {
     position: relative;
     flex: 0 0 360px;
-    padding-top: 0; /* Remove top padding */
     scroll-snap-align: center;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    min-height: 400px; /* Ensure enough height for alternating layout */
+    min-height: 480px; /* Ensure enough height for alternating layout */
+    box-sizing: border-box;
 }
 
 /* Enhanced Connector Line */
@@ -973,12 +978,11 @@ section {
     position: absolute;
     left: 50%;
     width: 2px;
-    height: 50%; /* Connect to center */
     transform: translateX(-50%);
-    background: linear-gradient(to bottom, rgba(59, 130, 246, 0.55), rgba(139, 92, 246, 0.0));
     opacity: 0.5;
     z-index: 0;
     transition: all 0.3s ease;
+    border-radius: 2px;
 }
 
 /* Add pulsing flow animation to the connector line */
@@ -994,23 +998,26 @@ section {
     animation: flow-vertical 2s linear infinite;
 }
 
-/* Alternating Layout: Top Items */
+/* Alternating Layout: Top Items (cards ABOVE center line) */
 .timeline-item:nth-child(odd) {
-    justify-content: flex-start;
+    justify-content: flex-start; /* Card at top */
+    padding-bottom: 220px; /* Reserve space for center line + gap */
 }
 
 .timeline-item:nth-child(odd)::before {
-    top: 50%; /* Line goes down from center */
-    bottom: auto;
-    background: linear-gradient(to bottom, rgba(59, 130, 246, 0.55), transparent);
+    top: auto;
+    bottom: 50%; /* Line starts at center, goes UP to card */
+    height: calc(50% - 20px); /* From center to near card bottom */
+    background: linear-gradient(to top, rgba(59, 130, 246, 0.55), transparent);
 }
 
 .timeline-item:nth-child(odd):hover::before {
-    background: linear-gradient(to bottom, rgba(59, 130, 246, 0.8), rgba(139, 92, 246, 0.2));
+    background: linear-gradient(to top, rgba(59, 130, 246, 0.8), rgba(139, 92, 246, 0.2));
 }
 
 .timeline-item:nth-child(odd) .timeline-content {
-    margin-top: 40px; /* Push content down below center line */
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .timeline-item:nth-child(odd) .timeline-node {
@@ -1018,23 +1025,26 @@ section {
     transform: translate(-50%, -50%);
 }
 
-/* Alternating Layout: Bottom Items */
+/* Alternating Layout: Bottom Items (cards BELOW center line) */
 .timeline-item:nth-child(even) {
-    justify-content: flex-end;
+    justify-content: flex-end; /* Card at bottom */
+    padding-top: 220px; /* Reserve space for center line + gap */
 }
 
 .timeline-item:nth-child(even)::before {
-    bottom: 50%; /* Line goes up from center */
-    top: auto;
-    background: linear-gradient(to top, rgba(59, 130, 246, 0.55), transparent);
+    top: 50%; /* Line starts at center, goes DOWN to card */
+    bottom: auto;
+    height: calc(50% - 20px); /* From center to near card top */
+    background: linear-gradient(to bottom, rgba(59, 130, 246, 0.55), transparent);
 }
 
 .timeline-item:nth-child(even):hover::before {
-    background: linear-gradient(to top, rgba(59, 130, 246, 0.8), rgba(139, 92, 246, 0.2));
+    background: linear-gradient(to bottom, rgba(59, 130, 246, 0.8), rgba(139, 92, 246, 0.2));
 }
 
 .timeline-item:nth-child(even) .timeline-content {
-    margin-bottom: 40px; /* Push content up above center line */
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .timeline-item:nth-child(even) .timeline-node {
@@ -1601,6 +1611,16 @@ section {
     color: var(--text-secondary);
 }
 
+.license-text {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.license-text code {
+    white-space: inherit;
+}
+
 .code-keyword {
     color: #c678dd;
 }
@@ -1977,104 +1997,6 @@ section {
 @media (max-width: 1024px) {
     :root {
         --section-padding: 80px;
-    }
-    
-    /* Timeline - Tablet (Vertical Center) */
-    .timeline-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 0;
-        padding: 40px 24px;
-        min-width: 0;
-        width: 100%;
-    }
-
-    .timeline-scroll {
-        overflow-y: visible;
-        overflow-x: hidden;
-    }
-
-    .timeline-container::before,
-    .timeline-container::after {
-        width: 3px;
-        height: 100%;
-        left: 50%;
-        right: auto;
-        top: 0;
-        transform: translateX(-50%);
-        background: linear-gradient(to bottom,
-            transparent 0%,
-            rgba(59, 130, 246, 0.25) 10%,
-            rgba(139, 92, 246, 0.55) 50%,
-            rgba(59, 130, 246, 0.25) 90%,
-            transparent 100%
-        );
-    }
-
-    .timeline-container::after {
-        background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.45), transparent);
-        background-size: 100% 200%;
-        animation: timeline-scan-vertical 6s linear infinite;
-    }
-
-    @keyframes timeline-scan-vertical {
-        0% { background-position: 0 200%; }
-        100% { background-position: 0 -200%; }
-    }
-
-    .timeline-item {
-        flex: 0 0 auto;
-        width: 100%;
-        max-width: 800px;
-        min-height: auto;
-        margin-bottom: 40px;
-        padding: 0;
-    }
-
-    /* Reset odd/even specific styles */
-    .timeline-item:nth-child(odd),
-    .timeline-item:nth-child(even) {
-        justify-content: center;
-        padding: 0;
-    }
-
-    .timeline-item:nth-child(odd) .timeline-content,
-    .timeline-item:nth-child(even) .timeline-content {
-        margin: 0;
-        width: calc(50% - 40px);
-    }
-
-    .timeline-item:nth-child(odd) {
-        align-items: flex-start; /* Left side */
-    }
-
-    .timeline-item:nth-child(even) {
-        align-items: flex-end; /* Right side */
-    }
-
-    /* Connectors for vertical layout */
-    .timeline-item::before,
-    .timeline-item:nth-child(odd)::before,
-    .timeline-item:nth-child(even)::before {
-        width: 50%;
-        height: 2px;
-        top: 24px; /* Align with node */
-        bottom: auto;
-    }
-
-    .timeline-item:nth-child(odd)::before {
-        left: 50%;
-        background: linear-gradient(to right, transparent, rgba(59, 130, 246, 0.55));
-    }
-
-    .timeline-item:nth-child(even)::before {
-        left: 0;
-        background: linear-gradient(to left, transparent, rgba(59, 130, 246, 0.55));
-    }
-
-    .timeline-node {
-        top: 24px;
-        transform: translate(-50%, -50%);
     }
     
     .hero-title {

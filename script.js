@@ -15,6 +15,8 @@ const cursorDot = document.querySelector('.cursor-dot');
 const cursorOutline = document.querySelector('.cursor-outline');
 
 if (cursorDot && cursorOutline && !prefersReducedMotion && hasFinePointer) {
+    document.body.classList.add('cursor-enabled');
+
     window.addEventListener('mousemove', (e) => {
         const posX = e.clientX;
         const posY = e.clientY;
@@ -511,7 +513,8 @@ wireAsyncForm(document.querySelector('#join-form'), {
 });
 
 // Cursor Follow Effect (Optional - for enhanced UX)
-if (enableHoverEffects) {
+// Only enable if the page doesn't already use the dot/outline cursor.
+if (enableHoverEffects && !cursorDot && !cursorOutline) {
     const cursor = document.createElement('div');
     cursor.className = 'custom-cursor';
     document.body.appendChild(cursor);
@@ -775,3 +778,15 @@ projectTabs.forEach(tab => {
         }
     });
 });
+
+// Deep link: open "More Projects" tab when linked from other pages (e.g. /projects/github-project.html)
+if (projectTabs.length) {
+    const hash = (window.location && typeof window.location.hash === 'string')
+        ? window.location.hash.toLowerCase()
+        : '';
+
+    if (hash === '#more-projects') {
+        const moreTab = document.querySelector('.project-tab[data-tab="more"]');
+        if (moreTab) moreTab.click();
+    }
+}
