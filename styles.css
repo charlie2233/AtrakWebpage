@@ -1941,6 +1941,104 @@ section {
         --section-padding: 80px;
     }
     
+    /* Timeline - Tablet (Vertical Center) */
+    .timeline-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        padding: 40px 24px;
+        min-width: 0;
+        width: 100%;
+    }
+
+    .timeline-scroll {
+        overflow-y: visible;
+        overflow-x: hidden;
+    }
+
+    .timeline-container::before,
+    .timeline-container::after {
+        width: 3px;
+        height: 100%;
+        left: 50%;
+        right: auto;
+        top: 0;
+        transform: translateX(-50%);
+        background: linear-gradient(to bottom,
+            transparent 0%,
+            rgba(59, 130, 246, 0.25) 10%,
+            rgba(139, 92, 246, 0.55) 50%,
+            rgba(59, 130, 246, 0.25) 90%,
+            transparent 100%
+        );
+    }
+
+    .timeline-container::after {
+        background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.45), transparent);
+        background-size: 100% 200%;
+        animation: timeline-scan-vertical 6s linear infinite;
+    }
+
+    @keyframes timeline-scan-vertical {
+        0% { background-position: 0 200%; }
+        100% { background-position: 0 -200%; }
+    }
+
+    .timeline-item {
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: 800px;
+        min-height: auto;
+        margin-bottom: 40px;
+        padding: 0;
+    }
+
+    /* Reset odd/even specific styles */
+    .timeline-item:nth-child(odd),
+    .timeline-item:nth-child(even) {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-content,
+    .timeline-item:nth-child(even) .timeline-content {
+        margin: 0;
+        width: calc(50% - 40px);
+    }
+
+    .timeline-item:nth-child(odd) {
+        align-items: flex-start; /* Left side */
+    }
+
+    .timeline-item:nth-child(even) {
+        align-items: flex-end; /* Right side */
+    }
+
+    /* Connectors for vertical layout */
+    .timeline-item::before,
+    .timeline-item:nth-child(odd)::before,
+    .timeline-item:nth-child(even)::before {
+        width: 50%;
+        height: 2px;
+        top: 24px; /* Align with node */
+        bottom: auto;
+    }
+
+    .timeline-item:nth-child(odd)::before {
+        left: 50%;
+        background: linear-gradient(to right, transparent, rgba(59, 130, 246, 0.55));
+    }
+
+    .timeline-item:nth-child(even)::before {
+        left: 0;
+        background: linear-gradient(to left, transparent, rgba(59, 130, 246, 0.55));
+    }
+
+    .timeline-node {
+        top: 24px;
+        transform: translate(-50%, -50%);
+    }
+    
     .hero-title {
         font-size: 48px;
     }
