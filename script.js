@@ -1,8 +1,5 @@
 // Atrak - Modern Tech Team Website JavaScript
 
-// Enable JS animations
-document.body.classList.add('js-enabled');
-
 const prefersReducedMotion = typeof window !== 'undefined'
     && typeof window.matchMedia === 'function'
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -11,6 +8,7 @@ const hasFinePointer = typeof window !== 'undefined'
     && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 const enableHoverEffects = hasFinePointer && !prefersReducedMotion;
 const enableHeroParallax = enableHoverEffects;
+const supportsIntersectionObserver = typeof window !== 'undefined' && 'IntersectionObserver' in window;
 
 // Custom Cursor
 const cursorDot = document.querySelector('.cursor-dot');
@@ -53,27 +51,42 @@ document.querySelectorAll('.glass-card, .project-card, .stat-item').forEach(card
     });
 });
 
-// Scroll Reveal
-const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-            // Stop observing once revealed
-            revealObserver.unobserve(entry.target);
+// Scroll Reveal (fails open so content never gets stuck hidden)
+if (supportsIntersectionObserver && !prefersReducedMotion) {
+    const revealElements = Array.from(document.querySelectorAll('.reveal'));
+    const autoRevealElements = Array.from(document.querySelectorAll('.project-card, .leader-card, .stat-item, .feature'));
+
+    autoRevealElements.forEach(el => el.classList.add('reveal'));
+
+    const allRevealElements = Array.from(new Set([...revealElements, ...autoRevealElements]));
+    const viewportHeight = window.innerHeight || 0;
+
+    allRevealElements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < viewportHeight && rect.bottom > 0) {
+            el.classList.add('active');
         }
     });
-}, { threshold: 0.1 });
 
-// Select elements that should have reveal animation
-const revealElements = document.querySelectorAll('.reveal');
-revealElements.forEach(el => revealObserver.observe(el));
+    document.body.classList.add('reveal-enabled');
 
-// Automatically add reveal class to cards if they don't have it
-const autoRevealElements = document.querySelectorAll('.project-card, .leader-card, .stat-item, .feature');
-autoRevealElements.forEach(el => {
-    el.classList.add('reveal');
-    revealObserver.observe(el);
-});
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    allRevealElements.forEach(el => {
+        if (!el.classList.contains('active')) {
+            revealObserver.observe(el);
+        }
+    });
+} else {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+}
 
 // Hero Parallax
 const hero = document.querySelector('.hero');
@@ -87,6 +100,24 @@ if (hero && enableHeroParallax) {
             const depth = (index + 1) * 0.5;
             card.style.transform = `translate(${moveX * depth}px, ${moveY * depth}px) rotate(${moveX * 0.5}px)`;
         });
+    });
+}
+
+// Code Card Interaction
+const closeCardBtn = document.getElementById('close-card-btn');
+const frontCard = document.getElementById('code-card-front');
+const visualStack = document.querySelector('.visual-stack');
+
+if (closeCardBtn && frontCard && visualStack) {
+    closeCardBtn.addEventListener('click', () => {
+        frontCard.classList.add('closed');
+        visualStack.classList.add('revealed');
+        
+        // Optional: Reset after delay if you want it to be re-openable or just leave it closed
+        // setTimeout(() => {
+        //     frontCard.classList.remove('closed');
+        //     visualStack.classList.remove('revealed');
+        // }, 5000);
     });
 }
 
@@ -216,18 +247,20 @@ const animateStats = () => {
     });
 };
 
-const statsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting && !statsAnimated) {
-            animateStats();
-            statsAnimated = true;
-        }
-    });
-}, { threshold: 0.5 });
+if (supportsIntersectionObserver) {
+    const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !statsAnimated) {
+                animateStats();
+                statsAnimated = true;
+            }
+        });
+    }, { threshold: 0.5 });
 
-const statsSection = document.querySelector('.stats');
-if (statsSection) {
-    statsObserver.observe(statsSection);
+    const statsSection = document.querySelector('.stats');
+    if (statsSection) {
+        statsObserver.observe(statsSection);
+    }
 }
 
 // Project Card Tilt Effect
@@ -514,6 +547,18 @@ const initTimelineItem = (item, node) => {
         const isExpanded = item.getAttribute('data-expanded') === 'true';
         item.setAttribute('data-expanded', !isExpanded);
         node.setAttribute('aria-expanded', !isExpanded);
+
+        if (!isExpanded) {
+            try {
+                item.scrollIntoView({
+                    behavior: prefersReducedMotion ? 'auto' : 'smooth',
+                    block: 'nearest',
+                    inline: 'center'
+                });
+            } catch (_) {
+                // ignore scroll errors
+            }
+        }
         
         // Announce change for screen readers
         const title = item.querySelector('.update-title')?.textContent || 'Timeline item';
@@ -544,6 +589,20 @@ const initTimelineItem = (item, node) => {
 const initTimeline = () => {
     const timelineItems = document.querySelectorAll('.timeline-item');
     const timelineNodes = document.querySelectorAll('.timeline-node');
+
+    const timelineScroll = document.querySelector('.timeline-scroll');
+    if (timelineScroll) {
+        timelineScroll.addEventListener('wheel', (e) => {
+            const canScrollHorizontally = timelineScroll.scrollWidth > timelineScroll.clientWidth;
+            if (!canScrollHorizontally) return;
+
+            const dominantVerticalScroll = Math.abs(e.deltaY) > Math.abs(e.deltaX);
+            if (!e.shiftKey && dominantVerticalScroll) {
+                timelineScroll.scrollLeft += e.deltaY;
+                e.preventDefault();
+            }
+        }, { passive: false });
+    }
     
     timelineNodes.forEach((node, index) => {
         const item = timelineItems[index];
@@ -575,17 +634,19 @@ if (document.readyState === 'loading') {
 }
 
 // Add timeline items to intersection observer for reveal animations
-const timelineItemsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.animationPlayState = 'running';
-        }
-    });
-}, { threshold: 0.2 });
+if (supportsIntersectionObserver) {
+    const timelineItemsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animationPlayState = 'running';
+            }
+        });
+    }, { threshold: 0.2 });
 
-document.querySelectorAll('.timeline-item').forEach(item => {
-    timelineItemsObserver.observe(item);
-});
+    document.querySelectorAll('.timeline-item').forEach(item => {
+        timelineItemsObserver.observe(item);
+    });
+}
 
 // Dynamic timeline update function
 // Adds a new timeline item. Position can be 'start' (default) or 'end'

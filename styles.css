@@ -91,8 +91,8 @@
     transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Only hide if JS is active and element hasn't been revealed yet */
-body.js-enabled .reveal:not(.active) {
+/* Only hide once reveal observer is enabled */
+body.reveal-enabled .reveal:not(.active) {
     opacity: 0;
     transform: translateY(30px);
 }
@@ -842,69 +842,137 @@ section {
     }
 }
 
-/* Vertical Timeline Styles */
-.timeline-container {
-    max-width: 900px;
-    margin: 48px auto 0;
+/* Horizontal Timeline (scrollable) */
+.timeline-scroll {
+    margin-top: 48px;
     position: relative;
-    padding: 0 24px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 8px 0 24px;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 24px;
+    -webkit-overflow-scrolling: touch;
 }
 
-/* Vertical line connecting timeline items */
+.timeline-scroll::before,
+.timeline-scroll::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 56px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.timeline-scroll::before {
+    left: 0;
+    background: linear-gradient(to right, var(--bg-secondary), rgba(10, 10, 10, 0));
+}
+
+.timeline-scroll::after {
+    right: 0;
+    background: linear-gradient(to left, var(--bg-secondary), rgba(10, 10, 10, 0));
+}
+
+.timeline-scroll::-webkit-scrollbar {
+    height: 10px;
+}
+
+.timeline-scroll::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 999px;
+}
+
+.timeline-scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.7), rgba(139, 92, 246, 0.7));
+    border-radius: 999px;
+    border: 2px solid rgba(10, 10, 10, 0.8);
+}
+
+.timeline-container {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 12px 24px 28px;
+    position: relative;
+    min-width: 100%;
+}
+
 .timeline-container::before {
     content: '';
     position: absolute;
-    left: 50%;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: linear-gradient(to bottom, 
+    left: 24px;
+    right: 24px;
+    top: 24px;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(90deg,
         transparent 0%,
-        rgba(59, 130, 246, 0.3) 10%,
-        rgba(139, 92, 246, 0.5) 50%,
-        rgba(59, 130, 246, 0.3) 90%,
+        rgba(59, 130, 246, 0.25) 12%,
+        rgba(139, 92, 246, 0.55) 50%,
+        rgba(59, 130, 246, 0.25) 88%,
         transparent 100%
     );
-    transform: translateX(-50%);
+    box-shadow: 0 0 18px rgba(59, 130, 246, 0.22),
+                0 0 40px rgba(139, 92, 246, 0.16);
+}
+
+.timeline-container::after {
+    content: '';
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    top: 24px;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+    background-size: 200% 100%;
+    opacity: 0.25;
+    animation: timeline-scan 6s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes timeline-scan {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .timeline-container::after {
+        animation: none;
+    }
 }
 
 .timeline-item {
     position: relative;
-    margin-bottom: 80px;
-    display: flex;
-    align-items: flex-start;
-    opacity: 0;
-    animation: fadeInTimeline 0.6s ease forwards;
+    flex: 0 0 360px;
+    padding-top: 56px;
+    scroll-snap-align: start;
 }
 
-.timeline-item:nth-child(1) { animation-delay: 0.1s; }
-.timeline-item:nth-child(2) { animation-delay: 0.2s; }
-.timeline-item:nth-child(3) { animation-delay: 0.3s; }
-.timeline-item:nth-child(4) { animation-delay: 0.4s; }
-.timeline-item:nth-child(5) { animation-delay: 0.5s; }
-.timeline-item:nth-child(6) { animation-delay: 0.6s; }
-
-@keyframes fadeInTimeline {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    top: 36px;
+    left: 50%;
+    width: 2px;
+    height: 20px;
+    transform: translateX(-50%);
+    background: linear-gradient(to bottom, rgba(59, 130, 246, 0.55), rgba(139, 92, 246, 0.0));
+    opacity: 0.9;
 }
 
-/* Timeline Node (the dot on the line) */
 .timeline-node {
     position: absolute;
+    top: 12px;
     left: 50%;
-    transform: translateX(-50%);
     width: 24px;
     height: 24px;
-    z-index: 2;
+    transform: translateX(-50%);
+    z-index: 1;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .timeline-node:hover,
@@ -918,7 +986,7 @@ section {
     height: 100%;
     background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
     border-radius: 50%;
-    border: 3px solid var(--bg-primary);
+    border: 3px solid var(--bg-secondary);
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
     transition: all 0.3s ease;
 }
@@ -932,7 +1000,6 @@ section {
     transform: scale(1.1);
 }
 
-/* Glowing effect */
 .node-glow {
     position: absolute;
     top: 50%;
@@ -964,36 +1031,43 @@ section {
     }
 }
 
-/* Timeline Content */
 .timeline-content {
-    flex: 1;
-    background: linear-gradient(135deg, 
-        rgba(26, 26, 46, 0.6) 0%, 
+    width: 100%;
+    background: linear-gradient(135deg,
+        rgba(26, 26, 46, 0.6) 0%,
         rgba(17, 24, 39, 0.6) 100%);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 16px;
     padding: 24px;
-    margin-left: calc(50% + 40px);
-    width: calc(50% - 60px);
     position: relative;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
 }
 
 .timeline-content::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, 
-        rgba(59, 130, 246, 0.05) 0%, 
+    inset: 0;
+    background: linear-gradient(135deg,
+        rgba(59, 130, 246, 0.05) 0%,
         rgba(139, 92, 246, 0.05) 100%);
     opacity: 0;
     transition: opacity 0.3s ease;
     pointer-events: none;
+}
+
+.timeline-content::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.65), rgba(139, 92, 246, 0.65), transparent);
+    opacity: 0.7;
 }
 
 .timeline-item:hover .timeline-content::before,
@@ -1001,30 +1075,18 @@ section {
     opacity: 1;
 }
 
-.timeline-content::after {
-    content: '';
-    position: absolute;
-    left: -10px;
-    top: 28px;
-    width: 20px;
-    height: 2px;
-    background: linear-gradient(to right, rgba(59, 130, 246, 0.5), transparent);
-}
-
 .timeline-item:hover .timeline-content,
 .timeline-item[data-expanded="true"] .timeline-content {
-    border-color: rgba(59, 130, 246, 0.5);
-    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2),
-                0 0 0 1px rgba(139, 92, 246, 0.1);
-    transform: translateX(8px);
+    border-color: rgba(59, 130, 246, 0.55);
+    box-shadow: 0 14px 40px rgba(59, 130, 246, 0.18),
+                0 0 0 1px rgba(139, 92, 246, 0.12);
+    transform: translateY(-6px);
 }
 
-/* Timeline Header */
 .timeline-header {
     margin-bottom: 12px;
 }
 
-/* Updated date styling */
 .timeline-content .update-date {
     font-size: 12px;
     font-weight: 700;
@@ -1064,7 +1126,6 @@ section {
     margin-bottom: 16px;
 }
 
-/* Timeline Details (expandable content) */
 .timeline-details {
     max-height: 0;
     overflow: hidden;
@@ -1089,45 +1150,47 @@ section {
     margin: 0;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
+    .timeline-scroll {
+        margin-top: 32px;
+        scroll-padding: 16px;
+    }
+
+    .timeline-scroll::before,
+    .timeline-scroll::after {
+        width: 28px;
+    }
+
     .timeline-container {
-        padding: 0 16px;
+        padding: 12px 16px 24px;
+        gap: 16px;
     }
-    
-    .timeline-container::before {
-        left: 24px;
+
+    .timeline-container::before,
+    .timeline-container::after {
+        left: 16px;
+        right: 16px;
     }
-    
-    .timeline-node {
-        left: 24px;
-    }
-    
-    .timeline-content {
-        margin-left: 64px;
-        width: calc(100% - 64px);
-    }
-    
-    .timeline-content::after {
-        left: -20px;
-        width: 20px;
-    }
-    
-    .timeline-item:hover .timeline-content,
-    .timeline-item[data-expanded="true"] .timeline-content {
-        transform: translateX(4px);
+
+    .timeline-item {
+        flex-basis: 300px;
+        padding-top: 52px;
     }
 }
 
 @media (max-width: 480px) {
+    .timeline-item {
+        flex-basis: 260px;
+    }
+
     .timeline-content {
         padding: 20px;
     }
-    
+
     .timeline-content .update-title {
         font-size: 18px;
     }
-    
+
     .timeline-content .update-description {
         font-size: 13px;
     }
@@ -1272,6 +1335,71 @@ section {
 
 .about-visual {
     position: relative;
+    /* Ensure height corresponds to the tallest card if absolute positioning is used */
+    min-height: 300px;
+}
+
+.visual-stack {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.visual-card-back,
+.visual-card-front {
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.visual-card-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: scale(0.95) translateY(10px) rotate(-2deg);
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.visual-card-front {
+    position: relative;
+    z-index: 2;
+    transform-origin: bottom center;
+}
+
+.visual-card-front.closed {
+    transform: translateY(50px) scale(0.9);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* When front is closed, back becomes active */
+.visual-stack.revealed .visual-card-back {
+    transform: scale(1) translateY(0) rotate(0);
+    opacity: 1;
+    z-index: 2;
+}
+
+.code-dot.close-btn {
+    cursor: pointer;
+    position: relative;
+}
+
+.code-dot.close-btn::after {
+    content: '×';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+    color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.2s;
+    line-height: 1;
+}
+
+.code-dot.close-btn:hover::after {
+    opacity: 1;
 }
 
 .glass-card {
