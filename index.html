@@ -464,12 +464,34 @@
                     </div>
                 </div>
                 <div class="about-visual reveal">
-                    <div class="visual-stack">
-                        <!-- Back Card -->
-                        <div class="glass-card visual-card-back">
+                    <div class="visual-stack" id="card-stack">
+                        <!-- Card 1: Mission -->
+                        <div class="glass-card visual-card active" data-index="0">
                             <div class="code-preview">
                                 <div class="code-header">
+                                    <span class="code-dot close-btn" title="Close"></span>
                                     <span class="code-dot"></span>
+                                    <span class="code-dot"></span>
+                                </div>
+                                <div class="code-content">
+                                    <code>
+                                        <span class="code-keyword">const</span> mission = {<br>
+                                        &nbsp;&nbsp;build: <span class="code-string">"real products"</span>,<br>
+                                        &nbsp;&nbsp;focus: [<span class="code-string">"accessibility"</span>, <span class="code-string">"computer vision"</span>, <span class="code-string">"local-first AI"</span>],<br>
+                                        &nbsp;&nbsp;values: [<span class="code-string">"impact"</span>, <span class="code-string">"craft"</span>, <span class="code-string">"open-source"</span>],<br>
+                                        &nbsp;&nbsp;team: <span class="code-string">"ship together"</span><br>
+                                        };<br><br>
+                                        <span class="code-keyword">export default</span> mission;
+                                    </code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Team -->
+                        <div class="glass-card visual-card next" data-index="1">
+                            <div class="code-preview">
+                                <div class="code-header">
+                                    <span class="code-dot close-btn" title="Close"></span>
                                     <span class="code-dot"></span>
                                     <span class="code-dot"></span>
                                 </div>
@@ -488,23 +510,44 @@
                             </div>
                         </div>
 
-                        <!-- Front Card -->
-                        <div class="glass-card visual-card-front" id="code-card-front">
+                        <!-- Card 3: Tech Stack -->
+                        <div class="glass-card visual-card back" data-index="2">
                             <div class="code-preview">
                                 <div class="code-header">
-                                    <span class="code-dot close-btn" id="close-card-btn" title="Close"></span>
+                                    <span class="code-dot close-btn" title="Close"></span>
                                     <span class="code-dot"></span>
                                     <span class="code-dot"></span>
                                 </div>
                                 <div class="code-content">
                                     <code>
-                                        <span class="code-keyword">const</span> mission = {<br>
-                                        &nbsp;&nbsp;build: <span class="code-string">"real products"</span>,<br>
-                                        &nbsp;&nbsp;focus: [<span class="code-string">"accessibility"</span>, <span class="code-string">"computer vision"</span>, <span class="code-string">"local-first AI"</span>],<br>
-                                        &nbsp;&nbsp;values: [<span class="code-string">"impact"</span>, <span class="code-string">"craft"</span>, <span class="code-string">"open-source"</span>],<br>
-                                        &nbsp;&nbsp;team: <span class="code-string">"ship together"</span><br>
-                                        };<br><br>
-                                        <span class="code-keyword">export default</span> mission;
+                                        <span class="code-keyword">const</span> stack = [<br>
+                                        &nbsp;&nbsp;<span class="code-string">"React / Next.js"</span>,<br>
+                                        &nbsp;&nbsp;<span class="code-string">"Node.js / Python"</span>,<br>
+                                        &nbsp;&nbsp;<span class="code-string">"TensorFlow / PyTorch"</span>,<br>
+                                        &nbsp;&nbsp;<span class="code-string">"Electron / Swift"</span><br>
+                                        ];<br><br>
+                                        <span class="code-comment">// Always learning more...</span>
+                                    </code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Values -->
+                        <div class="glass-card visual-card back" data-index="3">
+                            <div class="code-preview">
+                                <div class="code-header">
+                                    <span class="code-dot close-btn" title="Close"></span>
+                                    <span class="code-dot"></span>
+                                    <span class="code-dot"></span>
+                                </div>
+                                <div class="code-content">
+                                    <code>
+                                        <span class="code-keyword">const</span> values = {<br>
+                                        &nbsp;&nbsp;openSource: <span class="code-keyword">true</span>,<br>
+                                        &nbsp;&nbsp;accessibility: <span class="code-string">"priority"</span>,<br>
+                                        &nbsp;&nbsp;speed: <span class="code-string">"fast"</span>,<br>
+                                        &nbsp;&nbsp;fun: <span class="code-string">"mandatory"</span><br>
+                                        };
                                     </code>
                                 </div>
                             </div>

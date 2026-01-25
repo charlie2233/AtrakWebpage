@@ -103,21 +103,57 @@ if (hero && enableHeroParallax) {
     });
 }
 
-// Code Card Interaction
-const closeCardBtn = document.getElementById('close-card-btn');
-const frontCard = document.getElementById('code-card-front');
-const visualStack = document.querySelector('.visual-stack');
-
-if (closeCardBtn && frontCard && visualStack) {
-    closeCardBtn.addEventListener('click', () => {
-        frontCard.classList.add('closed');
-        visualStack.classList.add('revealed');
+// Infinite Card Rotation
+const cardStack = document.getElementById('card-stack');
+if (cardStack) {
+    const cards = Array.from(cardStack.querySelectorAll('.visual-card'));
+    
+    // Function to rotate classes
+    const rotateCards = () => {
+        // Find current active card
+        const currentActiveIndex = cards.findIndex(card => card.classList.contains('active'));
         
-        // Optional: Reset after delay if you want it to be re-openable or just leave it closed
-        // setTimeout(() => {
-        //     frontCard.classList.remove('closed');
-        //     visualStack.classList.remove('revealed');
-        // }, 5000);
+        // Calculate new indices
+        const nextActiveIndex = (currentActiveIndex + 1) % cards.length;
+        const nextNextIndex = (currentActiveIndex + 2) % cards.length;
+        
+        // Reset all classes first
+        cards.forEach(card => {
+            card.classList.remove('active', 'next', 'back', 'closed');
+        });
+        
+        // Assign new classes
+        cards[currentActiveIndex].classList.add('back'); // Old active goes to back
+        cards[nextActiveIndex].classList.add('active'); // Next becomes active
+        cards[nextNextIndex].classList.add('next'); // The one after becomes next
+        
+        // All others stay 'back' (already handled by reset) or can be specifically targeted
+        cards.forEach((card, index) => {
+            if (index !== nextActiveIndex && index !== nextNextIndex) {
+                card.classList.add('back');
+            }
+        });
+    };
+
+    // Attach click listeners to all close buttons
+    cards.forEach((card, index) => {
+        const closeBtn = card.querySelector('.close-btn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                // Only rotate if clicking the active card
+                if (card.classList.contains('active')) {
+                    // Animate out
+                    card.classList.add('closed');
+                    
+                    // Wait for animation then rotate
+                    setTimeout(() => {
+                        rotateCards();
+                    }, 400); // Slightly faster than CSS transition to feel snappy
+                }
+            });
+        }
     });
 }
 
