@@ -891,11 +891,13 @@ section {
 }
 
 .timeline-container {
-    display: inline-flex;
+    display: flex;
+    flex-wrap: nowrap;
     align-items: flex-start;
     gap: 24px;
     padding: 12px 24px 28px;
     position: relative;
+    width: max-content;
     min-width: 100%;
 }
 
