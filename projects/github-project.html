@@ -6,8 +6,11 @@
     <meta name="description" content="GitHub Project Details — Atrak">
     <title>Project Details — Atrak</title>
     <link rel="icon" type="image/png" href="../assets/logo.png">
-    <link rel="apple-touch-icon" href="../assets/logo.png">
-    <link rel="stylesheet" href="../styles.css?v=4">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/logo.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../assets/logo.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../assets/logo.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/logo.png">
+    <link rel="stylesheet" href="../styles.css?v=6">
 </head>
 <body>
     <nav class="navbar">
@@ -102,8 +105,8 @@
         </div>
     </footer>
 
-    <script src="../github-projects.js?v=4"></script>
-    <script src="../script.js?v=4"></script>
+    <script src="../github-projects.js?v=7"></script>
+    <script src="../script.js?v=7"></script>
     <script>
         // Load project details on page load
         (async function() {
@@ -143,13 +146,13 @@
                     ? techStack.map(tech => `<span class="tag">${tech}</span>`).join('')
                     : '<span class="tag">General</span>';
 
-                document.getElementById('project-details').innerHTML = `
-                    <div class="glass-card project-detail-card">
-                        <h3>📋 Overview</h3>
-                        <p><strong>Description:</strong> ${project.description}</p>
-                        <p><strong>Project Manager:</strong> Charlie Han</p>
-                        <p><strong>Role:</strong> Developer & Maintainer</p>
-                    </div>
+	                document.getElementById('project-details').innerHTML = `
+	                    <div class="glass-card project-detail-card">
+	                        <h3>📋 Overview</h3>
+	                        <p><strong>Description:</strong> ${project.description}</p>
+	                        <p><strong>Project Manager:</strong> Charlie Han</p>
+	                        <p><strong>Role:</strong> Developer & Maintainer</p>
+	                    </div>
 
                     <div class="glass-card project-detail-card">
                         <h3>🛠️ Technology Stack</h3>
@@ -175,21 +178,45 @@
                         ${project.license ? `<p><strong>License:</strong> ${project.license}</p>` : ''}
                     </div>
 
-                    <div class="glass-card project-detail-card project-actions-card">
-                        <h3>🔗 Links</h3>
-                        <div class="project-actions">
-                            <a href="${project.url}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                View on GitHub
-                            </a>
-                            ${project.homepage ? `
-                                <a href="${project.homepage}" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
-                                    Visit Website
-                                </a>
-                            ` : ''}
-                        </div>
-                        <p class="project-note">Full repository: <a href="${project.url}" target="_blank">${project.fullName}</a></p>
-                    </div>
-                `;
+	                    <div class="glass-card project-detail-card project-actions-card">
+	                        <h3>🔗 Links</h3>
+	                        <div class="project-actions">
+	                            <a href="${project.url}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+	                                View on GitHub
+	                            </a>
+	                            <a href="${project.url}#readme" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+	                                Docs
+	                            </a>
+	                            <a href="${project.url}/releases" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+	                                Download
+	                            </a>
+	                            ${project.homepage ? `
+	                                <a href="${project.homepage}" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+	                                    Demo / Website
+	                                </a>
+	                            ` : ''}
+	                        </div>
+	                        <p class="project-note">Full repository: <a href="${project.url}" target="_blank">${project.fullName}</a></p>
+	                    </div>
+
+	                    <div class="glass-card project-detail-card">
+	                        <h3>🖼️ Screenshots</h3>
+	                        <div class="media-placeholder" role="img" aria-label="Screenshots placeholder">
+	                            <div class="media-icon">IMG</div>
+	                            <div class="media-title">Screenshots coming soon</div>
+	                            <div class="media-meta">Add images later to show key features.</div>
+	                        </div>
+	                    </div>
+
+	                    <div class="glass-card project-detail-card">
+	                        <h3>🎬 Demo Video</h3>
+	                        <div class="media-placeholder" role="img" aria-label="Demo video placeholder">
+	                            <div class="media-icon">VID</div>
+	                            <div class="media-title">Demo video coming soon</div>
+	                            <div class="media-meta">Add a clip or a link to a live demo.</div>
+	                        </div>
+	                    </div>
+	                `;
 
             } catch (error) {
                 console.error('Failed to load project details:', error);

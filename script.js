@@ -304,6 +304,40 @@ if (supportsIntersectionObserver) {
 // Project Card Tilt Effect
 const projectCards = document.querySelectorAll('.project-card');
 
+// Make project cards clickable (opens the "Details" link)
+projectCards.forEach(card => {
+    if (!card || card.tagName === 'A') return;
+
+    const detailsLink = card.querySelector('.project-actions a[href]');
+    if (!detailsLink) return;
+
+    const href = detailsLink.getAttribute('href');
+    if (!href) return;
+
+    card.setAttribute('role', 'link');
+    if (!card.hasAttribute('tabindex')) {
+        card.setAttribute('tabindex', '0');
+    }
+
+    const navigate = () => {
+        window.location.href = href;
+    };
+
+    card.addEventListener('click', (e) => {
+        if (e.target && e.target.closest && e.target.closest('a, button, input, textarea, select, label')) {
+            return;
+        }
+        navigate();
+    });
+
+    card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            navigate();
+        }
+    });
+});
+
 if (enableHoverEffects) {
     projectCards.forEach(card => {
         card.addEventListener('mousemove', (e) => {
