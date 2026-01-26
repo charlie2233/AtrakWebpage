@@ -24,6 +24,7 @@ const SITE_BASE_URL = (() => {
 const CACHED_DATA_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-repos.json` : 'data/github-repos.json'; // Updated by GitHub Actions
 const CACHED_EVENTS_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-events.json` : 'data/github-events.json'; // Updated by GitHub Actions
 const CACHED_META_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-meta.json` : 'data/github-meta.json'; // Updated by GitHub Actions
+const WEEKLY_LOG_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}WeeklyLog.txt` : 'WeeklyLog.txt';
 
 // Known featured projects to exclude from "More Projects" section
 const FEATURED_PROJECT_REPOS = [
@@ -111,6 +112,135 @@ function formatShortDate(date) {
         return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     } catch (_) {
         return '';
+    }
+}
+
+function slugify(value) {
+    return String(value || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
+function classifyCommitMessage(message) {
+    const msg = String(message || '').trim().toLowerCase();
+    if (!msg) return 'other';
+
+    if (msg.startsWith('fix') || msg.includes('bug') || msg.includes('hotfix') || msg.includes('patch')) return 'fix';
+    if (msg.startsWith('feat') || msg.startsWith('add') || msg.includes('feature') || msg.includes('implement')) return 'feature';
+    if (msg.startsWith('doc') || msg.includes('readme') || msg.includes('docs')) return 'docs';
+    if (msg.startsWith('refactor') || msg.includes('cleanup') || msg.includes('clean up')) return 'refactor';
+    if (msg.startsWith('chore') || msg.includes('deps') || msg.includes('bump ')) return 'chore';
+
+    return 'other';
+}
+
+const INTERNAL_PROJECT_PAGES = {
+    'rork-guide-pup--vision-assistant': 'projects/guidepup.html',
+    'Basketball_action_recoginition_sever': 'projects/hoops-clips.html',
+    'AI-predator-simulation': 'projects/ai-predator-simulation.html',
+    'rork-ten-seconds-vip-manager': 'projects/ten-seconds-vip-manager.html',
+    'LunarWeb': 'index.html',
+};
+
+function parseWeeklyLog(text) {
+    const content = String(text || '');
+    if (!content) return null;
+
+    const matches = [];
+    const re = /^##\s+Week of\s+(.+)$/gm;
+    let m;
+    while ((m = re.exec(content)) !== null) {
+        matches.push({ index: m.index, weekOf: (m[1] || '').trim() });
+    }
+    if (!matches.length) return null;
+
+    const last = matches[matches.length - 1];
+    const nextIndex = matches.length >= 2 ? matches[matches.length - 1].index : content.length;
+    // Find the end of the last "Week of" block by searching for the next "## Week of" after it.
+    const after = content.slice(last.index + 1);
+    const nextMatch = after.match(/^##\s+Week of\s+/m);
+    const end = nextMatch ? last.index + 1 + nextMatch.index : content.length;
+    const sectionText = content.slice(last.index, end);
+
+    const titleMatch = content.match(/^#\s+(.+)$/m);
+    const rawTitle = titleMatch ? titleMatch[1].trim() : 'Weekly Dev News';
+    const projectTitle = rawTitle.replace(/\s+—\s+Weekly Dev News.*$/i, '').trim();
+
+    const headlineMatch = sectionText.match(/^###\s+(.+)$/m);
+    const headline = headlineMatch ? headlineMatch[1].trim().replace(/^["“]|["”]$/g, '') : '';
+
+    const lines = sectionText.split(/\r?\n/);
+    const blocks = {};
+    let currentKey = null;
+    let current = null;
+
+    const commitMetrics = {};
+
+    const flush = () => {
+        if (!currentKey || !current) return;
+        if (!blocks[currentKey]) blocks[currentKey] = { bullets: [], paragraphs: [] };
+        blocks[currentKey].bullets.push(...current.bullets);
+        blocks[currentKey].paragraphs.push(...current.paragraphs);
+        currentKey = null;
+        current = null;
+    };
+
+    for (const lineRaw of lines) {
+        const line = lineRaw.trim();
+        if (!line) continue;
+
+        const blockHeader = line.match(/^\*\*(.+?)\*\*$/);
+        if (blockHeader) {
+            flush();
+            currentKey = blockHeader[1].trim();
+            current = { bullets: [], paragraphs: [] };
+            continue;
+        }
+
+        if (!currentKey) continue;
+
+        const bullet = line.match(/^[-*]\s+(.+)$/);
+        if (bullet) {
+            current.bullets.push(bullet[1].trim());
+            continue;
+        }
+
+        if (/^reply\b/i.test(line)) continue;
+        if (/^coverage complete\b/i.test(line)) continue;
+        if (/^part\s+\d+/i.test(line)) continue;
+
+        current.paragraphs.push(line);
+    }
+    flush();
+
+    // Parse metrics from a "Metrics" block if present.
+    if (blocks.Metrics) {
+        const all = [...blocks.Metrics.bullets, ...blocks.Metrics.paragraphs];
+        all.forEach(entry => {
+            const mm = String(entry).match(/^([A-Za-z ]+):\s*(.+)$/);
+            if (!mm) return;
+            commitMetrics[mm[1].trim()] = mm[2].trim();
+        });
+    }
+
+    return {
+        projectTitle: projectTitle || 'Weekly Dev News',
+        weekOf: last.weekOf || '',
+        headline,
+        blocks,
+        metrics: commitMetrics
+    };
+}
+
+async function loadLatestWeeklyLogEntry() {
+    try {
+        const response = await fetch(WEEKLY_LOG_PATH);
+        if (!response.ok) return null;
+        const text = await response.text();
+        return parseWeeklyLog(text);
+    } catch (_) {
+        return null;
     }
 }
 
@@ -407,12 +537,8 @@ async function renderWeeklyHighlights() {
         const response = await fetch(CACHED_EVENTS_PATH);
         if (!response.ok) throw new Error('Events not found');
         
-        const events = await response.json();
-        if (!Array.isArray(events) || events.length === 0) {
-            container.innerHTML = '<div class="weekly-empty">No activity recorded this week.</div>';
-            if (dateRangeEl) dateRangeEl.textContent = 'This Week';
-            return;
-        }
+        const rawEvents = await response.json();
+        const events = Array.isArray(rawEvents) ? rawEvents : [];
         
         // Filter last 7 days (weekly digest)
         const now = new Date();
@@ -429,21 +555,30 @@ async function renderWeeklyHighlights() {
             dateRangeEl.textContent = `${formatShortDate(weekAgo)} - ${formatShortDate(now)}`;
         }
         
-        if (weeklyEvents.length === 0) {
-            container.innerHTML = '<div class="weekly-empty">No public activity in the last 7 days.</div>';
-            return;
-        }
-
         const repoActivity = new Map();
         const activeRepos = new Set();
         const createdRepos = [];
         const releases = [];
         const commitStream = [];
+        const categorizedCommits = {
+            feature: [],
+            fix: [],
+            docs: [],
+            refactor: [],
+            chore: [],
+            other: []
+        };
         let totalCommits = 0;
         let totalPushes = 0;
         let starsGained = 0;
+        let mostRecentEventAt = null;
 
         for (const e of weeklyEvents) {
+            const createdAt = e && typeof e.created_at === 'string' ? new Date(e.created_at) : null;
+            if (createdAt && !Number.isNaN(createdAt.getTime())) {
+                if (!mostRecentEventAt || createdAt > mostRecentEventAt) mostRecentEventAt = createdAt;
+            }
+
             const type = e.type;
             const repoFull = e.repo && typeof e.repo.name === 'string' ? e.repo.name : '';
             const repoKey = repoFull ? repoFull.split('/')[1] || repoFull : '';
@@ -477,7 +612,10 @@ async function renderWeeklyHighlights() {
                     const firstLine = raw.split('\n')[0].trim();
                     if (!firstLine) return;
                     if (/^merge\b/i.test(firstLine)) return;
-                    commitStream.push({ repo: repoKey || repoFull || 'repo', message: firstLine });
+                    const repoLabel = repoKey || repoFull || 'repo';
+                    commitStream.push({ repo: repoLabel, message: firstLine });
+                    const bucket = classifyCommitMessage(firstLine);
+                    categorizedCommits[bucket].push({ repo: repoLabel, message: firstLine });
                 });
             } else if (type === 'CreateEvent') {
                 const refType = e.payload && e.payload.ref_type;
@@ -515,6 +653,17 @@ async function renderWeeklyHighlights() {
         const topRepos = Array.from(repoActivity.values())
             .sort((a, b) => (b.commits - a.commits) || (b.pushes - a.pushes) || a.name.localeCompare(b.name))
             .slice(0, 5);
+
+        const introPhrases = [
+            'Welcome back. Grab a snack — this is the weekly drop.',
+            'Another week, another pile of commits. Here’s the digest.',
+            'Ship fast, break less. Here’s what the team has been up to.',
+            'Weekly briefing time. Let’s get you caught up.'
+        ];
+        const intro = introPhrases[(totalCommits + totalPushes) % introPhrases.length];
+        const kickoff = totalCommits
+            ? `We clocked <strong>${escapeHtml(totalCommits)}</strong> commits across <strong>${escapeHtml(activeRepos.size)}</strong> active repos.`
+            : `Quiet week on public repos — but we might have been building in private 👀`;
 
         const kpi = (value, label) => `
             <div class="weekly-kpi">
@@ -565,6 +714,145 @@ async function renderWeeklyHighlights() {
             ? notableCommits.map(text => li(escapeHtml(text))).join('')
             : li('No notable commit messages (or all were merges).');
 
+        const take = (arr, n) => (Array.isArray(arr) ? arr.slice(0, n) : []);
+        const formatCommit = (c) => `${escapeHtml(c.repo)}: ${escapeHtml(c.message)}`;
+        const featureList = take(categorizedCommits.feature, 6).length
+            ? take(categorizedCommits.feature, 6).map(c => li(formatCommit(c))).join('')
+            : li('No obvious “feature” commits this week. (Commit messages were shy.)');
+        const fixList = take(categorizedCommits.fix, 6).length
+            ? take(categorizedCommits.fix, 6).map(c => li(formatCommit(c))).join('')
+            : li('No obvious “fix/bug” commits this week. Either we’re perfect… or it’s hidden in private repos.');
+
+        const [weeklyLog, cachedRepos] = await Promise.all([
+            loadLatestWeeklyLogEntry(),
+            loadCachedData()
+        ]);
+
+        const spotlightRepo = (() => {
+            const repos = Array.isArray(cachedRepos) ? cachedRepos : [];
+            const bestKey = topRepos[0] ? topRepos[0].key : '';
+            const best = bestKey ? repos.find(r => r && r.name === bestKey) : null;
+            if (best) return best;
+
+            // Fallback: most recently pushed repo (excluding the website repo itself if possible)
+            const sorted = repos
+                .filter(r => r && typeof r.pushed_at === 'string')
+                .slice()
+                .sort((a, b) => String(b.pushed_at).localeCompare(String(a.pushed_at)));
+            const nonSite = sorted.find(r => r && r.name && r.name !== 'LunarWeb');
+            return nonSite || sorted[0] || null;
+        })();
+
+        const spotlightHtml = spotlightRepo ? (() => {
+            const key = String(spotlightRepo.name || '').trim();
+            const display = formatDisplayName(key);
+            const githubUrl = safeExternalUrl(spotlightRepo.html_url || ('https://github.com/' + (spotlightRepo.full_name || '')));
+            const desc = (spotlightRepo.description || '').trim();
+            const lang = spotlightRepo.language ? String(spotlightRepo.language) : '';
+            const internal = INTERNAL_PROJECT_PAGES[key] || '';
+            const pushed = spotlightRepo.pushed_at ? formatShortDate(new Date(spotlightRepo.pushed_at)) : '';
+
+            return `
+                <section class="weekly-section weekly-section-wide weekly-spotlight">
+                    <div class="weekly-section-header">
+                        <h4 class="weekly-section-title"><span class="weekly-section-icon">🔦</span>Spotlight</h4>
+                        <span class="weekly-section-meta">${escapeHtml(lang || 'Project')}${pushed ? ` • Updated ${escapeHtml(pushed)}` : ''}</span>
+                    </div>
+                    <p class="weekly-briefing-text">
+                        <strong>${escapeHtml(display)}</strong>${desc ? ` — ${escapeHtml(desc)}` : ''}
+                    </p>
+                    <div class="weekly-spotlight-actions">
+                        ${internal ? `<a class="btn btn-secondary btn-sm" href="${escapeHtml(internal)}">Project Page</a>` : ''}
+                        <a class="btn btn-secondary btn-sm" href="${githubUrl}" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a class="btn btn-secondary btn-sm" href="${safeExternalUrl(githubUrl.replace(/\\/$/, '') + '/releases')}" target="_blank" rel="noopener noreferrer">Releases</a>
+                    </div>
+                </section>
+            `;
+        })() : '';
+        const diaryBlocks = weeklyLog ? weeklyLog.blocks : {};
+        const diaryHighlights = diaryBlocks.Highlights && diaryBlocks.Highlights.bullets ? diaryBlocks.Highlights.bullets.slice(0, 6) : [];
+        const diaryShipped = diaryBlocks.Shipped && diaryBlocks.Shipped.bullets ? diaryBlocks.Shipped.bullets.slice(0, 6) : [];
+        const diaryFixes = diaryBlocks.Fixes && diaryBlocks.Fixes.bullets ? diaryBlocks.Fixes.bullets.slice(0, 6) : [];
+        const diaryNext = diaryBlocks.Next && diaryBlocks.Next.bullets ? diaryBlocks.Next.bullets.slice(0, 6) : [];
+        const diaryEngineering = diaryBlocks.Engineering && diaryBlocks.Engineering.bullets ? diaryBlocks.Engineering.bullets.slice(0, 6) : [];
+        const diaryChallenges = diaryBlocks.Challenges && diaryBlocks.Challenges.bullets ? diaryBlocks.Challenges.bullets.slice(0, 6) : [];
+        const diaryVibe = diaryBlocks.Vibe && diaryBlocks.Vibe.paragraphs ? diaryBlocks.Vibe.paragraphs.join(' ') : '';
+        const diaryMetrics = weeklyLog && weeklyLog.metrics ? weeklyLog.metrics : {};
+        const diaryMetricLine = Object.keys(diaryMetrics).length
+            ? Object.entries(diaryMetrics).slice(0, 4).map(([k, v]) => `${escapeHtml(k)}: ${escapeHtml(v)}`).join(' • ')
+            : '';
+
+        const diarySection = weeklyLog
+            ? `
+                <section class="weekly-section weekly-section-wide weekly-diary" id="weekly-diary-${escapeHtml(slugify(weeklyLog.weekOf || weeklyLog.projectTitle))}">
+                    <div class="weekly-section-header">
+                        <h4 class="weekly-section-title"><span class="weekly-section-icon">📝</span>Dev Diary Spotlight</h4>
+                        <span class="weekly-section-meta">${escapeHtml(weeklyLog.projectTitle)} • ${escapeHtml(weeklyLog.weekOf || '')}</span>
+                    </div>
+                    ${weeklyLog.headline ? `<div class="weekly-diary-headline">${escapeHtml(weeklyLog.headline)}</div>` : ''}
+                    <div class="weekly-diary-grid">
+                        <div class="weekly-diary-card">
+                            <div class="weekly-diary-card-title">Highlights</div>
+                            <ul class="weekly-list">
+                                ${(diaryHighlights.length ? diaryHighlights : ['No highlights logged.']).map(item => li(escapeHtml(item))).join('')}
+                            </ul>
+                        </div>
+                        <div class="weekly-diary-card">
+                            <div class="weekly-diary-card-title">Shipped</div>
+                            <ul class="weekly-list">
+                                ${(diaryShipped.length ? diaryShipped : ['No shipped items logged.']).map(item => li(escapeHtml(item))).join('')}
+                            </ul>
+                        </div>
+                        <div class="weekly-diary-card">
+                            <div class="weekly-diary-card-title">Fixes</div>
+                            <ul class="weekly-list">
+                                ${(diaryFixes.length ? diaryFixes : ['No fixes logged.']).map(item => li(escapeHtml(item))).join('')}
+                            </ul>
+                        </div>
+                        <div class="weekly-diary-card">
+                            <div class="weekly-diary-card-title">Next</div>
+                            <ul class="weekly-list">
+                                ${(diaryNext.length ? diaryNext : ['No next steps logged.']).map(item => li(escapeHtml(item))).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    ${diaryVibe ? `
+                        <div class="weekly-diary-vibe">
+                            <div class="weekly-diary-card-title">Vibe Check</div>
+                            <p class="weekly-diary-vibe-text">${escapeHtml(diaryVibe)}</p>
+                        </div>
+                    ` : ''}
+                    ${(diaryEngineering.length || diaryChallenges.length) ? `
+                        <details class="weekly-diary-more">
+                            <summary>More technical notes</summary>
+                            <div class="weekly-diary-more-grid">
+                                ${diaryEngineering.length ? `
+                                    <div class="weekly-diary-card">
+                                        <div class="weekly-diary-card-title">Engineering</div>
+                                        <ul class="weekly-list">
+                                            ${diaryEngineering.map(item => li(escapeHtml(item))).join('')}
+                                        </ul>
+                                    </div>
+                                ` : ''}
+                                ${diaryChallenges.length ? `
+                                    <div class="weekly-diary-card">
+                                        <div class="weekly-diary-card-title">Challenges</div>
+                                        <ul class="weekly-list">
+                                            ${diaryChallenges.map(item => li(escapeHtml(item))).join('')}
+                                        </ul>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </details>
+                    ` : ''}
+                    <div class="weekly-diary-footer">
+                        ${diaryMetricLine ? `<span class="weekly-diary-metrics">${diaryMetricLine}</span>` : ''}
+                        <a class="weekly-link" href="WeeklyLog.txt" target="_blank" rel="noopener">Read full log</a>
+                    </div>
+                </section>
+            `
+            : '';
+
         container.innerHTML = `
             <div class="weekly-digest">
                 <div class="weekly-kpis">
@@ -575,6 +863,21 @@ async function renderWeeklyHighlights() {
                 </div>
 
                 <div class="weekly-sections">
+                    <section class="weekly-section weekly-section-wide weekly-briefing">
+                        <div class="weekly-section-header">
+                            <h4 class="weekly-section-title"><span class="weekly-section-icon">🎙️</span>Weekly Briefing</h4>
+                            <span class="weekly-section-meta">${mostRecentEventAt ? `Last ping: ${escapeHtml(formatShortDate(mostRecentEventAt))}` : 'Last 7d'}</span>
+                        </div>
+                        <p class="weekly-briefing-text">${escapeHtml(intro)}</p>
+                        <p class="weekly-briefing-text">${kickoff}</p>
+                        <p class="weekly-briefing-text">
+                            Want in? <a class="weekly-inline-link" href="#contact" data-open-contact-tab="apply">Apply / Contact</a> — we’re always looking for builders.
+                        </p>
+                    </section>
+
+                    ${spotlightHtml}
+                    ${diarySection}
+
                     <section class="weekly-section">
                         <div class="weekly-section-header">
                             <h4 class="weekly-section-title"><span class="weekly-section-icon">📌</span>Highlights</h4>
@@ -612,6 +915,26 @@ async function renderWeeklyHighlights() {
                         </div>
                         <ul class="weekly-list">
                             ${releasesList}
+                        </ul>
+                    </section>
+
+                    <section class="weekly-section">
+                        <div class="weekly-section-header">
+                            <h4 class="weekly-section-title"><span class="weekly-section-icon">✨</span>Patch Notes</h4>
+                            <span class="weekly-section-meta">New stuff</span>
+                        </div>
+                        <ul class="weekly-list">
+                            ${featureList}
+                        </ul>
+                    </section>
+
+                    <section class="weekly-section">
+                        <div class="weekly-section-header">
+                            <h4 class="weekly-section-title"><span class="weekly-section-icon">🪲</span>Bug Squash Report</h4>
+                            <span class="weekly-section-meta">Fixes</span>
+                        </div>
+                        <ul class="weekly-list">
+                            ${fixList}
                         </ul>
                     </section>
                 </div>

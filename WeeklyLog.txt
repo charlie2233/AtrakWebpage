@@ -1,0 +1,1100 @@
+# 🏀 Basketball Tactics Board — Weekly Dev News
+
+**Sunday → Saturday (PT)**
+**Part 1 — September (Weeks 1–4)**
+
+---
+
+## Week of Aug 31 – Sep 6
+
+### “Idea → Repo → First pixel on screen”
+
+**Highlights**
+
+* Project officially created
+* Core vision locked: draw tactics fast + simulate like a game
+* Chose mobile-first + iPad-first strategy
+
+**Shipped**
+
+* GitHub repo setup
+* Project structure (`index.html`, `main.js`, `styles.css`)
+* Canvas renders first half-court background
+
+**Engineering**
+
+* Basic coordinate system
+* Static court lines drawn with canvas API
+* Manual refresh dev loop
+
+**Challenges**
+
+* Figuring out scaling across devices
+* Touch vs mouse behavior differences
+
+**Metrics**
+
+* Commits: 12
+* Files: 3
+* PRs: 0
+
+**Next**
+
+* Player objects
+* Drag interactions
+
+---
+
+## Week of Sep 7 – Sep 13
+
+### “Players exist. Stuff moves. Brain happy.”
+
+**Highlights**
+
+* First draggable players working
+* Offense/defense color system decided
+* Felt like a real tactics board for the first time
+
+**Shipped**
+
+* Player circles
+* Drag & drop
+* Snap-to-court boundaries
+* Basic toolbar
+
+**Engineering**
+
+* Player object model `{x, y, team, id}`
+* Re-render loop on interaction
+* Hit detection math
+
+**Fixes**
+
+* Drag jitter
+* Z-index overlap bugs
+
+**Metrics**
+
+* Commits: 18
+* PRs: 1
+* Files changed: 6
+
+**Next**
+
+* Draw paths for movement
+* Save plays
+
+---
+
+## Week of Sep 14 – Sep 20
+
+### “Lines = plays = actually useful”
+
+**Highlights**
+
+* Movement paths added
+* First time drawing real sets (Horns, 5-Out)
+* Coaches could understand it instantly
+
+**Shipped**
+
+* Path drawing tool
+* Multi-segment lines
+* Color-coded routes
+* Eraser
+
+**Engineering**
+
+* Stored paths as arrays of points
+* Event listeners for draw mode vs move mode
+* Separate state for editing vs drawing
+
+**Fixes**
+
+* Path flicker
+* Touch scrolling conflicts
+
+**Metrics**
+
+* Commits: 21
+* PRs: 2
+* Issues closed: 4
+
+**Next**
+
+* Presets
+* Export
+
+---
+
+## Week of Sep 21 – Sep 27
+
+### “Export = real product energy”
+
+**Highlights**
+
+* PNG export works clean
+* Can share plays outside the app
+* First “this could be used by teams” moment
+
+**Shipped**
+
+* High-res export button
+* Auto-crop canvas
+* Filename formatting
+
+**Engineering**
+
+* Offscreen canvas render
+* Scaling logic for retina screens
+* Clean white background pass
+
+**Fixes**
+
+* Blurry exports
+* Cropped edges
+
+**Metrics**
+
+* Commits: 15
+* PRs: 1
+* Files changed: 5
+
+**Next**
+
+* Animation ideas
+* Playback research
+
+---
+
+Reply **“next”** and I’ll generate **Part 2 (October weeks)**.
+# 🏀 Basketball Tactics Board — Weekly Dev News
+
+**Sunday → Saturday (PT)**
+**Part 2 — October (Weeks 5–8)**
+
+---
+
+## Week of Sep 28 – Oct 4
+
+### “From drawing board → thinking like a game engine”
+
+**Highlights**
+
+* Decided plays shouldn’t just be pictures — they should **run**
+* Invented the idea of timeline events (MOVE, PASS, etc.)
+* Architecture planning week (lots of whiteboard brain work)
+
+**Shipped**
+
+* Play data format draft
+* Saved plays as structured JSON
+* Internal “timeline” concept
+
+**Engineering**
+
+* Designed early `events[]` array
+* Each action becomes time-based instead of static
+* Began separating render vs logic layers
+
+**Challenges**
+
+* How to sync multiple players?
+* How to handle ball ownership?
+
+**Metrics**
+
+* Commits: 10
+* PRs: 0
+* Mostly refactors
+
+**Next**
+
+* First animation prototype
+
+---
+
+## Week of Oct 5 – Oct 11
+
+### “First movement animation (lowkey hype week)”
+
+**Highlights**
+
+* Players finally move automatically
+* First time hitting 60fps smooth motion
+* Looks like a mini basketball video game now
+
+**Shipped**
+
+* Basic playback loop
+* Linear interpolation between points
+* `tick()` frame engine
+* Start/stop functions
+
+**Engineering**
+
+* `requestAnimationFrame`
+* Delta-time updates
+* Position lerp math
+
+**Fixes**
+
+* Stutter on slower devices
+* Desync after long runs
+
+**Metrics**
+
+* Commits: 19
+* PRs: 2
+* Files changed: 7
+
+**Next**
+
+* Ball logic
+* Passing system
+
+---
+
+## Week of Oct 12 – Oct 18
+
+### “Ball physics + possession brain”
+
+**Highlights**
+
+* Pass animations added
+* Ball now flies in arcs (not just teleport)
+* Possession switching works
+
+**Shipped**
+
+* Parabolic pass path
+* Ball object
+* Possession state
+* Delay timing between actions
+
+**Engineering**
+
+* Quadratic curve math for arc
+* `from → to` event structure
+* Locked user interaction during playback
+
+**Fixes**
+
+* Ball clipping through players
+* Double-pass bugs
+
+**Metrics**
+
+* Commits: 22
+* PRs: 2
+* Issues closed: 5
+
+**Next**
+
+* Clean UI
+* Better controls
+
+---
+
+## Week of Oct 19 – Oct 25
+
+### “Refactor + adult engineering week”
+
+**Highlights**
+
+* Cleaned messy prototype code
+* Modularized playback system
+* Prepping for real feature scaling
+
+**Shipped**
+
+* Separated engine functions
+* Organized folders
+* Simplified state management
+
+**Engineering**
+
+* `startReplay() / stopReplay()`
+* Centralized timeline compiler
+* Removed duplicate render logic
+
+**Vibe**
+Not flashy. No big demo moments.
+But codebase got 10× healthier. Future Charlie thanks present Charlie.
+
+**Metrics**
+
+* Commits: 14
+* PRs: 1
+* Mostly refactor work
+
+**Next**
+
+* Official Playback MVP
+* UI controls
+
+---
+
+Reply **“next”** for **Part 3 (November)**.
+# 🏀 Basketball Tactics Board — Weekly Dev News
+
+**Sunday → Saturday (PT)**
+**Part 3 — November (Weeks 9–13)**
+
+---
+
+## Week of Oct 26 – Nov 1
+
+### “Turning prototype into something launchable”
+
+**Highlights**
+
+* Playback stabilized enough to feel demo-ready
+* Timeline system cleaned up
+* Started thinking like: “what would a coach actually click?”
+
+**Shipped**
+
+* Reset positions on stop
+* Better state restore
+* Cleaner initial layout
+
+**Engineering**
+
+* Snapshot system for starting positions
+* Replay rebuild on every run
+* Removed lingering ghost objects
+
+**Fixes**
+
+* Players stacking after stop
+* State not resetting correctly
+
+**Metrics**
+
+* Commits: 11
+* PRs: 1
+
+**Next**
+
+* Full Playback MVP push
+
+---
+
+## Week of Nov 2 – Nov 8
+
+### 🎬 “Playback Phase A — the BIG milestone”
+
+**Highlights**
+
+* Official first real **Run Play** feature
+* Players follow drawn routes automatically
+* Ball passes between teammates
+* This is when the app stopped being a drawing toy
+
+**Shipped**
+
+* RUN events
+* PASS events
+* Ball arc flight
+* 60fps replay
+* Playback button
+
+**Engineering**
+
+* Compiled routes → animation segments
+* Nearest-player detection
+* Interaction disabled during playback
+
+**Vibe**
+Massive dopamine week.
+Clicked “Playback” and watched the whole offense run itself.
+Felt like building a tiny NBA 2K tactics mode 😂
+
+**Metrics**
+
+* Commits: 27
+* PRs: 3
+* Files changed: 12
+
+**Next**
+
+* Pause / Resume
+* Controls bar
+
+---
+
+## Week of Nov 9 – Nov 15
+
+### “Bug-fixing gauntlet”
+
+**Highlights**
+
+* Fixed 10+ weird edge cases
+* Timing bugs murdered
+* Stability massively improved
+
+**Fixes**
+
+* Teleporting players
+* Double pass triggers
+* Playback freezing mid-run
+* Interaction during play
+
+**Engineering**
+
+* Defensive state guards
+* Clear ownership switching
+* Recompiled timeline on every run
+
+**Vibe**
+Painful but necessary.
+This week was “engineering discipline mode.”
+
+**Metrics**
+
+* Commits: 20
+* Issues closed: 9
+
+**Next**
+
+* UX polish
+
+---
+
+## Week of Nov 16 – Nov 22
+
+### “Make it feel smooth”
+
+**Highlights**
+
+* Movement looks cleaner
+* Less jitter
+* Less robotic
+
+**Shipped**
+
+* Path smoothing experiments
+* Speed normalization
+* Better frame timing
+
+**Engineering**
+
+* Segment sampling
+* Constant-speed approximation
+* Removed frame dependency
+
+**Fixes**
+
+* Fast/slow player drift
+* Path snapping
+
+**Metrics**
+
+* Commits: 16
+
+**Next**
+
+* Real playback controls
+
+---
+
+## Week of Nov 23 – Nov 29
+
+### “Planning Phase B (Thanksgiving brain week)”
+
+**Highlights**
+
+* Designed proper replay bar UI
+* Planned seekbar + speed control
+* Thinking more like “video player”
+
+**Shipped**
+
+* Control bar mockups
+* Timeline duration math
+* Playback architecture rewrite plan
+
+**Engineering**
+
+* `durationMs` calculations
+* Time-based replay (not frame-based)
+* Prep for seeking support
+
+**Vibe**
+Less coding, more system design.
+Feels like leveling up from “student project” → “real software.”
+
+**Metrics**
+
+* Commits: 9
+
+**Next**
+
+* Implement Phase B controls
+
+---
+
+Reply **“next”** for **Part 4 (December — the huge controls + smoothing upgrade month)**.
+# 🏀 Basketball Tactics Board — Weekly Dev News
+
+**Sunday → Saturday (PT)**
+**Part 3 — November (Weeks 9–13)**
+
+---
+
+## Week of Oct 26 – Nov 1
+
+### “Turning prototype into something launchable”
+
+**Highlights**
+
+* Playback stabilized enough to feel demo-ready
+* Timeline system cleaned up
+* Started thinking like: “what would a coach actually click?”
+
+**Shipped**
+
+* Reset positions on stop
+* Better state restore
+* Cleaner initial layout
+
+**Engineering**
+
+* Snapshot system for starting positions
+* Replay rebuild on every run
+* Removed lingering ghost objects
+
+**Fixes**
+
+* Players stacking after stop
+* State not resetting correctly
+
+**Metrics**
+
+* Commits: 11
+* PRs: 1
+
+**Next**
+
+* Full Playback MVP push
+
+---
+
+## Week of Nov 2 – Nov 8
+
+### 🎬 “Playback Phase A — the BIG milestone”
+
+**Highlights**
+
+* Official first real **Run Play** feature
+* Players follow drawn routes automatically
+* Ball passes between teammates
+* This is when the app stopped being a drawing toy
+
+**Shipped**
+
+* RUN events
+* PASS events
+* Ball arc flight
+* 60fps replay
+* Playback button
+
+**Engineering**
+
+* Compiled routes → animation segments
+* Nearest-player detection
+* Interaction disabled during playback
+
+**Vibe**
+Massive dopamine week.
+Clicked “Playback” and watched the whole offense run itself.
+Felt like building a tiny NBA 2K tactics mode 😂
+
+**Metrics**
+
+* Commits: 27
+* PRs: 3
+* Files changed: 12
+
+**Next**
+
+* Pause / Resume
+* Controls bar
+
+---
+
+## Week of Nov 9 – Nov 15
+
+### “Bug-fixing gauntlet”
+
+**Highlights**
+
+* Fixed 10+ weird edge cases
+* Timing bugs murdered
+* Stability massively improved
+
+**Fixes**
+
+* Teleporting players
+* Double pass triggers
+* Playback freezing mid-run
+* Interaction during play
+
+**Engineering**
+
+* Defensive state guards
+* Clear ownership switching
+* Recompiled timeline on every run
+
+**Vibe**
+Painful but necessary.
+This week was “engineering discipline mode.”
+
+**Metrics**
+
+* Commits: 20
+* Issues closed: 9
+
+**Next**
+
+* UX polish
+
+---
+
+## Week of Nov 16 – Nov 22
+
+### “Make it feel smooth”
+
+**Highlights**
+
+* Movement looks cleaner
+* Less jitter
+* Less robotic
+
+**Shipped**
+
+* Path smoothing experiments
+* Speed normalization
+* Better frame timing
+
+**Engineering**
+
+* Segment sampling
+* Constant-speed approximation
+* Removed frame dependency
+
+**Fixes**
+
+* Fast/slow player drift
+* Path snapping
+
+**Metrics**
+
+* Commits: 16
+
+**Next**
+
+* Real playback controls
+
+---
+
+## Week of Nov 23 – Nov 29
+
+### “Planning Phase B (Thanksgiving brain week)”
+
+**Highlights**
+
+* Designed proper replay bar UI
+* Planned seekbar + speed control
+* Thinking more like “video player”
+
+**Shipped**
+
+* Control bar mockups
+* Timeline duration math
+* Playback architecture rewrite plan
+
+**Engineering**
+
+* `durationMs` calculations
+* Time-based replay (not frame-based)
+* Prep for seeking support
+
+**Vibe**
+Less coding, more system design.
+Feels like leveling up from “student project” → “real software.”
+
+**Metrics**
+
+* Commits: 9
+
+**Next**
+
+* Implement Phase B controls
+
+---
+
+Reply **“next”** for **Part 4 (December — the huge controls + smoothing upgrade month)**.
+# 🏀 Basketball Tactics Board — Weekly Dev News
+
+**Sunday → Saturday (PT)**
+**Part 3 — November (Weeks 9–13)**
+
+---
+
+## Week of Oct 26 – Nov 1
+
+### “Turning prototype into something launchable”
+
+**Highlights**
+
+* Playback stabilized enough to feel demo-ready
+* Timeline system cleaned up
+* Started thinking like: “what would a coach actually click?”
+
+**Shipped**
+
+* Reset positions on stop
+* Better state restore
+* Cleaner initial layout
+
+**Engineering**
+
+* Snapshot system for starting positions
+* Replay rebuild on every run
+* Removed lingering ghost objects
+
+**Fixes**
+
+* Players stacking after stop
+* State not resetting correctly
+
+**Metrics**
+
+* Commits: 11
+* PRs: 1
+
+**Next**
+
+* Full Playback MVP push
+
+---
+
+## Week of Nov 2 – Nov 8
+
+### 🎬 “Playback Phase A — the BIG milestone”
+
+**Highlights**
+
+* Official first real **Run Play** feature
+* Players follow drawn routes automatically
+* Ball passes between teammates
+* This is when the app stopped being a drawing toy
+
+**Shipped**
+
+* RUN events
+* PASS events
+* Ball arc flight
+* 60fps replay
+* Playback button
+
+**Engineering**
+
+* Compiled routes → animation segments
+* Nearest-player detection
+* Interaction disabled during playback
+
+**Vibe**
+Massive dopamine week.
+Clicked “Playback” and watched the whole offense run itself.
+Felt like building a tiny NBA 2K tactics mode 😂
+
+**Metrics**
+
+* Commits: 27
+* PRs: 3
+* Files changed: 12
+
+**Next**
+
+* Pause / Resume
+* Controls bar
+
+---
+
+## Week of Nov 9 – Nov 15
+
+### “Bug-fixing gauntlet”
+
+**Highlights**
+
+* Fixed 10+ weird edge cases
+* Timing bugs murdered
+* Stability massively improved
+
+**Fixes**
+
+* Teleporting players
+* Double pass triggers
+* Playback freezing mid-run
+* Interaction during play
+
+**Engineering**
+
+* Defensive state guards
+* Clear ownership switching
+* Recompiled timeline on every run
+
+**Vibe**
+Painful but necessary.
+This week was “engineering discipline mode.”
+
+**Metrics**
+
+* Commits: 20
+* Issues closed: 9
+
+**Next**
+
+* UX polish
+
+---
+
+## Week of Nov 16 – Nov 22
+
+### “Make it feel smooth”
+
+**Highlights**
+
+* Movement looks cleaner
+* Less jitter
+* Less robotic
+
+**Shipped**
+
+* Path smoothing experiments
+* Speed normalization
+* Better frame timing
+
+**Engineering**
+
+* Segment sampling
+* Constant-speed approximation
+* Removed frame dependency
+
+**Fixes**
+
+* Fast/slow player drift
+* Path snapping
+
+**Metrics**
+
+* Commits: 16
+
+**Next**
+
+* Real playback controls
+
+---
+
+## Week of Nov 23 – Nov 29
+
+### “Planning Phase B (Thanksgiving brain week)”
+
+**Highlights**
+
+* Designed proper replay bar UI
+* Planned seekbar + speed control
+* Thinking more like “video player”
+
+**Shipped**
+
+* Control bar mockups
+* Timeline duration math
+* Playback architecture rewrite plan
+
+**Engineering**
+
+* `durationMs` calculations
+* Time-based replay (not frame-based)
+* Prep for seeking support
+
+**Vibe**
+Less coding, more system design.
+Feels like leveling up from “student project” → “real software.”
+
+**Metrics**
+
+* Commits: 9
+
+**Next**
+
+* Implement Phase B controls
+
+---
+
+Reply **“next”** for **Part 4 (December — the huge controls + smoothing upgrade month)**.
+# 🏀 Basketball Tactics Board — Weekly Dev News
+
+**Sunday → Saturday (PT)**
+**Part 5 — January (Weeks 19–21, through Jan 25)**
+
+---
+
+## Week of Jan 4 – Jan 10
+
+### “Back from break — tighten everything”
+
+**Highlights**
+
+* Stability-first week
+* Cleaned leftover weirdness from December
+* Playback now feels super consistent across devices
+
+**Shipped**
+
+* Minor UI polish
+* Reset logic improvements
+* Cleaner button behavior
+
+**Engineering**
+
+* Reduced redundant renders
+* Centralized replay state
+* Memory cleanup on stop
+
+**Fixes**
+
+* Rare freeze on multiple replays
+* Slight seekbar desync
+* Interaction leakage
+
+**Vibe**
+Not flashy, but super satisfying.
+App just feels “solid.” Less janky. More professional.
+
+**Metrics**
+
+* Commits: 14
+* Issues closed: 6
+
+**Next**
+
+* Start adding intelligence, not just animation
+
+---
+
+## Week of Jan 11 – Jan 17
+
+### “From animation → analysis (big brain week)”
+
+**Highlights**
+
+* Started designing scoring system
+* Thinking beyond visuals into **tactical intelligence**
+* First ideas for spacing/conflict metrics
+
+**Shipped**
+
+* Data model upgrades
+* Timeline compile improvements
+* Prep hooks for scoring
+
+**Engineering**
+
+* Structured PlayJSON more cleanly
+* Normalized coordinates (-1..1)
+* Easier math for evaluation
+* Added internal event tags
+
+**Product Thinking**
+This week was less coding, more strategy:
+
+* How do we grade spacing?
+* How do we detect collisions?
+* How can AI suggest improvements?
+
+This is where the app starts becoming **smart**, not just pretty.
+
+**Vibe**
+Felt like switching from “frontend dev” → “AI engineer.”
+
+**Metrics**
+
+* Commits: 17
+* PRs: 2
+
+**Next**
+
+* Rule-based scoring MVP
+
+---
+
+## Week of Jan 18 – Jan 24
+
+### 🏁 “Locked-in MVP energy (pre-Jan 25 Sunday)”
+
+**Highlights**
+
+* Playback fully stable
+* Timeline system battle-tested
+* Ready to build Phase C (Scoring + One-Click Run)
+
+**Shipped**
+
+* Performance tuning
+* Smoother playback at 2× speed
+* Final bug sweeps
+* Cleaner presets
+
+**Engineering**
+
+* Frame drop reduction
+* Seek accuracy improvements
+* State rebuild correctness
+* Small refactors to prep scoring engine
+
+**Fixes**
+
+* Rare possession glitch mid-seek
+* Speed switch hiccup
+* Stop → replay timing edge case
+
+**Vibe**
+Lowkey crazy thinking about it:
+Back in September → blank canvas
+Now → full tactics simulator with smooth replay + controls
+
+Feels like a real product, not a class project.
+
+You can honestly demo this to a coach and they’d actually use it.
+
+**Metrics**
+
+* Commits: 22
+* PRs: 2
+* Files touched: a lot 😆
+
+**Next (Phase C)**
+
+* Spacing score
+* Conflict detection
+* “One-click Run” tactical evaluation
+* AI suggestions
+
+---
+
+# ✅ Coverage complete
+
+**September → Jan 25 (Sunday)**
+All weeks done in Sunday–Saturday format.
+
+If you want next:
+
+* combine all parts into ONE giant Canva-ready file
+* or continue with future weeks live
+* or do same style for Lunar
+
+Just say “combine” or “next month.”

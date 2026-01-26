@@ -972,12 +972,12 @@ const initContactTabs = () => {
         });
     });
 
-    document.querySelectorAll('[data-open-contact-tab]').forEach(link => {
-        link.addEventListener('click', () => {
-            const desiredTab = (link.dataset.openContactTab || '').trim();
-            if (!desiredTab) return;
-            setActiveTab(desiredTab);
-        });
+    document.addEventListener('click', (e) => {
+        const link = e.target && e.target.closest ? e.target.closest('[data-open-contact-tab]') : null;
+        if (!link) return;
+        const desiredTab = (link.dataset.openContactTab || '').trim();
+        if (!desiredTab) return;
+        setActiveTab(desiredTab);
     });
 
     const initialHash = (window.location && typeof window.location.hash === 'string')
