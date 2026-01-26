@@ -4200,6 +4200,44 @@ section {
     gap: 12px;
 }
 
+.weekly-title-stack h3 {
+    margin: 0;
+}
+
+.weekly-subtitle {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: var(--text-tertiary);
+}
+
+.weekly-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.weekly-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    transition: all var(--transition-base);
+}
+
+.weekly-link:hover {
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.05);
+}
+
 .weekly-icon {
     font-size: 24px;
 }
@@ -4222,6 +4260,146 @@ section {
 
 .weekly-content {
     min-height: 100px;
+}
+
+.weekly-digest {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.weekly-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.weekly-kpi {
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.weekly-kpi-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.1;
+}
+
+.weekly-kpi-label {
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.weekly-sections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.weekly-section {
+    padding: 14px 14px 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);
+    overflow: hidden;
+}
+
+.weekly-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.weekly-section-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.weekly-section-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.weekly-section-meta {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    white-space: nowrap;
+}
+
+.weekly-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.weekly-list-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    line-height: 1.4;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.weekly-bullet {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    margin-top: 6px;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    flex-shrink: 0;
+}
+
+.weekly-inline-link {
+    color: var(--accent-primary);
+    text-decoration: none;
+}
+
+.weekly-inline-link:hover {
+    text-decoration: underline;
+}
+
+.weekly-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.weekly-footer .btn {
+    padding: 10px 14px;
+}
+
+.weekly-empty {
+    padding: 18px 0 6px;
+    color: var(--text-tertiary);
+    text-align: center;
+    font-size: 14px;
 }
 
 .weekly-item {
@@ -4315,6 +4493,25 @@ section {
 
 /* Responsive */
 @media (max-width: 768px) {
+    .weekly-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .weekly-header-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .weekly-kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .weekly-sections {
+        grid-template-columns: 1fr;
+    }
+
     .project-meta-bar {
         flex-direction: column;
         gap: 0.75rem;

@@ -85,6 +85,35 @@ function setFooterSyncStatus(message) {
     }
 }
 
+function escapeHtml(value) {
+    const str = value == null ? '' : String(value);
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function safeExternalUrl(url) {
+    const str = (url || '').trim();
+    if (!str) return '#';
+    if (!/^https?:\/\//i.test(str)) return '#';
+    try {
+        return new URL(str).toString();
+    } catch (_) {
+        return '#';
+    }
+}
+
+function formatShortDate(date) {
+    try {
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    } catch (_) {
+        return '';
+    }
+}
+
 function formatUTCDateTime(isoString) {
     try {
         const date = new Date(isoString);
@@ -385,84 +414,215 @@ async function renderWeeklyHighlights() {
             return;
         }
         
-        // Filter last 7 days
+        // Filter last 7 days (weekly digest)
         const now = new Date();
-        const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
         
-        const weeklyEvents = events.filter(e => new Date(e.created_at) > oneWeekAgo);
+        const weeklyEvents = events
+            .filter(e => e && typeof e === 'object' && typeof e.created_at === 'string')
+            .filter(e => {
+                const created = new Date(e.created_at);
+                return !Number.isNaN(created.getTime()) && created >= weekAgo && created <= now;
+            });
         
         if (dateRangeEl) {
-            const options = { month: 'short', day: 'numeric' };
-            dateRangeEl.textContent = `${oneWeekAgo.toLocaleDateString('en-US', options)} - ${now.toLocaleDateString('en-US', options)}`;
+            dateRangeEl.textContent = `${formatShortDate(weekAgo)} - ${formatShortDate(now)}`;
         }
         
         if (weeklyEvents.length === 0) {
             container.innerHTML = '<div class="weekly-empty">No public activity in the last 7 days.</div>';
             return;
         }
-        
-        // Group by Repo
-        const repoActivity = {};
-        weeklyEvents.forEach(e => {
-            if (!e.repo || !e.repo.name) return;
-            const repoName = e.repo.name.split('/')[1] || e.repo.name;
-            
-            if (!repoActivity[repoName]) {
-                repoActivity[repoName] = {
-                    name: formatDisplayName(repoName),
-                    url: `https://github.com/${e.repo.name}`,
-                    pushes: 0,
-                    commits: 0,
-                    releases: 0,
-                    prs: 0,
-                    desc: []
-                };
-            }
-            
-            if (e.type === 'PushEvent') {
-                repoActivity[repoName].pushes++;
-                repoActivity[repoName].commits += e.payload.distinct_size || 0;
-                // Add unique commit messages (first line)
-                if (e.payload.commits && e.payload.commits.length > 0) {
-                    e.payload.commits.forEach(c => {
-                        repoActivity[repoName].desc.push(c.message.split('\n')[0]);
+
+        const repoActivity = new Map();
+        const activeRepos = new Set();
+        const createdRepos = [];
+        const releases = [];
+        const commitStream = [];
+        let totalCommits = 0;
+        let totalPushes = 0;
+        let starsGained = 0;
+
+        for (const e of weeklyEvents) {
+            const type = e.type;
+            const repoFull = e.repo && typeof e.repo.name === 'string' ? e.repo.name : '';
+            const repoKey = repoFull ? repoFull.split('/')[1] || repoFull : '';
+
+            if (repoKey) activeRepos.add(repoKey);
+
+            if (type === 'PushEvent') {
+                totalPushes += 1;
+                const distinct = Number(e.payload && e.payload.distinct_size) || 0;
+                totalCommits += distinct;
+
+                if (repoKey) {
+                    if (!repoActivity.has(repoKey)) {
+                        repoActivity.set(repoKey, {
+                            key: repoKey,
+                            full: repoFull,
+                            name: formatDisplayName(repoKey),
+                            url: safeExternalUrl(`https://github.com/${repoFull}`),
+                            commits: 0,
+                            pushes: 0
+                        });
+                    }
+                    const info = repoActivity.get(repoKey);
+                    info.commits += distinct;
+                    info.pushes += 1;
+                }
+
+                const commits = e.payload && Array.isArray(e.payload.commits) ? e.payload.commits : [];
+                commits.forEach(c => {
+                    const raw = c && typeof c.message === 'string' ? c.message : '';
+                    const firstLine = raw.split('\n')[0].trim();
+                    if (!firstLine) return;
+                    if (/^merge\b/i.test(firstLine)) return;
+                    commitStream.push({ repo: repoKey || repoFull || 'repo', message: firstLine });
+                });
+            } else if (type === 'CreateEvent') {
+                const refType = e.payload && e.payload.ref_type;
+                if (refType === 'repository' && repoFull) {
+                    createdRepos.push({
+                        name: formatDisplayName(repoKey || repoFull),
+                        url: safeExternalUrl(`https://github.com/${repoFull}`)
                     });
                 }
-            } else if (e.type === 'ReleaseEvent') {
-                repoActivity[repoName].releases++;
-                repoActivity[repoName].desc.push(`🚀 Released ${e.payload.release.tag_name || 'new version'}`);
-            } else if (e.type === 'PullRequestEvent' && e.payload.action === 'opened') {
-                repoActivity[repoName].prs++;
-                repoActivity[repoName].desc.push(`🔀 Opened PR: ${e.payload.pull_request.title}`);
+            } else if (type === 'WatchEvent') {
+                starsGained += 1;
+            } else if (type === 'ReleaseEvent') {
+                const tag = e.payload && e.payload.release && e.payload.release.tag_name ? e.payload.release.tag_name : 'new release';
+                const releaseUrl = e.payload && e.payload.release && e.payload.release.html_url ? e.payload.release.html_url : `https://github.com/${repoFull}/releases`;
+                releases.push({
+                    repo: formatDisplayName(repoKey || repoFull || 'repo'),
+                    tag,
+                    url: safeExternalUrl(releaseUrl)
+                });
             }
-        });
-        
-        // Generate HTML
-        const itemsHTML = Object.values(repoActivity)
-            .sort((a, b) => (b.commits + b.releases * 5) - (a.commits + a.releases * 5)) // Sort by "impact"
-            .slice(0, 5) // Top 5 active repos
-            .map(repo => {
-                const uniqueDesc = [...new Set(repo.desc)].slice(0, 2); // Top 2 unique messages
+        }
+
+        const uniqueCommitTexts = new Set();
+        const notableCommits = [];
+        for (const c of commitStream) {
+            const msg = c.message.replace(/\s+/g, ' ').trim();
+            if (!msg) continue;
+            const combined = `${c.repo}: ${msg}`;
+            if (uniqueCommitTexts.has(combined)) continue;
+            uniqueCommitTexts.add(combined);
+            notableCommits.push(combined.length > 96 ? `${combined.slice(0, 96)}…` : combined);
+            if (notableCommits.length >= 6) break;
+        }
+
+        const topRepos = Array.from(repoActivity.values())
+            .sort((a, b) => (b.commits - a.commits) || (b.pushes - a.pushes) || a.name.localeCompare(b.name))
+            .slice(0, 5);
+
+        const kpi = (value, label) => `
+            <div class="weekly-kpi">
+                <div class="weekly-kpi-value">${escapeHtml(value)}</div>
+                <div class="weekly-kpi-label">${escapeHtml(label)}</div>
+            </div>
+        `;
+
+        const li = (textHtml) => `
+            <li class="weekly-list-item">
+                <span class="weekly-bullet"></span>
+                <span>${textHtml}</span>
+            </li>
+        `;
+
+        const highlights = [];
+        highlights.push(`${escapeHtml(totalCommits)} commits across ${escapeHtml(activeRepos.size)} repos`);
+        if (topRepos[0]) {
+            highlights.push(`Most active: <a class="weekly-inline-link" href="${topRepos[0].url}" target="_blank" rel="noopener">${escapeHtml(topRepos[0].name)}</a> (${escapeHtml(topRepos[0].commits)} commits)`);
+        }
+        if (createdRepos.length) {
+            const names = createdRepos
+                .slice(0, 3)
+                .map(r => `<a class="weekly-inline-link" href="${r.url}" target="_blank" rel="noopener">${escapeHtml(r.name)}</a>`)
+                .join(', ');
+            highlights.push(`New repos: ${names}${createdRepos.length > 3 ? '…' : ''}`);
+        } else {
+            highlights.push('New repos: none this week');
+        }
+        if (starsGained) {
+            highlights.push(`Stars: +${escapeHtml(starsGained)}`);
+        }
+
+        const releasesList = releases.length
+            ? releases.slice(0, 5).map(r => li(`<a class="weekly-inline-link" href="${r.url}" target="_blank" rel="noopener">${escapeHtml(r.repo)}</a> — ${escapeHtml(r.tag)}`)).join('')
+            : li(`No GitHub releases this week. Check <a class="weekly-inline-link" href="releases.html">Release Notes</a>.`);
+
+        const buildList = topRepos.length
+            ? topRepos.map(r => {
                 const meta = [];
-                if (repo.releases) meta.push(`${repo.releases} release${repo.releases > 1 ? 's' : ''}`);
-                if (repo.commits) meta.push(`${repo.commits} commit${repo.commits > 1 ? 's' : ''}`);
-                if (repo.prs) meta.push(`${repo.prs} PR${repo.prs > 1 ? 's' : ''}`);
-                
-                return `
-                    <div class="weekly-item">
-                        <div class="weekly-item-icon">📦</div>
-                        <div class="weekly-item-content">
-                            <div class="weekly-item-header">
-                                <a href="${repo.url}" target="_blank" rel="noopener" class="weekly-item-title">${repo.name}</a>
-                                <span class="weekly-item-meta">${meta.join(' • ')}</span>
-                            </div>
-                            ${uniqueDesc.map(d => `<div class="weekly-item-desc">${d}</div>`).join('')}
+                if (r.commits) meta.push(`${r.commits} commit${r.commits === 1 ? '' : 's'}`);
+                if (r.pushes) meta.push(`${r.pushes} push${r.pushes === 1 ? '' : 'es'}`);
+                return li(`<a class="weekly-inline-link" href="${r.url}" target="_blank" rel="noopener">${escapeHtml(r.name)}</a> — ${escapeHtml(meta.join(' • ') || 'active')}`);
+            }).join('')
+            : li('No repo updates found.');
+
+        const notableList = notableCommits.length
+            ? notableCommits.map(text => li(escapeHtml(text))).join('')
+            : li('No notable commit messages (or all were merges).');
+
+        container.innerHTML = `
+            <div class="weekly-digest">
+                <div class="weekly-kpis">
+                    ${kpi(totalCommits, 'Commits')}
+                    ${kpi(totalPushes, 'Pushes')}
+                    ${kpi(activeRepos.size, 'Repos Active')}
+                    ${kpi(starsGained, 'Stars')}
+                </div>
+
+                <div class="weekly-sections">
+                    <section class="weekly-section">
+                        <div class="weekly-section-header">
+                            <h4 class="weekly-section-title"><span class="weekly-section-icon">📌</span>Highlights</h4>
+                            <span class="weekly-section-meta">Last 7d</span>
                         </div>
-                    </div>
-                `;
-            }).join('');
-            
-        container.innerHTML = itemsHTML;
+                        <ul class="weekly-list">
+                            ${highlights.map(h => li(h)).join('')}
+                        </ul>
+                    </section>
+
+                    <section class="weekly-section">
+                        <div class="weekly-section-header">
+                            <h4 class="weekly-section-title"><span class="weekly-section-icon">🧱</span>Build Log</h4>
+                            <span class="weekly-section-meta">Top repos</span>
+                        </div>
+                        <ul class="weekly-list">
+                            ${buildList}
+                        </ul>
+                    </section>
+
+                    <section class="weekly-section">
+                        <div class="weekly-section-header">
+                            <h4 class="weekly-section-title"><span class="weekly-section-icon">📝</span>Notable Changes</h4>
+                            <span class="weekly-section-meta">Commits</span>
+                        </div>
+                        <ul class="weekly-list">
+                            ${notableList}
+                        </ul>
+                    </section>
+
+                    <section class="weekly-section">
+                        <div class="weekly-section-header">
+                            <h4 class="weekly-section-title"><span class="weekly-section-icon">🚀</span>Releases</h4>
+                            <span class="weekly-section-meta">${escapeHtml(releases.length ? `${releases.length}` : '0')}</span>
+                        </div>
+                        <ul class="weekly-list">
+                            ${releasesList}
+                        </ul>
+                    </section>
+                </div>
+
+                <div class="weekly-footer">
+                    <a class="btn btn-secondary btn-sm" href="releases.html">Read Release Notes</a>
+                    <a class="btn btn-secondary btn-sm" href="${safeExternalUrl('https://github.com/' + GITHUB_USERNAME)}" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a class="btn btn-secondary btn-sm" href="#updates">Open Build Log</a>
+                </div>
+            </div>
+        `;
         
     } catch (e) {
         console.error('Failed to render weekly highlights', e);
