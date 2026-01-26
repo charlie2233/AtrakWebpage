@@ -4,7 +4,25 @@
 
 const GITHUB_USERNAME = 'charlie2233';
 const GITHUB_API_BASE = 'https://api.github.com';
-const CACHED_DATA_PATH = 'data/github-repos.json'; // Updated by GitHub Actions
+const SITE_BASE_URL = (() => {
+    const currentScript = document.currentScript;
+    if (currentScript && currentScript.src) {
+        try {
+            return new URL('.', currentScript.src).toString();
+        } catch (_) {
+            // fall through
+        }
+    }
+
+    if (window.location && window.location.origin && window.location.origin !== 'null') {
+        return `${window.location.origin}/`;
+    }
+
+    return '';
+})();
+
+const CACHED_DATA_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-repos.json` : 'data/github-repos.json'; // Updated by GitHub Actions
+const CACHED_META_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-meta.json` : 'data/github-meta.json'; // Updated by GitHub Actions
 
 // Known featured projects to exclude from "More Projects" section
 const FEATURED_PROJECT_REPOS = [
@@ -18,6 +36,7 @@ const FEATURED_PROJECT_REPOS = [
 let githubProjectsCache = null;
 let cacheTimestamp = null;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+let lastGitHubFetchSource = null; // 'cache' | 'api'
 
 /**
  * Try to load pre-cached data from GitHub Actions
@@ -38,6 +57,35 @@ async function loadCachedData() {
     return null;
 }
 
+async function loadCachedMeta() {
+    try {
+        const response = await fetch(CACHED_META_PATH);
+        if (!response.ok) return null;
+        const meta = await response.json();
+        if (!meta || typeof meta !== 'object') return null;
+        if (typeof meta.updatedAt !== 'string') return null;
+        return meta;
+    } catch (e) {
+        return null;
+    }
+}
+
+function setMoreProjectsMeta(message) {
+    const metaEl = document.getElementById('more-projects-meta');
+    if (!metaEl) return;
+    metaEl.textContent = message || '';
+}
+
+function formatUTCDateTime(isoString) {
+    try {
+        const date = new Date(isoString);
+        if (Number.isNaN(date.getTime())) return isoString;
+        return date.toUTCString().replace('GMT', 'UTC');
+    } catch (_) {
+        return isoString;
+    }
+}
+
 /**
  * Fetch repositories from GitHub API
  */
@@ -49,6 +97,7 @@ async function fetchGitHubRepositories() {
 
     // Try pre-cached data from GitHub Actions first
     let repos = await loadCachedData();
+    lastGitHubFetchSource = repos ? 'cache' : null;
     
     // If no cached data, fetch from API
     if (!repos) {
@@ -60,8 +109,10 @@ async function fetchGitHubRepositories() {
             }
             
             repos = await response.json();
+            lastGitHubFetchSource = 'api';
         } catch (error) {
             console.error('Failed to fetch GitHub repositories:', error);
+            lastGitHubFetchSource = null;
             return [];
         }
     }
@@ -190,12 +241,14 @@ async function renderMoreProjects() {
 
     // Show loading state
     container.innerHTML = '<p class="loading-message">Loading projects from GitHub...</p>';
+    setMoreProjectsMeta('Loading GitHub data…');
 
     try {
         const projects = await fetchGitHubRepositories();
         
         if (projects.length === 0) {
             container.innerHTML = '<p class="empty-message">No additional projects found.</p>';
+            setMoreProjectsMeta('');
             return;
         }
 
@@ -203,6 +256,19 @@ async function renderMoreProjects() {
         const displayProjects = projects.slice(0, 6);
         
         container.innerHTML = displayProjects.map(project => createProjectCard(project)).join('');
+
+        if (lastGitHubFetchSource === 'cache') {
+            const meta = await loadCachedMeta();
+            if (meta && meta.updatedAt) {
+                setMoreProjectsMeta(`Cached daily • Last updated ${formatUTCDateTime(meta.updatedAt)}`);
+            } else {
+                setMoreProjectsMeta('Cached data loaded.');
+            }
+        } else if (lastGitHubFetchSource === 'api') {
+            setMoreProjectsMeta('Live from GitHub • If this fails, you may be rate-limited.');
+        } else {
+            setMoreProjectsMeta('');
+        }
         
         // Re-trigger reveal animations for new elements
         const revealElements = container.querySelectorAll('.reveal');
@@ -213,6 +279,7 @@ async function renderMoreProjects() {
     } catch (error) {
         console.error('Failed to render projects:', error);
         container.innerHTML = '<p class="error-message">Failed to load projects. Please try again later.</p>';
+        setMoreProjectsMeta('');
     }
 }
 
@@ -220,6 +287,36 @@ async function renderMoreProjects() {
  * Get project details for the detail page
  */
 async function getProjectDetails(fullRepoName) {
+    const normalizedFullName = (fullRepoName || '').trim().toLowerCase();
+
+    // Prefer cached data (avoids GitHub API rate limits on the client).
+    const cachedRepos = await loadCachedData();
+    if (cachedRepos && normalizedFullName) {
+        const cachedRepo = cachedRepos.find(repo => {
+            const candidate = typeof repo.full_name === 'string' ? repo.full_name.trim().toLowerCase() : '';
+            return candidate === normalizedFullName;
+        });
+
+        if (cachedRepo) {
+            return {
+                name: cachedRepo.name,
+                fullName: cachedRepo.full_name,
+                description: cachedRepo.description || 'No description available.',
+                url: cachedRepo.html_url,
+                homepage: cachedRepo.homepage,
+                language: cachedRepo.language,
+                topics: cachedRepo.topics || [],
+                stars: cachedRepo.stargazers_count,
+                forks: cachedRepo.forks_count,
+                watchers: cachedRepo.watchers_count,
+                createdAt: new Date(cachedRepo.created_at),
+                updatedAt: new Date(cachedRepo.updated_at),
+                pushedAt: cachedRepo.pushed_at ? new Date(cachedRepo.pushed_at) : null,
+                license: cachedRepo.license ? cachedRepo.license.name : null
+            };
+        }
+    }
+
     try {
         const response = await fetch(`${GITHUB_API_BASE}/repos/${fullRepoName}`);
         
