@@ -22,6 +22,7 @@ const SITE_BASE_URL = (() => {
 })();
 
 const CACHED_DATA_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-repos.json` : 'data/github-repos.json'; // Updated by GitHub Actions
+const CACHED_EVENTS_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-events.json` : 'data/github-events.json'; // Updated by GitHub Actions
 const CACHED_META_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-meta.json` : 'data/github-meta.json'; // Updated by GitHub Actions
 
 // Known featured projects to exclude from "More Projects" section
@@ -361,6 +362,115 @@ async function getProjectDetails(fullRepoName) {
 }
 
 // ============================================
+// WEEKLY HIGHLIGHTS
+// ============================================
+
+/**
+ * Render Weekly Highlights from GitHub Events
+ */
+async function renderWeeklyHighlights() {
+    const container = document.getElementById('weekly-content');
+    const dateRangeEl = document.getElementById('weekly-date-range');
+    
+    if (!container) return;
+    
+    try {
+        const response = await fetch(CACHED_EVENTS_PATH);
+        if (!response.ok) throw new Error('Events not found');
+        
+        const events = await response.json();
+        if (!Array.isArray(events) || events.length === 0) {
+            container.innerHTML = '<div class="weekly-empty">No activity recorded this week.</div>';
+            if (dateRangeEl) dateRangeEl.textContent = 'This Week';
+            return;
+        }
+        
+        // Filter last 7 days
+        const now = new Date();
+        const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        
+        const weeklyEvents = events.filter(e => new Date(e.created_at) > oneWeekAgo);
+        
+        if (dateRangeEl) {
+            const options = { month: 'short', day: 'numeric' };
+            dateRangeEl.textContent = `${oneWeekAgo.toLocaleDateString('en-US', options)} - ${now.toLocaleDateString('en-US', options)}`;
+        }
+        
+        if (weeklyEvents.length === 0) {
+            container.innerHTML = '<div class="weekly-empty">No public activity in the last 7 days.</div>';
+            return;
+        }
+        
+        // Group by Repo
+        const repoActivity = {};
+        weeklyEvents.forEach(e => {
+            if (!e.repo || !e.repo.name) return;
+            const repoName = e.repo.name.split('/')[1] || e.repo.name;
+            
+            if (!repoActivity[repoName]) {
+                repoActivity[repoName] = {
+                    name: formatDisplayName(repoName),
+                    url: `https://github.com/${e.repo.name}`,
+                    pushes: 0,
+                    commits: 0,
+                    releases: 0,
+                    prs: 0,
+                    desc: []
+                };
+            }
+            
+            if (e.type === 'PushEvent') {
+                repoActivity[repoName].pushes++;
+                repoActivity[repoName].commits += e.payload.distinct_size || 0;
+                // Add unique commit messages (first line)
+                if (e.payload.commits && e.payload.commits.length > 0) {
+                    e.payload.commits.forEach(c => {
+                        repoActivity[repoName].desc.push(c.message.split('\n')[0]);
+                    });
+                }
+            } else if (e.type === 'ReleaseEvent') {
+                repoActivity[repoName].releases++;
+                repoActivity[repoName].desc.push(`🚀 Released ${e.payload.release.tag_name || 'new version'}`);
+            } else if (e.type === 'PullRequestEvent' && e.payload.action === 'opened') {
+                repoActivity[repoName].prs++;
+                repoActivity[repoName].desc.push(`🔀 Opened PR: ${e.payload.pull_request.title}`);
+            }
+        });
+        
+        // Generate HTML
+        const itemsHTML = Object.values(repoActivity)
+            .sort((a, b) => (b.commits + b.releases * 5) - (a.commits + a.releases * 5)) // Sort by "impact"
+            .slice(0, 5) // Top 5 active repos
+            .map(repo => {
+                const uniqueDesc = [...new Set(repo.desc)].slice(0, 2); // Top 2 unique messages
+                const meta = [];
+                if (repo.releases) meta.push(`${repo.releases} release${repo.releases > 1 ? 's' : ''}`);
+                if (repo.commits) meta.push(`${repo.commits} commit${repo.commits > 1 ? 's' : ''}`);
+                if (repo.prs) meta.push(`${repo.prs} PR${repo.prs > 1 ? 's' : ''}`);
+                
+                return `
+                    <div class="weekly-item">
+                        <div class="weekly-item-icon">📦</div>
+                        <div class="weekly-item-content">
+                            <div class="weekly-item-header">
+                                <a href="${repo.url}" target="_blank" rel="noopener" class="weekly-item-title">${repo.name}</a>
+                                <span class="weekly-item-meta">${meta.join(' • ')}</span>
+                            </div>
+                            ${uniqueDesc.map(d => `<div class="weekly-item-desc">${d}</div>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+        container.innerHTML = itemsHTML;
+        
+    } catch (e) {
+        console.error('Failed to render weekly highlights', e);
+        container.innerHTML = '<div class="weekly-empty">Unable to load highlights.</div>';
+    }
+}
+
+// ============================================
 // LIVE ACTIVITY FEED
 // ============================================
 
@@ -466,6 +576,7 @@ async function renderLiveActivity() {
 window.GitHubProjects = {
     renderMoreProjects,
     renderLiveActivity,
+    renderWeeklyHighlights,
     getProjectDetails,
     fetchGitHubRepositories,
     getTechStack,
@@ -494,6 +605,7 @@ function initGitHubFeatures() {
     
     // Always render live activity if element exists
     renderLiveActivity();
+    renderWeeklyHighlights();
     
     // Only auto-load More Projects if the tab is active (visible) on page load
     const moreProjectsGrid = document.getElementById('more-projects-grid');
