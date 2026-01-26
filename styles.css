@@ -1056,37 +1056,6 @@ section {
     transition: transform 0.3s ease;
 }
 
-.timeline-item:nth-child(even)::before {
-    top: 50%; /* Line starts at center, goes DOWN to card */
-    bottom: auto;
-    height: calc(50% - 20px); /* From center to near card top */
-    background: linear-gradient(to bottom, rgba(59, 130, 246, 0.55), transparent);
-}
-
-.timeline-item:nth-child(even):hover::before {
-    background: linear-gradient(to bottom, rgba(59, 130, 246, 0.8), rgba(139, 92, 246, 0.2));
-}
-
-.timeline-item:nth-child(even) .timeline-content {
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-.timeline-item:nth-child(even) .timeline-node {
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.timeline-node {
-    position: absolute;
-    left: 50%;
-    width: 24px;
-    height: 24px;
-    z-index: 2; /* Bring above lines */
-    cursor: pointer;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 /* Sci-fi Ring for Node */
 .timeline-node::after {
     content: '';
