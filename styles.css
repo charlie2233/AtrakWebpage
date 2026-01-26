@@ -2349,6 +2349,50 @@ section {
     margin-bottom: 40px;
 }
 
+.contact-tabs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 0 auto 28px;
+    max-width: 720px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.contact-tab {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 15px;
+    font-weight: 500;
+    padding: 12px 18px;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    border-bottom: 2px solid transparent;
+    position: relative;
+    bottom: -1px;
+    border-radius: 10px 10px 0 0;
+}
+
+.contact-tab:hover {
+    color: var(--text-primary);
+    background-color: var(--hover-bg);
+}
+
+.contact-tab.active {
+    color: var(--text-primary);
+    border-bottom-color: var(--accent-primary);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.10), rgba(139, 92, 246, 0.06));
+}
+
+.contact-tab-content {
+    display: none;
+}
+
+.contact-tab-content.active {
+    display: block;
+}
+
 .contact-buttons {
     display: flex;
     gap: 16px;
@@ -2546,6 +2590,311 @@ section {
 
 .footer-sync:empty {
     display: none;
+}
+
+/* ============================================
+   ENHANCED TEAM & WORKFLOW UI
+   ============================================ */
+
+/* Leadership / Role Cards */
+.leadership-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 32px;
+    margin-bottom: 60px;
+}
+
+.leader-card {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.leader-card:hover {
+    transform: translateY(-8px);
+}
+
+.leader-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.leader-card:hover::before {
+    opacity: 1;
+}
+
+.leader-avatar-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin-bottom: 24px;
+}
+
+.leader-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 2;
+    background: #111;
+}
+
+.avatar-ring {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border-radius: 50%;
+    border: 1px solid var(--accent-primary);
+    border-top-color: transparent;
+    border-left-color: transparent;
+    opacity: 0;
+    transition: all 0.5s ease;
+}
+
+.leader-card:hover .avatar-ring {
+    opacity: 1;
+    transform: rotate(180deg);
+}
+
+.member-status-indicator {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 16px;
+    height: 16px;
+    background: #10b981;
+    border: 3px solid #000;
+    border-radius: 50%;
+    z-index: 3;
+}
+
+.member-status-indicator.pulse::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 50%;
+    border: 1px solid #10b981;
+    animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ping {
+    75%, 100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+.leader-info h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+}
+
+.leader-role {
+    font-size: 14px;
+    color: var(--accent-primary);
+    font-weight: 500;
+    margin-bottom: 16px;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.leader-bio {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.leader-stats {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.stat-label {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+}
+
+/* Hiring Card Special Styles */
+.leader-card.hiring {
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    background: transparent;
+}
+
+.leader-card.hiring:hover {
+    border-color: var(--accent-primary);
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.leader-card.hiring .leader-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: var(--text-tertiary);
+    border-style: dashed;
+}
+
+/* Workflow / How We Work */
+.how-we-work-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+@media (max-width: 900px) {
+    .how-we-work-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.work-node {
+    padding: 32px 24px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.work-node:hover {
+    transform: translateY(-5px);
+    z-index: 2;
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.work-icon-wrapper {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    position: relative;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.work-node:hover .work-icon-wrapper {
+    background: var(--gradient-primary);
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+}
+
+.work-node h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.work-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.work-list li {
+    font-size: 14px;
+    color: var(--text-secondary);
+    position: relative;
+    padding-left: 20px;
+    line-height: 1.5;
+}
+
+.work-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent-primary);
+    opacity: 0.5;
+    transition: transform 0.2s ease;
+}
+
+.work-node:hover .work-list li::before {
+    transform: translateX(3px);
+    opacity: 1;
+}
+
+/* Connector Lines (Desktop Only) */
+@media (min-width: 901px) {
+    .node-connector {
+        position: absolute;
+        top: 60px; /* Aligns with icon center approx */
+        right: -12px;
+        width: 24px;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.1);
+        z-index: 0;
+    }
+    
+    .node-connector::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: -3px;
+        width: 8px;
+        height: 8px;
+        background: #000;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+    }
+    
+    .work-node:last-child .node-connector {
+        display: none;
+    }
+    
+    .work-node:hover + .work-node .work-icon-wrapper {
+        animation: pulse 1s ease infinite;
+    }
 }
 
 /* Responsive Design */

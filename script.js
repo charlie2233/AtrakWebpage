@@ -926,6 +926,76 @@ if (projectTabs.length) {
 }
 
 // ================================
+// Contact Tabs (Index Page)
+// ================================
+const initContactTabs = () => {
+    const tabs = Array.from(document.querySelectorAll('.contact-tab'));
+    const panels = Array.from(document.querySelectorAll('.contact-tab-content'));
+    if (!tabs.length || !panels.length) return;
+
+    const validTabs = new Set(tabs.map(tab => (tab.dataset.tab || '').trim()).filter(Boolean));
+
+    const setActiveTab = (tabName) => {
+        const target = (tabName || '').trim();
+        if (!target || !validTabs.has(target)) return;
+
+        tabs.forEach(tab => {
+            const isActive = (tab.dataset.tab || '').trim() === target;
+            tab.classList.toggle('active', isActive);
+            tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            tab.tabIndex = isActive ? 0 : -1;
+        });
+
+        panels.forEach(panel => {
+            const isActive = (panel.dataset.tab || '').trim() === target;
+            panel.classList.toggle('active', isActive);
+        });
+    };
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => setActiveTab(tab.dataset.tab));
+
+        tab.addEventListener('keydown', (e) => {
+            if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+            e.preventDefault();
+
+            const currentIndex = tabs.indexOf(tab);
+            if (currentIndex < 0) return;
+
+            const delta = e.key === 'ArrowRight' ? 1 : -1;
+            const nextIndex = (currentIndex + delta + tabs.length) % tabs.length;
+            const nextTab = tabs[nextIndex];
+            if (!nextTab) return;
+
+            setActiveTab(nextTab.dataset.tab);
+            nextTab.focus();
+        });
+    });
+
+    document.querySelectorAll('[data-open-contact-tab]').forEach(link => {
+        link.addEventListener('click', () => {
+            const desiredTab = (link.dataset.openContactTab || '').trim();
+            if (!desiredTab) return;
+            setActiveTab(desiredTab);
+        });
+    });
+
+    const initialHash = (window.location && typeof window.location.hash === 'string')
+        ? window.location.hash.toLowerCase()
+        : '';
+    const initialActive = tabs.find(tab => tab.classList.contains('active'));
+    setActiveTab(initialActive ? initialActive.dataset.tab : tabs[0].dataset.tab);
+
+    if (initialHash === '#contact-apply' || initialHash === '#apply') setActiveTab('apply');
+};
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initContactTabs);
+} else {
+    initContactTabs();
+}
+
+// ================================
 // Run Tabs (Project Pages)
 // ================================
 const runTabs = document.querySelectorAll('.run-tab');

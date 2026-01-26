@@ -31,8 +31,8 @@
                 <li><a href="releases.html">Releases</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#leadership">Team</a></li>
-                <li><a href="join.html">Join</a></li>
-                <li><a href="#contact" class="nav-cta">Suggestion Box</a></li>
+                <li><a href="#contact" data-open-contact-tab="apply">Join</a></li>
+                <li><a href="#contact" class="nav-cta" data-open-contact-tab="suggestion">Suggestion Box</a></li>
             </ul>
             <button class="mobile-menu-btn" aria-label="Toggle menu">
                 <span></span>
@@ -58,7 +58,7 @@
                 </p>
                 <div class="hero-buttons">
                     <a href="#projects" class="btn btn-primary">View Projects</a>
-                    <a href="#contact" class="btn btn-secondary">Suggestion Box</a>
+                    <a href="#contact" class="btn btn-secondary" data-open-contact-tab="suggestion">Suggestion Box</a>
                 </div>
             </div>
             <div class="hero-visual reveal">
@@ -370,11 +370,11 @@
                             <span class="tag">Desktop</span>
                             <span class="tag">Productivity</span>
                         </div>
-	                        <div class="project-actions">
-	                            <a href="projects/lunar.html" class="btn btn-secondary btn-sm">Details</a>
-	                            <a href="join.html#contact" class="btn btn-secondary btn-sm">Request Access</a>
-	                            <button class="btn btn-secondary btn-sm" disabled>Download (Soon)</button>
-                        </div>
+		                        <div class="project-actions">
+		                            <a href="projects/lunar.html" class="btn btn-secondary btn-sm">Details</a>
+		                            <a href="#contact" class="btn btn-secondary btn-sm" data-open-contact-tab="apply">Request Access</a>
+		                            <button class="btn btn-secondary btn-sm" disabled>Download (Soon)</button>
+	                        </div>
                     </div>
                 </div>
 
@@ -398,11 +398,11 @@
                             <span class="tag">Operations</span>
                             <span class="tag">Database</span>
                         </div>
-	                        <div class="project-actions">
-	                            <a href="projects/ten-seconds-vip-manager.html" class="btn btn-secondary btn-sm">Details</a>
-	                            <a href="join.html#contact" class="btn btn-secondary btn-sm">Request Access</a>
-	                            <button class="btn btn-secondary btn-sm" disabled>Download (Internal)</button>
-	                        </div>
+		                        <div class="project-actions">
+		                            <a href="projects/ten-seconds-vip-manager.html" class="btn btn-secondary btn-sm">Details</a>
+		                            <a href="#contact" class="btn btn-secondary btn-sm" data-open-contact-tab="apply">Request Access</a>
+		                            <button class="btn btn-secondary btn-sm" disabled>Download (Internal)</button>
+		                        </div>
                     </div>
                 </div>
 
@@ -594,158 +594,176 @@
                     Meet the people shipping products and the culture we've built
                 </p>
                 <div class="section-actions">
-                    <a href="join.html" class="btn btn-primary">Join the Team</a>
+                    <a href="#contact" class="btn btn-primary" data-open-contact-tab="apply">Join the Team</a>
                     <a href="handbook.html" class="btn btn-secondary">Team Handbook</a>
                 </div>
             </div>
 
             <!-- Team Member Cards -->
-            <div class="team-members-grid">
-                <div class="member-card reveal glass-card">
-                    <div class="member-header">
-                        <div class="member-avatar">
-                        <div class="avatar-placeholder">CH</div>
+            <div class="leadership-grid">
+                <!-- Charlie Han -->
+                <div class="leader-card glass-card reveal">
+                    <div class="leader-avatar-wrapper">
+                        <div class="leader-avatar" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.35), rgba(139, 92, 246, 0.25)); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700;">CH</div>
+                        <div class="member-status-indicator pulse"></div>
+                        <div class="avatar-ring"></div>
+                    </div>
+                    <div class="leader-info">
+                        <h3>Charlie Han</h3>
+                        <span class="leader-role">Team Leader</span>
+                        <p class="leader-bio">
+                            Leads Atrak. Class of 2028. Competes in USACO Gold and FBLA, and plays basketball.
+                            <br>
+                            <span class="text-tertiary">Traits: disciplined, team-first, focused on shipping useful products.</span>
+                        </p>
+                        <div class="leader-stats">
+                            <div class="stat">
+                                <span class="stat-value">USACO</span>
+                                <span class="stat-label">Gold</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">FBLA</span>
+                                <span class="stat-label">Competing</span>
+                            </div>
                         </div>
-                        <div class="member-info">
-                            <h3 class="member-name">Charlie Han</h3>
-                            <p class="member-role">Team Leader</p>
-                            <span class="member-class">C/O 2028</span>
-                        </div>
                     </div>
-                    <div class="member-focus">
-                        <span class="focus-label">Focus</span>
-                        <p>Strategy, architecture, full-stack development, and team coordination</p>
-                    </div>
-                    <div class="member-tags">
-                        <span class="tag">USACO Gold</span>
-                        <span class="tag">FBLA</span>
-                        <span class="tag">Full-Stack</span>
-                    </div>
-                    <div class="member-links">
-                        <a href="https://github.com/charlie2233" target="_blank" rel="noopener noreferrer" class="member-link">
-                            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M10 0C4.477 0 0 4.477 0 10c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0110 4.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C17.137 18.163 20 14.418 20 10c0-5.523-4.477-10-10-10z"/></svg>
-                            GitHub
+                    <div class="leader-social">
+                        <a href="https://github.com/charlie2233" target="_blank" rel="noopener" aria-label="GitHub">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.05-.015-2.07-3.345.72-4.05-1.605-4.05-1.605-.54-1.38-1.335-1.755-1.335-1.755-1.095-.75.09-.735.09-.735 1.2.09 1.845 1.245 1.845 1.245 1.08 1.86 2.805 1.32 3.495 1.005.105-.78.42-1.32.765-1.62-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405 1.02 0 2.04.135 3 .405 2.28-1.545 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.61-5.475 5.91.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.285 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
                         </a>
                     </div>
                 </div>
 
-                <div class="member-card reveal glass-card">
-                    <div class="member-header">
-                        <div class="member-avatar">
-                            <div class="avatar-placeholder">YC</div>
+                <!-- Yannon Chang -->
+                <div class="leader-card glass-card reveal">
+                    <div class="leader-avatar-wrapper">
+                        <div class="leader-avatar" style="background: linear-gradient(135deg, #333, #111); display: flex; align-items: center; justify-content: center; font-size: 24px;">YC</div>
+                        <div class="avatar-ring"></div>
+                    </div>
+                    <div class="leader-info">
+                        <h3>Yannon Chang</h3>
+                        <span class="leader-role">Engineer</span>
+                        <p class="leader-bio">
+                            System architecture and backend performance specialist.
+                            <br>
+                            <span class="text-tertiary">Class of 2029</span>
+                        </p>
+                        <div class="leader-stats">
+                            <div class="stat">
+                                <span class="stat-value">backend</span>
+                                <span class="stat-label">Focus</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">C++</span>
+                                <span class="stat-label">Core</span>
+                            </div>
                         </div>
-                        <div class="member-info">
-                            <h3 class="member-name">Yannon Chang</h3>
-                            <p class="member-role">Engineer</p>
-                            <span class="member-class">C/O 2029</span>
-                        </div>
-                    </div>
-                    <div class="member-focus">
-                        <span class="focus-label">Focus</span>
-                        <p>Backend systems, APIs, and software architecture</p>
-                    </div>
-                    <div class="member-tags">
-                        <span class="tag">Backend</span>
-                        <span class="tag">Python</span>
-                        <span class="tag">Systems</span>
-                    </div>
-                    <div class="member-links">
-                        <a href="#" class="member-link disabled">
-                            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M10 0C4.477 0 0 4.477 0 10c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0110 4.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C17.137 18.163 20 14.418 20 10c0-5.523-4.477-10-10-10z"/></svg>
-                            GitHub
-                        </a>
                     </div>
                 </div>
 
-                <div class="member-card reveal glass-card">
-                    <div class="member-header">
-                        <div class="member-avatar">
-                            <div class="avatar-placeholder">CZ</div>
+                <!-- Caleb Zeng -->
+                <div class="leader-card glass-card reveal">
+                    <div class="leader-avatar-wrapper">
+                        <div class="leader-avatar" style="background: linear-gradient(135deg, #333, #111); display: flex; align-items: center; justify-content: center; font-size: 24px;">CZ</div>
+                        <div class="avatar-ring"></div>
+                    </div>
+                    <div class="leader-info">
+                        <h3>Caleb Zeng</h3>
+                        <span class="leader-role">Style Designer</span>
+                        <p class="leader-bio">
+                            Crafting visual identities and user interfaces that delight.
+                            <br>
+                            <span class="text-tertiary">Class of 2028</span>
+                        </p>
+                        <div class="leader-stats">
+                            <div class="stat">
+                                <span class="stat-value">UI/UX</span>
+                                <span class="stat-label">Focus</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">Figma</span>
+                                <span class="stat-label">Tool</span>
+                            </div>
                         </div>
-                        <div class="member-info">
-                            <h3 class="member-name">Caleb Zeng</h3>
-                            <p class="member-role">Style Designer</p>
-                            <span class="member-class">C/O 2028</span>
-                        </div>
-                    </div>
-                    <div class="member-focus">
-                        <span class="focus-label">Focus</span>
-                        <p>Visual design, UI polish, and brand aesthetics</p>
-                    </div>
-                    <div class="member-tags">
-                        <span class="tag">UI/UX</span>
-                        <span class="tag">Visual Design</span>
-                        <span class="tag">Branding</span>
-                    </div>
-                    <div class="member-links">
-                        <a href="#" class="member-link disabled">
-                            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M10 0C4.477 0 0 4.477 0 10c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0110 4.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C17.137 18.163 20 14.418 20 10c0-5.523-4.477-10-10-10z"/></svg>
-                            GitHub
-                        </a>
                     </div>
                 </div>
 
-                <div class="member-card reveal glass-card is-open">
-                    <div class="member-header">
-                        <div class="member-avatar">
-                            <div class="avatar-placeholder open-icon">+</div>
+                <!-- Open Role -->
+                <a href="#contact" class="leader-card hiring glass-card reveal" data-open-contact-tab="apply">
+                    <div class="leader-avatar-wrapper">
+                        <div class="leader-avatar">+</div>
+                    </div>
+                    <div class="leader-info">
+                        <h3>Join Us</h3>
+                        <span class="leader-role">Open Roles</span>
+                        <p class="leader-bio">
+                            We're looking for builders. Engineers, Designers, and Product thinkers.
+                        </p>
+                        <div class="leader-stats">
+                            <div class="stat">
+                                <span class="stat-value">Apply</span>
+                                <span class="stat-label">Now</span>
+                            </div>
                         </div>
-                        <div class="member-info">
-                            <h3 class="member-name">Open Positions</h3>
-                            <p class="member-role">Multiple Roles</p>
-                            <span class="member-class">Hiring Now</span>
-                        </div>
                     </div>
-                    <div class="member-focus">
-                        <span class="focus-label">Looking for</span>
-                        <p>Engineers, designers, and product minds who want to ship real software</p>
-                    </div>
-                    <div class="member-tags">
-                        <span class="tag">Engineering</span>
-                        <span class="tag">Design</span>
-                        <span class="tag">Product</span>
-                    </div>
-                    <div class="member-links">
-                        <a href="join.html" class="member-link cta">
-                            Apply Now →
-                        </a>
-                    </div>
-                </div>
+                </a>
             </div>
 
             <!-- How We Work Section -->
             <div class="how-we-work reveal">
                 <h3 class="subsection-title">How We Work</h3>
-                <div class="work-grid">
-                    <div class="work-card glass-card">
-                        <div class="work-icon">📅</div>
-                        <h4>Weekly Cadence</h4>
-                        <ul class="work-list">
-                            <li>Monday: Week planning + priority sync</li>
-                            <li>Wednesday: Mid-week check-in (async)</li>
-                            <li>Friday: Demo day + code freeze</li>
-                            <li>Async updates in Discord daily</li>
-                        </ul>
-                </div>
-                    <div class="work-card glass-card">
-                        <div class="work-icon">🔍</div>
-                        <h4>Code Review Rules</h4>
-                        <ul class="work-list">
-                            <li>All PRs require 1+ review before merge</li>
-                            <li>No direct pushes to main branch</li>
-                            <li>Tests must pass (when applicable)</li>
-                            <li>Clear commit messages required</li>
-                        </ul>
+                <div class="how-we-work-grid">
+                    <!-- Workflow Node 1 -->
+                    <div class="work-node glass-card reveal">
+                        <div class="node-connector"></div>
+                        <div class="work-icon-wrapper">
+                            <div class="work-icon">📅</div>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <div class="work-content">
+                            <h4>Weekly Cadence</h4>
+                            <ul class="work-list">
+                                <li>Monday: Week planning + priority sync</li>
+                                <li>Wednesday: Mid-week check-in (async)</li>
+                                <li>Friday: Demo day + code freeze</li>
+                                <li>Async updates in Discord daily</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="work-card glass-card">
-                        <div class="work-icon">✅</div>
-                        <h4>Quality Bar</h4>
-                        <ul class="work-list">
-                            <li>Ship working software, not perfect code</li>
-                            <li>Document as you go (README first)</li>
-                            <li>Accessibility is not optional</li>
-                            <li>If it's not tested, it's broken</li>
-                        </ul>
+
+                    <!-- Workflow Node 2 -->
+                    <div class="work-node glass-card reveal">
+                        <div class="node-connector"></div>
+                        <div class="work-icon-wrapper">
+                            <div class="work-icon">🔍</div>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <div class="work-content">
+                            <h4>Code Review Rules</h4>
+                            <ul class="work-list">
+                                <li>All PRs require 1+ review before merge</li>
+                                <li>No direct pushes to main branch</li>
+                                <li>Tests must pass (when applicable)</li>
+                                <li>Clear commit messages required</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Workflow Node 3 -->
+                    <div class="work-node glass-card reveal">
+                        <div class="work-icon-wrapper">
+                            <div class="work-icon">✅</div>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <div class="work-content">
+                            <h4>Quality Bar</h4>
+                            <ul class="work-list">
+                                <li>Ship working software, not perfect code</li>
+                                <li>Document as you go (README first)</li>
+                                <li>Accessibility is not optional</li>
+                                <li>If it's not tested, it's broken</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div class="work-cta">
@@ -759,23 +777,67 @@
     <section id="contact" class="contact reveal">
         <div class="container">
             <div class="contact-content reveal">
-                <h2 class="contact-title">Suggestion Box</h2>
+                <h2 class="contact-title">Contact</h2>
                 <p class="contact-description">
-                    Send anonymous feedback, ideas, or bug reports. No name or contact info required.
+                    Send anonymous feedback, or apply / contact the team. Choose an option below.
                 </p>
 
-                <div class="suggestion-box glass-card reveal">
-                    <form id="suggestion-form" class="suggestion-form" action="https://formspree.io/f/REPLACE_ME" method="POST" data-endpoint-key="suggestion" data-endpoint="https://formspree.io/f/REPLACE_ME" novalidate>
-                        <label for="suggestion-message" class="suggestion-label">Your message</label>
-                        <textarea id="suggestion-message" name="message" rows="6" maxlength="1200" required placeholder="Write your suggestion..."></textarea>
-                        <div class="form-meta">
-                            <span class="form-count" data-char-count="suggestion-message">0/1200</span>
-                        </div>
-                        <input type="text" name="_gotcha" class="suggestion-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
-                        <button type="submit" class="btn btn-primary">Send anonymously</button>
-                        <p id="suggestion-status" class="form-status" role="status" aria-live="polite"></p>
-                        <p class="form-disclaimer">No contact info collected.</p>
-                    </form>
+                <div class="contact-tabs" role="tablist" aria-label="Contact options">
+                    <button class="contact-tab active" type="button" role="tab" aria-selected="true" aria-controls="contact-suggestion-panel" id="contact-suggestion-tab" data-tab="suggestion">Suggestion Box</button>
+                    <button class="contact-tab" type="button" role="tab" aria-selected="false" aria-controls="contact-apply-panel" id="contact-apply-tab" data-tab="apply">Apply / Contact</button>
+                </div>
+
+                <div class="contact-tab-content active" id="contact-suggestion-panel" role="tabpanel" aria-labelledby="contact-suggestion-tab" data-tab="suggestion">
+                    <div class="suggestion-box glass-card reveal">
+                        <form id="suggestion-form" class="suggestion-form" action="https://formspree.io/f/REPLACE_ME" method="POST" data-endpoint-key="suggestion" data-endpoint="https://formspree.io/f/REPLACE_ME" novalidate>
+                            <label for="suggestion-message" class="suggestion-label">Your message</label>
+                            <textarea id="suggestion-message" name="message" rows="6" maxlength="1200" required placeholder="Write your suggestion..."></textarea>
+                            <div class="form-meta">
+                                <span class="form-count" data-char-count="suggestion-message">0/1200</span>
+                            </div>
+                            <input type="text" name="_gotcha" class="suggestion-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+                            <button type="submit" class="btn btn-primary">Send anonymously</button>
+                            <p id="suggestion-status" class="form-status" role="status" aria-live="polite"></p>
+                            <p class="form-disclaimer">No contact info collected.</p>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="contact-tab-content" id="contact-apply-panel" role="tabpanel" aria-labelledby="contact-apply-tab" data-tab="apply">
+                    <div class="suggestion-box glass-card reveal">
+                        <form id="join-form" class="suggestion-form" action="https://formspree.io/f/REPLACE_ME" method="POST" data-endpoint-key="join" novalidate>
+                            <div class="form-grid">
+                                <div class="form-field">
+                                    <label for="join-name" class="suggestion-label">Name</label>
+                                    <input id="join-name" name="name" type="text" autocomplete="name" required placeholder="Your name">
+                                </div>
+                                <div class="form-field">
+                                    <label for="join-email" class="suggestion-label">Email</label>
+                                    <input id="join-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+                                </div>
+                            </div>
+
+                            <label for="join-interest" class="suggestion-label">Interest</label>
+                            <select id="join-interest" name="interest" required>
+                                <option value="" disabled selected>Select one</option>
+                                <option>Engineering</option>
+                                <option>Design</option>
+                                <option>Product & Ops</option>
+                                <option>Other</option>
+                            </select>
+
+                            <label for="join-message" class="suggestion-label">Message</label>
+                            <textarea id="join-message" name="message" rows="7" maxlength="1600" required placeholder="Tell us what you want to work on and any links you’d like to share."></textarea>
+                            <div class="form-meta">
+                                <span class="form-count" data-char-count="join-message">0/1600</span>
+                            </div>
+
+                            <input type="text" name="_gotcha" class="suggestion-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+                            <button type="submit" class="btn btn-primary">Send</button>
+                            <p id="join-status" class="form-status" role="status" aria-live="polite"></p>
+                            <p class="form-disclaimer">We’ll only use your email to reply.</p>
+                        </form>
+                    </div>
                 </div>
 
                 <div class="contact-buttons reveal">
@@ -807,7 +869,7 @@
                         <a href="releases.html">Releases</a>
                         <a href="#leadership">Team</a>
                         <a href="handbook.html">Handbook</a>
-                        <a href="join.html">Join</a>
+                        <a href="#contact" data-open-contact-tab="apply">Join</a>
                     </div>
                     <div class="footer-column">
                         <h4>Connect</h4>
