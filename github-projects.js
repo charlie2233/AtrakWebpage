@@ -72,8 +72,16 @@ async function loadCachedMeta() {
 
 function setMoreProjectsMeta(message) {
     const metaEl = document.getElementById('more-projects-meta');
-    if (!metaEl) return;
-    metaEl.textContent = message || '';
+    if (metaEl) {
+        metaEl.textContent = message || '';
+    }
+}
+
+function setFooterSyncStatus(message) {
+    const footerEl = document.getElementById('footer-sync-status');
+    if (footerEl) {
+        footerEl.textContent = message || '';
+    }
 }
 
 function formatUTCDateTime(isoString) {
@@ -260,12 +268,16 @@ async function renderMoreProjects() {
         if (lastGitHubFetchSource === 'cache') {
             const meta = await loadCachedMeta();
             if (meta && meta.updatedAt) {
+                const updateMsg = `Synced via GitHub Actions • ${formatUTCDateTime(meta.updatedAt)}`;
                 setMoreProjectsMeta(`Cached daily • Last updated ${formatUTCDateTime(meta.updatedAt)}`);
+                setFooterSyncStatus(updateMsg);
             } else {
                 setMoreProjectsMeta('Cached data loaded.');
+                setFooterSyncStatus('GitHub data synced daily');
             }
         } else if (lastGitHubFetchSource === 'api') {
-            setMoreProjectsMeta('Live from GitHub • If this fails, you may be rate-limited.');
+            setMoreProjectsMeta('Live from GitHub API');
+            setFooterSyncStatus('Live GitHub data');
         } else {
             setMoreProjectsMeta('');
         }
@@ -359,11 +371,26 @@ window.GitHubProjects = {
     GITHUB_USERNAME
 };
 
+// Load sync status on page load (even if More Projects tab is hidden)
+async function loadSyncStatus() {
+    try {
+        const meta = await loadCachedMeta();
+        if (meta && meta.updatedAt) {
+            setFooterSyncStatus(`GitHub data synced • ${formatUTCDateTime(meta.updatedAt)}`);
+        }
+    } catch (e) {
+        // Ignore errors loading sync status
+    }
+}
+
 // Auto-initialize if the More Projects section exists and is visible
 // Note: With tabbed interface, we don't auto-load on page load since the tab may be hidden
 // The renderMoreProjects function will be called when the tab is activated
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+        // Always load sync status
+        loadSyncStatus();
+        
         const moreProjectsGrid = document.getElementById('more-projects-grid');
         const moreTab = document.getElementById('more-tab');
         // Only auto-load if the tab is active (visible) on page load
@@ -372,6 +399,9 @@ if (document.readyState === 'loading') {
         }
     });
 } else {
+    // Always load sync status
+    loadSyncStatus();
+    
     const moreProjectsGrid = document.getElementById('more-projects-grid');
     const moreTab = document.getElementById('more-tab');
     // Only auto-load if the tab is active (visible) on page load

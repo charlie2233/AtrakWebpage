@@ -1,14 +1,24 @@
 # This workflow fetches your GitHub data and caches it as a JSON file
 # Runs daily at midnight UTC, or manually via workflow_dispatch
+# Uses GH_PAT secret for authenticated requests (higher rate limits)
 
 name: Update GitHub Data
 
 on:
   schedule:
     - cron: '0 0 * * *'  # Daily at midnight UTC
-  workflow_dispatch:  # Allows manual trigger
+    - cron: '0 12 * * *' # Also at noon UTC for fresher data
+  workflow_dispatch:  # Allows manual trigger from Actions tab
+    inputs:
+      force_update:
+        description: 'Force update even if no changes'
+        required: false
+        default: 'false'
+        type: boolean
   push:
-    branches: [main]  # Also run on push to main
+    branches: [main]
+    paths:
+      - '.github/workflows/update-github-data.yml'  # Re-run if workflow changes
 
 permissions:
   contents: write

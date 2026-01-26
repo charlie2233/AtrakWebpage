@@ -2538,6 +2538,16 @@ section {
     color: var(--text-tertiary);
 }
 
+.footer-sync {
+    margin-top: 0.5rem;
+    font-size: 0.7rem;
+    opacity: 0.6;
+}
+
+.footer-sync:empty {
+    display: none;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
     :root {
@@ -2910,8 +2920,35 @@ section {
 .projects-meta {
     margin-top: 18px;
     text-align: center;
-    font-size: 13px;
+    font-size: 12px;
     color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.projects-meta::before {
+    content: '●';
+    color: #22c55e;
+    font-size: 8px;
+    animation: pulse 2s infinite;
+}
+
+.projects-meta:empty::before {
+    display: none;
+}
+
+.sync-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 100px;
+    font-size: 11px;
+    color: #22c55e;
 }
 
 /* Breadcrumb Navigation */
