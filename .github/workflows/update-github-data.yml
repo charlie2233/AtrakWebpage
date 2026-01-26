@@ -1,0 +1,55 @@
+# This workflow fetches your GitHub data and caches it as a JSON file
+# Runs daily at midnight UTC, or manually via workflow_dispatch
+
+name: Update GitHub Data
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Daily at midnight UTC
+  workflow_dispatch:  # Allows manual trigger
+  push:
+    branches: [main]  # Also run on push to main
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Create data directory
+        run: mkdir -p data
+      
+      - name: Fetch GitHub data
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          # Fetch repos with your PAT for higher rate limits
+          curl -s -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/users/charlie2233/repos?sort=updated&per_page=100" \
+            > data/github-repos.json
+          
+          # Fetch user profile
+          curl -s -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/users/charlie2233" \
+            > data/github-profile.json
+          
+          # Log success
+          echo "✅ Data fetched at $(date -u)" | tee data/last-updated.txt
+          echo "📦 Repos found: $(cat data/github-repos.json | grep -c '"id":')"
+      
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update GitHub data [skip ci]"
+            git push
+          fi
+

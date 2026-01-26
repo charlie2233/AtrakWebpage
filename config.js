@@ -11,7 +11,8 @@ window.ATRAK_CONFIG = {
         // Replace 'REPLACE_ME' with your actual Formspree ID.
         default: 'https://formspree.io/f/REPLACE_ME',
         suggestion: 'https://formspree.io/f/REPLACE_ME',
-        join: 'https://formspree.io/f/REPLACE_ME'
+        join: 'https://formspree.io/f/REPLACE_ME',
+        security: 'https://formspree.io/f/REPLACE_ME'
     }
 };
 

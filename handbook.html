@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Atrak Team Handbook — How we work, our values, and what to expect">
+    <title>Team Handbook — Atrak</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/logo.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/logo.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="assets/logo.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/logo.png">
+    <link rel="stylesheet" href="styles.css?v=9">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a class="logo" href="index.html">
+                <span class="logo-icon">
+                    <img src="assets/logo.png" alt="Atrak Logo">
+                </span>
+                <span class="logo-text">Atrak</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#updates">Updates</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#leadership">Team</a></li>
+                <li><a href="join.html">Join</a></li>
+                <li><a href="index.html#contact" class="nav-cta">Suggestion Box</a></li>
+            </ul>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <section class="page-hero">
+        <div class="container">
+            <span class="section-tag">Internal Guide</span>
+            <h1 class="page-title">Team Handbook</h1>
+            <p class="page-description">
+                How we work together, ship products, and maintain quality. This is a living document.
+            </p>
+        </div>
+    </section>
+
+    <section class="handbook-content">
+        <div class="container">
+            <div class="handbook-grid">
+                <nav class="handbook-nav glass-card">
+                    <h3>Contents</h3>
+                    <ul>
+                        <li><a href="#values">Our Values</a></li>
+                        <li><a href="#cadence">Weekly Cadence</a></li>
+                        <li><a href="#code-review">Code Review</a></li>
+                        <li><a href="#quality">Quality Standards</a></li>
+                        <li><a href="#communication">Communication</a></li>
+                        <li><a href="#tools">Tools We Use</a></li>
+                    </ul>
+                </nav>
+
+                <div class="handbook-sections">
+                    <article id="values" class="handbook-section glass-card">
+                        <h2>🎯 Our Values</h2>
+                        <div class="value-grid">
+                            <div class="value-item">
+                                <h4>Ship It</h4>
+                                <p>Working software beats perfect plans. We bias toward action and iterate in public.</p>
+                            </div>
+                            <div class="value-item">
+                                <h4>Quality Matters</h4>
+                                <p>Fast doesn't mean sloppy. We write tests, document our code, and fix bugs before features.</p>
+                            </div>
+                            <div class="value-item">
+                                <h4>Team First</h4>
+                                <p>Help teammates before yourself. Review PRs quickly. Share knowledge freely.</p>
+                            </div>
+                            <div class="value-item">
+                                <h4>Stay Curious</h4>
+                                <p>Try new tools. Read the docs. Ask why. The best engineers never stop learning.</p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article id="cadence" class="handbook-section glass-card">
+                        <h2>📅 Weekly Cadence</h2>
+                        <table class="cadence-table">
+                            <thead>
+                                <tr>
+                                    <th>Day</th>
+                                    <th>What Happens</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Monday</strong></td>
+                                    <td>Week planning. Set priorities for the week, assign tasks, sync on blockers.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Wednesday</strong></td>
+                                    <td>Mid-week check-in (async). Quick status update in Discord — what's done, what's next.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Friday</strong></td>
+                                    <td>Demo day. Show what you shipped. Code freeze for main branch after demos.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Daily</strong></td>
+                                    <td>Async updates in Discord. Share progress, ask questions, help teammates.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </article>
+
+                    <article id="code-review" class="handbook-section glass-card">
+                        <h2>🔍 Code Review Rules</h2>
+                        <ul class="handbook-list">
+                            <li>
+                                <strong>All PRs require at least 1 approval</strong>
+                                <p>No exceptions. Even small fixes get reviewed.</p>
+                            </li>
+                            <li>
+                                <strong>No direct pushes to main</strong>
+                                <p>Branch protection is on. Use feature branches.</p>
+                            </li>
+                            <li>
+                                <strong>Review within 24 hours</strong>
+                                <p>Don't let PRs sit. Quick feedback keeps momentum.</p>
+                            </li>
+                            <li>
+                                <strong>Be constructive, not critical</strong>
+                                <p>Suggest improvements, don't just point out flaws. "What if we tried X?" > "This is wrong."</p>
+                            </li>
+                            <li>
+                                <strong>Tests must pass</strong>
+                                <p>If CI fails, the PR waits. Fix tests before requesting review.</p>
+                            </li>
+                        </ul>
+                    </article>
+
+                    <article id="quality" class="handbook-section glass-card">
+                        <h2>✅ Quality Standards</h2>
+                        <div class="quality-grid">
+                            <div class="quality-item">
+                                <h4>README First</h4>
+                                <p>Every project starts with a README. If you can't explain it, you can't build it.</p>
+                            </div>
+                            <div class="quality-item">
+                                <h4>Test What Matters</h4>
+                                <p>100% coverage isn't the goal. Test critical paths, edge cases, and integration points.</p>
+                            </div>
+                            <div class="quality-item">
+                                <h4>Accessibility Required</h4>
+                                <p>Semantic HTML, keyboard navigation, screen reader support. Not optional.</p>
+                            </div>
+                            <div class="quality-item">
+                                <h4>If It's Not Tested, It's Broken</h4>
+                                <p>Assume untested code has bugs. Manual testing counts, but automated is better.</p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article id="communication" class="handbook-section glass-card">
+                        <h2>💬 Communication</h2>
+                        <ul class="handbook-list">
+                            <li>
+                                <strong>Discord is home base</strong>
+                                <p>All async communication happens in Discord. Check it daily.</p>
+                            </li>
+                            <li>
+                                <strong>Over-communicate, don't under-communicate</strong>
+                                <p>When in doubt, share more context. "I'm blocked on X" is better than silence.</p>
+                            </li>
+                            <li>
+                                <strong>Respect async</strong>
+                                <p>Not everyone is online at the same time. Write clear messages that don't require immediate response.</p>
+                            </li>
+                            <li>
+                                <strong>Use threads</strong>
+                                <p>Keep conversations organized. Reply in threads, not in the main channel.</p>
+                            </li>
+                        </ul>
+                    </article>
+
+                    <article id="tools" class="handbook-section glass-card">
+                        <h2>🛠 Tools We Use</h2>
+                        <div class="tools-grid">
+                            <div class="tool-item">
+                                <span class="tool-name">GitHub</span>
+                                <span class="tool-use">Code, PRs, Issues</span>
+                            </div>
+                            <div class="tool-item">
+                                <span class="tool-name">Discord</span>
+                                <span class="tool-use">Team chat, async updates</span>
+                            </div>
+                            <div class="tool-item">
+                                <span class="tool-name">Figma</span>
+                                <span class="tool-use">Design, prototypes</span>
+                            </div>
+                            <div class="tool-item">
+                                <span class="tool-name">VS Code / Cursor</span>
+                                <span class="tool-use">Primary editors</span>
+                            </div>
+                            <div class="tool-item">
+                                <span class="tool-name">Vercel / GitHub Pages</span>
+                                <span class="tool-use">Deployment</span>
+                            </div>
+                            <div class="tool-item">
+                                <span class="tool-name">Notion</span>
+                                <span class="tool-use">Docs, specs, notes</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="handbook-cta">
+        <div class="container">
+            <div class="cta-card glass-card">
+                <h2>Want to join the team?</h2>
+                <p>We're looking for engineers, designers, and product minds who ship.</p>
+                <a href="join.html" class="btn btn-primary">Apply Now</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <span class="logo-icon">
+                            <img src="assets/logo.png" alt="Atrak Logo">
+                        </span>
+                        <span class="logo-text">Atrak</span>
+                    </div>
+                    <p class="footer-tagline">Student tech team shipping real products.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Projects</h4>
+                        <a href="projects/guidepup.html">GuidePup</a>
+                        <a href="projects/hoops-clips.html">Hoops Clips</a>
+                        <a href="projects/lunar.html">Lunar</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Team</h4>
+                        <a href="index.html#leadership">Team</a>
+                        <a href="handbook.html">Handbook</a>
+                        <a href="join.html">Join</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Policies</h4>
+                        <a href="privacy.html">Privacy</a>
+                        <a href="terms.html">Terms</a>
+                        <a href="license.html">License</a>
+                        <a href="security.html">Security</a>
+                        <a href="code-of-conduct.html">Code of Conduct</a>
+                        <a href="contributing.html">Contributing</a>
+                        <a href="share.html">Share</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Connect</h4>
+                        <a href="https://github.com/charlie2233" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a href="index.html#contact">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Atrak. Built by students.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js?v=9"></script>
+</body>
+</html>

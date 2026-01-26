@@ -1,0 +1,25 @@
+# Environment variables (NEVER commit these!)
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node (if you ever add npm)
+node_modules/
+npm-debug.log
+
+# Build outputs
+dist/
+build/
+
+# Note: data/*.json files ARE committed (updated by GitHub Actions)
+

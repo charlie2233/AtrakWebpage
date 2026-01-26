@@ -1,8 +1,10 @@
 // GitHub Projects - Dynamic project loading from GitHub API
 // Fetches repositories for the user and displays them in the "More Projects" section
+// Can use pre-cached data from GitHub Actions or fetch live from API
 
 const GITHUB_USERNAME = 'charlie2233';
 const GITHUB_API_BASE = 'https://api.github.com';
+const CACHED_DATA_PATH = 'data/github-repos.json'; // Updated by GitHub Actions
 
 // Known featured projects to exclude from "More Projects" section
 const FEATURED_PROJECT_REPOS = [
@@ -18,53 +20,78 @@ let cacheTimestamp = null;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 /**
+ * Try to load pre-cached data from GitHub Actions
+ */
+async function loadCachedData() {
+    try {
+        const response = await fetch(CACHED_DATA_PATH);
+        if (response.ok) {
+            const repos = await response.json();
+            if (Array.isArray(repos) && repos.length > 0) {
+                console.log('Using pre-cached GitHub data');
+                return repos;
+            }
+        }
+    } catch (e) {
+        // Cached data not available, will fetch from API
+    }
+    return null;
+}
+
+/**
  * Fetch repositories from GitHub API
  */
 async function fetchGitHubRepositories() {
-    // Check cache first
+    // Check memory cache first
     if (githubProjectsCache && cacheTimestamp && (Date.now() - cacheTimestamp < CACHE_DURATION)) {
         return githubProjectsCache;
     }
 
-    try {
-        const response = await fetch(`${GITHUB_API_BASE}/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`);
-        
-        if (!response.ok) {
-            throw new Error(`GitHub API returned ${response.status}`);
+    // Try pre-cached data from GitHub Actions first
+    let repos = await loadCachedData();
+    
+    // If no cached data, fetch from API
+    if (!repos) {
+        try {
+            const response = await fetch(`${GITHUB_API_BASE}/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`);
+            
+            if (!response.ok) {
+                throw new Error(`GitHub API returned ${response.status}`);
+            }
+            
+            repos = await response.json();
+        } catch (error) {
+            console.error('Failed to fetch GitHub repositories:', error);
+            return [];
         }
-        
-        const repos = await response.json();
-        
-        // Filter and sort repositories
-        const projects = repos
-            .filter(repo => {
-                // Exclude featured projects and forks
-                return !repo.fork && !FEATURED_PROJECT_REPOS.includes(repo.name);
-            })
-            .map(repo => ({
-                name: repo.name,
-                fullName: repo.full_name,
-                description: repo.description || 'No description available.',
-                url: repo.html_url,
-                homepage: repo.homepage,
-                language: repo.language,
-                topics: repo.topics || [],
-                stars: repo.stargazers_count,
-                forks: repo.forks_count,
-                createdAt: new Date(repo.created_at),
-                updatedAt: new Date(repo.updated_at),
-                pushedAt: repo.pushed_at ? new Date(repo.pushed_at) : null
-            }))
-            .sort((a, b) => b.updatedAt - a.updatedAt); // Sort by most recently updated
-
-        githubProjectsCache = projects;
-        cacheTimestamp = Date.now();
-        
-        return projects;
-    } catch (error) {
-        console.error('Failed to fetch GitHub repositories:', error);
-        return [];
     }
+    
+    // Filter and sort repositories
+    const projects = repos
+        .filter(repo => {
+            // Exclude featured projects and forks
+            return !repo.fork && !FEATURED_PROJECT_REPOS.includes(repo.name);
+        })
+        .map(repo => ({
+            name: repo.name,
+            fullName: repo.full_name,
+            description: repo.description || 'No description available.',
+            url: repo.html_url,
+            homepage: repo.homepage,
+            language: repo.language,
+            topics: repo.topics || [],
+            stars: repo.stargazers_count,
+            forks: repo.forks_count,
+            createdAt: new Date(repo.created_at),
+            updatedAt: new Date(repo.updated_at),
+            pushedAt: repo.pushed_at ? new Date(repo.pushed_at) : null
+        }))
+        .sort((a, b) => b.updatedAt - a.updatedAt); // Sort by most recently updated
+
+    githubProjectsCache = projects;
+    cacheTimestamp = Date.now();
+    
+    return projects;
 }
 
 /**

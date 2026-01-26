@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Privacy Policy for atrak.dev (Atrak)">
-    <title>Privacy Policy — Atrak</title>
+    <meta name="description" content="Share Atrak (atrak.dev) with your friends and teammates">
+    <title>Share — Atrak</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/logo.png">
     <link rel="apple-touch-icon" sizes="152x152" href="assets/logo.png">
@@ -37,56 +37,66 @@
         </div>
     </nav>
 
-    <main>
+    <main data-share-page data-share-url="https://atrak.dev">
         <section class="page-hero">
             <div class="container">
                 <a class="project-back-link" href="index.html">← Back to Home</a>
 
                 <div class="project-header">
-                    <span class="section-tag">Legal</span>
-                    <h1 class="section-title">Privacy Policy</h1>
+                    <span class="section-tag">Community</span>
+                    <h1 class="section-title">Share Atrak</h1>
                     <p class="section-description">
-                        This page explains what data is collected on atrak.dev and how it’s used.
+                        Share atrak.dev with friends, teammates, or anyone who likes building real products.
                     </p>
+                </div>
+
+                <div class="suggestion-box glass-card">
+                    <div class="suggestion-form" aria-label="Share tools">
+                        <label for="share-url" class="suggestion-label">Share link</label>
+                        <input id="share-url" type="url" inputmode="url" readonly value="https://atrak.dev">
+
+                        <div class="project-actions">
+                            <button id="share-copy" class="btn btn-primary" type="button">Copy link</button>
+                            <button id="share-native" class="btn btn-secondary" type="button">Share…</button>
+                        </div>
+
+                        <p id="share-status" class="form-status" role="status" aria-live="polite"></p>
+                        <p class="form-disclaimer">No tracking links — just the clean URL.</p>
+                    </div>
                 </div>
 
                 <div class="project-detail-grid">
                     <div class="glass-card project-detail-card">
-                        <h3>Information We Collect</h3>
-                        <ul>
-                            <li><strong>Suggestion Box:</strong> the message you submit (no name required).</li>
-                            <li><strong>Join / Contact:</strong> name, email, selected interest area, and your message.</li>
-                            <li><strong>Security reports:</strong> vulnerability details, affected project, severity, and optional contact email.</li>
-                            <li><strong>Technical metadata:</strong> our form provider may log standard request metadata (like IP address and user agent) for abuse prevention and delivery.</li>
-                        </ul>
+                        <h3>Social</h3>
+                        <p>Quick-share to your favorite platform.</p>
+                        <div class="project-actions">
+                            <a id="share-x" class="btn btn-secondary" href="#" target="_blank" rel="noopener noreferrer">Share on X</a>
+                            <a id="share-linkedin" class="btn btn-secondary" href="#" target="_blank" rel="noopener noreferrer">Share on LinkedIn</a>
+                        </div>
+                        <p class="project-note">If buttons don’t open, your browser may be blocking popups.</p>
                     </div>
-
                     <div class="glass-card project-detail-card">
-                        <h3>How We Use Information</h3>
-                        <ul>
-                            <li>Review suggestions, bug reports, and feedback.</li>
-                            <li>Investigate security reports and fix vulnerabilities.</li>
-                            <li>Reply to join/contact messages using the email you provide.</li>
-                            <li>Improve the site and our projects.</li>
-                        </ul>
-                    </div>
-
-                    <div class="glass-card project-detail-card">
-                        <h3>Where Submissions Go</h3>
+                        <h3>What to Say</h3>
                         <p>
-                            Form submissions are sent through a third-party form provider (configured in <code>config.js</code>)
-                            and delivered to our team inbox. We don’t publish your submissions.
+                            “Atrak is a student tech team building AI, accessibility, and real-world software projects —
+                            check out our project hub at atrak.dev.”
                         </p>
-                        <p>We do not sell your information.</p>
                     </div>
-
                     <div class="glass-card project-detail-card">
-                        <h3>Your Choices</h3>
-                        <ul>
-                            <li>Do not include sensitive personal data in forms.</li>
-                            <li>If you want a message deleted, contact us via the form on <a href="join.html#contact">join.html</a>.</li>
-                            <li>External links (like GitHub) have their own policies.</li>
-                        </ul>
+                        <h3>Want to Help?</h3>
+                        <p>We’re always looking for contributors and collaborators.</p>
+                        <div class="project-actions">
+                            <a class="btn btn-primary" href="join.html">Join the Team</a>
+                            <a class="btn btn-secondary" href="contributing.html">Contributing</a>
+                        </div>
+                    </div>
+                    <div class="glass-card project-detail-card">
+                        <h3>Feedback</h3>
+                        <p>Have ideas to improve the site or the projects?</p>
+                        <div class="project-actions">
+                            <a class="btn btn-secondary" href="index.html#contact">Suggestion Box</a>
+                            <a class="btn btn-secondary" href="security.html">Security</a>
+                        </div>
                     </div>
                 </div>
             </div>

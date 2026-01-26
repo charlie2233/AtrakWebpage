@@ -561,6 +561,89 @@ wireAsyncForm(document.querySelector('#join-form'), {
     successMessage: 'Thanks — your message was sent. We’ll reply soon.'
 });
 
+wireAsyncForm(document.querySelector('#security-form'), {
+    minMessageLength: 30,
+    successMessage: 'Thanks — your security report was sent.'
+});
+
+const initSharePage = () => {
+    const shareRoot = document.querySelector('[data-share-page]');
+    if (!shareRoot) return;
+
+    const shareUrl = (shareRoot.dataset.shareUrl || '').trim()
+        || (window.location && window.location.origin ? window.location.origin : '');
+    const shareText = (shareRoot.dataset.shareText || '').trim()
+        || 'Atrak — student tech team building AI, accessibility, and real-world software projects.';
+    const shareTitle = (shareRoot.dataset.shareTitle || '').trim() || 'Atrak';
+
+    const shareUrlInput = document.getElementById('share-url');
+    const statusEl = document.getElementById('share-status');
+    const copyButton = document.getElementById('share-copy');
+    const nativeButton = document.getElementById('share-native');
+    const xLink = document.getElementById('share-x');
+    const linkedinLink = document.getElementById('share-linkedin');
+
+    const setStatus = (message, state) => setFormStatus(statusEl, message, state);
+
+    if (shareUrlInput && shareUrl) {
+        shareUrlInput.value = shareUrl;
+        shareUrlInput.addEventListener('focus', () => shareUrlInput.select());
+    }
+
+    if (copyButton) {
+        copyButton.addEventListener('click', async () => {
+            if (!shareUrl) return;
+            try {
+                if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+                    await navigator.clipboard.writeText(shareUrl);
+                    setStatus('Copied to clipboard.', 'is-success');
+                    return;
+                }
+
+                if (shareUrlInput) {
+                    shareUrlInput.select();
+                    setStatus('Select the link and copy it.', 'is-pending');
+                    return;
+                }
+            } catch (_) {
+                // fall through
+            }
+
+            setStatus('Copy failed. Please copy the link manually.', 'is-error');
+        });
+    }
+
+    if (nativeButton) {
+        const canShare = typeof navigator.share === 'function';
+        if (!canShare) {
+            nativeButton.style.display = 'none';
+        } else {
+            nativeButton.addEventListener('click', async () => {
+                if (!shareUrl) return;
+                try {
+                    await navigator.share({ title: shareTitle, text: shareText, url: shareUrl });
+                } catch (err) {
+                    if (err && err.name === 'AbortError') return;
+                    setStatus('Could not open the share dialog.', 'is-error');
+                }
+            });
+        }
+    }
+
+    const encodedUrl = encodeURIComponent(shareUrl || '');
+    const encodedText = encodeURIComponent(shareText || '');
+
+    if (xLink) {
+        xLink.href = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
+    }
+
+    if (linkedinLink) {
+        linkedinLink.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+    }
+};
+
+initSharePage();
+
 // Cursor Follow Effect (Optional - for enhanced UX)
 // Only enable if the page doesn't already use the dot/outline cursor.
 if (enableHoverEffects && !cursorDot && !cursorOutline) {
@@ -788,7 +871,9 @@ window.addTimelineItem = function(data, position = 'start') {
 // Prevent default link behavior for demo links
 document.querySelectorAll('a[href="#"]').forEach(link => {
     link.addEventListener('click', (e) => {
-        e.preventDefault();
+        if (link.getAttribute('href') === '#') {
+            e.preventDefault();
+        }
     });
 });
 
