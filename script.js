@@ -451,6 +451,21 @@ const wireAsyncForm = (form, options) => {
 
     const setStatus = (message, state) => setFormStatus(statusEl, message, state);
 
+    const resolveEndpoint = () => {
+        const endpoint = getFormEndpoint(form);
+        return endpoint ? endpoint.trim() : '';
+    };
+
+    const isEndpointConfigured = (endpoint) => Boolean(endpoint) && !endpoint.includes('REPLACE_ME');
+
+    // If the form isn't configured, disable submit up-front so users don't type a long message then fail.
+    const initialEndpoint = resolveEndpoint();
+    if (!isEndpointConfigured(initialEndpoint)) {
+        if (submitButton) submitButton.disabled = true;
+        setStatus('This form is not active yet. Please check back later.', null);
+        console.warn('[Atrak] Form endpoint is not configured. Update config.js with your Formspree form ID.');
+    }
+
     form.addEventListener('input', () => {
         if (statusEl && statusEl.classList.contains('is-error')) {
             setStatus('', null);
@@ -483,9 +498,9 @@ const wireAsyncForm = (form, options) => {
             return;
         }
 
-        const endpoint = getFormEndpoint(form);
-        if (!endpoint || endpoint.includes('REPLACE_ME')) {
-            setStatus('This form is not available yet. Please try again later.', 'is-error');
+        const endpoint = resolveEndpoint();
+        if (!isEndpointConfigured(endpoint)) {
+            setStatus('This form is not active yet. Please check back later.', 'is-error');
             return;
         }
 
