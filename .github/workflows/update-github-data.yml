@@ -10,6 +10,9 @@ on:
   push:
     branches: [main]  # Also run on push to main
 
+permissions:
+  contents: write
+
 jobs:
   update-data:
     runs-on: ubuntu-latest
@@ -23,23 +26,48 @@ jobs:
       
       - name: Fetch GitHub data
         env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}
+          GH_TOKEN: ${{ secrets.GH_PAT || secrets.GITHUB_PAT || secrets.GITHUB_API_TOKEN || secrets.PAT || secrets.GITHUB_TOKEN }}
         run: |
-          # Fetch repos with your PAT for higher rate limits
-          curl -s -H "Authorization: token $GH_TOKEN" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/users/charlie2233/repos?sort=updated&per_page=100" \
+          set -euo pipefail
+
+          API_BASE="https://api.github.com"
+          USERNAME="charlie2233"
+
+          AUTH_HEADER=()
+          if [ -n "${GH_TOKEN:-}" ]; then
+            AUTH_HEADER=(-H "Authorization: token $GH_TOKEN")
+            echo "Using authenticated GitHub API requests."
+          else
+            echo "No GH token configured; using unauthenticated GitHub API requests (lower rate limit)."
+          fi
+
+          curl -fsSL "${AUTH_HEADER[@]}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "${API_BASE}/users/${USERNAME}/repos?sort=updated&per_page=100" \
             > data/github-repos.json
-          
-          # Fetch user profile
-          curl -s -H "Authorization: token $GH_TOKEN" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/users/charlie2233" \
-            > data/github-profile.json
-          
-          # Log success
-          echo "✅ Data fetched at $(date -u)" | tee data/last-updated.txt
-          echo "📦 Repos found: $(cat data/github-repos.json | grep -c '"id":')"
+
+          python3 - <<'PY'
+          import datetime
+          import json
+          from pathlib import Path
+
+          repos = json.loads(Path("data/github-repos.json").read_text(encoding="utf-8"))
+          if not isinstance(repos, list):
+              raise SystemExit(f"Expected list response, got: {type(repos).__name__}: {repos}")
+
+          meta = {
+              "updatedAt": datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
+              "repoCount": len(repos),
+              "source": "github-actions-cache",
+          }
+
+          Path("data/github-meta.json").write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
+          Path("data/last-updated.txt").write_text(meta["updatedAt"] + "\n", encoding="utf-8")
+
+          print(f"Repos fetched: {len(repos)}")
+          print(f"Updated at (UTC): {meta['updatedAt']}")
+          PY
       
       - name: Commit and push changes
         run: |
@@ -52,4 +80,3 @@ jobs:
             git commit -m "chore: update GitHub data [skip ci]"
             git push
           fi
-

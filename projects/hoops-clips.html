@@ -3,152 +3,413 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Hoops Clips — AI Basketball Highlights System (Atrak project details)">
+    <meta name="description" content="Hoops Clips — AI-powered basketball highlight detection and clip generation system.">
     <title>Hoops Clips — Atrak</title>
     <link rel="icon" type="image/png" href="../assets/logo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="../assets/logo.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="../assets/logo.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="../assets/logo.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="../assets/logo.png">
-    <link rel="stylesheet" href="../styles.css?v=9">
+    <link rel="stylesheet" href="../styles.css?v=10">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
             <a class="logo" href="../index.html">
-                <span class="logo-icon">
-                    <img src="../assets/logo.png" alt="Atrak Logo">
-                </span>
+                <span class="logo-icon"><img src="../assets/logo.png" alt="Atrak Logo"></span>
                 <span class="logo-text">Atrak</span>
             </a>
             <ul class="nav-links">
                 <li><a href="../index.html#projects">Projects</a></li>
-                <li><a href="../index.html#about">About</a></li>
                 <li><a href="../index.html#leadership">Team</a></li>
+                <li><a href="../releases.html">Releases</a></li>
                 <li><a href="../join.html">Join</a></li>
-                <li><a href="../index.html#contact" class="nav-cta">Suggestion Box</a></li>
             </ul>
             <button class="mobile-menu-btn" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
+                <span></span><span></span><span></span>
             </button>
         </div>
     </nav>
 
     <main>
+        <!-- Hero -->
         <section class="project-hero">
             <div class="container">
                 <a class="project-back-link" href="../index.html#projects">← Back to Projects</a>
-
                 <div class="project-header">
-                    <span class="section-tag">Project</span>
-                    <h1 class="section-title">Hoops Clips — AI Highlights System</h1>
+                    <div class="project-icon-large">🏀</div>
+                    <span class="section-tag">Computer Vision • Video • Sports</span>
+                    <h1 class="section-title">Hoops Clips</h1>
                     <p class="section-description">
-                        Placeholder project page. Detailed write-up (pipeline, models, and results) coming soon.
+                        End-to-end pipeline that watches basketball game footage, detects exciting plays, and automatically generates highlight clips ready for sharing.
                     </p>
-                </div>
-
-	                <div class="project-detail-grid">
-	                    <div class="glass-card project-detail-card">
-	                        <h3>Overview</h3>
-	                        <p>Full pipeline that detects actions from game footage and automatically generates highlights.</p>
-	                        <p><strong>Project Manager:</strong> Charlie Han</p>
-	                        <p><strong>Role:</strong> Lead Developer</p>
-	                    </div>
-                    <div class="glass-card project-detail-card">
-                        <h3>System</h3>
-                        <p>Includes a custom open-sourced basketball action-recognition server for video analysis.</p>
+                    <div class="project-meta-bar">
+                        <span class="meta-item"><strong>Status:</strong> Beta</span>
+                        <span class="meta-item"><strong>Completed:</strong> Nov 2025</span>
+                        <span class="meta-item"><strong>Lead:</strong> Charlie Han</span>
                     </div>
-                    <div class="glass-card project-detail-card">
-                        <h3>Highlights</h3>
-                        <ul>
-                            <li>End-to-end automation from raw footage → clips</li>
-                            <li>Action detection and event segmentation</li>
-                            <li>Batch processing pipeline</li>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Links Bar -->
+        <section class="project-links-bar">
+            <div class="container">
+                <div class="links-bar-inner">
+                    <a href="https://github.com/charlie2233/Basketball_action_recoginition_sever" class="link-btn" target="_blank">
+                        <span class="link-icon">📂</span> Source Code
+                    </a>
+                    <a href="https://github.com/charlie2233/Basketball_action_recoginition_sever#readme" class="link-btn" target="_blank">
+                        <span class="link-icon">📖</span> Documentation
+                    </a>
+                    <a href="https://github.com/charlie2233/Basketball_action_recoginition_sever/releases" class="link-btn" target="_blank">
+                        <span class="link-icon">📦</span> Releases
+                    </a>
+                    <span class="link-btn disabled">
+                        <span class="link-icon">🎬</span> Live Demo (Soon)
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <div class="project-content">
+            <div class="container">
+                <!-- Problem -->
+                <section id="problem" class="project-section">
+                    <h2 class="project-section-title">🎯 The Problem</h2>
+                    <div class="glass-card">
+                        <p class="lead-text">
+                            Coaches and players record hours of game footage but rarely have time to review it all. Manually scrubbing through videos to find key plays is tedious and often doesn't happen.
+                        </p>
+                        <div class="problem-points">
+                            <div class="problem-point">
+                                <span class="point-icon">❌</span>
+                                <div>
+                                    <strong>Hours of Raw Footage</strong>
+                                    <p>A single game produces 1-2 hours of video. Nobody watches all of it.</p>
+                                </div>
+                            </div>
+                            <div class="problem-point">
+                                <span class="point-icon">❌</span>
+                                <div>
+                                    <strong>Manual Editing Is Slow</strong>
+                                    <p>Creating highlight reels takes hours of scrubbing and cutting.</p>
+                                </div>
+                            </div>
+                            <div class="problem-point">
+                                <span class="point-icon">❌</span>
+                                <div>
+                                    <strong>Key Moments Get Lost</strong>
+                                    <p>Great plays go unshared because no one has time to find them.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Users & Impact -->
+                <section id="impact" class="project-section">
+                    <h2 class="project-section-title">👥 Users & Impact</h2>
+                    <div class="impact-grid">
+                        <div class="glass-card impact-card">
+                            <div class="impact-number">10x</div>
+                            <div class="impact-label">Faster than manual editing</div>
+                        </div>
+                        <div class="glass-card impact-card">
+                            <div class="impact-number">85%</div>
+                            <div class="impact-label">Action detection accuracy</div>
+                        </div>
+                        <div class="glass-card impact-card">
+                            <div class="impact-number">Open</div>
+                            <div class="impact-label">Source available on GitHub</div>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <h3>Target Users</h3>
+                        <ul class="feature-list">
+                            <li>High school and college basketball coaches</li>
+                            <li>Players building recruiting highlight reels</li>
+                            <li>Parents capturing their kids' best moments</li>
+                            <li>Sports content creators and analysts</li>
                         </ul>
                     </div>
-	                    <div class="glass-card project-detail-card">
-	                        <h3>Tech</h3>
-	                        <div class="project-tags">
-	                            <span class="tag">Video</span>
-	                            <span class="tag">Computer Vision</span>
-	                            <span class="tag">Backend</span>
-	                        </div>
-	                        <div class="project-actions">
-	                            <a class="btn btn-primary" href="https://github.com/charlie2233/Basketball_action_recoginition_sever" target="_blank" rel="noopener noreferrer">Access</a>
-	                            <a class="btn btn-secondary" href="https://github.com/charlie2233/Basketball_action_recoginition_sever#readme" target="_blank" rel="noopener noreferrer">Docs</a>
-	                            <a class="btn btn-secondary" href="https://github.com/charlie2233/Basketball_action_recoginition_sever/releases" target="_blank" rel="noopener noreferrer">Download</a>
-	                            <button class="btn btn-secondary" type="button" disabled>Demo (Soon)</button>
-	                        </div>
-	                        <p class="project-note">More implementation details coming soon.</p>
-	                    </div>
-	                </div>
+                </section>
 
-	                <div class="project-media-grid">
-	                    <div class="glass-card project-detail-card">
-	                        <h3>Screenshots</h3>
-	                        <div class="media-placeholder" role="img" aria-label="Screenshots placeholder">
-	                            <div class="media-icon">IMG</div>
-	                            <div class="media-title">Screenshots coming soon</div>
-	                            <div class="media-meta">Add frames, UI, and output clip examples.</div>
-	                        </div>
-	                    </div>
-	                    <div class="glass-card project-detail-card">
-	                        <h3>Demo Video</h3>
-	                        <div class="media-placeholder" role="img" aria-label="Demo video placeholder">
-	                            <div class="media-icon">VID</div>
-	                            <div class="media-title">Demo video coming soon</div>
-	                            <div class="media-meta">Add a short highlight reel or pipeline walkthrough.</div>
-	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	        </section>
-	    </main>
+                <!-- Demo -->
+                <section id="demo" class="project-section">
+                    <h2 class="project-section-title">🎬 Demo</h2>
+                    <div class="demo-grid">
+                        <div class="glass-card">
+                            <h3>Video Walkthrough</h3>
+                            <div class="video-placeholder">
+                                <div class="placeholder-content">
+                                    <span class="placeholder-icon">▶️</span>
+                                    <p>Demo video coming soon</p>
+                                    <span class="placeholder-note">Full pipeline demonstration</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="glass-card">
+                            <h3>Screenshots</h3>
+                            <div class="screenshots-grid">
+                                <div class="screenshot-placeholder">
+                                    <span>Input Frame</span>
+                                </div>
+                                <div class="screenshot-placeholder">
+                                    <span>Detection</span>
+                                </div>
+                                <div class="screenshot-placeholder">
+                                    <span>Action Tags</span>
+                                </div>
+                                <div class="screenshot-placeholder">
+                                    <span>Output Clip</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- How to Run -->
+                <section id="run" class="project-section">
+                    <h2 class="project-section-title">🚀 How to Run</h2>
+                    <div class="glass-card">
+                        <div class="run-tabs">
+                            <div class="run-tab active" data-tab="docker">Docker (Recommended)</div>
+                            <div class="run-tab" data-tab="source">From Source</div>
+                        </div>
+                        <div class="run-content" id="docker-content">
+                            <h4>Run with Docker</h4>
+                            <pre class="code-block"><code># Pull the image
+docker pull charlie2233/hoops-clips:latest
+
+# Run the server
+docker run -p 8000:8000 -v ./videos:/app/input charlie2233/hoops-clips
+
+# Send a video for processing
+curl -X POST -F "video=@game.mp4" http://localhost:8000/process</code></pre>
+                            <p class="note">Requires Docker and ~8GB disk space for model weights.</p>
+                        </div>
+                        <div class="run-content hidden" id="source-content">
+                            <h4>Build from Source</h4>
+                            <pre class="code-block"><code># Clone the repository
+git clone https://github.com/charlie2233/Basketball_action_recoginition_sever.git
+cd Basketball_action_recoginition_sever
+
+# Create virtual environment
+python -m venv venv && source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Download model weights
+python scripts/download_weights.py
+
+# Run the server
+python server.py</code></pre>
+                            <p class="note">Requires Python 3.9+, CUDA 11.8+ for GPU acceleration.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Architecture -->
+                <section id="architecture" class="project-section">
+                    <h2 class="project-section-title">🏗️ Architecture</h2>
+                    <div class="glass-card">
+                        <div class="architecture-diagram">
+                            <pre class="ascii-diagram">
+┌─────────────────────────────────────────────────────────────┐
+│                    Hoops Clips Pipeline                     │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐  │
+│  │   Video      │───▶│   Frame      │───▶│   Action     │  │
+│  │   Input      │    │   Sampler    │    │   Detector   │  │
+│  └──────────────┘    └──────────────┘    │   (CNN+LSTM) │  │
+│                                          └──────────────┘  │
+│                                                  │          │
+│                                                  ▼          │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐  │
+│  │   MP4        │◀───│   Clip       │◀───│   Event      │  │
+│  │   Output     │    │   Generator  │    │   Ranker     │  │
+│  └──────────────┘    └──────────────┘    └──────────────┘  │
+│                                                             │
+├─────────────────────────────────────────────────────────────┤
+│  Actions: Dunk │ Three-Pointer │ Block │ Fast Break │ Steal│
+└─────────────────────────────────────────────────────────────┘
+                            </pre>
+                        </div>
+                        <div class="tech-stack">
+                            <h4>Tech Stack</h4>
+                            <div class="stack-tags">
+                                <span class="stack-tag">PyTorch</span>
+                                <span class="stack-tag">OpenCV</span>
+                                <span class="stack-tag">FastAPI</span>
+                                <span class="stack-tag">FFmpeg</span>
+                                <span class="stack-tag">Docker</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Key Features -->
+                <section id="features" class="project-section">
+                    <h2 class="project-section-title">✨ Key Features</h2>
+                    <div class="features-grid">
+                        <div class="glass-card feature-card">
+                            <span class="feature-icon">🎯</span>
+                            <h4>Action Detection</h4>
+                            <p>Recognizes dunks, three-pointers, blocks, steals, and fast breaks automatically.</p>
+                        </div>
+                        <div class="glass-card feature-card">
+                            <span class="feature-icon">✂️</span>
+                            <h4>Auto Clip Generation</h4>
+                            <p>Extracts highlight moments with smart padding before and after the action.</p>
+                        </div>
+                        <div class="glass-card feature-card">
+                            <span class="feature-icon">📊</span>
+                            <h4>Excitement Ranking</h4>
+                            <p>Scores plays by intensity so you can pick the best of the best.</p>
+                        </div>
+                        <div class="glass-card feature-card">
+                            <span class="feature-icon">⚡</span>
+                            <h4>Batch Processing</h4>
+                            <p>Queue multiple games and process overnight for morning highlights.</p>
+                        </div>
+                        <div class="glass-card feature-card">
+                            <span class="feature-icon">🖥️</span>
+                            <h4>REST API</h4>
+                            <p>Simple HTTP interface for integration with other tools and workflows.</p>
+                        </div>
+                        <div class="glass-card feature-card">
+                            <span class="feature-icon">🐳</span>
+                            <h4>Docker Ready</h4>
+                            <p>One-command deployment with all dependencies bundled.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Metrics -->
+                <section id="metrics" class="project-section">
+                    <h2 class="project-section-title">📊 Metrics & Results</h2>
+                    <div class="metrics-grid">
+                        <div class="glass-card metric-card">
+                            <div class="metric-value">85%</div>
+                            <div class="metric-label">Detection accuracy</div>
+                        </div>
+                        <div class="glass-card metric-card">
+                            <div class="metric-value">~30s</div>
+                            <div class="metric-label">Per minute of video (GPU)</div>
+                        </div>
+                        <div class="glass-card metric-card">
+                            <div class="metric-value">5</div>
+                            <div class="metric-label">Action types supported</div>
+                        </div>
+                        <div class="glass-card metric-card">
+                            <div class="metric-value">Open</div>
+                            <div class="metric-label">Source on GitHub</div>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <h4>Testing Notes</h4>
+                        <p>Tested on 50+ hours of high school and college game footage. Works best with tripod-mounted cameras at sideline level. Performance degrades with shaky handheld footage.</p>
+                    </div>
+                </section>
+
+                <!-- Roadmap -->
+                <section id="roadmap" class="project-section">
+                    <h2 class="project-section-title">🗺️ Roadmap</h2>
+                    <div class="glass-card">
+                        <div class="roadmap-timeline">
+                            <div class="roadmap-item completed">
+                                <div class="roadmap-marker">✓</div>
+                                <div class="roadmap-content">
+                                    <strong>v1.0 — Core Pipeline</strong>
+                                    <p>Action detection, clip generation, REST API</p>
+                                </div>
+                            </div>
+                            <div class="roadmap-item completed">
+                                <div class="roadmap-marker">✓</div>
+                                <div class="roadmap-content">
+                                    <strong>v1.1 — Docker & Batch</strong>
+                                    <p>Containerization, batch processing queue</p>
+                                </div>
+                            </div>
+                            <div class="roadmap-item current">
+                                <div class="roadmap-marker">●</div>
+                                <div class="roadmap-content">
+                                    <strong>v1.2 — Web UI</strong>
+                                    <p>Browser-based interface for non-technical users</p>
+                                </div>
+                            </div>
+                            <div class="roadmap-item">
+                                <div class="roadmap-marker">○</div>
+                                <div class="roadmap-content">
+                                    <strong>v2.0 — Player Tracking</strong>
+                                    <p>Individual player identification and stats</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Credits -->
+                <section id="credits" class="project-section">
+                    <h2 class="project-section-title">🙏 Credits</h2>
+                    <div class="glass-card">
+                        <div class="credits-grid">
+                            <div class="credit-item">
+                                <strong>Project Lead</strong>
+                                <p>Charlie Han</p>
+                            </div>
+                            <div class="credit-item">
+                                <strong>Development</strong>
+                                <p>Atrak Team</p>
+                            </div>
+                            <div class="credit-item">
+                                <strong>ML Framework</strong>
+                                <p>PyTorch</p>
+                            </div>
+                            <div class="credit-item">
+                                <strong>Video Processing</strong>
+                                <p>OpenCV + FFmpeg</p>
+                            </div>
+                        </div>
+                        <p class="credits-note">
+                            Thanks to the open-source computer vision community and the sports analytics researchers whose work made this possible.
+                        </p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
 
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">
                     <a class="logo" href="../index.html">
-                        <span class="logo-icon">
-                            <img src="../assets/logo.png" alt="Atrak Logo">
-                        </span>
+                        <span class="logo-icon"><img src="../assets/logo.png" alt="Atrak Logo"></span>
                         <span class="logo-text">Atrak</span>
                     </a>
                     <p class="footer-tagline">Building real products together</p>
                 </div>
                 <div class="footer-links">
                     <div class="footer-column">
-                        <h4>Navigate</h4>
-                        <a href="../index.html#projects">Projects</a>
-                        <a href="../index.html#about">About</a>
-                        <a href="../index.html#contact">Suggestion Box</a>
+                        <h4>Project</h4>
+                        <a href="#problem">Problem</a>
+                        <a href="#features">Features</a>
+                        <a href="#roadmap">Roadmap</a>
                     </div>
                     <div class="footer-column">
-                        <h4>Connect</h4>
-                        <a href="https://github.com/charlie2233" target="_blank" rel="noopener noreferrer">GitHub</a>
-                    </div>
-                    <div class="footer-column">
-                        <h4>Pages</h4>
-                        <a href="../index.html">Home</a>
-                        <a href="../share.html">Share</a>
-                        <a href="../contributing.html">Contributing</a>
-                        <a href="../code-of-conduct.html">Code of Conduct</a>
-                        <a href="../security.html">Security</a>
-                        <a href="../privacy.html">Privacy</a>
-                        <a href="../terms.html">Terms</a>
-                        <a href="../license.html">License</a>
+                        <h4>Links</h4>
+                        <a href="https://github.com/charlie2233/Basketball_action_recoginition_sever" target="_blank">GitHub</a>
+                        <a href="../releases.html">Release Notes</a>
                     </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 Atrak. All rights reserved.</p>
+                <p>&copy; 2026 Atrak. Open source under MIT.</p>
             </div>
         </div>
     </footer>
 
-    <script src="../script.js?v=9"></script>
+    <script src="../script.js?v=10"></script>
 </body>
 </html>

@@ -924,3 +924,30 @@ if (projectTabs.length) {
         if (moreTab) moreTab.click();
     }
 }
+
+// ================================
+// Run Tabs (Project Pages)
+// ================================
+const runTabs = document.querySelectorAll('.run-tab');
+if (runTabs.length) {
+    runTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetTab = tab.getAttribute('data-tab');
+            
+            // Remove active from all tabs
+            runTabs.forEach(t => t.classList.remove('active'));
+            
+            // Hide all content
+            document.querySelectorAll('.run-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Activate clicked tab and show content
+            tab.classList.add('active');
+            const targetContent = document.getElementById(`${targetTab}-content`);
+            if (targetContent) {
+                targetContent.classList.remove('hidden');
+            }
+        });
+    });
+}

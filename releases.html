@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Atrak Release Notes — Monthly updates on what shipped, what broke, and what's next.">
+    <title>Release Notes — Atrak</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/logo.png">
+    <link rel="stylesheet" href="styles.css?v=10">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a class="logo" href="index.html">
+                <span class="logo-icon"><img src="assets/logo.png" alt="Atrak Logo"></span>
+                <span class="logo-text">Atrak</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#leadership">Team</a></li>
+                <li><a href="releases.html" class="active">Releases</a></li>
+                <li><a href="join.html">Join</a></li>
+            </ul>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <section class="releases-hero">
+            <div class="container">
+                <span class="section-tag">Monthly Updates</span>
+                <h1 class="section-title">Release Notes</h1>
+                <p class="section-description">
+                    What we shipped, what broke, and what's coming next. Transparent updates from the Atrak team.
+                </p>
+            </div>
+        </section>
+
+        <section class="releases-content">
+            <div class="container">
+                <!-- January 2026 -->
+                <article class="release-post glass-card" id="jan-2026">
+                    <header class="release-header">
+                        <time class="release-date">January 2026</time>
+                        <span class="release-version">v2.1</span>
+                    </header>
+
+                    <div class="release-body">
+                        <section class="release-section shipped">
+                            <h3>🚀 What Shipped</h3>
+                            <ul class="release-list">
+                                <li>
+                                    <strong>Website Overhaul</strong> — Complete redesign with futuristic UI, glassmorphism, custom cursor, and scroll animations.
+                                    <a href="index.html" class="release-link">View →</a>
+                                </li>
+                                <li>
+                                    <strong>Team Handbook</strong> — New public handbook documenting our values, processes, and quality standards.
+                                    <a href="handbook.html" class="release-link">View →</a>
+                                </li>
+                                <li>
+                                    <strong>Expanded Roster</strong> — Added detailed member cards with roles, focus areas, and social links.
+                                    <a href="index.html#leadership" class="release-link">View →</a>
+                                </li>
+                                <li>
+                                    <strong>GitHub Integration</strong> — Automated workflow to fetch and cache GitHub project data.
+                                </li>
+                                <li>
+                                    <strong>Release Notes System</strong> — This page! Monthly transparency on progress.
+                                </li>
+                            </ul>
+                        </section>
+
+                        <section class="release-section broke">
+                            <h3>💥 What Broke</h3>
+                            <ul class="release-list">
+                                <li>
+                                    <strong>Black Screen Bug</strong> — JavaScript variable hoisting issue caused UI to not render. Fixed by reordering declarations.
+                                </li>
+                                <li>
+                                    <strong>Button Clicks Blocked</strong> — CSS pseudo-element was capturing pointer events. Fixed with <code>pointer-events: none</code>.
+                                </li>
+                                <li>
+                                    <strong>Timeline Layout</strong> — Alternating top/bottom cards had alignment issues on different screen sizes. Simplified to consistent layout.
+                                </li>
+                            </ul>
+                        </section>
+
+                        <section class="release-section next">
+                            <h3>🔮 What's Next</h3>
+                            <ul class="release-list">
+                                <li>
+                                    <strong>Project Page Templates</strong> — Rich documentation structure for all projects (Problem, Demo, Architecture, Roadmap, etc.)
+                                </li>
+                                <li>
+                                    <strong>GuidePup TestFlight</strong> — Open beta testing for iOS users.
+                                    <a href="projects/guidepup.html" class="release-link">Project →</a>
+                                </li>
+                                <li>
+                                    <strong>Lunar AI Enhancements</strong> — Context-aware responses and conversation memory.
+                                    <a href="projects/lunar.html" class="release-link">Project →</a>
+                                </li>
+                            </ul>
+                        </section>
+
+                        <section class="release-section stats">
+                            <h3>📊 By the Numbers</h3>
+                            <div class="release-stats">
+                                <div class="stat-item">
+                                    <span class="stat-value">47</span>
+                                    <span class="stat-label">Commits</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value">12</span>
+                                    <span class="stat-label">Files Changed</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value">3</span>
+                                    <span class="stat-label">Bugs Fixed</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value">5</span>
+                                    <span class="stat-label">Features Added</span>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <footer class="release-footer">
+                        <div class="release-projects">
+                            <strong>Related Projects:</strong>
+                            <a href="projects/guidepup.html">GuidePup</a>
+                            <a href="projects/lunar.html">Lunar</a>
+                            <a href="index.html">Website</a>
+                        </div>
+                    </footer>
+                </article>
+
+                <!-- December 2025 -->
+                <article class="release-post glass-card" id="dec-2025">
+                    <header class="release-header">
+                        <time class="release-date">December 2025</time>
+                        <span class="release-version">v2.0</span>
+                    </header>
+
+                    <div class="release-body">
+                        <section class="release-section shipped">
+                            <h3>🚀 What Shipped</h3>
+                            <ul class="release-list">
+                                <li>
+                                    <strong>GuidePup App Store Submission</strong> — Submitted for Apple review.
+                                    <a href="projects/guidepup.html" class="release-link">Project →</a>
+                                </li>
+                                <li>
+                                    <strong>Atrak Website Launch</strong> — Initial public website with project showcase.
+                                </li>
+                                <li>
+                                    <strong>Ten Seconds VIP Manager v1.0</strong> — Python automation tool for Roblox VIP management.
+                                    <a href="projects/ten-seconds-vip-manager.html" class="release-link">Project →</a>
+                                </li>
+                            </ul>
+                        </section>
+
+                        <section class="release-section broke">
+                            <h3>💥 What Broke</h3>
+                            <ul class="release-list">
+                                <li>
+                                    <strong>Mobile Nav Menu</strong> — Hamburger menu wasn't closing after link click. Fixed with event listener.
+                                </li>
+                            </ul>
+                        </section>
+
+                        <section class="release-section next">
+                            <h3>🔮 What's Next</h3>
+                            <ul class="release-list">
+                                <li>Website redesign with futuristic UI</li>
+                                <li>Team expansion</li>
+                                <li>GitHub API integration</li>
+                            </ul>
+                        </section>
+                    </div>
+
+                    <footer class="release-footer">
+                        <div class="release-projects">
+                            <strong>Related Projects:</strong>
+                            <a href="projects/guidepup.html">GuidePup</a>
+                            <a href="projects/ten-seconds-vip-manager.html">Ten Seconds</a>
+                        </div>
+                    </footer>
+                </article>
+
+                <!-- November 2025 -->
+                <article class="release-post glass-card" id="nov-2025">
+                    <header class="release-header">
+                        <time class="release-date">November 2025</time>
+                        <span class="release-version">v1.0</span>
+                    </header>
+
+                    <div class="release-body">
+                        <section class="release-section shipped">
+                            <h3>🚀 What Shipped</h3>
+                            <ul class="release-list">
+                                <li>
+                                    <strong>AI Predator Simulation</strong> — Neural network-powered predator-prey simulation in Unity.
+                                    <a href="projects/ai-predator-simulation.html" class="release-link">Project →</a>
+                                </li>
+                                <li>
+                                    <strong>GuidePup MVP</strong> — First working prototype with GPT-4 Vision integration.
+                                </li>
+                                <li>
+                                    <strong>Hoops Clips Beta</strong> — Basketball highlight analysis using computer vision.
+                                    <a href="projects/hoops-clips.html" class="release-link">Project →</a>
+                                </li>
+                            </ul>
+                        </section>
+
+                        <section class="release-section broke">
+                            <h3>💥 What Broke</h3>
+                            <ul class="release-list">
+                                <li>
+                                    <strong>API Rate Limits</strong> — Hit OpenAI rate limits during testing. Implemented caching and request throttling.
+                                </li>
+                            </ul>
+                        </section>
+
+                        <section class="release-section next">
+                            <h3>🔮 What's Next</h3>
+                            <ul class="release-list">
+                                <li>GuidePup App Store submission</li>
+                                <li>Atrak website launch</li>
+                                <li>Team recruitment</li>
+                            </ul>
+                        </section>
+                    </div>
+
+                    <footer class="release-footer">
+                        <div class="release-projects">
+                            <strong>Related Projects:</strong>
+                            <a href="projects/ai-predator-simulation.html">AI Predator</a>
+                            <a href="projects/hoops-clips.html">Hoops Clips</a>
+                        </div>
+                    </footer>
+                </article>
+
+                <!-- Archive Notice -->
+                <div class="releases-archive">
+                    <p>📜 Earlier releases predate the Atrak organization. Check individual project repos for full history.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a class="logo" href="index.html">
+                        <span class="logo-icon"><img src="assets/logo.png" alt="Atrak Logo"></span>
+                        <span class="logo-text">Atrak</span>
+                    </a>
+                    <p class="footer-tagline">Building real products together</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Navigate</h4>
+                        <a href="index.html#projects">Projects</a>
+                        <a href="index.html#leadership">Team</a>
+                        <a href="handbook.html">Handbook</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Connect</h4>
+                        <a href="https://github.com/charlie2233" target="_blank">GitHub</a>
+                        <a href="join.html">Join Us</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Atrak. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js?v=10"></script>
+</body>
+</html>
+

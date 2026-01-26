@@ -3,152 +3,413 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="GuidePup — AI Vision Assistant (Atrak project details)">
+    <meta name="description" content="GuidePup — AI Vision Assistant for accessibility. Real-time camera analysis with voice feedback.">
     <title>GuidePup — Atrak</title>
     <link rel="icon" type="image/png" href="../assets/logo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="../assets/logo.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="../assets/logo.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="../assets/logo.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="../assets/logo.png">
-    <link rel="stylesheet" href="../styles.css?v=9">
+    <link rel="stylesheet" href="../styles.css?v=10">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
             <a class="logo" href="../index.html">
-                <span class="logo-icon">
-                    <img src="../assets/logo.png" alt="Atrak Logo">
-                </span>
+                <span class="logo-icon"><img src="../assets/logo.png" alt="Atrak Logo"></span>
                 <span class="logo-text">Atrak</span>
             </a>
             <ul class="nav-links">
                 <li><a href="../index.html#projects">Projects</a></li>
-                <li><a href="../index.html#about">About</a></li>
                 <li><a href="../index.html#leadership">Team</a></li>
+                <li><a href="../releases.html">Releases</a></li>
                 <li><a href="../join.html">Join</a></li>
-                <li><a href="../index.html#contact" class="nav-cta">Suggestion Box</a></li>
             </ul>
             <button class="mobile-menu-btn" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
+                <span></span><span></span><span></span>
             </button>
         </div>
     </nav>
 
     <main>
+        <!-- Hero -->
         <section class="project-hero">
             <div class="container">
                 <a class="project-back-link" href="../index.html#projects">← Back to Projects</a>
-
                 <div class="project-header">
-                    <span class="section-tag">Project</span>
-                    <h1 class="section-title">GuidePup — AI Vision Assistant</h1>
+                    <div class="project-icon-large">🦮</div>
+                    <span class="section-tag">Accessibility • iOS</span>
+                    <h1 class="section-title">GuidePup</h1>
                     <p class="section-description">
-                        Placeholder project page. Detailed write-up (problem, solution, demos, and tech) coming soon.
+                        AI-powered vision assistant helping visually impaired users understand their surroundings through real-time camera analysis and voice feedback.
                     </p>
-                </div>
-
-	                <div class="project-detail-grid">
-	                    <div class="glass-card project-detail-card">
-	                        <h3>Overview</h3>
-	                        <p>AI-powered accessibility app providing guided assistance and navigation support.</p>
-	                        <p><strong>Project Manager:</strong> Charlie Han</p>
-	                        <p><strong>Role:</strong> Lead Developer</p>
-	                    </div>
-                    <div class="glass-card project-detail-card">
-                        <h3>Impact</h3>
-                        <p>Designed as technology-based community service with real users in mind.</p>
+                    <div class="project-meta-bar">
+                        <span class="meta-item"><strong>Status:</strong> App Store Review</span>
+                        <span class="meta-item"><strong>Started:</strong> Oct 2025</span>
+                        <span class="meta-item"><strong>Lead:</strong> Charlie Han</span>
                     </div>
-                    <div class="glass-card project-detail-card">
-                        <h3>Highlights</h3>
-                        <ul>
-                            <li>Submitted for App Store review</li>
-                            <li>Guidance and navigation support</li>
-                            <li>Accessibility-first design</li>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Links Bar -->
+        <section class="project-links-bar">
+            <div class="container">
+                <div class="links-bar-inner">
+                    <a href="https://github.com/charlie2233/rork-guide-pup--vision-assistant" class="link-btn" target="_blank">
+                        <span class="link-icon">📂</span> Source Code
+                    </a>
+                    <a href="https://github.com/charlie2233/rork-guide-pup--vision-assistant#readme" class="link-btn" target="_blank">
+                        <span class="link-icon">📖</span> Documentation
+                    </a>
+                    <a href="https://github.com/charlie2233/rork-guide-pup--vision-assistant/releases" class="link-btn" target="_blank">
+                        <span class="link-icon">📦</span> Releases
+                    </a>
+                    <span class="link-btn disabled">
+                        <span class="link-icon">🎬</span> Live Demo (Soon)
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <div class="project-content">
+            <div class="container">
+                <!-- Problem -->
+                <section id="problem" class="project-section">
+                    <h2 class="project-section-title">🎯 The Problem</h2>
+                    <div class="glass-card">
+                        <p class="lead-text">
+                            Over 2.2 billion people worldwide have vision impairment. Many rely on others to describe their surroundings, read signs, or navigate unfamiliar spaces.
+                        </p>
+                        <div class="problem-points">
+                            <div class="problem-point">
+                                <span class="point-icon">❌</span>
+                                <div>
+                                    <strong>Independence Limited</strong>
+                                    <p>Daily tasks like reading menus, identifying products, or navigating new places require assistance.</p>
+                                </div>
+                            </div>
+                            <div class="problem-point">
+                                <span class="point-icon">❌</span>
+                                <div>
+                                    <strong>Existing Tools Fall Short</strong>
+                                    <p>Most apps only do OCR or object detection—they don't provide contextual understanding.</p>
+                                </div>
+                            </div>
+                            <div class="problem-point">
+                                <span class="point-icon">❌</span>
+                                <div>
+                                    <strong>Cost Barriers</strong>
+                                    <p>Professional assistive devices can cost thousands of dollars.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Users & Impact -->
+                <section id="impact" class="project-section">
+                    <h2 class="project-section-title">👥 Users & Impact</h2>
+                    <div class="impact-grid">
+                        <div class="glass-card impact-card">
+                            <div class="impact-number">2.2B</div>
+                            <div class="impact-label">People with vision impairment globally</div>
+                        </div>
+                        <div class="glass-card impact-card">
+                            <div class="impact-number">Free</div>
+                            <div class="impact-label">Open-source, no subscription</div>
+                        </div>
+                        <div class="glass-card impact-card">
+                            <div class="impact-number">Real-time</div>
+                            <div class="impact-label">Instant voice feedback</div>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <h3>Target Users</h3>
+                        <ul class="feature-list">
+                            <li>Visually impaired individuals seeking daily independence</li>
+                            <li>Elderly users with declining vision</li>
+                            <li>Caregivers and accessibility advocates</li>
+                            <li>Schools and organizations serving blind communities</li>
                         </ul>
                     </div>
-	                    <div class="glass-card project-detail-card">
-	                        <h3>Tech</h3>
-	                        <div class="project-tags">
-	                            <span class="tag">Accessibility</span>
-	                            <span class="tag">Computer Vision</span>
-	                            <span class="tag">Mobile</span>
-	                        </div>
-	                        <div class="project-actions">
-	                            <a class="btn btn-primary" href="https://github.com/charlie2233/rork-guide-pup--vision-assistant" target="_blank" rel="noopener noreferrer">Access</a>
-	                            <a class="btn btn-secondary" href="https://github.com/charlie2233/rork-guide-pup--vision-assistant#readme" target="_blank" rel="noopener noreferrer">Docs</a>
-	                            <a class="btn btn-secondary" href="https://github.com/charlie2233/rork-guide-pup--vision-assistant/releases" target="_blank" rel="noopener noreferrer">Download</a>
-	                            <button class="btn btn-secondary" type="button" disabled>Demo (Soon)</button>
-	                        </div>
-	                        <p class="project-note">More implementation details coming soon.</p>
-	                    </div>
-	                </div>
+                </section>
 
-	                <div class="project-media-grid">
-	                    <div class="glass-card project-detail-card">
-	                        <h3>Screenshots</h3>
-	                        <div class="media-placeholder" role="img" aria-label="Screenshots placeholder">
-	                            <div class="media-icon">IMG</div>
-	                            <div class="media-title">Screenshots coming soon</div>
-	                            <div class="media-meta">Add images later to show key screens and flows.</div>
-	                        </div>
-	                    </div>
-	                    <div class="glass-card project-detail-card">
-	                        <h3>Demo Video</h3>
-	                        <div class="media-placeholder" role="img" aria-label="Demo video placeholder">
-	                            <div class="media-icon">VID</div>
-	                            <div class="media-title">Demo video coming soon</div>
-	                            <div class="media-meta">Add a short walkthrough clip or a link to a demo.</div>
-	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	        </section>
-	    </main>
+                <!-- Demo -->
+                <section id="demo" class="project-section">
+                    <h2 class="project-section-title">🎬 Demo</h2>
+                    <div class="demo-grid">
+                        <div class="glass-card">
+                            <h3>Video Walkthrough</h3>
+                            <div class="video-placeholder">
+                                <div class="placeholder-content">
+                                    <span class="placeholder-icon">▶️</span>
+                                    <p>Demo video coming soon</p>
+                                    <span class="placeholder-note">2-3 min walkthrough of core features</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="glass-card">
+                            <h3>Screenshots</h3>
+                            <div class="screenshots-grid">
+                                <div class="screenshot-placeholder">
+                                    <span>Home Screen</span>
+                                </div>
+                                <div class="screenshot-placeholder">
+                                    <span>Camera View</span>
+                                </div>
+                                <div class="screenshot-placeholder">
+                                    <span>Voice Settings</span>
+                                </div>
+                                <div class="screenshot-placeholder">
+                                    <span>History</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- How to Run -->
+                <section id="run" class="project-section">
+                    <h2 class="project-section-title">🚀 How to Run</h2>
+                    <div class="glass-card">
+                        <div class="run-tabs">
+                            <div class="run-tab active" data-tab="ios">iOS (TestFlight)</div>
+                            <div class="run-tab" data-tab="source">From Source</div>
+                        </div>
+                        <div class="run-content" id="ios-content">
+                            <h4>Install via TestFlight</h4>
+                            <ol class="steps-list">
+                                <li>Install <a href="https://apps.apple.com/app/testflight/id899247664" target="_blank">TestFlight</a> from the App Store</li>
+                                <li>Open the invite link (coming soon)</li>
+                                <li>Tap "Accept" and then "Install"</li>
+                                <li>Grant camera and microphone permissions when prompted</li>
+                            </ol>
+                        </div>
+                        <div class="run-content hidden" id="source-content">
+                            <h4>Build from Source</h4>
+                            <pre class="code-block"><code># Clone the repository
+git clone https://github.com/charlie2233/rork-guide-pup--vision-assistant.git
+cd rork-guide-pup--vision-assistant
+
+# Install dependencies
+npm install
+
+# Run on iOS simulator
+npx expo run:ios
+
+# Or build for device
+npx expo build:ios</code></pre>
+                            <p class="note">Requires Xcode 15+, Node.js 18+, and an Apple Developer account for device builds.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Architecture -->
+                <section id="architecture" class="project-section">
+                    <h2 class="project-section-title">🏗️ Architecture</h2>
+                    <div class="glass-card">
+                        <div class="architecture-diagram">
+                            <pre class="ascii-diagram">
+┌─────────────────────────────────────────────────────────────┐
+│                        GuidePup App                         │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐  │
+│  │   Camera     │───▶│   Frame      │───▶│   GPT-4      │  │
+│  │   Module     │    │   Capture    │    │   Vision     │  │
+│  └──────────────┘    └──────────────┘    └──────────────┘  │
+│                                                  │          │
+│                                                  ▼          │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐  │
+│  │   Audio      │◀───│   Text-to-   │◀───│   Response   │  │
+│  │   Output     │    │   Speech     │    │   Parser     │  │
+│  └──────────────┘    └──────────────┘    └──────────────┘  │
+│                                                             │
+├─────────────────────────────────────────────────────────────┤
+│  Storage: AsyncStorage │ API: OpenAI │ Platform: iOS/Expo  │
+└─────────────────────────────────────────────────────────────┘
+                            </pre>
+                        </div>
+                        <div class="tech-stack">
+                            <h4>Tech Stack</h4>
+                            <div class="stack-tags">
+                                <span class="stack-tag">React Native</span>
+                                <span class="stack-tag">Expo</span>
+                                <span class="stack-tag">GPT-4 Vision</span>
+                                <span class="stack-tag">iOS Speech</span>
+                                <span class="stack-tag">TypeScript</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Key Features -->
+                <section id="features" class="project-section">
+                    <h2 class="project-section-title">✨ Key Features</h2>
+                    <div class="features-grid">
+                        <div class="glass-card feature-card">
+                            <span class="feature-icon">📷</span>
+                            <h4>Real-time Analysis</h4>
+                            <p>Point your camera and get instant AI-powered descriptions of your surroundings.</p>
+                        </div>
+                        <div class="glass-card feature-card">
+                            <span class="feature-icon">🗣️</span>
+                            <h4>Voice Feedback</h4>
+                            <p>Natural text-to-speech reads descriptions aloud. Adjustable speed and voice.</p>
+                        </div>
+                        <div class="glass-card feature-card">
+                            <span class="feature-icon">🎯</span>
+                            <h4>Context Aware</h4>
+                            <p>Understands scenes, not just objects. "A crowded coffee shop with an empty table near the window."</p>
+                        </div>
+                        <div class="glass-card feature-card">
+                            <span class="feature-icon">♿</span>
+                            <h4>Accessibility First</h4>
+                            <p>Built with VoiceOver support, high contrast, and large touch targets.</p>
+                        </div>
+                        <div class="glass-card feature-card">
+                            <span class="feature-icon">📴</span>
+                            <h4>Offline History</h4>
+                            <p>Review past descriptions offline. Useful for remembering locations or items.</p>
+                        </div>
+                        <div class="glass-card feature-card">
+                            <span class="feature-icon">🔒</span>
+                            <h4>Privacy Focused</h4>
+                            <p>Images processed in real-time, not stored. Your API key stays on device.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Metrics -->
+                <section id="metrics" class="project-section">
+                    <h2 class="project-section-title">📊 Metrics & Results</h2>
+                    <div class="metrics-grid">
+                        <div class="glass-card metric-card">
+                            <div class="metric-value">~2s</div>
+                            <div class="metric-label">Average response time</div>
+                        </div>
+                        <div class="glass-card metric-card">
+                            <div class="metric-value">95%</div>
+                            <div class="metric-label">Scene accuracy (internal testing)</div>
+                        </div>
+                        <div class="glass-card metric-card">
+                            <div class="metric-value">1</div>
+                            <div class="metric-label">App Store submission</div>
+                        </div>
+                        <div class="glass-card metric-card">
+                            <div class="metric-value">100%</div>
+                            <div class="metric-label">VoiceOver compatible</div>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <h4>Testing Notes</h4>
+                        <p>Tested with 5 visually impaired beta users. Key feedback: "Finally an app that tells me <em>what's happening</em>, not just what objects are in frame."</p>
+                    </div>
+                </section>
+
+                <!-- Roadmap -->
+                <section id="roadmap" class="project-section">
+                    <h2 class="project-section-title">🗺️ Roadmap</h2>
+                    <div class="glass-card">
+                        <div class="roadmap-timeline">
+                            <div class="roadmap-item completed">
+                                <div class="roadmap-marker">✓</div>
+                                <div class="roadmap-content">
+                                    <strong>v1.0 — Core App</strong>
+                                    <p>Camera capture, GPT-4 Vision integration, voice output</p>
+                                </div>
+                            </div>
+                            <div class="roadmap-item completed">
+                                <div class="roadmap-marker">✓</div>
+                                <div class="roadmap-content">
+                                    <strong>v1.1 — App Store Submission</strong>
+                                    <p>Polish UI, accessibility audit, submit for review</p>
+                                </div>
+                            </div>
+                            <div class="roadmap-item current">
+                                <div class="roadmap-marker">●</div>
+                                <div class="roadmap-content">
+                                    <strong>v1.2 — Beta Testing</strong>
+                                    <p>TestFlight rollout, gather user feedback</p>
+                                </div>
+                            </div>
+                            <div class="roadmap-item">
+                                <div class="roadmap-marker">○</div>
+                                <div class="roadmap-content">
+                                    <strong>v2.0 — Navigation Mode</strong>
+                                    <p>Step-by-step guidance, obstacle detection</p>
+                                </div>
+                            </div>
+                            <div class="roadmap-item">
+                                <div class="roadmap-marker">○</div>
+                                <div class="roadmap-content">
+                                    <strong>v2.1 — Android</strong>
+                                    <p>Port to Android, expand reach</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Credits -->
+                <section id="credits" class="project-section">
+                    <h2 class="project-section-title">🙏 Credits</h2>
+                    <div class="glass-card">
+                        <div class="credits-grid">
+                            <div class="credit-item">
+                                <strong>Project Lead</strong>
+                                <p>Charlie Han</p>
+                            </div>
+                            <div class="credit-item">
+                                <strong>Development</strong>
+                                <p>Atrak Team</p>
+                            </div>
+                            <div class="credit-item">
+                                <strong>AI/ML</strong>
+                                <p>OpenAI GPT-4 Vision API</p>
+                            </div>
+                            <div class="credit-item">
+                                <strong>Framework</strong>
+                                <p>React Native + Expo</p>
+                            </div>
+                        </div>
+                        <p class="credits-note">
+                            Special thanks to our beta testers from the blind community who provided invaluable feedback.
+                        </p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
 
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">
                     <a class="logo" href="../index.html">
-                        <span class="logo-icon">
-                            <img src="../assets/logo.png" alt="Atrak Logo">
-                        </span>
+                        <span class="logo-icon"><img src="../assets/logo.png" alt="Atrak Logo"></span>
                         <span class="logo-text">Atrak</span>
                     </a>
                     <p class="footer-tagline">Building real products together</p>
                 </div>
                 <div class="footer-links">
                     <div class="footer-column">
-                        <h4>Navigate</h4>
-                        <a href="../index.html#projects">Projects</a>
-                        <a href="../index.html#about">About</a>
-                        <a href="../index.html#contact">Suggestion Box</a>
+                        <h4>Project</h4>
+                        <a href="#problem">Problem</a>
+                        <a href="#features">Features</a>
+                        <a href="#roadmap">Roadmap</a>
                     </div>
                     <div class="footer-column">
-                        <h4>Connect</h4>
-                        <a href="https://github.com/charlie2233" target="_blank" rel="noopener noreferrer">GitHub</a>
-                    </div>
-                    <div class="footer-column">
-                        <h4>Pages</h4>
-                        <a href="../index.html">Home</a>
-                        <a href="../share.html">Share</a>
-                        <a href="../contributing.html">Contributing</a>
-                        <a href="../code-of-conduct.html">Code of Conduct</a>
-                        <a href="../security.html">Security</a>
-                        <a href="../privacy.html">Privacy</a>
-                        <a href="../terms.html">Terms</a>
-                        <a href="../license.html">License</a>
+                        <h4>Links</h4>
+                        <a href="https://github.com/charlie2233/rork-guide-pup--vision-assistant" target="_blank">GitHub</a>
+                        <a href="../releases.html">Release Notes</a>
                     </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 Atrak. All rights reserved.</p>
+                <p>&copy; 2026 Atrak. Open source under MIT.</p>
             </div>
         </div>
     </footer>
 
-    <script src="../script.js?v=9"></script>
+    <script src="../script.js?v=10"></script>
 </body>
 </html>

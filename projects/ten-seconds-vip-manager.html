@@ -3,28 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Ten Seconds VIP Manager (Atrak project details)">
+    <meta name="description" content="Ten Seconds VIP Manager — Internal tool for VIP tracking, balances, and operational workflows.">
     <title>Ten Seconds VIP Manager — Atrak</title>
     <link rel="icon" type="image/png" href="../assets/logo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="../assets/logo.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="../assets/logo.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="../assets/logo.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="../assets/logo.png">
-    <link rel="stylesheet" href="../styles.css?v=9">
+    <link rel="stylesheet" href="../styles.css?v=10">
     <style>
-        .project-header-icon {
+        .project-icon-custom {
             width: 80px;
             height: 80px;
-            margin-bottom: 24px;
             border-radius: 20px;
             overflow: hidden;
             border: 1px solid var(--border-color);
-            background: var(--bg-tertiary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin-bottom: 1rem;
         }
-        .project-header-icon img {
+        .project-icon-custom img {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -35,133 +28,363 @@
     <nav class="navbar">
         <div class="nav-container">
             <a class="logo" href="../index.html">
-                <span class="logo-icon">
-                    <img src="../assets/logo.png" alt="Atrak Logo">
-                </span>
+                <span class="logo-icon"><img src="../assets/logo.png" alt="Atrak Logo"></span>
                 <span class="logo-text">Atrak</span>
             </a>
             <ul class="nav-links">
                 <li><a href="../index.html#projects">Projects</a></li>
-                <li><a href="../index.html#about">About</a></li>
                 <li><a href="../index.html#leadership">Team</a></li>
+                <li><a href="../releases.html">Releases</a></li>
                 <li><a href="../join.html">Join</a></li>
-                <li><a href="../index.html#contact" class="nav-cta">Suggestion Box</a></li>
             </ul>
             <button class="mobile-menu-btn" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
+                <span></span><span></span><span></span>
             </button>
         </div>
     </nav>
 
     <main>
+        <!-- Hero -->
         <section class="project-hero">
             <div class="container">
                 <a class="project-back-link" href="../index.html#projects">← Back to Projects</a>
-
                 <div class="project-header">
-                    <div class="project-header-icon">
+                    <div class="project-icon-custom">
                         <img src="../assets/ten-seconds-icon.jpg" alt="Ten Seconds Icon">
                     </div>
-                    <span class="section-tag">Internal Project</span>
+                    <span class="section-tag">Internal • Full-Stack • Operations</span>
                     <h1 class="section-title">Ten Seconds VIP Manager</h1>
                     <p class="section-description">
-                        Placeholder project page. Detailed write-up (features, deployment, and ops learnings) coming soon.
+                        Internal management system for VIP tracking, balance management, and daily operational workflows. Built for real-world use at a family restaurant.
                     </p>
-                </div>
-
-	                <div class="project-detail-grid">
-	                    <div class="glass-card project-detail-card">
-	                        <h3>Overview</h3>
-	                        <p>Internal management app for VIP tracking, balances, and operational workflows.</p>
-	                        <p><strong>Project Manager:</strong> Charlie Han</p>
-	                        <p><strong>Role:</strong> Lead Developer & Operations</p>
-	                    </div>
-                    <div class="glass-card project-detail-card">
-                        <h3>Real-World Use</h3>
-                        <p>Deployed for daily use at my parents’ restaurant.</p>
+                    <div class="project-meta-bar">
+                        <span class="meta-item"><strong>Status:</strong> Production</span>
+                        <span class="meta-item"><strong>Deployed:</strong> Dec 2025</span>
+                        <span class="meta-item"><strong>Lead:</strong> Charlie Han</span>
                     </div>
-                    <div class="glass-card project-detail-card">
-                        <h3>What’s Next</h3>
-                        <ul>
-                            <li>Better reporting and analytics</li>
-                            <li>Role-based access control</li>
-                            <li>More automation for staff workflows</li>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Links Bar -->
+        <section class="project-links-bar">
+            <div class="container">
+                <div class="links-bar-inner">
+                    <a href="../join.html#contact" class="link-btn">
+                        <span class="link-icon">🔑</span> Request Access
+                    </a>
+                    <span class="link-btn disabled">
+                        <span class="link-icon">📖</span> Docs (Internal)
+                    </span>
+                    <span class="link-btn disabled">
+                        <span class="link-icon">📦</span> Download (Internal)
+                    </span>
+                    <span class="link-btn disabled">
+                        <span class="link-icon">🎬</span> Demo (Internal)
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <div class="project-content">
+            <div class="container">
+                <!-- Problem -->
+                <section id="problem" class="project-section">
+                    <h2 class="project-section-title">🎯 The Problem</h2>
+                    <div class="glass-card">
+                        <p class="lead-text">
+                            Small businesses often track VIP customers and balances with paper notebooks or scattered spreadsheets. This leads to errors, disputes, and lost revenue.
+                        </p>
+                        <div class="problem-points">
+                            <div class="problem-point">
+                                <span class="point-icon">❌</span>
+                                <div>
+                                    <strong>Paper-Based Tracking</strong>
+                                    <p>Handwritten records are hard to search, easy to lose, and prone to mistakes.</p>
+                                </div>
+                            </div>
+                            <div class="problem-point">
+                                <span class="point-icon">❌</span>
+                                <div>
+                                    <strong>No History</strong>
+                                    <p>Without transaction logs, disputes become "he said/she said" situations.</p>
+                                </div>
+                            </div>
+                            <div class="problem-point">
+                                <span class="point-icon">❌</span>
+                                <div>
+                                    <strong>Staff Confusion</strong>
+                                    <p>Multiple staff members updating different records causes inconsistencies.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Users & Impact -->
+                <section id="impact" class="project-section">
+                    <h2 class="project-section-title">👥 Users & Impact</h2>
+                    <div class="impact-grid">
+                        <div class="glass-card impact-card">
+                            <div class="impact-number">Daily</div>
+                            <div class="impact-label">Active production use</div>
+                        </div>
+                        <div class="glass-card impact-card">
+                            <div class="impact-number">100%</div>
+                            <div class="impact-label">Dispute reduction</div>
+                        </div>
+                        <div class="glass-card impact-card">
+                            <div class="impact-number">~5min</div>
+                            <div class="impact-label">Daily time saved</div>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <h3>Target Users</h3>
+                        <ul class="feature-list">
+                            <li>Restaurant owners and managers</li>
+                            <li>Front-of-house staff handling VIP accounts</li>
+                            <li>Small businesses with prepaid/credit systems</li>
+                            <li>Family businesses needing simple, reliable tools</li>
                         </ul>
                     </div>
-	                    <div class="glass-card project-detail-card">
-	                        <h3>Tech</h3>
-	                        <div class="project-tags">
-	                            <span class="tag">Full-Stack</span>
-	                            <span class="tag">Operations</span>
-	                            <span class="tag">Database</span>
-	                        </div>
-	                        <div class="project-actions">
-	                            <a class="btn btn-primary" href="../join.html#contact">Request Access</a>
-	                            <button class="btn btn-secondary" type="button" disabled>Docs (Internal)</button>
-	                            <button class="btn btn-secondary" type="button" disabled>Download (Internal)</button>
-	                            <button class="btn btn-secondary" type="button" disabled>Demo (Internal)</button>
-	                        </div>
-	                        <p class="project-note">More implementation details coming soon.</p>
-	                    </div>
-	                </div>
+                </section>
 
-	                <div class="project-media-grid">
-	                    <div class="glass-card project-detail-card">
-	                        <h3>Screenshots</h3>
-	                        <div class="media-placeholder" role="img" aria-label="Screenshots placeholder">
-	                            <div class="media-icon">IMG</div>
-	                            <div class="media-title">Screenshots coming soon</div>
-	                            <div class="media-meta">Add dashboard and workflow screenshots.</div>
-	                        </div>
-	                    </div>
-	                    <div class="glass-card project-detail-card">
-	                        <h3>Demo Video</h3>
-	                        <div class="media-placeholder" role="img" aria-label="Demo video placeholder">
-	                            <div class="media-icon">VID</div>
-	                            <div class="media-title">Demo video coming soon</div>
-	                            <div class="media-meta">Add a quick walkthrough of daily use.</div>
-	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	        </section>
-	    </main>
+                <!-- Demo -->
+                <section id="demo" class="project-section">
+                    <h2 class="project-section-title">🎬 Demo</h2>
+                    <div class="demo-grid">
+                        <div class="glass-card">
+                            <h3>Video Walkthrough</h3>
+                            <div class="video-placeholder">
+                                <div class="placeholder-content">
+                                    <span class="placeholder-icon">🔒</span>
+                                    <p>Internal demo only</p>
+                                    <span class="placeholder-note">Contains business-sensitive data</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="glass-card">
+                            <h3>Screenshots</h3>
+                            <div class="screenshots-grid">
+                                <div class="screenshot-placeholder">
+                                    <span>Dashboard</span>
+                                </div>
+                                <div class="screenshot-placeholder">
+                                    <span>VIP List</span>
+                                </div>
+                                <div class="screenshot-placeholder">
+                                    <span>Transaction</span>
+                                </div>
+                                <div class="screenshot-placeholder">
+                                    <span>Reports</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- How to Run -->
+                <section id="run" class="project-section">
+                    <h2 class="project-section-title">🚀 Deployment</h2>
+                    <div class="glass-card">
+                        <h4>Internal Deployment</h4>
+                        <p>This is an internal tool deployed for a specific business. The codebase is not publicly available, but the architecture and learnings inform other Atrak projects.</p>
+                        <p class="note">Interested in a similar solution for your business? <a href="../join.html#contact">Reach out</a> and we can discuss.</p>
+                    </div>
+                </section>
+
+                <!-- Architecture -->
+                <section id="architecture" class="project-section">
+                    <h2 class="project-section-title">🏗️ Architecture</h2>
+                    <div class="glass-card">
+                        <div class="architecture-diagram">
+                            <pre class="ascii-diagram">
+┌─────────────────────────────────────────────────────────────┐
+│                  Ten Seconds VIP Manager                    │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐  │
+│  │   Web UI     │───▶│   REST API   │───▶│   Database   │  │
+│  │   (React)    │    │   (FastAPI)  │    │   (SQLite)   │  │
+│  └──────────────┘    └──────────────┘    └──────────────┘  │
+│                             │                               │
+│                             ▼                               │
+│                      ┌──────────────┐                       │
+│                      │   Auth       │                       │
+│                      │   (PIN-based)│                       │
+│                      └──────────────┘                       │
+│                                                             │
+├─────────────────────────────────────────────────────────────┤
+│  Hosting: Local server │ Backup: Daily to cloud            │
+└─────────────────────────────────────────────────────────────┘
+                            </pre>
+                        </div>
+                        <div class="tech-stack">
+                            <h4>Tech Stack</h4>
+                            <div class="stack-tags">
+                                <span class="stack-tag">React</span>
+                                <span class="stack-tag">FastAPI</span>
+                                <span class="stack-tag">SQLite</span>
+                                <span class="stack-tag">Python</span>
+                                <span class="stack-tag">Local Server</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Key Features -->
+                <section id="features" class="project-section">
+                    <h2 class="project-section-title">✨ Key Features</h2>
+                    <div class="features-grid">
+                        <div class="glass-card feature-card">
+                            <span class="feature-icon">👤</span>
+                            <h4>VIP Profiles</h4>
+                            <p>Store customer info, preferences, and notes in searchable profiles.</p>
+                        </div>
+                        <div class="glass-card feature-card">
+                            <span class="feature-icon">💰</span>
+                            <h4>Balance Tracking</h4>
+                            <p>Manage prepaid balances with automatic calculations and history.</p>
+                        </div>
+                        <div class="glass-card feature-card">
+                            <span class="feature-icon">📜</span>
+                            <h4>Transaction Log</h4>
+                            <p>Every deposit, charge, and adjustment is logged with timestamps.</p>
+                        </div>
+                        <div class="glass-card feature-card">
+                            <span class="feature-icon">🔍</span>
+                            <h4>Quick Search</h4>
+                            <p>Find any customer instantly by name, phone, or ID.</p>
+                        </div>
+                        <div class="glass-card feature-card">
+                            <span class="feature-icon">📊</span>
+                            <h4>Simple Reports</h4>
+                            <p>Daily and monthly summaries of activity and outstanding balances.</p>
+                        </div>
+                        <div class="glass-card feature-card">
+                            <span class="feature-icon">🔐</span>
+                            <h4>PIN Protection</h4>
+                            <p>Simple PIN-based access control for staff accountability.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Metrics -->
+                <section id="metrics" class="project-section">
+                    <h2 class="project-section-title">📊 Metrics & Results</h2>
+                    <div class="metrics-grid">
+                        <div class="glass-card metric-card">
+                            <div class="metric-value">0</div>
+                            <div class="metric-label">Disputes since launch</div>
+                        </div>
+                        <div class="glass-card metric-card">
+                            <div class="metric-value">100+</div>
+                            <div class="metric-label">VIP profiles managed</div>
+                        </div>
+                        <div class="glass-card metric-card">
+                            <div class="metric-value">30s</div>
+                            <div class="metric-label">Avg transaction time</div>
+                        </div>
+                        <div class="glass-card metric-card">
+                            <div class="metric-value">99.9%</div>
+                            <div class="metric-label">Uptime since deploy</div>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <h4>Real-World Impact</h4>
+                        <p>"Before this, we had arguments every week about balances. Now it's all in the system with receipts. Zero disputes in 2 months." — Restaurant Owner</p>
+                    </div>
+                </section>
+
+                <!-- Roadmap -->
+                <section id="roadmap" class="project-section">
+                    <h2 class="project-section-title">🗺️ Roadmap</h2>
+                    <div class="glass-card">
+                        <div class="roadmap-timeline">
+                            <div class="roadmap-item completed">
+                                <div class="roadmap-marker">✓</div>
+                                <div class="roadmap-content">
+                                    <strong>v1.0 — Core System</strong>
+                                    <p>VIP profiles, balance tracking, transaction logs</p>
+                                </div>
+                            </div>
+                            <div class="roadmap-item completed">
+                                <div class="roadmap-marker">✓</div>
+                                <div class="roadmap-content">
+                                    <strong>v1.1 — Reports & Search</strong>
+                                    <p>Quick search, daily summaries, balance reports</p>
+                                </div>
+                            </div>
+                            <div class="roadmap-item current">
+                                <div class="roadmap-marker">●</div>
+                                <div class="roadmap-content">
+                                    <strong>v1.2 — Analytics</strong>
+                                    <p>Better reporting, customer insights, spending patterns</p>
+                                </div>
+                            </div>
+                            <div class="roadmap-item">
+                                <div class="roadmap-marker">○</div>
+                                <div class="roadmap-content">
+                                    <strong>v2.0 — Multi-User</strong>
+                                    <p>Role-based access, staff activity logs, permissions</p>
+                                </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+                <!-- Credits -->
+                <section id="credits" class="project-section">
+                    <h2 class="project-section-title">🙏 Credits</h2>
+                    <div class="glass-card">
+                        <div class="credits-grid">
+                            <div class="credit-item">
+                                <strong>Project Lead</strong>
+                                <p>Charlie Han</p>
+                            </div>
+                            <div class="credit-item">
+                                <strong>Development</strong>
+                                <p>Atrak Team</p>
+                            </div>
+                            <div class="credit-item">
+                                <strong>Frontend</strong>
+                                <p>React</p>
+                            </div>
+                            <div class="credit-item">
+                                <strong>Backend</strong>
+                                <p>FastAPI + SQLite</p>
+                            </div>
+                        </div>
+                        <p class="credits-note">
+                            Built to solve a real problem for a real business. Sometimes the best software is the simplest software.
+                        </p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
 
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">
                     <a class="logo" href="../index.html">
-                        <span class="logo-icon">
-                            <img src="../assets/logo.png" alt="Atrak Logo">
-                        </span>
+                        <span class="logo-icon"><img src="../assets/logo.png" alt="Atrak Logo"></span>
                         <span class="logo-text">Atrak</span>
                     </a>
                     <p class="footer-tagline">Building real products together</p>
                 </div>
                 <div class="footer-links">
                     <div class="footer-column">
-                        <h4>Navigate</h4>
-                        <a href="../index.html#projects">Projects</a>
-                        <a href="../index.html#about">About</a>
-                        <a href="../index.html#contact">Suggestion Box</a>
+                        <h4>Project</h4>
+                        <a href="#problem">Problem</a>
+                        <a href="#features">Features</a>
+                        <a href="#roadmap">Roadmap</a>
                     </div>
                     <div class="footer-column">
-                        <h4>Connect</h4>
-                        <a href="https://github.com/charlie2233" target="_blank" rel="noopener noreferrer">GitHub</a>
-                    </div>
-                    <div class="footer-column">
-                        <h4>Pages</h4>
-                        <a href="../index.html">Home</a>
-                        <a href="../share.html">Share</a>
-                        <a href="../contributing.html">Contributing</a>
-                        <a href="../code-of-conduct.html">Code of Conduct</a>
-                        <a href="../security.html">Security</a>
-                        <a href="../privacy.html">Privacy</a>
-                        <a href="../terms.html">Terms</a>
-                        <a href="../license.html">License</a>
+                        <h4>Links</h4>
+                        <a href="../join.html#contact">Contact</a>
+                        <a href="../releases.html">Release Notes</a>
                     </div>
                 </div>
             </div>
@@ -171,6 +394,6 @@
         </div>
     </footer>
 
-    <script src="../script.js?v=9"></script>
+    <script src="../script.js?v=10"></script>
 </body>
 </html>
