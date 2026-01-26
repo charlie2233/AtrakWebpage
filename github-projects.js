@@ -360,14 +360,118 @@ async function getProjectDetails(fullRepoName) {
     }
 }
 
+// ============================================
+// LIVE ACTIVITY FEED
+// ============================================
+
+/**
+ * Get relative time string
+ */
+function getTimeAgo(date) {
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    if (diffMins < 1) return 'just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays === 1) return 'yesterday';
+    if (diffDays < 7) return `${diffDays}d ago`;
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
+    
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+/**
+ * Create HTML for a live activity item
+ */
+function createLiveActivityItem(repo) {
+    const displayName = formatDisplayName(repo.name);
+    const timeAgo = getTimeAgo(new Date(repo.pushed_at));
+    const icon = repo.language === 'TypeScript' ? '📘' : 
+                 repo.language === 'Python' ? '🐍' :
+                 repo.language === 'JavaScript' ? '📙' :
+                 repo.language === 'Jupyter Notebook' ? '📓' : '📦';
+    
+    return `
+        <div class="live-item">
+            <span class="live-item-icon">${icon}</span>
+            <div class="live-item-content">
+                <div class="live-item-title">
+                    <a href="${repo.html_url}" target="_blank" rel="noopener">${displayName}</a>
+                </div>
+                <div class="live-item-meta">
+                    <span class="live-item-time">Updated ${timeAgo}</span>
+                    ${repo.language ? `
+                        <span class="live-item-lang">
+                            <span class="lang-dot" data-lang="${repo.language}"></span>
+                            ${repo.language}
+                        </span>
+                    ` : ''}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Render the live activity feed from cached repo data
+ */
+async function renderLiveActivity() {
+    const feedEl = document.getElementById('live-activity-feed');
+    const syncEl = document.getElementById('timeline-sync-status');
+    
+    if (!feedEl) return;
+    
+    try {
+        // Load cached repos
+        const repos = await loadCachedData();
+        const meta = await loadCachedMeta();
+        
+        if (!repos || repos.length === 0) {
+            feedEl.innerHTML = '<div class="live-activity-empty">No activity data available</div>';
+            if (syncEl) syncEl.textContent = 'Unable to load';
+            return;
+        }
+        
+        // Sort by pushed_at (most recent first) and take top 5
+        const recentRepos = repos
+            .filter(r => r.pushed_at)
+            .sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at))
+            .slice(0, 5);
+        
+        if (recentRepos.length === 0) {
+            feedEl.innerHTML = '<div class="live-activity-empty">No recent activity</div>';
+        } else {
+            feedEl.innerHTML = recentRepos.map(createLiveActivityItem).join('');
+        }
+        
+        // Update sync status
+        if (syncEl && meta && meta.updatedAt) {
+            const syncTime = getTimeAgo(new Date(meta.updatedAt));
+            syncEl.textContent = `Synced ${syncTime} • ${meta.repoCount || repos.length} repos tracked`;
+        } else if (syncEl) {
+            syncEl.textContent = `${repos.length} repos tracked`;
+        }
+        
+    } catch (error) {
+        console.error('Failed to render live activity:', error);
+        feedEl.innerHTML = '<div class="live-activity-empty">Failed to load activity</div>';
+    }
+}
+
 // Export functions for use in other scripts
 window.GitHubProjects = {
     renderMoreProjects,
+    renderLiveActivity,
     getProjectDetails,
     fetchGitHubRepositories,
     getTechStack,
     formatDate,
     formatDisplayName,
+    getTimeAgo,
     GITHUB_USERNAME
 };
 
@@ -383,29 +487,24 @@ async function loadSyncStatus() {
     }
 }
 
-// Auto-initialize if the More Projects section exists and is visible
-// Note: With tabbed interface, we don't auto-load on page load since the tab may be hidden
-// The renderMoreProjects function will be called when the tab is activated
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        // Always load sync status
-        loadSyncStatus();
-        
-        const moreProjectsGrid = document.getElementById('more-projects-grid');
-        const moreTab = document.getElementById('more-tab');
-        // Only auto-load if the tab is active (visible) on page load
-        if (moreProjectsGrid && moreTab && moreTab.classList.contains('active')) {
-            renderMoreProjects();
-        }
-    });
-} else {
+// Auto-initialize
+function initGitHubFeatures() {
     // Always load sync status
     loadSyncStatus();
     
+    // Always render live activity if element exists
+    renderLiveActivity();
+    
+    // Only auto-load More Projects if the tab is active (visible) on page load
     const moreProjectsGrid = document.getElementById('more-projects-grid');
     const moreTab = document.getElementById('more-tab');
-    // Only auto-load if the tab is active (visible) on page load
     if (moreProjectsGrid && moreTab && moreTab.classList.contains('active')) {
         renderMoreProjects();
     }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGitHubFeatures);
+} else {
+    initGitHubFeatures();
 }

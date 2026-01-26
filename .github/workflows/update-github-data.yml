@@ -51,11 +51,19 @@ jobs:
             echo "No GH token configured; using unauthenticated GitHub API requests (lower rate limit)."
           fi
 
+          # Fetch repositories
           curl -fsSL "${AUTH_HEADER[@]}" \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             "${API_BASE}/users/${USERNAME}/repos?sort=updated&per_page=100" \
             > data/github-repos.json
+
+          # Fetch recent events (pushes, releases, etc.)
+          curl -fsSL "${AUTH_HEADER[@]}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "${API_BASE}/users/${USERNAME}/events/public?per_page=50" \
+            > data/github-events.json || echo "[]" > data/github-events.json
 
           python3 - <<'PY'
           import datetime
@@ -66,9 +74,25 @@ jobs:
           if not isinstance(repos, list):
               raise SystemExit(f"Expected list response, got: {type(repos).__name__}: {repos}")
 
+          # Calculate stats
+          total_stars = sum(r.get("stargazers_count", 0) for r in repos)
+          total_forks = sum(r.get("forks_count", 0) for r in repos)
+          languages = set(r.get("language") for r in repos if r.get("language"))
+          
+          # Get most recent push
+          most_recent = None
+          for r in repos:
+              if r.get("pushed_at"):
+                  if most_recent is None or r["pushed_at"] > most_recent:
+                      most_recent = r["pushed_at"]
+
           meta = {
               "updatedAt": datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
               "repoCount": len(repos),
+              "totalStars": total_stars,
+              "totalForks": total_forks,
+              "languageCount": len(languages),
+              "mostRecentPush": most_recent,
               "source": "github-actions-cache",
           }
 
@@ -76,6 +100,8 @@ jobs:
           Path("data/last-updated.txt").write_text(meta["updatedAt"] + "\n", encoding="utf-8")
 
           print(f"Repos fetched: {len(repos)}")
+          print(f"Total stars: {total_stars}")
+          print(f"Languages: {len(languages)}")
           print(f"Updated at (UTC): {meta['updatedAt']}")
           PY
       
