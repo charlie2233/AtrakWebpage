@@ -1007,22 +1007,25 @@ section {
 
 .timeline-item {
     position: relative;
-    flex: 0 0 360px;
+    flex: 0 0 340px;
     scroll-snap-align: center;
     display: flex;
     flex-direction: column;
-    min-height: 480px; /* Ensure enough height for alternating layout */
+    padding-top: 48px; /* Space for node above */
     box-sizing: border-box;
 }
 
-/* Enhanced Connector Line */
+/* Connector Line from node to card */
 .timeline-item::before {
     content: '';
     position: absolute;
     left: 50%;
+    top: 0;
     width: 2px;
+    height: 48px;
     transform: translateX(-50%);
-    opacity: 0.5;
+    background: linear-gradient(to bottom, rgba(59, 130, 246, 0.6), rgba(59, 130, 246, 0.2));
+    opacity: 0.6;
     z-index: 0;
     transition: all 0.3s ease;
     border-radius: 2px;
@@ -1036,42 +1039,21 @@ section {
 
 .timeline-item:hover::before {
     opacity: 1;
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-    background-size: 100% 200%;
-    animation: flow-vertical 2s linear infinite;
+    background: linear-gradient(to bottom, rgba(59, 130, 246, 0.9), rgba(139, 92, 246, 0.4));
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
 }
 
-/* Alternating Layout: Top Items (cards ABOVE center line) */
-.timeline-item:nth-child(odd) {
-    justify-content: flex-start; /* Card at top */
-    padding-bottom: 220px; /* Reserve space for center line + gap */
-}
-
-.timeline-item:nth-child(odd)::before {
-    top: auto;
-    bottom: 50%; /* Line starts at center, goes UP to card */
-    height: calc(50% - 20px); /* From center to near card bottom */
-    background: linear-gradient(to top, rgba(59, 130, 246, 0.55), transparent);
-}
-
-.timeline-item:nth-child(odd):hover::before {
-    background: linear-gradient(to top, rgba(59, 130, 246, 0.8), rgba(139, 92, 246, 0.2));
-}
-
-.timeline-item:nth-child(odd) .timeline-content {
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-.timeline-item:nth-child(odd) .timeline-node {
-    top: 50%;
+/* Node positioning - centered at top of each item */
+.timeline-node {
+    position: absolute;
+    left: 50%;
+    top: 0;
     transform: translate(-50%, -50%);
-}
-
-/* Alternating Layout: Bottom Items (cards BELOW center line) */
-.timeline-item:nth-child(even) {
-    justify-content: flex-end; /* Card at bottom */
-    padding-top: 220px; /* Reserve space for center line + gap */
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    z-index: 2;
+    transition: transform 0.3s ease;
 }
 
 .timeline-item:nth-child(even)::before {
