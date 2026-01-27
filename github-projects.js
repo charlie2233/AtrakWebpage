@@ -39,6 +39,7 @@ let githubProjectsCache = null;
 let cacheTimestamp = null;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 let lastGitHubFetchSource = null; // 'cache' | 'api'
+let weeklyLogArchiveCache = null;
 
 /**
  * Try to load pre-cached data from GitHub Actions
@@ -135,38 +136,7 @@ function classifyCommitMessage(message) {
     return 'other';
 }
 
-const INTERNAL_PROJECT_PAGES = {
-    'rork-guide-pup--vision-assistant': 'projects/guidepup.html',
-    'Basketball_action_recoginition_sever': 'projects/hoops-clips.html',
-    'AI-predator-simulation': 'projects/ai-predator-simulation.html',
-    'rork-ten-seconds-vip-manager': 'projects/ten-seconds-vip-manager.html',
-    'LunarWeb': 'index.html',
-};
-
-function parseWeeklyLog(text) {
-    const content = String(text || '');
-    if (!content) return null;
-
-    const matches = [];
-    const re = /^##\s+Week of\s+(.+)$/gm;
-    let m;
-    while ((m = re.exec(content)) !== null) {
-        matches.push({ index: m.index, weekOf: (m[1] || '').trim() });
-    }
-    if (!matches.length) return null;
-
-    const last = matches[matches.length - 1];
-    const nextIndex = matches.length >= 2 ? matches[matches.length - 1].index : content.length;
-    // Find the end of the last "Week of" block by searching for the next "## Week of" after it.
-    const after = content.slice(last.index + 1);
-    const nextMatch = after.match(/^##\s+Week of\s+/m);
-    const end = nextMatch ? last.index + 1 + nextMatch.index : content.length;
-    const sectionText = content.slice(last.index, end);
-
-    const titleMatch = content.match(/^#\s+(.+)$/m);
-    const rawTitle = titleMatch ? titleMatch[1].trim() : 'Weekly Dev News';
-    const projectTitle = rawTitle.replace(/\s+—\s+Weekly Dev News.*$/i, '').trim();
-
+function parseWeeklyLogEntry(sectionText, projectTitle, weekOf) {
     const headlineMatch = sectionText.match(/^###\s+(.+)$/m);
     const headline = headlineMatch ? headlineMatch[1].trim().replace(/^["“]|["”]$/g, '') : '';
 
@@ -174,8 +144,7 @@ function parseWeeklyLog(text) {
     const blocks = {};
     let currentKey = null;
     let current = null;
-
-    const commitMetrics = {};
+    const metrics = {};
 
     const flush = () => {
         if (!currentKey || !current) return;
@@ -214,35 +183,71 @@ function parseWeeklyLog(text) {
     }
     flush();
 
-    // Parse metrics from a "Metrics" block if present.
     if (blocks.Metrics) {
         const all = [...blocks.Metrics.bullets, ...blocks.Metrics.paragraphs];
         all.forEach(entry => {
             const mm = String(entry).match(/^([A-Za-z ]+):\s*(.+)$/);
             if (!mm) return;
-            commitMetrics[mm[1].trim()] = mm[2].trim();
+            metrics[mm[1].trim()] = mm[2].trim();
         });
     }
 
     return {
         projectTitle: projectTitle || 'Weekly Dev News',
-        weekOf: last.weekOf || '',
+        weekOf: weekOf || '',
         headline,
         blocks,
-        metrics: commitMetrics
+        metrics,
     };
 }
 
-async function loadLatestWeeklyLogEntry() {
+function parseWeeklyLogArchive(text) {
+    const content = String(text || '');
+    if (!content) return null;
+
+    const titleMatch = content.match(/^#\s+(.+)$/m);
+    const rawTitle = titleMatch ? titleMatch[1].trim() : 'Weekly Dev News';
+    const projectTitle = rawTitle.replace(/\s+—\s+Weekly Dev News.*$/i, '').trim() || 'Weekly Dev News';
+
+    const markers = [];
+    const re = /^##\s+Week of\s+(.+)$/gm;
+    let m;
+    while ((m = re.exec(content)) !== null) {
+        markers.push({ index: m.index, weekOf: (m[1] || '').trim() });
+    }
+
+    const entries = [];
+    for (let i = 0; i < markers.length; i += 1) {
+        const start = markers[i].index;
+        const end = (i + 1 < markers.length) ? markers[i + 1].index : content.length;
+        const sectionText = content.slice(start, end);
+        entries.push(parseWeeklyLogEntry(sectionText, projectTitle, markers[i].weekOf));
+    }
+
+    return { projectTitle, entries };
+}
+
+async function loadWeeklyLogArchive() {
+    if (weeklyLogArchiveCache) return weeklyLogArchiveCache;
+
     try {
         const response = await fetch(WEEKLY_LOG_PATH);
         if (!response.ok) return null;
         const text = await response.text();
-        return parseWeeklyLog(text);
+        weeklyLogArchiveCache = parseWeeklyLogArchive(text);
+        return weeklyLogArchiveCache;
     } catch (_) {
         return null;
     }
 }
+
+const INTERNAL_PROJECT_PAGES = {
+    'rork-guide-pup--vision-assistant': 'projects/guidepup.html',
+    'Basketball_action_recoginition_sever': 'projects/hoops-clips.html',
+    'AI-predator-simulation': 'projects/ai-predator-simulation.html',
+    'rork-ten-seconds-vip-manager': 'projects/ten-seconds-vip-manager.html',
+    'LunarWeb': 'index.html',
+};
 
 function formatUTCDateTime(isoString) {
     try {
@@ -723,10 +728,24 @@ async function renderWeeklyHighlights() {
             ? take(categorizedCommits.fix, 6).map(c => li(formatCommit(c))).join('')
             : li('No obvious “fix/bug” commits this week. Either we’re perfect… or it’s hidden in private repos.');
 
-        const [weeklyLog, cachedRepos] = await Promise.all([
-            loadLatestWeeklyLogEntry(),
+        const [weeklyArchive, cachedRepos] = await Promise.all([
+            loadWeeklyLogArchive(),
             loadCachedData()
         ]);
+
+        const diaryEntries = weeklyArchive && Array.isArray(weeklyArchive.entries) ? weeklyArchive.entries : [];
+        const savedDiaryIndex = (() => {
+            try {
+                return Number.parseInt(window.localStorage.getItem('atrak_weekly_diary_index') || '', 10);
+            } catch (_) {
+                return Number.NaN;
+            }
+        })();
+        const defaultDiaryIndex = diaryEntries.length ? diaryEntries.length - 1 : -1;
+        const selectedDiaryIndex = Number.isFinite(savedDiaryIndex) && savedDiaryIndex >= 0 && savedDiaryIndex < diaryEntries.length
+            ? savedDiaryIndex
+            : defaultDiaryIndex;
+        const selectedDiaryEntry = selectedDiaryIndex >= 0 ? diaryEntries[selectedDiaryIndex] : null;
 
         const spotlightRepo = (() => {
             const repos = Array.isArray(cachedRepos) ? cachedRepos : [];
@@ -764,97 +783,132 @@ async function renderWeeklyHighlights() {
                     <div class="weekly-spotlight-actions">
                         ${internal ? `<a class="btn btn-secondary btn-sm" href="${escapeHtml(internal)}">Project Page</a>` : ''}
                         <a class="btn btn-secondary btn-sm" href="${githubUrl}" target="_blank" rel="noopener noreferrer">GitHub</a>
-                        <a class="btn btn-secondary btn-sm" href="${safeExternalUrl(githubUrl.replace(/\\/$/, '') + '/releases')}" target="_blank" rel="noopener noreferrer">Releases</a>
+                        <a class="btn btn-secondary btn-sm" href="${safeExternalUrl((githubUrl.endsWith('/') ? githubUrl.slice(0, -1) : githubUrl) + '/releases')}" target="_blank" rel="noopener noreferrer">Releases</a>
                     </div>
                 </section>
             `;
         })() : '';
-        const diaryBlocks = weeklyLog ? weeklyLog.blocks : {};
-        const diaryHighlights = diaryBlocks.Highlights && diaryBlocks.Highlights.bullets ? diaryBlocks.Highlights.bullets.slice(0, 6) : [];
-        const diaryShipped = diaryBlocks.Shipped && diaryBlocks.Shipped.bullets ? diaryBlocks.Shipped.bullets.slice(0, 6) : [];
-        const diaryFixes = diaryBlocks.Fixes && diaryBlocks.Fixes.bullets ? diaryBlocks.Fixes.bullets.slice(0, 6) : [];
-        const diaryNext = diaryBlocks.Next && diaryBlocks.Next.bullets ? diaryBlocks.Next.bullets.slice(0, 6) : [];
-        const diaryEngineering = diaryBlocks.Engineering && diaryBlocks.Engineering.bullets ? diaryBlocks.Engineering.bullets.slice(0, 6) : [];
-        const diaryChallenges = diaryBlocks.Challenges && diaryBlocks.Challenges.bullets ? diaryBlocks.Challenges.bullets.slice(0, 6) : [];
-        const diaryVibe = diaryBlocks.Vibe && diaryBlocks.Vibe.paragraphs ? diaryBlocks.Vibe.paragraphs.join(' ') : '';
-        const diaryMetrics = weeklyLog && weeklyLog.metrics ? weeklyLog.metrics : {};
-        const diaryMetricLine = Object.keys(diaryMetrics).length
-            ? Object.entries(diaryMetrics).slice(0, 4).map(([k, v]) => `${escapeHtml(k)}: ${escapeHtml(v)}`).join(' • ')
-            : '';
+        const renderDiaryBody = (entry) => {
+            if (!entry) return '';
 
-        const diarySection = weeklyLog
+            const blocks = entry.blocks || {};
+            const highlights = blocks.Highlights && blocks.Highlights.bullets ? blocks.Highlights.bullets.slice(0, 6) : [];
+            const shipped = blocks.Shipped && blocks.Shipped.bullets ? blocks.Shipped.bullets.slice(0, 6) : [];
+            const fixes = blocks.Fixes && blocks.Fixes.bullets ? blocks.Fixes.bullets.slice(0, 6) : [];
+            const next = blocks.Next && blocks.Next.bullets ? blocks.Next.bullets.slice(0, 6) : [];
+            const engineering = blocks.Engineering && blocks.Engineering.bullets ? blocks.Engineering.bullets.slice(0, 6) : [];
+            const challenges = blocks.Challenges && blocks.Challenges.bullets ? blocks.Challenges.bullets.slice(0, 6) : [];
+            const vibe = blocks.Vibe && blocks.Vibe.paragraphs ? blocks.Vibe.paragraphs.join(' ') : '';
+
+            return `
+                ${entry.headline ? `<div class="weekly-diary-headline" id="weekly-diary-headline">${escapeHtml(entry.headline)}</div>` : ''}
+                <div class="weekly-diary-grid">
+                    <div class="weekly-diary-card">
+                        <div class="weekly-diary-card-title">Highlights</div>
+                        <ul class="weekly-list">
+                            ${(highlights.length ? highlights : ['No highlights logged.']).map(item => li(escapeHtml(item))).join('')}
+                        </ul>
+                    </div>
+                    <div class="weekly-diary-card">
+                        <div class="weekly-diary-card-title">Shipped</div>
+                        <ul class="weekly-list">
+                            ${(shipped.length ? shipped : ['No shipped items logged.']).map(item => li(escapeHtml(item))).join('')}
+                        </ul>
+                    </div>
+                    <div class="weekly-diary-card">
+                        <div class="weekly-diary-card-title">Fixes</div>
+                        <ul class="weekly-list">
+                            ${(fixes.length ? fixes : ['No fixes logged.']).map(item => li(escapeHtml(item))).join('')}
+                        </ul>
+                    </div>
+                    <div class="weekly-diary-card">
+                        <div class="weekly-diary-card-title">Next</div>
+                        <ul class="weekly-list">
+                            ${(next.length ? next : ['No next steps logged.']).map(item => li(escapeHtml(item))).join('')}
+                        </ul>
+                    </div>
+                </div>
+                ${vibe ? `
+                    <div class="weekly-diary-vibe">
+                        <div class="weekly-diary-card-title">Vibe Check</div>
+                        <p class="weekly-diary-vibe-text">${escapeHtml(vibe)}</p>
+                    </div>
+                ` : ''}
+                ${(engineering.length || challenges.length) ? `
+                    <details class="weekly-diary-more">
+                        <summary>More technical notes</summary>
+                        <div class="weekly-diary-more-grid">
+                            ${engineering.length ? `
+                                <div class="weekly-diary-card">
+                                    <div class="weekly-diary-card-title">Engineering</div>
+                                    <ul class="weekly-list">
+                                        ${engineering.map(item => li(escapeHtml(item))).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                            ${challenges.length ? `
+                                <div class="weekly-diary-card">
+                                    <div class="weekly-diary-card-title">Challenges</div>
+                                    <ul class="weekly-list">
+                                        ${challenges.map(item => li(escapeHtml(item))).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </details>
+                ` : ''}
+            `;
+        };
+
+        const renderDiaryMetrics = (entry) => {
+            if (!entry || !entry.metrics) return '';
+            const metrics = entry.metrics;
+            if (!metrics || typeof metrics !== 'object') return '';
+            const keys = Object.keys(metrics);
+            if (!keys.length) return '';
+            return Object.entries(metrics).slice(0, 4).map(([k, v]) => `${k}: ${v}`).join(' • ');
+        };
+
+        const diaryOptions = diaryEntries
+            .map((entry, idx) => ({ entry, idx }))
+            .slice()
+            .reverse()
+            .map(({ entry, idx }) => {
+                const label = entry.weekOf ? `Week of ${entry.weekOf}` : `Week #${idx + 1}`;
+                return `<option value="${idx}" ${idx === selectedDiaryIndex ? 'selected' : ''}>${escapeHtml(label)}</option>`;
+            })
+            .join('');
+
+        const diarySection = selectedDiaryEntry
             ? `
-                <section class="weekly-section weekly-section-wide weekly-diary" id="weekly-diary-${escapeHtml(slugify(weeklyLog.weekOf || weeklyLog.projectTitle))}">
+                <section class="weekly-section weekly-section-wide weekly-diary" id="weekly-diary-${escapeHtml(slugify(selectedDiaryEntry.weekOf || selectedDiaryEntry.projectTitle))}">
                     <div class="weekly-section-header">
                         <h4 class="weekly-section-title"><span class="weekly-section-icon">📝</span>Dev Diary Spotlight</h4>
-                        <span class="weekly-section-meta">${escapeHtml(weeklyLog.projectTitle)} • ${escapeHtml(weeklyLog.weekOf || '')}</span>
-                    </div>
-                    ${weeklyLog.headline ? `<div class="weekly-diary-headline">${escapeHtml(weeklyLog.headline)}</div>` : ''}
-                    <div class="weekly-diary-grid">
-                        <div class="weekly-diary-card">
-                            <div class="weekly-diary-card-title">Highlights</div>
-                            <ul class="weekly-list">
-                                ${(diaryHighlights.length ? diaryHighlights : ['No highlights logged.']).map(item => li(escapeHtml(item))).join('')}
-                            </ul>
-                        </div>
-                        <div class="weekly-diary-card">
-                            <div class="weekly-diary-card-title">Shipped</div>
-                            <ul class="weekly-list">
-                                ${(diaryShipped.length ? diaryShipped : ['No shipped items logged.']).map(item => li(escapeHtml(item))).join('')}
-                            </ul>
-                        </div>
-                        <div class="weekly-diary-card">
-                            <div class="weekly-diary-card-title">Fixes</div>
-                            <ul class="weekly-list">
-                                ${(diaryFixes.length ? diaryFixes : ['No fixes logged.']).map(item => li(escapeHtml(item))).join('')}
-                            </ul>
-                        </div>
-                        <div class="weekly-diary-card">
-                            <div class="weekly-diary-card-title">Next</div>
-                            <ul class="weekly-list">
-                                ${(diaryNext.length ? diaryNext : ['No next steps logged.']).map(item => li(escapeHtml(item))).join('')}
-                            </ul>
-                        </div>
-                    </div>
-                    ${diaryVibe ? `
-                        <div class="weekly-diary-vibe">
-                            <div class="weekly-diary-card-title">Vibe Check</div>
-                            <p class="weekly-diary-vibe-text">${escapeHtml(diaryVibe)}</p>
-                        </div>
-                    ` : ''}
-                    ${(diaryEngineering.length || diaryChallenges.length) ? `
-                        <details class="weekly-diary-more">
-                            <summary>More technical notes</summary>
-                            <div class="weekly-diary-more-grid">
-                                ${diaryEngineering.length ? `
-                                    <div class="weekly-diary-card">
-                                        <div class="weekly-diary-card-title">Engineering</div>
-                                        <ul class="weekly-list">
-                                            ${diaryEngineering.map(item => li(escapeHtml(item))).join('')}
-                                        </ul>
-                                    </div>
-                                ` : ''}
-                                ${diaryChallenges.length ? `
-                                    <div class="weekly-diary-card">
-                                        <div class="weekly-diary-card-title">Challenges</div>
-                                        <ul class="weekly-list">
-                                            ${diaryChallenges.map(item => li(escapeHtml(item))).join('')}
-                                        </ul>
-                                    </div>
-                                ` : ''}
+                        ${diaryEntries.length > 1 ? `
+                            <div class="weekly-diary-controls">
+                                <label class="sr-only" for="weekly-diary-select">Select week</label>
+                                <select id="weekly-diary-select" class="weekly-diary-select">
+                                    ${diaryOptions}
+                                </select>
                             </div>
-                        </details>
-                    ` : ''}
+                        ` : `
+                            <span class="weekly-section-meta">${escapeHtml(selectedDiaryEntry.projectTitle)} • ${escapeHtml(selectedDiaryEntry.weekOf || '')}</span>
+                        `}
+                    </div>
+                    <div class="weekly-diary-meta" id="weekly-diary-meta">${escapeHtml(selectedDiaryEntry.projectTitle)} • ${escapeHtml(selectedDiaryEntry.weekOf || '')}</div>
+                    <div id="weekly-diary-body">
+                        ${renderDiaryBody(selectedDiaryEntry)}
+                    </div>
                     <div class="weekly-diary-footer">
-                        ${diaryMetricLine ? `<span class="weekly-diary-metrics">${diaryMetricLine}</span>` : ''}
+                        <span class="weekly-diary-metrics" id="weekly-diary-metrics">${escapeHtml(renderDiaryMetrics(selectedDiaryEntry))}</span>
                         <a class="weekly-link" href="WeeklyLog.txt" target="_blank" rel="noopener">Read full log</a>
                     </div>
                 </section>
             `
             : '';
 
-        container.innerHTML = `
-            <div class="weekly-digest">
+	        container.innerHTML = `
+	            <div class="weekly-digest">
                 <div class="weekly-kpis">
                     ${kpi(totalCommits, 'Commits')}
                     ${kpi(totalPushes, 'Pushes')}
@@ -944,13 +998,41 @@ async function renderWeeklyHighlights() {
                     <a class="btn btn-secondary btn-sm" href="${safeExternalUrl('https://github.com/' + GITHUB_USERNAME)}" target="_blank" rel="noopener noreferrer">GitHub</a>
                     <a class="btn btn-secondary btn-sm" href="#updates">Open Build Log</a>
                 </div>
-            </div>
-        `;
-        
-    } catch (e) {
-        console.error('Failed to render weekly highlights', e);
-        container.innerHTML = '<div class="weekly-empty">Unable to load highlights.</div>';
-    }
+	            </div>
+	        `;
+
+	        const diarySelectEl = document.getElementById('weekly-diary-select');
+	        if (diarySelectEl && diaryEntries.length > 1 && !diarySelectEl.dataset.bound) {
+	            const updateDiary = (idx) => {
+	                const safeIndex = Number.parseInt(String(idx), 10);
+	                if (!Number.isFinite(safeIndex) || safeIndex < 0 || safeIndex >= diaryEntries.length) return;
+
+	                try {
+	                    window.localStorage.setItem('atrak_weekly_diary_index', String(safeIndex));
+	                } catch (_) {
+	                    // ignore storage errors
+	                }
+
+	                const entry = diaryEntries[safeIndex];
+	                const metaEl = document.getElementById('weekly-diary-meta');
+	                const bodyEl = document.getElementById('weekly-diary-body');
+	                const metricsEl = document.getElementById('weekly-diary-metrics');
+
+	                if (metaEl) {
+	                    metaEl.textContent = `${entry.projectTitle || ''}${entry.weekOf ? ` • ${entry.weekOf}` : ''}`;
+	                }
+	                if (bodyEl) bodyEl.innerHTML = renderDiaryBody(entry);
+	                if (metricsEl) metricsEl.textContent = renderDiaryMetrics(entry) || '';
+	            };
+
+	            diarySelectEl.dataset.bound = 'true';
+	            diarySelectEl.addEventListener('change', () => updateDiary(diarySelectEl.value));
+	        }
+	        
+	    } catch (e) {
+	        console.error('Failed to render weekly highlights', e);
+	        container.innerHTML = '<div class="weekly-empty">Unable to load highlights.</div>';
+	    }
 }
 
 // ============================================

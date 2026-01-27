@@ -4489,6 +4489,38 @@ section {
     font-family: var(--font-mono);
 }
 
+.weekly-diary-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.weekly-diary-select {
+    appearance: none;
+    -webkit-appearance: none;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-primary);
+    padding: 8px 34px 8px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    line-height: 1.2;
+    cursor: pointer;
+    max-width: 240px;
+}
+
+.weekly-diary-select:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+.weekly-diary-meta {
+    margin: 8px 0 12px;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
 .weekly-spotlight-actions {
     display: flex;
     flex-wrap: wrap;
