@@ -10,7 +10,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="assets/logo.png">
     <link rel="apple-touch-icon" sizes="120x120" href="assets/logo.png">
     <link rel="apple-touch-icon" sizes="76x76" href="assets/logo.png">
-    <link rel="stylesheet" href="styles.css?v=10">
+    <link rel="stylesheet" href="styles.css?v=17">
 </head>
 <body>
     <nav class="navbar">
@@ -24,6 +24,7 @@
             <ul class="nav-links">
                 <li><a href="index.html#projects">Projects</a></li>
                 <li><a href="index.html#leadership">Team</a></li>
+                <li><a href="handbook.html" class="active">Handbook</a></li>
                 <li><a href="releases.html">Releases</a></li>
                 <li><a href="join.html">Join</a></li>
                 <li><a href="index.html#contact" class="nav-cta">Suggestion Box</a></li>
@@ -51,21 +52,22 @@
             <div class="handbook-grid">
                 <nav class="handbook-nav glass-card">
                     <h3>Contents</h3>
-                    <ul>
-                        <li><a href="#roles">Roles & Expectations</a></li>
-                        <li><a href="#values">Our Values</a></li>
-                        <li><a href="#cadence">Weekly Cadence</a></li>
-                        <li><a href="#code-review">Code Review</a></li>
-                        <li><a href="#quality">Quality Standards</a></li>
-                        <li><a href="#communication">Communication</a></li>
-                        <li><a href="#tools">Tools We Use</a></li>
-                    </ul>
-                </nav>
+	                    <ul>
+	                        <li><a href="#roles">Roles & Expectations</a></li>
+	                        <li><a href="#values">Our Values</a></li>
+	                        <li><a href="#cadence">Weekly Cadence</a></li>
+	                        <li><a href="#code-review">Code Review</a></li>
+	                        <li><a href="#quality">Quality Standards</a></li>
+	                        <li><a href="#communication">Communication</a></li>
+	                        <li><a href="#tools">Tools We Use</a></li>
+	                        <li><a href="#docs">Docs & Policies</a></li>
+	                    </ul>
+	                </nav>
 
                 <div class="handbook-sections">
                     <article id="roles" class="handbook-section glass-card">
                         <h2>👥 Roles & Expectations</h2>
-                        <div class="role-grid">
+	                        <div class="role-grid">
                             <div class="role-item">
                                 <div class="role-header">
                                     <span class="role-icon">💻</span>
@@ -92,21 +94,34 @@
                                     <li><strong>Tools:</strong> Figma, CSS/Tailwind knowledge</li>
                                 </ul>
                             </div>
-                            <div class="role-item">
-                                <div class="role-header">
-                                    <span class="role-icon">🚀</span>
-                                    <h4>Product & Ops</h4>
-                                </div>
-                                <p>You ensure we ship the right things. You manage the roadmap and unblock the team.</p>
-                                <ul class="role-list">
-                                    <li>Define product roadmap and specs</li>
-                                    <li>Manage GitHub issues and milestones</li>
-                                    <li>Coordinate releases and testing</li>
-                                    <li><strong>Focus:</strong> Impact, Velocity, Users</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </article>
+	                            <div class="role-item">
+	                                <div class="role-header">
+	                                    <span class="role-icon">🚀</span>
+	                                    <h4>Product & Ops</h4>
+	                                </div>
+	                                <p>You ensure we ship the right things. You manage the roadmap and unblock the team.</p>
+	                                <ul class="role-list">
+	                                    <li>Define product roadmap and specs</li>
+	                                    <li>Manage GitHub issues and milestones</li>
+	                                    <li>Coordinate releases and testing</li>
+	                                    <li><strong>Focus:</strong> Impact, Velocity, Users</li>
+	                                </ul>
+	                            </div>
+	                            <div class="role-item">
+	                                <div class="role-header">
+	                                    <span class="role-icon">🧰</span>
+	                                    <h4>Backend Maintenance</h4>
+	                                </div>
+	                                <p>You keep our infrastructure healthy. You prevent breakage, fix incidents, and keep systems fast.</p>
+	                                <ul class="role-list">
+	                                    <li>Maintain backend services and automation</li>
+	                                    <li>Own deployments, caching, and reliability</li>
+	                                    <li>Handle security patches and dependency updates</li>
+	                                    <li><strong>Stack:</strong> Python, Java, C++</li>
+	                                </ul>
+	                            </div>
+	                        </div>
+	                    </article>
 
                     <article id="values" class="handbook-section glass-card">
                         <h2>🎯 Our Values</h2>
@@ -230,8 +245,8 @@
                         </ul>
                     </article>
 
-                    <article id="tools" class="handbook-section glass-card">
-                        <h2>🛠 Tools We Use</h2>
+	                    <article id="tools" class="handbook-section glass-card">
+	                        <h2>🛠 Tools We Use</h2>
                         <div class="tools-grid">
                             <div class="tool-item">
                                 <span class="tool-name">GitHub</span>
@@ -253,16 +268,38 @@
                                 <span class="tool-name">Vercel / GitHub Pages</span>
                                 <span class="tool-use">Deployment</span>
                             </div>
-                            <div class="tool-item">
-                                <span class="tool-name">Notion</span>
-                                <span class="tool-use">Docs, specs, notes</span>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </div>
-    </section>
+	                            <div class="tool-item">
+	                                <span class="tool-name">Notion</span>
+	                                <span class="tool-use">Docs, specs, notes</span>
+	                            </div>
+	                        </div>
+	                    </article>
+
+	                    <article id="docs" class="handbook-section glass-card">
+	                        <h2>📚 Docs & Policies</h2>
+	                        <ul class="handbook-list">
+	                            <li>
+	                                <strong><a href="code-of-conduct.html">Code of Conduct</a></strong>
+	                                <p>How we treat people. Be kind, be constructive, be professional.</p>
+	                            </li>
+	                            <li>
+	                                <strong><a href="contributing.html">Contributing</a></strong>
+	                                <p>How to propose changes, open PRs, and keep projects maintainable.</p>
+	                            </li>
+	                            <li>
+	                                <strong><a href="security.html">Security</a></strong>
+	                                <p>Found a vulnerability? Report it privately through the form (no email exposed).</p>
+	                            </li>
+	                            <li>
+	                                <strong><a href="releases.html">Release Notes</a></strong>
+	                                <p>Monthly updates: what shipped, what broke, what’s next.</p>
+	                            </li>
+	                        </ul>
+	                    </article>
+	                </div>
+	            </div>
+	        </div>
+	    </section>
 
     <section class="handbook-cta">
         <div class="container">
@@ -322,6 +359,6 @@
         </div>
     </footer>
 
-    <script src="script.js?v=10"></script>
+    <script src="script.js?v=16"></script>
 </body>
 </html>

@@ -2081,6 +2081,15 @@ section {
     margin-bottom: 24px;
 }
 
+.handbook-section a {
+    color: var(--accent-primary);
+    text-decoration: none;
+}
+
+.handbook-section a:hover {
+    text-decoration: underline;
+}
+
 /* Roles & Expectations */
 .role-grid {
     display: grid;

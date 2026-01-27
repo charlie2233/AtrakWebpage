@@ -17,6 +17,8 @@ A modern, minimal tech team website + project hub (atrak.dev) featuring a clean 
 - 🚀 **Projects Showcase**: Notable technical projects with modern card layouts
 - 📖 **About Section**: Company information with interactive code preview
 - 👥 **Leadership Team**: Team member profiles with social links
+- 📘 **Team Handbook**: Public handbook covering roles, values, cadence, and quality bar
+- 🗓️ **Release Notes**: Monthly updates on what shipped, what broke, and what’s next
 - 📬 **Anonymous Suggestion Box**: Visitors can send feedback without sharing identity
 - 🔗 **Footer**: Comprehensive navigation and information
 
@@ -72,7 +74,9 @@ The workflow also writes `data/github-meta.json` (timestamp + repo count) for UI
 Atrak/
 ├── config.js       # Runtime config (form endpoints)
 ├── index.html      # Main HTML structure
+├── handbook.html   # Team handbook (how we work)
 ├── join.html       # Join/Contact page
+├── releases.html   # Monthly release notes
 ├── styles.css      # All styles with CSS variables
 ├── script.js       # Interactive functionality
 ├── projects/       # Project detail pages
