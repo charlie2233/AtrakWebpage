@@ -539,11 +539,18 @@ async function renderWeeklyHighlights() {
     if (!container) return;
     
     try {
-        const response = await fetch(CACHED_EVENTS_PATH);
-        if (!response.ok) throw new Error('Events not found');
-        
-        const rawEvents = await response.json();
-        const events = Array.isArray(rawEvents) ? rawEvents : [];
+        let events = [];
+        try {
+            const response = await fetch(CACHED_EVENTS_PATH);
+            if (response.ok) {
+                const rawEvents = await response.json();
+                events = Array.isArray(rawEvents) ? rawEvents : [];
+            } else {
+                console.warn('GitHub events cache missing:', response.status);
+            }
+        } catch (error) {
+            console.warn('Failed to load GitHub events cache:', error);
+        }
         
         // Filter last 7 days (weekly digest)
         const now = new Date();
@@ -746,6 +753,10 @@ async function renderWeeklyHighlights() {
             ? savedDiaryIndex
             : defaultDiaryIndex;
         const selectedDiaryEntry = selectedDiaryIndex >= 0 ? diaryEntries[selectedDiaryIndex] : null;
+        const diaryWeekCounter = selectedDiaryEntry && diaryEntries.length ? `${selectedDiaryIndex + 1}/${diaryEntries.length}` : '';
+        if (dateRangeEl && selectedDiaryEntry && selectedDiaryEntry.weekOf) {
+            dateRangeEl.textContent = `Week of ${selectedDiaryEntry.weekOf}`;
+        }
 
         const spotlightRepo = (() => {
             const repos = Array.isArray(cachedRepos) ? cachedRepos : [];
@@ -881,11 +892,13 @@ async function renderWeeklyHighlights() {
 
         const diarySection = selectedDiaryEntry
             ? `
-                <section class="weekly-section weekly-section-wide weekly-diary" id="weekly-diary-${escapeHtml(slugify(selectedDiaryEntry.weekOf || selectedDiaryEntry.projectTitle))}">
-                    <div class="weekly-section-header">
-                        <h4 class="weekly-section-title"><span class="weekly-section-icon">📝</span>Dev Diary Spotlight</h4>
+	                <section class="weekly-section weekly-section-wide weekly-diary" id="weekly-diary-${escapeHtml(slugify(selectedDiaryEntry.weekOf || selectedDiaryEntry.projectTitle))}">
+	                    <div class="weekly-section-header">
+	                        <h4 class="weekly-section-title"><span class="weekly-section-icon">📝</span>Dev Diary Spotlight</h4>
                         ${diaryEntries.length > 1 ? `
                             <div class="weekly-diary-controls">
+                                <button class="weekly-diary-nav" type="button" data-weekly-diary-nav="prev" aria-label="Previous week">‹</button>
+                                <button class="weekly-diary-nav" type="button" data-weekly-diary-nav="next" aria-label="Next week">›</button>
                                 <label class="sr-only" for="weekly-diary-select">Select week</label>
                                 <select id="weekly-diary-select" class="weekly-diary-select">
                                     ${diaryOptions}
@@ -893,12 +906,12 @@ async function renderWeeklyHighlights() {
                             </div>
                         ` : `
                             <span class="weekly-section-meta">${escapeHtml(selectedDiaryEntry.projectTitle)} • ${escapeHtml(selectedDiaryEntry.weekOf || '')}</span>
-                        `}
-                    </div>
-                    <div class="weekly-diary-meta" id="weekly-diary-meta">${escapeHtml(selectedDiaryEntry.projectTitle)} • ${escapeHtml(selectedDiaryEntry.weekOf || '')}</div>
-                    <div id="weekly-diary-body">
-                        ${renderDiaryBody(selectedDiaryEntry)}
-                    </div>
+	                        `}
+	                    </div>
+	                    <div class="weekly-diary-meta" id="weekly-diary-meta">${escapeHtml(selectedDiaryEntry.projectTitle)} • ${escapeHtml(selectedDiaryEntry.weekOf || '')}${diaryWeekCounter ? ` • ${escapeHtml(diaryWeekCounter)}` : ''}</div>
+	                    <div id="weekly-diary-body" class="weekly-diary-body" role="region" aria-label="Weekly report" aria-live="polite">
+	                        ${renderDiaryBody(selectedDiaryEntry)}
+	                    </div>
                     <div class="weekly-diary-footer">
                         <span class="weekly-diary-metrics" id="weekly-diary-metrics">${escapeHtml(renderDiaryMetrics(selectedDiaryEntry))}</span>
                         <a class="weekly-link" href="WeeklyLog.txt" target="_blank" rel="noopener">Read full log</a>
@@ -1003,7 +1016,29 @@ async function renderWeeklyHighlights() {
 
 	        const diarySelectEl = document.getElementById('weekly-diary-select');
 	        if (diarySelectEl && diaryEntries.length > 1 && !diarySelectEl.dataset.bound) {
-	            const updateDiary = (idx) => {
+	            const prevBtn = document.querySelector('[data-weekly-diary-nav="prev"]');
+	            const nextBtn = document.querySelector('[data-weekly-diary-nav="next"]');
+	            const headerPrevBtn = document.getElementById('prev-week-btn');
+	            const headerNextBtn = document.getElementById('next-week-btn');
+	            const bodyEl = document.getElementById('weekly-diary-body');
+	            let currentIndex = Number.parseInt(String(diarySelectEl.value), 10);
+	            if (!Number.isFinite(currentIndex)) currentIndex = selectedDiaryIndex;
+
+	            const setControls = () => {
+	                if (prevBtn) prevBtn.disabled = currentIndex <= 0;
+	                if (nextBtn) nextBtn.disabled = currentIndex >= (diaryEntries.length - 1);
+	                if (headerPrevBtn) headerPrevBtn.disabled = currentIndex <= 0;
+	                if (headerNextBtn) headerNextBtn.disabled = currentIndex >= (diaryEntries.length - 1);
+	            };
+
+	            const animateBody = (direction) => {
+	                if (!bodyEl) return;
+	                bodyEl.classList.remove('slide-in-left', 'slide-in-right');
+	                void bodyEl.offsetWidth;
+	                bodyEl.classList.add(direction === 'left' ? 'slide-in-left' : 'slide-in-right');
+	            };
+
+	            const updateDiary = (idx, direction) => {
 	                const safeIndex = Number.parseInt(String(idx), 10);
 	                if (!Number.isFinite(safeIndex) || safeIndex < 0 || safeIndex >= diaryEntries.length) return;
 
@@ -1013,20 +1048,61 @@ async function renderWeeklyHighlights() {
 	                    // ignore storage errors
 	                }
 
-	                const entry = diaryEntries[safeIndex];
-	                const metaEl = document.getElementById('weekly-diary-meta');
-	                const bodyEl = document.getElementById('weekly-diary-body');
-	                const metricsEl = document.getElementById('weekly-diary-metrics');
+		                const entry = diaryEntries[safeIndex];
+		                const metaEl = document.getElementById('weekly-diary-meta');
+		                const metricsEl = document.getElementById('weekly-diary-metrics');
 
-	                if (metaEl) {
-	                    metaEl.textContent = `${entry.projectTitle || ''}${entry.weekOf ? ` • ${entry.weekOf}` : ''}`;
+		                if (metaEl) {
+		                    const metaParts = [];
+		                    if (entry.projectTitle) metaParts.push(entry.projectTitle);
+		                    if (entry.weekOf) metaParts.push(entry.weekOf);
+		                    metaParts.push(`${safeIndex + 1}/${diaryEntries.length}`);
+		                    metaEl.textContent = metaParts.join(' • ');
+		                }
+		                if (dateRangeEl && entry.weekOf) {
+		                    dateRangeEl.textContent = `Week of ${entry.weekOf}`;
+		                }
+	                if (bodyEl) {
+	                    bodyEl.innerHTML = renderDiaryBody(entry);
+	                    animateBody(direction || 'right');
 	                }
-	                if (bodyEl) bodyEl.innerHTML = renderDiaryBody(entry);
 	                if (metricsEl) metricsEl.textContent = renderDiaryMetrics(entry) || '';
+
+	                currentIndex = safeIndex;
+	                diarySelectEl.value = String(safeIndex);
+	                setControls();
 	            };
 
 	            diarySelectEl.dataset.bound = 'true';
-	            diarySelectEl.addEventListener('change', () => updateDiary(diarySelectEl.value));
+	            diarySelectEl.addEventListener('change', () => {
+	                const nextIndex = Number.parseInt(String(diarySelectEl.value), 10);
+	                if (!Number.isFinite(nextIndex)) return;
+	                const direction = nextIndex < currentIndex ? 'left' : 'right';
+	                updateDiary(nextIndex, direction);
+	            });
+
+	            if (prevBtn) {
+	                prevBtn.addEventListener('click', () => updateDiary(currentIndex - 1, 'left'));
+	            }
+	            if (nextBtn) {
+	                nextBtn.addEventListener('click', () => updateDiary(currentIndex + 1, 'right'));
+	            }
+	            if (headerPrevBtn && !headerPrevBtn.dataset.bound) {
+	                headerPrevBtn.dataset.bound = 'true';
+	                headerPrevBtn.addEventListener('click', () => updateDiary(currentIndex - 1, 'left'));
+	            }
+	            if (headerNextBtn && !headerNextBtn.dataset.bound) {
+	                headerNextBtn.dataset.bound = 'true';
+	                headerNextBtn.addEventListener('click', () => updateDiary(currentIndex + 1, 'right'));
+	            }
+
+	            if (bodyEl) {
+	                bodyEl.addEventListener('animationend', () => {
+	                    bodyEl.classList.remove('slide-in-left', 'slide-in-right');
+	                });
+	            }
+
+	            setControls();
 	        }
 	        
 	    } catch (e) {

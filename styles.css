@@ -4399,78 +4399,372 @@ section {
     to { transform: translateX(0); opacity: 1; }
 }
 
-/* Chatty/Fun Content Styles */
-.weekly-intro {
-    font-size: 16px;
-    color: var(--text-secondary);
-    margin-bottom: 24px;
-    font-style: italic;
-    border-left: 3px solid var(--accent-primary);
-    padding: 12px 16px;
-    background: linear-gradient(90deg, rgba(59, 130, 246, 0.08), transparent);
-    border-radius: 0 8px 8px 0;
-}
-
-.weekly-stats-row {
+/* Weekly Digest (This Week at Atrak) */
+.weekly-digest {
     display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 16px;
 }
 
-.fun-stat {
+.weekly-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.weekly-kpi {
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
     background: rgba(255, 255, 255, 0.03);
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.weekly-kpi-value {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.weekly-kpi-label {
+    margin-top: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
     color: var(--text-tertiary);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.weekly-sections {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.weekly-section {
+    padding: 14px 14px 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(0, 0, 0, 0.22);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.weekly-section-wide {
+    grid-column: 1 / -1;
+}
+
+.weekly-section-header {
     display: flex;
     align-items: center;
-    gap: 6px;
-}
-
-.fun-stat strong {
-    color: var(--text-primary);
-    font-size: 13px;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
 }
 
 .weekly-section-title {
-    font-size: 11px;
-    text-transform: uppercase;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text-primary);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.2px;
+}
+
+.weekly-section-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px;
+}
+
+.weekly-section-meta {
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
     color: var(--text-tertiary);
-    letter-spacing: 1px;
-    margin-bottom: 12px;
-    font-weight: 700;
-    margin-top: 24px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    white-space: nowrap;
 }
 
-.weekly-section-title:first-child {
-    margin-top: 0;
-}
-
-.highlight-list {
+.weekly-list {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
-.highlight-item {
+.weekly-list-item {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     align-items: flex-start;
-    font-size: 14px;
     color: var(--text-secondary);
-    line-height: 1.5;
+    font-size: 13px;
+    line-height: 1.55;
 }
 
-.highlight-icon {
-    font-size: 16px;
+.weekly-bullet {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(59, 130, 246, 0.9);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
     flex-shrink: 0;
-    margin-top: 2px;
+    margin-top: 7px;
+}
+
+.weekly-inline-link {
+    color: var(--accent-primary);
+    text-decoration: none;
+}
+
+.weekly-inline-link:hover {
+    text-decoration: underline;
+}
+
+.weekly-briefing-text {
+    margin: 0 0 10px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+.weekly-briefing-text:last-child {
+    margin-bottom: 0;
+}
+
+.weekly-spotlight-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.weekly-footer {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.weekly-empty {
+    padding: 22px;
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 14px;
+}
+
+/* Dev Diary Spotlight (WeeklyLog archive) */
+.weekly-diary-meta {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    margin-bottom: 10px;
+}
+
+.weekly-diary-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.weekly-diary-nav {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.weekly-diary-nav:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.weekly-diary-nav:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.weekly-diary-nav:focus-visible {
+    outline: 2px solid rgba(59, 130, 246, 0.7);
+    outline-offset: 2px;
+}
+
+.weekly-diary-select {
+    min-width: 160px;
+    padding: 9px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.28);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-family: var(--font-mono);
+    cursor: pointer;
+}
+
+.weekly-diary-select:focus-visible {
+    outline: 2px solid rgba(59, 130, 246, 0.7);
+    outline-offset: 2px;
+}
+
+.weekly-diary-headline {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.weekly-diary-body {
+    overflow: hidden;
+    will-change: transform, opacity;
+}
+
+.weekly-diary-body.slide-in-left {
+    animation: weeklyDiarySlideInLeft 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.weekly-diary-body.slide-in-right {
+    animation: weeklyDiarySlideInRight 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes weeklyDiarySlideInLeft {
+    from { transform: translateX(-22px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes weeklyDiarySlideInRight {
+    from { transform: translateX(22px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.weekly-diary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.weekly-diary-card {
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.weekly-diary-card-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.weekly-diary-vibe {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(59, 130, 246, 0.18);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(0, 0, 0, 0));
+}
+
+.weekly-diary-vibe-text {
+    margin: 6px 0 0;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.weekly-diary-more {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.weekly-diary-more summary {
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-weight: 600;
+    list-style: none;
+}
+
+.weekly-diary-more summary::-webkit-details-marker {
+    display: none;
+}
+
+.weekly-diary-more summary::after {
+    content: '▾';
+    margin-left: 8px;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.weekly-diary-more[open] summary::after {
+    content: '▴';
+}
+
+.weekly-diary-more-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.weekly-diary-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.weekly-diary-metrics {
+    color: var(--text-tertiary);
+    font-size: 11px;
+    font-family: var(--font-mono);
+}
+
+.weekly-link {
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.weekly-link:hover {
+    text-decoration: underline;
 }
 
 .weekly-loading {
@@ -4513,9 +4807,7 @@ section {
 /* Responsive */
 @media (max-width: 768px) {
     .weekly-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+        padding: 14px 16px;
     }
 
     .weekly-header-actions {
@@ -4537,6 +4829,10 @@ section {
 
     .weekly-diary-more-grid {
         grid-template-columns: 1fr;
+    }
+
+    .weekly-content {
+        padding: 18px;
     }
 
     .project-meta-bar {
