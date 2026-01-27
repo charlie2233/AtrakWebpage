@@ -281,26 +281,33 @@
             </div>
             
             <!-- Weekly Highlights -->
-	            <div class="weekly-highlights-wrapper reveal">
-	                <div class="glass-card weekly-card" id="weekly-highlights">
-	                    <div class="weekly-header">
-	                        <div class="weekly-title-group">
-	                            <span class="weekly-icon">🛰️</span>
-	                            <div class="weekly-title-stack">
-	                                <h3>This Week at Atrak</h3>
-	                                <p class="weekly-subtitle">Auto-generated from public GitHub activity.</p>
-	                            </div>
-	                        </div>
-	                        <div class="weekly-header-actions">
-	                            <a class="weekly-link" href="releases.html">Release Notes</a>
-	                            <span class="weekly-date" id="weekly-date-range">Loading updates...</span>
-	                        </div>
-	                    </div>
-	                    <div class="weekly-content" id="weekly-content">
-	                        <div class="weekly-loading">
-	                            <span class="loading-dot"></span>
-	                            <span class="loading-dot"></span>
-                            <span class="loading-dot"></span>
+            <div class="weekly-highlights-wrapper reveal">
+                <div class="glass-card weekly-card" id="weekly-highlights">
+                    <div class="weekly-header">
+                        <button class="nav-btn prev-week" id="prev-week-btn" aria-label="Previous Week">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+                        </button>
+                        
+                        <div class="weekly-title-group">
+                            <span class="weekly-icon" id="weekly-icon">📅</span>
+                            <div class="weekly-title-stack">
+                                <h3 id="weekly-title">This Week</h3>
+                                <span class="weekly-date" id="weekly-date-range">Loading...</span>
+                            </div>
+                        </div>
+
+                        <button class="nav-btn next-week" id="next-week-btn" aria-label="Next Week" disabled>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                        </button>
+                    </div>
+                    
+                    <div class="weekly-content-wrapper">
+                        <div class="weekly-content" id="weekly-content">
+                            <div class="weekly-loading">
+                                <span class="loading-dot"></span>
+                                <span class="loading-dot"></span>
+                                <span class="loading-dot"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
