@@ -24,6 +24,7 @@ const SITE_BASE_URL = (() => {
 const CACHED_DATA_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-repos.json` : 'data/github-repos.json'; // Updated by GitHub Actions
 const CACHED_EVENTS_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-events.json` : 'data/github-events.json'; // Updated by GitHub Actions
 const CACHED_META_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-meta.json` : 'data/github-meta.json'; // Updated by GitHub Actions
+const CACHED_RELEASES_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-releases.json` : 'data/github-releases.json'; // Updated by GitHub Actions
 const WEEKLY_LOG_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}WeeklyLog.txt` : 'WeeklyLog.txt';
 
 // Known featured projects to exclude from "More Projects" section
@@ -68,6 +69,18 @@ async function loadCachedMeta() {
         if (!meta || typeof meta !== 'object') return null;
         if (typeof meta.updatedAt !== 'string') return null;
         return meta;
+    } catch (e) {
+        return null;
+    }
+}
+
+async function loadCachedReleases() {
+    try {
+        const response = await fetch(CACHED_RELEASES_PATH);
+        if (!response.ok) return null;
+        const releases = await response.json();
+        if (!Array.isArray(releases)) return null;
+        return releases;
     } catch (e) {
         return null;
     }
@@ -374,26 +387,30 @@ function createProjectCard(project) {
             <div class="project-image">
                 <div class="project-icon">📦</div>
             </div>
-            <div class="project-content">
-                <h3 class="project-title">${displayName}</h3>
-                <p class="project-description">
-                    ${project.description}
-                </p>
-                <div class="project-meta">
-                    <span class="project-date">Updated: ${formatDate(project.updatedAt)}</span>
-                </div>
-                <div class="project-tags">
-                    ${tagsHTML}
-                </div>
-                <div class="project-actions">
-                    <a href="projects/github-project.html?repo=${encodeURIComponent(project.fullName)}" class="btn btn-secondary btn-sm">Details</a>
-                    <a href="${project.url}" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Access</a>
-                    <a href="${project.url}/releases" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Download</a>
-                    ${project.homepage ? `<a href="${project.homepage}" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Demo</a>` : ''}
-                </div>
-            </div>
-        </div>
-    `;
+	            <div class="project-content">
+	                <h3 class="project-title">${displayName}</h3>
+	                <p class="project-description">
+	                    ${project.description}
+	                </p>
+	                <div class="project-meta">
+	                    <span class="project-date">Updated: ${formatDate(project.updatedAt)}</span>
+	                </div>
+	                <div class="project-tags">
+	                    ${tagsHTML}
+	                </div>
+	                <div class="project-actions">
+	                    <a href="projects/github-project.html?repo=${encodeURIComponent(project.fullName)}" class="btn btn-secondary btn-sm">Details</a>
+	                    <a href="${project.url}" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Repo</a>
+	                    <a href="${project.url}#readme" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Docs</a>
+	                    <a href="${project.url}/releases" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Releases</a>
+	                    ${project.homepage
+	                        ? `<a href="${project.homepage}" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Demo</a>`
+	                        : `<button class="btn btn-secondary btn-sm" type="button" disabled aria-disabled="true">Demo</button>`
+	                    }
+	                </div>
+	            </div>
+	        </div>
+	    `;
 }
 
 /**
@@ -535,6 +552,8 @@ async function getProjectDetails(fullRepoName) {
 async function renderWeeklyHighlights() {
     const container = document.getElementById('weekly-content');
     const dateRangeEl = document.getElementById('weekly-date-range');
+    const titleEl = document.getElementById('weekly-title');
+    const iconEl = document.getElementById('weekly-icon');
     
     if (!container) return;
     
@@ -562,10 +581,6 @@ async function renderWeeklyHighlights() {
                 const created = new Date(e.created_at);
                 return !Number.isNaN(created.getTime()) && created >= weekAgo && created <= now;
             });
-        
-        if (dateRangeEl) {
-            dateRangeEl.textContent = `${formatShortDate(weekAgo)} - ${formatShortDate(now)}`;
-        }
         
         const repoActivity = new Map();
         const activeRepos = new Set();
@@ -735,9 +750,10 @@ async function renderWeeklyHighlights() {
             ? take(categorizedCommits.fix, 6).map(c => li(formatCommit(c))).join('')
             : li('No obvious “fix/bug” commits this week. Either we’re perfect… or it’s hidden in private repos.');
 
-        const [weeklyArchive, cachedRepos] = await Promise.all([
+        const [weeklyArchive, cachedRepos, cachedReleases] = await Promise.all([
             loadWeeklyLogArchive(),
-            loadCachedData()
+            loadCachedData(),
+            loadCachedReleases()
         ]);
 
         const diaryEntries = weeklyArchive && Array.isArray(weeklyArchive.entries) ? weeklyArchive.entries : [];
@@ -754,9 +770,56 @@ async function renderWeeklyHighlights() {
             : defaultDiaryIndex;
         const selectedDiaryEntry = selectedDiaryIndex >= 0 ? diaryEntries[selectedDiaryIndex] : null;
         const diaryWeekCounter = selectedDiaryEntry && diaryEntries.length ? `${selectedDiaryIndex + 1}/${diaryEntries.length}` : '';
-        if (dateRangeEl && selectedDiaryEntry && selectedDiaryEntry.weekOf) {
-            dateRangeEl.textContent = `Week of ${selectedDiaryEntry.weekOf}`;
-        }
+        const setWeeklyHeader = (entry) => {
+            const weekOf = entry && entry.weekOf ? `Week of ${entry.weekOf}` : `${formatShortDate(weekAgo)} - ${formatShortDate(now)}`;
+            if (dateRangeEl) dateRangeEl.textContent = weekOf;
+            if (titleEl) titleEl.textContent = (entry && entry.headline) ? entry.headline : 'This Week at Atrak';
+            if (iconEl) iconEl.textContent = '📰';
+        };
+        setWeeklyHeader(selectedDiaryEntry);
+
+        const currentMonthLabel = (() => {
+            try {
+                return now.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+            } catch (_) {
+                return 'This month';
+            }
+        })();
+
+        const releasesThisMonth = (() => {
+            const list = Array.isArray(cachedReleases) ? cachedReleases : [];
+            const seen = new Set();
+            const out = [];
+
+            for (const rel of list) {
+                if (!rel || typeof rel !== 'object') continue;
+                if (rel.draft) continue;
+                const publishedRaw = typeof rel.published_at === 'string' ? rel.published_at : '';
+                const publishedAt = publishedRaw ? new Date(publishedRaw) : null;
+                if (!publishedAt || Number.isNaN(publishedAt.getTime())) continue;
+                if (publishedAt.getFullYear() !== now.getFullYear()) continue;
+                if (publishedAt.getMonth() !== now.getMonth()) continue;
+
+                const url = safeExternalUrl(rel.url);
+                if (url === '#') continue;
+                if (seen.has(url)) continue;
+                seen.add(url);
+
+                const repoFull = typeof rel.repo === 'string' ? rel.repo : '';
+                const repoName = repoFull ? (repoFull.split('/')[1] || repoFull) : 'repo';
+                out.push({
+                    repo: repoName,
+                    tag: typeof rel.tag === 'string' && rel.tag.trim() ? rel.tag.trim() : 'release',
+                    name: typeof rel.name === 'string' ? rel.name.trim() : '',
+                    url,
+                    date: publishedAt
+                });
+
+                if (out.length >= 6) break;
+            }
+
+            return out;
+        })();
 
         const spotlightRepo = (() => {
             const repos = Array.isArray(cachedRepos) ? cachedRepos : [];
@@ -890,220 +953,288 @@ async function renderWeeklyHighlights() {
             })
             .join('');
 
-        const diarySection = selectedDiaryEntry
-            ? `
-	                <section class="weekly-section weekly-section-wide weekly-diary" id="weekly-diary-${escapeHtml(slugify(selectedDiaryEntry.weekOf || selectedDiaryEntry.projectTitle))}">
-	                    <div class="weekly-section-header">
-	                        <h4 class="weekly-section-title"><span class="weekly-section-icon">📝</span>Dev Diary Spotlight</h4>
-                        ${diaryEntries.length > 1 ? `
-                            <div class="weekly-diary-controls">
-                                <button class="weekly-diary-nav" type="button" data-weekly-diary-nav="prev" aria-label="Previous week">‹</button>
-                                <button class="weekly-diary-nav" type="button" data-weekly-diary-nav="next" aria-label="Next week">›</button>
-                                <label class="sr-only" for="weekly-diary-select">Select week</label>
-                                <select id="weekly-diary-select" class="weekly-diary-select">
-                                    ${diaryOptions}
-                                </select>
-                            </div>
-                        ` : `
-                            <span class="weekly-section-meta">${escapeHtml(selectedDiaryEntry.projectTitle)} • ${escapeHtml(selectedDiaryEntry.weekOf || '')}</span>
-	                        `}
-	                    </div>
-	                    <div class="weekly-diary-meta" id="weekly-diary-meta">${escapeHtml(selectedDiaryEntry.projectTitle)} • ${escapeHtml(selectedDiaryEntry.weekOf || '')}${diaryWeekCounter ? ` • ${escapeHtml(diaryWeekCounter)}` : ''}</div>
-	                    <div id="weekly-diary-body" class="weekly-diary-body" role="region" aria-label="Weekly report" aria-live="polite">
-	                        ${renderDiaryBody(selectedDiaryEntry)}
-	                    </div>
-                    <div class="weekly-diary-footer">
-                        <span class="weekly-diary-metrics" id="weekly-diary-metrics">${escapeHtml(renderDiaryMetrics(selectedDiaryEntry))}</span>
-                        <a class="weekly-link" href="WeeklyLog.txt" target="_blank" rel="noopener">Read full log</a>
+        const renderDiaryPreview = (entry) => {
+            if (!entry) return '<div class="weekly-empty">No weekly posts yet.</div>';
+            const blocks = entry.blocks || {};
+            const highlights = blocks.Highlights && blocks.Highlights.bullets ? blocks.Highlights.bullets.slice(0, 3) : [];
+            const shipped = blocks.Shipped && blocks.Shipped.bullets ? blocks.Shipped.bullets.slice(0, 3) : [];
+
+            return `
+                <div class="weekly-diary-grid weekly-diary-grid-compact">
+                    <div class="weekly-diary-card">
+                        <div class="weekly-diary-card-title">Highlights</div>
+                        <ul class="weekly-list">
+                            ${(highlights.length ? highlights : ['No highlights logged.']).map(item => li(escapeHtml(item))).join('')}
+                        </ul>
                     </div>
-                </section>
-            `
+                    <div class="weekly-diary-card">
+                        <div class="weekly-diary-card-title">Shipped</div>
+                        <ul class="weekly-list">
+                            ${(shipped.length ? shipped : ['No shipped items logged.']).map(item => li(escapeHtml(item))).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        };
+
+        const weekChips = diaryEntries.length
+            ? diaryEntries
+                .map((entry, idx) => ({ entry, idx }))
+                .slice()
+                .reverse()
+                .map(({ entry, idx }) => {
+                    const label = entry.weekOf ? `Week of ${entry.weekOf}` : `Week #${idx + 1}`;
+                    const shortLabel = entry.weekOf ? entry.weekOf.replace(/\s+/g, ' ') : `Week ${idx + 1}`;
+                    const active = idx === selectedDiaryIndex;
+                    return `<button class="weekly-week-chip" type="button" data-weekly-week="${idx}" ${active ? 'aria-current="true"' : ''} aria-label="${escapeHtml(label)}">${escapeHtml(shortLabel)}</button>`;
+                })
+                .join('')
             : '';
 
-	        container.innerHTML = `
-	            <div class="weekly-digest">
-                <div class="weekly-kpis">
-                    ${kpi(totalCommits, 'Commits')}
-                    ${kpi(totalPushes, 'Pushes')}
-                    ${kpi(activeRepos.size, 'Repos Active')}
-                    ${kpi(starsGained, 'Stars')}
+        const diarySection = `
+            <section class="weekly-section weekly-section-wide weekly-diary" id="weekly-diary">
+                <div class="weekly-section-header">
+                    <h4 class="weekly-section-title"><span class="weekly-section-icon">🗞️</span>Weekly News</h4>
+                    <span class="weekly-section-meta" id="weekly-news-meta">${selectedDiaryEntry && selectedDiaryEntry.weekOf ? escapeHtml(selectedDiaryEntry.weekOf) : escapeHtml(currentMonthLabel)}</span>
                 </div>
-
-                <div class="weekly-sections">
-                    <section class="weekly-section weekly-section-wide weekly-briefing">
-                        <div class="weekly-section-header">
-                            <h4 class="weekly-section-title"><span class="weekly-section-icon">🎙️</span>Weekly Briefing</h4>
-                            <span class="weekly-section-meta">${mostRecentEventAt ? `Last ping: ${escapeHtml(formatShortDate(mostRecentEventAt))}` : 'Last 7d'}</span>
+                ${weekChips ? `<div class="weekly-week-strip" role="navigation" aria-label="Browse weekly posts">${weekChips}</div>` : ''}
+                <div class="weekly-diary-meta" id="weekly-diary-meta">${selectedDiaryEntry ? `${escapeHtml(selectedDiaryEntry.projectTitle)} • ${escapeHtml(selectedDiaryEntry.weekOf || '')}${diaryWeekCounter ? ` • ${escapeHtml(diaryWeekCounter)}` : ''}` : 'No weekly posts loaded.'}</div>
+                <div id="weekly-diary-preview">
+                    ${renderDiaryPreview(selectedDiaryEntry)}
+                </div>
+                ${selectedDiaryEntry ? `
+                    <details class="weekly-more weekly-post-more" id="weekly-post-more">
+                        <summary>Open full week</summary>
+                        <div id="weekly-diary-body" class="weekly-diary-body" role="region" aria-label="Weekly post" aria-live="polite">
+                            ${renderDiaryBody(selectedDiaryEntry)}
                         </div>
-                        <p class="weekly-briefing-text">${escapeHtml(intro)}</p>
-                        <p class="weekly-briefing-text">${kickoff}</p>
-                        <p class="weekly-briefing-text">
-                            Want in? <a class="weekly-inline-link" href="#contact" data-open-contact-tab="apply">Apply / Contact</a> — we’re always looking for builders.
-                        </p>
-                    </section>
+                    </details>
+                ` : ''}
+                <div class="weekly-diary-footer">
+                    <span class="weekly-diary-metrics" id="weekly-diary-metrics">${escapeHtml(selectedDiaryEntry ? (renderDiaryMetrics(selectedDiaryEntry) || '') : '')}</span>
+                    <a class="weekly-link" href="WeeklyLog.txt" target="_blank" rel="noopener">Read full log</a>
+                </div>
+            </section>
+        `;
 
-                    ${spotlightHtml}
+	        const topReposThisWeekList = topRepos.length
+	            ? topRepos.slice(0, 4).map(r => {
+	                const meta = [];
+	                if (r.commits) meta.push(`${r.commits} commit${r.commits === 1 ? '' : 's'}`);
+	                if (r.pushes) meta.push(`${r.pushes} push${r.pushes === 1 ? '' : 'es'}`);
+	                return li(`<a class="weekly-inline-link" href="${r.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(r.name)}</a> — ${escapeHtml(meta.join(' • ') || 'active')}`);
+	            }).join('')
+	            : li('No repo updates found (or cache not ready).');
+
+            const monthReleasesList = releasesThisMonth.length
+                ? releasesThisMonth.slice(0, 4).map(r => {
+                    const nameSuffix = r.name ? ` <span class="weekly-muted">(${escapeHtml(r.name)})</span>` : '';
+                    return li(`<a class="weekly-inline-link" href="${r.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(r.repo)}</a> — <code>${escapeHtml(r.tag)}</code>${nameSuffix}`);
+                }).join('')
+                : li(`No releases cached for ${escapeHtml(currentMonthLabel)} yet.`);
+
+            const moreGitHubDetails = `
+                <details class="weekly-more" id="weekly-github-more">
+                    <summary>More from GitHub (last 7 days)</summary>
+                    <div class="weekly-sections">
+                        <section class="weekly-section weekly-section-wide weekly-briefing">
+                            <div class="weekly-section-header">
+                                <h4 class="weekly-section-title"><span class="weekly-section-icon">🎙️</span>Weekly Briefing</h4>
+                                <span class="weekly-section-meta">${mostRecentEventAt ? `Last ping: ${escapeHtml(formatShortDate(mostRecentEventAt))}` : 'Last 7d'}</span>
+                            </div>
+                            <p class="weekly-briefing-text">${escapeHtml(intro)} ${kickoff}</p>
+                            <p class="weekly-briefing-text">
+                                Want in? <a class="weekly-inline-link" href="#contact" data-open-contact-tab="apply">Apply / Contact</a>
+                            </p>
+                        </section>
+                        ${spotlightHtml}
+                        <section class="weekly-section">
+                            <div class="weekly-section-header">
+                                <h4 class="weekly-section-title"><span class="weekly-section-icon">📌</span>Highlights</h4>
+                                <span class="weekly-section-meta">Last 7d</span>
+                            </div>
+                            <ul class="weekly-list">
+                                ${highlights.map(h => li(h)).join('')}
+                            </ul>
+                        </section>
+                        <section class="weekly-section">
+                            <div class="weekly-section-header">
+                                <h4 class="weekly-section-title"><span class="weekly-section-icon">📝</span>Notable Changes</h4>
+                                <span class="weekly-section-meta">Commits</span>
+                            </div>
+                            <ul class="weekly-list">
+                                ${notableList}
+                            </ul>
+                        </section>
+                        <section class="weekly-section">
+                            <div class="weekly-section-header">
+                                <h4 class="weekly-section-title"><span class="weekly-section-icon">🚀</span>Releases (This Week)</h4>
+                                <span class="weekly-section-meta">${escapeHtml(releases.length ? `${releases.length}` : '0')}</span>
+                            </div>
+                            <ul class="weekly-list">
+                                ${releasesList}
+                            </ul>
+                        </section>
+                        <section class="weekly-section">
+                            <div class="weekly-section-header">
+                                <h4 class="weekly-section-title"><span class="weekly-section-icon">✨</span>Patch Notes</h4>
+                                <span class="weekly-section-meta">Features</span>
+                            </div>
+                            <ul class="weekly-list">
+                                ${featureList}
+                            </ul>
+                        </section>
+                        <section class="weekly-section">
+                            <div class="weekly-section-header">
+                                <h4 class="weekly-section-title"><span class="weekly-section-icon">🪲</span>Bug Squash</h4>
+                                <span class="weekly-section-meta">Fixes</span>
+                            </div>
+                            <ul class="weekly-list">
+                                ${fixList}
+                            </ul>
+                        </section>
+                    </div>
+                </details>
+            `;
+
+	        container.innerHTML = `
+	            <div class="weekly-digest weekly-digest-v2">
+                    <div class="weekly-kpis">
+                        ${kpi(totalCommits, 'Commits (7d)')}
+                        ${kpi(totalPushes, 'Pushes')}
+                        ${kpi(activeRepos.size, 'Repos Active')}
+                        ${kpi(starsGained, 'Stars')}
+                    </div>
+
                     ${diarySection}
 
-                    <section class="weekly-section">
-                        <div class="weekly-section-header">
-                            <h4 class="weekly-section-title"><span class="weekly-section-icon">📌</span>Highlights</h4>
-                            <span class="weekly-section-meta">Last 7d</span>
-                        </div>
-                        <ul class="weekly-list">
-                            ${highlights.map(h => li(h)).join('')}
-                        </ul>
-                    </section>
+                    <div class="weekly-sections weekly-sections-compact">
+                        <section class="weekly-section">
+                            <div class="weekly-section-header">
+                                <h4 class="weekly-section-title"><span class="weekly-section-icon">🔥</span>Top Repos (This Week)</h4>
+                                <span class="weekly-section-meta">Live</span>
+                            </div>
+                            <ul class="weekly-list">
+                                ${topReposThisWeekList}
+                            </ul>
+                        </section>
 
-                    <section class="weekly-section">
-                        <div class="weekly-section-header">
-                            <h4 class="weekly-section-title"><span class="weekly-section-icon">🧱</span>Build Log</h4>
-                            <span class="weekly-section-meta">Top repos</span>
-                        </div>
-                        <ul class="weekly-list">
-                            ${buildList}
-                        </ul>
-                    </section>
+                        <section class="weekly-section">
+                            <div class="weekly-section-header">
+                                <h4 class="weekly-section-title"><span class="weekly-section-icon">🚀</span>Latest Releases</h4>
+                                <span class="weekly-section-meta">${escapeHtml(currentMonthLabel)}</span>
+                            </div>
+                            <ul class="weekly-list">
+                                ${monthReleasesList}
+                            </ul>
+                        </section>
+                    </div>
 
-                    <section class="weekly-section">
-                        <div class="weekly-section-header">
-                            <h4 class="weekly-section-title"><span class="weekly-section-icon">📝</span>Notable Changes</h4>
-                            <span class="weekly-section-meta">Commits</span>
-                        </div>
-                        <ul class="weekly-list">
-                            ${notableList}
-                        </ul>
-                    </section>
+                    ${moreGitHubDetails}
 
-                    <section class="weekly-section">
-                        <div class="weekly-section-header">
-                            <h4 class="weekly-section-title"><span class="weekly-section-icon">🚀</span>Releases</h4>
-                            <span class="weekly-section-meta">${escapeHtml(releases.length ? `${releases.length}` : '0')}</span>
-                        </div>
-                        <ul class="weekly-list">
-                            ${releasesList}
-                        </ul>
-                    </section>
-
-                    <section class="weekly-section">
-                        <div class="weekly-section-header">
-                            <h4 class="weekly-section-title"><span class="weekly-section-icon">✨</span>Patch Notes</h4>
-                            <span class="weekly-section-meta">New stuff</span>
-                        </div>
-                        <ul class="weekly-list">
-                            ${featureList}
-                        </ul>
-                    </section>
-
-                    <section class="weekly-section">
-                        <div class="weekly-section-header">
-                            <h4 class="weekly-section-title"><span class="weekly-section-icon">🪲</span>Bug Squash Report</h4>
-                            <span class="weekly-section-meta">Fixes</span>
-                        </div>
-                        <ul class="weekly-list">
-                            ${fixList}
-                        </ul>
-                    </section>
-                </div>
-
-                <div class="weekly-footer">
-                    <a class="btn btn-secondary btn-sm" href="releases.html">Read Release Notes</a>
-                    <a class="btn btn-secondary btn-sm" href="${safeExternalUrl('https://github.com/' + GITHUB_USERNAME)}" target="_blank" rel="noopener noreferrer">GitHub</a>
-                    <a class="btn btn-secondary btn-sm" href="#updates">Open Build Log</a>
-                </div>
+                    <div class="weekly-footer">
+                        <a class="btn btn-secondary btn-sm" href="releases.html">Read Release Notes</a>
+                        <a class="btn btn-secondary btn-sm" href="${safeExternalUrl('https://github.com/' + GITHUB_USERNAME)}" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a class="btn btn-secondary btn-sm" href="#updates">Build Log</a>
+                    </div>
 	            </div>
 	        `;
 
-	        const diarySelectEl = document.getElementById('weekly-diary-select');
-	        if (diarySelectEl && diaryEntries.length > 1 && !diarySelectEl.dataset.bound) {
-	            const prevBtn = document.querySelector('[data-weekly-diary-nav="prev"]');
-	            const nextBtn = document.querySelector('[data-weekly-diary-nav="next"]');
-	            const headerPrevBtn = document.getElementById('prev-week-btn');
-	            const headerNextBtn = document.getElementById('next-week-btn');
-	            const bodyEl = document.getElementById('weekly-diary-body');
-	            let currentIndex = Number.parseInt(String(diarySelectEl.value), 10);
-	            if (!Number.isFinite(currentIndex)) currentIndex = selectedDiaryIndex;
+            if (diaryEntries.length) {
+                const headerPrevBtn = document.getElementById('prev-week-btn');
+                const headerNextBtn = document.getElementById('next-week-btn');
+                const previewEl = document.getElementById('weekly-diary-preview');
+                const bodyEl = document.getElementById('weekly-diary-body');
+                const metaEl = document.getElementById('weekly-diary-meta');
+                const metricsEl = document.getElementById('weekly-diary-metrics');
+                const newsMetaEl = document.getElementById('weekly-news-meta');
+                const weekButtons = Array.from(document.querySelectorAll('[data-weekly-week]'));
 
-	            const setControls = () => {
-	                if (prevBtn) prevBtn.disabled = currentIndex <= 0;
-	                if (nextBtn) nextBtn.disabled = currentIndex >= (diaryEntries.length - 1);
-	                if (headerPrevBtn) headerPrevBtn.disabled = currentIndex <= 0;
-	                if (headerNextBtn) headerNextBtn.disabled = currentIndex >= (diaryEntries.length - 1);
-	            };
+                let currentIndex = selectedDiaryIndex;
 
-	            const animateBody = (direction) => {
-	                if (!bodyEl) return;
-	                bodyEl.classList.remove('slide-in-left', 'slide-in-right');
-	                void bodyEl.offsetWidth;
-	                bodyEl.classList.add(direction === 'left' ? 'slide-in-left' : 'slide-in-right');
-	            };
+                const setControls = () => {
+                    if (headerPrevBtn) headerPrevBtn.disabled = currentIndex <= 0;
+                    if (headerNextBtn) headerNextBtn.disabled = currentIndex >= (diaryEntries.length - 1);
+                };
 
-	            const updateDiary = (idx, direction) => {
-	                const safeIndex = Number.parseInt(String(idx), 10);
-	                if (!Number.isFinite(safeIndex) || safeIndex < 0 || safeIndex >= diaryEntries.length) return;
+                const animateContent = (direction) => {
+                    container.classList.remove('slide-left', 'slide-right');
+                    void container.offsetWidth;
+                    container.classList.add(direction === 'left' ? 'slide-left' : 'slide-right');
+                    window.setTimeout(() => container.classList.remove('slide-left', 'slide-right'), 420);
+                };
 
-	                try {
-	                    window.localStorage.setItem('atrak_weekly_diary_index', String(safeIndex));
-	                } catch (_) {
-	                    // ignore storage errors
-	                }
+                const setActiveChip = () => {
+                    weekButtons.forEach(btn => {
+                        const idx = Number.parseInt(String(btn.dataset.weeklyWeek || ''), 10);
+                        if (idx === currentIndex) {
+                            btn.setAttribute('aria-current', 'true');
+                        } else {
+                            btn.removeAttribute('aria-current');
+                        }
+                    });
+                };
 
-		                const entry = diaryEntries[safeIndex];
-		                const metaEl = document.getElementById('weekly-diary-meta');
-		                const metricsEl = document.getElementById('weekly-diary-metrics');
+                const updateWeek = (idx, direction) => {
+                    const safeIndex = Number.parseInt(String(idx), 10);
+                    if (!Number.isFinite(safeIndex) || safeIndex < 0 || safeIndex >= diaryEntries.length) return;
 
-		                if (metaEl) {
-		                    const metaParts = [];
-		                    if (entry.projectTitle) metaParts.push(entry.projectTitle);
-		                    if (entry.weekOf) metaParts.push(entry.weekOf);
-		                    metaParts.push(`${safeIndex + 1}/${diaryEntries.length}`);
-		                    metaEl.textContent = metaParts.join(' • ');
-		                }
-		                if (dateRangeEl && entry.weekOf) {
-		                    dateRangeEl.textContent = `Week of ${entry.weekOf}`;
-		                }
-	                if (bodyEl) {
-	                    bodyEl.innerHTML = renderDiaryBody(entry);
-	                    animateBody(direction || 'right');
-	                }
-	                if (metricsEl) metricsEl.textContent = renderDiaryMetrics(entry) || '';
+                    currentIndex = safeIndex;
 
-	                currentIndex = safeIndex;
-	                diarySelectEl.value = String(safeIndex);
-	                setControls();
-	            };
+                    try {
+                        window.localStorage.setItem('atrak_weekly_diary_index', String(safeIndex));
+                    } catch (_) {
+                        // ignore storage errors
+                    }
 
-	            diarySelectEl.dataset.bound = 'true';
-	            diarySelectEl.addEventListener('change', () => {
-	                const nextIndex = Number.parseInt(String(diarySelectEl.value), 10);
-	                if (!Number.isFinite(nextIndex)) return;
-	                const direction = nextIndex < currentIndex ? 'left' : 'right';
-	                updateDiary(nextIndex, direction);
-	            });
+                    const entry = diaryEntries[safeIndex];
+                    setWeeklyHeader(entry);
+                    if (newsMetaEl) newsMetaEl.textContent = entry.weekOf || currentMonthLabel;
 
-	            if (prevBtn) {
-	                prevBtn.addEventListener('click', () => updateDiary(currentIndex - 1, 'left'));
-	            }
-	            if (nextBtn) {
-	                nextBtn.addEventListener('click', () => updateDiary(currentIndex + 1, 'right'));
-	            }
-	            if (headerPrevBtn && !headerPrevBtn.dataset.bound) {
-	                headerPrevBtn.dataset.bound = 'true';
-	                headerPrevBtn.addEventListener('click', () => updateDiary(currentIndex - 1, 'left'));
-	            }
-	            if (headerNextBtn && !headerNextBtn.dataset.bound) {
-	                headerNextBtn.dataset.bound = 'true';
-	                headerNextBtn.addEventListener('click', () => updateDiary(currentIndex + 1, 'right'));
-	            }
+                    if (metaEl) {
+                        const metaParts = [];
+                        if (entry.projectTitle) metaParts.push(entry.projectTitle);
+                        if (entry.weekOf) metaParts.push(entry.weekOf);
+                        metaParts.push(`${safeIndex + 1}/${diaryEntries.length}`);
+                        metaEl.textContent = metaParts.join(' • ');
+                    }
 
-	            if (bodyEl) {
-	                bodyEl.addEventListener('animationend', () => {
-	                    bodyEl.classList.remove('slide-in-left', 'slide-in-right');
-	                });
-	            }
+                    if (previewEl) previewEl.innerHTML = renderDiaryPreview(entry);
+                    if (bodyEl) bodyEl.innerHTML = renderDiaryBody(entry);
+                    if (metricsEl) metricsEl.textContent = renderDiaryMetrics(entry) || '';
 
-	            setControls();
-	        }
+                    setActiveChip();
+                    setControls();
+                    animateContent(direction || 'right');
+                };
+
+                setControls();
+                setActiveChip();
+
+                if (headerPrevBtn && !headerPrevBtn.dataset.bound) {
+                    headerPrevBtn.dataset.bound = 'true';
+                    headerPrevBtn.addEventListener('click', () => updateWeek(currentIndex - 1, 'left'));
+                }
+                if (headerNextBtn && !headerNextBtn.dataset.bound) {
+                    headerNextBtn.dataset.bound = 'true';
+                    headerNextBtn.addEventListener('click', () => updateWeek(currentIndex + 1, 'right'));
+                }
+
+                weekButtons.forEach(btn => {
+                    if (btn.dataset.bound) return;
+                    btn.dataset.bound = 'true';
+                    btn.addEventListener('click', () => {
+                        const idx = Number.parseInt(String(btn.dataset.weeklyWeek || ''), 10);
+                        const direction = idx < currentIndex ? 'left' : 'right';
+                        updateWeek(idx, direction);
+                    });
+                });
+            } else {
+                const headerPrevBtn = document.getElementById('prev-week-btn');
+                const headerNextBtn = document.getElementById('next-week-btn');
+                if (headerPrevBtn) headerPrevBtn.disabled = true;
+                if (headerNextBtn) headerNextBtn.disabled = true;
+            }
 	        
 	    } catch (e) {
 	        console.error('Failed to render weekly highlights', e);

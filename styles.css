@@ -4415,6 +4415,100 @@ section {
     gap: 16px;
 }
 
+.weekly-digest-v2 .weekly-sections {
+    gap: 12px;
+}
+
+.weekly-week-strip {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 10px 2px 6px;
+    margin: -4px 0 8px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+}
+
+.weekly-week-strip::-webkit-scrollbar {
+    height: 8px;
+}
+
+.weekly-week-strip::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 999px;
+}
+
+.weekly-week-strip::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.6), rgba(139, 92, 246, 0.6));
+    border-radius: 999px;
+}
+
+.weekly-week-chip {
+    flex: 0 0 auto;
+    padding: 10px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    scroll-snap-align: center;
+    white-space: nowrap;
+}
+
+.weekly-week-chip:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+
+.weekly-week-chip[aria-current="true"] {
+    color: var(--text-primary);
+    border-color: rgba(59, 130, 246, 0.45);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(139, 92, 246, 0.14));
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+}
+
+.weekly-more {
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.18);
+    padding: 12px 14px;
+}
+
+.weekly-more summary {
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-weight: 700;
+    list-style: none;
+}
+
+.weekly-more summary::-webkit-details-marker {
+    display: none;
+}
+
+.weekly-more summary::after {
+    content: '▾';
+    margin-left: 8px;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.weekly-more[open] summary::after {
+    content: '▴';
+}
+
+.weekly-post-more {
+    margin-top: 12px;
+}
+
+.weekly-muted {
+    color: var(--text-tertiary);
+    font-size: 12px;
+}
+
 .weekly-kpis {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -4679,6 +4773,10 @@ section {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
+}
+
+.weekly-diary-grid-compact {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .weekly-diary-card {

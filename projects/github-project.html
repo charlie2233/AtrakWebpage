@@ -10,7 +10,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="../assets/logo.png">
     <link rel="apple-touch-icon" sizes="120x120" href="../assets/logo.png">
     <link rel="apple-touch-icon" sizes="76x76" href="../assets/logo.png">
-    <link rel="stylesheet" href="../styles.css?v=17">
+    <link rel="stylesheet" href="../styles.css?v=18">
 </head>
 <body>
     <nav class="navbar">
@@ -112,8 +112,8 @@
         </div>
     </footer>
 
-    <script src="../github-projects.js?v=16"></script>
-    <script src="../script.js?v=16"></script>
+    <script src="../github-projects.js?v=18"></script>
+    <script src="../script.js?v=18"></script>
     <script>
         // Load project details on page load
         (async function() {
@@ -188,22 +188,15 @@
 	                    <div class="glass-card project-detail-card project-actions-card">
 	                        <h3>🔗 Links</h3>
 	                        <div class="project-actions">
-	                            <a href="${project.url}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-	                                View on GitHub
-	                            </a>
-	                            <a href="${project.url}#readme" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
-	                                Docs
-	                            </a>
-	                            <a href="${project.url}/releases" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
-	                                Download
-	                            </a>
-	                            ${project.homepage ? `
-	                                <a href="${project.homepage}" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
-	                                    Demo / Website
-	                                </a>
-	                            ` : ''}
+	                            <a href="${project.url}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Repo</a>
+	                            <a href="${project.url}#readme" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">Docs</a>
+	                            <a href="${project.url}/releases" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">Releases</a>
+	                            ${project.homepage
+	                                ? `<a href="${project.homepage}" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">Demo</a>`
+	                                : `<button class="btn btn-secondary" type="button" disabled aria-disabled="true">Demo</button>`
+	                            }
 	                        </div>
-	                        <p class="project-note">Full repository: <a href="${project.url}" target="_blank">${project.fullName}</a></p>
+	                        <p class="project-note">Full repository: <a href="${project.url}" target="_blank" rel="noopener noreferrer">${project.fullName}</a></p>
 	                    </div>
 
 	                    <div class="glass-card project-detail-card">
