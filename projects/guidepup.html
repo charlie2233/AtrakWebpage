@@ -7,7 +7,7 @@
     <title>GuidePup — Atrak</title>
     <link rel="icon" type="image/png" href="../assets/logo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="../assets/logo.png">
-    <link rel="stylesheet" href="../styles.css?v=18">
+    <link rel="stylesheet" href="../styles.css?v=19">
 </head>
 <body>
     <nav class="navbar">
@@ -149,18 +149,26 @@
                         </div>
                         <div class="glass-card">
                             <h3>Screenshots</h3>
-                            <div class="screenshots-grid">
-                                <div class="screenshot-placeholder">
-                                    <span>Home Screen</span>
-                                </div>
-                                <div class="screenshot-placeholder">
-                                    <span>Camera View</span>
-                                </div>
-                                <div class="screenshot-placeholder">
-                                    <span>Voice Settings</span>
-                                </div>
-                                <div class="screenshot-placeholder">
-                                    <span>History</span>
+                            <div class="media-carousel" data-carousel>
+                                <button class="carousel-btn prev" type="button" data-carousel-prev aria-label="Previous screenshot">‹</button>
+                                <button class="carousel-btn next" type="button" data-carousel-next aria-label="Next screenshot">›</button>
+                                <div class="carousel-track" data-carousel-track aria-label="Screenshots (scroll horizontally)">
+                                    <figure class="carousel-slide">
+                                        <a href="../assets/Demo/Demo_Img_GuidePup/01.png" target="_blank" rel="noopener noreferrer">
+                                            <div class="carousel-media">
+                                                <img src="../assets/Demo/Demo_Img_GuidePup/01.png" alt="GuidePup screenshot 1" loading="lazy" decoding="async">
+                                            </div>
+                                            <figcaption class="carousel-caption">Home / Camera</figcaption>
+                                        </a>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <a href="../assets/Demo/Demo_Img_GuidePup/02.png" target="_blank" rel="noopener noreferrer">
+                                            <div class="carousel-media">
+                                                <img src="../assets/Demo/Demo_Img_GuidePup/02.png" alt="GuidePup screenshot 2" loading="lazy" decoding="async">
+                                            </div>
+                                            <figcaption class="carousel-caption">Guidance / Voice</figcaption>
+                                        </a>
+                                    </figure>
                                 </div>
                             </div>
                         </div>
@@ -411,6 +419,6 @@ npx expo build:ios</code></pre>
         </div>
     </footer>
 
-    <script src="../script.js?v=18"></script>
+    <script src="../script.js?v=19"></script>
 </body>
 </html>

@@ -7,7 +7,7 @@
     <title>Release Notes — Atrak</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/logo.png">
-	    <link rel="stylesheet" href="styles.css?v=18">
+	    <link rel="stylesheet" href="styles.css?v=19">
 </head>
 <body>
     <nav class="navbar">
@@ -42,6 +42,20 @@
 
 	        <section class="releases-content">
 	            <div class="container">
+                    <section class="releases-live" aria-label="Latest GitHub releases">
+                        <div class="glass-card releases-live-card" id="releases-live">
+                            <div class="releases-live-header">
+                                <div class="releases-live-title">
+                                    <span class="releases-live-icon">🚀</span>
+                                    <h2 class="releases-live-heading">Latest Releases (GitHub)</h2>
+                                </div>
+                                <p class="releases-live-meta" id="releases-live-meta" role="status" aria-live="polite">Loading…</p>
+                            </div>
+                            <div class="releases-live-controls" id="releases-live-controls"></div>
+                            <div class="releases-live-list" id="releases-live-list"></div>
+                        </div>
+                    </section>
+
 	                <nav class="release-toc glass-card" aria-label="Release notes navigation">
 	                    <div class="release-toc-header">
 	                        <span class="release-toc-icon">🗓️</span>
@@ -295,6 +309,7 @@
         </div>
     </footer>
 
-    <script src="script.js?v=18"></script>
+    <script src="github-projects.js?v=19"></script>
+    <script src="script.js?v=19"></script>
 </body>
 </html>

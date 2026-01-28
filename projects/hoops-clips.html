@@ -7,7 +7,7 @@
     <title>Hoops Clips — Atrak</title>
     <link rel="icon" type="image/png" href="../assets/logo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="../assets/logo.png">
-    <link rel="stylesheet" href="../styles.css?v=18">
+    <link rel="stylesheet" href="../styles.css?v=19">
 </head>
 <body>
     <nav class="navbar">
@@ -149,18 +149,42 @@
                         </div>
                         <div class="glass-card">
                             <h3>Screenshots</h3>
-                            <div class="screenshots-grid">
-                                <div class="screenshot-placeholder">
-                                    <span>Input Frame</span>
-                                </div>
-                                <div class="screenshot-placeholder">
-                                    <span>Detection</span>
-                                </div>
-                                <div class="screenshot-placeholder">
-                                    <span>Action Tags</span>
-                                </div>
-                                <div class="screenshot-placeholder">
-                                    <span>Output Clip</span>
+                            <div class="media-carousel" data-carousel>
+                                <button class="carousel-btn prev" type="button" data-carousel-prev aria-label="Previous screenshot">‹</button>
+                                <button class="carousel-btn next" type="button" data-carousel-next aria-label="Next screenshot">›</button>
+                                <div class="carousel-track" data-carousel-track aria-label="Screenshots (scroll horizontally)">
+                                    <figure class="carousel-slide">
+                                        <a href="../assets/Demo/DemoHoopsClips/01.png" target="_blank" rel="noopener noreferrer">
+                                            <div class="carousel-media">
+                                                <img src="../assets/Demo/DemoHoopsClips/01.png" alt="Hoops Clips screenshot: Input frame" loading="lazy" decoding="async">
+                                            </div>
+                                            <figcaption class="carousel-caption">Input Frame</figcaption>
+                                        </a>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <a href="../assets/Demo/DemoHoopsClips/02.png" target="_blank" rel="noopener noreferrer">
+                                            <div class="carousel-media">
+                                                <img src="../assets/Demo/DemoHoopsClips/02.png" alt="Hoops Clips screenshot: Detection" loading="lazy" decoding="async">
+                                            </div>
+                                            <figcaption class="carousel-caption">Detection</figcaption>
+                                        </a>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <a href="../assets/Demo/DemoHoopsClips/03.png" target="_blank" rel="noopener noreferrer">
+                                            <div class="carousel-media">
+                                                <img src="../assets/Demo/DemoHoopsClips/03.png" alt="Hoops Clips screenshot: Action tags" loading="lazy" decoding="async">
+                                            </div>
+                                            <figcaption class="carousel-caption">Action Tags</figcaption>
+                                        </a>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <a href="../assets/Demo/DemoHoopsClips/04.png" target="_blank" rel="noopener noreferrer">
+                                            <div class="carousel-media">
+                                                <img src="../assets/Demo/DemoHoopsClips/04.png" alt="Hoops Clips screenshot: Output clip" loading="lazy" decoding="async">
+                                            </div>
+                                            <figcaption class="carousel-caption">Output Clip</figcaption>
+                                        </a>
+                                    </figure>
                                 </div>
                             </div>
                         </div>
@@ -411,6 +435,6 @@ python server.py</code></pre>
         </div>
     </footer>
 
-    <script src="../script.js?v=18"></script>
+    <script src="../script.js?v=19"></script>
 </body>
 </html>

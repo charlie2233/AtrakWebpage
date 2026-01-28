@@ -59,16 +59,40 @@ jobs:
             > data/github-repos.json
 
           # Fetch recent events (pushes, releases, etc.)
-          curl -fsSL "${AUTH_HEADER[@]}" \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "${API_BASE}/users/${USERNAME}/events/public?per_page=50" \
-            > data/github-events.json || echo "[]" > data/github-events.json
+          for page in 1 2 3; do
+            curl -fsSL "${AUTH_HEADER[@]}" \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "${API_BASE}/users/${USERNAME}/events/public?per_page=100&page=${page}" \
+              > "data/_events_${page}.json" || echo "[]" > "data/_events_${page}.json"
+          done
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          events = []
+          for page in (1, 2, 3):
+              path = Path(f"data/_events_{page}.json")
+              try:
+                  data = json.loads(path.read_text(encoding="utf-8"))
+                  if isinstance(data, list):
+                      events.extend(data)
+              except Exception:
+                  pass
+              try:
+                  path.unlink()
+              except Exception:
+                  pass
+
+          Path("data/github-events.json").write_text(json.dumps(events, indent=2) + "\n", encoding="utf-8")
+          PY
 
           python3 - <<'PY'
           import datetime
           import json
           import os
+          import time
           import urllib.request
           from pathlib import Path
 
@@ -101,9 +125,63 @@ jobs:
           Path("data/github-meta.json").write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
           Path("data/last-updated.txt").write_text(meta["updatedAt"] + "\n", encoding="utf-8")
 
+          # Weekly stats (commit contributions, PRs, etc.) via GitHub GraphQL.
+          weekly_stats = {}
+          token = os.environ.get("GH_TOKEN") or ""
+          if token:
+              try:
+                  now = datetime.datetime.utcnow().replace(microsecond=0)
+                  week_ago = now - datetime.timedelta(days=7)
+
+                  query = """
+                  query($login: String!, $from: DateTime!, $to: DateTime!) {
+                    user(login: $login) {
+                      contributionsCollection(from: $from, to: $to) {
+                        totalCommitContributions
+                        totalPullRequestContributions
+                        totalIssueContributions
+                        totalRepositoryContributions
+                      }
+                    }
+                  }
+                  """.strip()
+
+                  payload = json.dumps({
+                      "query": query,
+                      "variables": {
+                          "login": "charlie2233",
+                          "from": week_ago.isoformat() + "Z",
+                          "to": now.isoformat() + "Z",
+                      }
+                  }).encode("utf-8")
+
+                  headers = {
+                      "Accept": "application/vnd.github+json",
+                      "User-Agent": "atrak-dev-site",
+                      "Authorization": f"token {token}",
+                  }
+
+                  req = urllib.request.Request("https://api.github.com/graphql", data=payload, headers=headers)
+                  with urllib.request.urlopen(req, timeout=30) as resp:
+                      data = json.load(resp)
+
+                  cc = (data or {}).get("data", {}).get("user", {}).get("contributionsCollection", {}) or {}
+                  weekly_stats = {
+                      "updatedAt": meta["updatedAt"],
+                      "from": week_ago.isoformat() + "Z",
+                      "to": now.isoformat() + "Z",
+                      "totalCommitContributions": int(cc.get("totalCommitContributions") or 0),
+                      "totalPullRequestContributions": int(cc.get("totalPullRequestContributions") or 0),
+                      "totalIssueContributions": int(cc.get("totalIssueContributions") or 0),
+                      "totalRepositoryContributions": int(cc.get("totalRepositoryContributions") or 0),
+                  }
+              except Exception as e:
+                  print(f"Failed to fetch weekly GraphQL stats: {e}")
+
+          Path("data/github-weekly.json").write_text(json.dumps(weekly_stats, indent=2) + "\n", encoding="utf-8")
+
           # Fetch recent releases across repos (for the website "Latest releases" UI)
           api_base = "https://api.github.com"
-          token = os.environ.get("GH_TOKEN") or ""
           headers = {
               "Accept": "application/vnd.github+json",
               "X-GitHub-Api-Version": "2022-11-28",
@@ -139,6 +217,16 @@ jobs:
               for rel in rels:
                   if not isinstance(rel, dict):
                       continue
+                  assets = []
+                  for asset in rel.get("assets") or []:
+                      if not isinstance(asset, dict):
+                          continue
+                      assets.append({
+                          "name": asset.get("name") or "",
+                          "download_url": asset.get("browser_download_url") or "",
+                          "size": int(asset.get("size") or 0),
+                          "download_count": int(asset.get("download_count") or 0),
+                      })
                   releases.append({
                       "repo": full_name,
                       "name": rel.get("name") or "",
@@ -147,6 +235,9 @@ jobs:
                       "published_at": rel.get("published_at") or "",
                       "draft": bool(rel.get("draft")),
                       "prerelease": bool(rel.get("prerelease")),
+                      "zipball_url": rel.get("zipball_url") or "",
+                      "tarball_url": rel.get("tarball_url") or "",
+                      "assets": assets,
                   })
 
           releases.sort(key=lambda r: r.get("published_at") or "", reverse=True)

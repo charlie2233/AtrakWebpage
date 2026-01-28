@@ -25,6 +25,7 @@ const CACHED_DATA_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-repos.json
 const CACHED_EVENTS_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-events.json` : 'data/github-events.json'; // Updated by GitHub Actions
 const CACHED_META_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-meta.json` : 'data/github-meta.json'; // Updated by GitHub Actions
 const CACHED_RELEASES_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-releases.json` : 'data/github-releases.json'; // Updated by GitHub Actions
+const CACHED_WEEKLY_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-weekly.json` : 'data/github-weekly.json'; // Updated by GitHub Actions
 const WEEKLY_LOG_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}WeeklyLog.txt` : 'WeeklyLog.txt';
 
 // Known featured projects to exclude from "More Projects" section
@@ -81,6 +82,19 @@ async function loadCachedReleases() {
         const releases = await response.json();
         if (!Array.isArray(releases)) return null;
         return releases;
+    } catch (e) {
+        return null;
+    }
+}
+
+async function loadCachedWeeklyStats() {
+    try {
+        const response = await fetch(CACHED_WEEKLY_PATH);
+        if (!response.ok) return null;
+        const stats = await response.json();
+        if (!stats || typeof stats !== 'object') return null;
+        if (typeof stats.updatedAt !== 'string') return null;
+        return stats;
     } catch (e) {
         return null;
     }
@@ -574,7 +588,11 @@ async function renderWeeklyHighlights() {
         // Filter last 7 days (weekly digest)
         const now = new Date();
         const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        
+
+        if (titleEl) titleEl.textContent = 'This Week at Atrak';
+        if (iconEl) iconEl.textContent = '📰';
+        if (dateRangeEl) dateRangeEl.textContent = `${formatShortDate(weekAgo)} - ${formatShortDate(now)}`;
+
         const weeklyEvents = events
             .filter(e => e && typeof e === 'object' && typeof e.created_at === 'string')
             .filter(e => {
@@ -688,9 +706,7 @@ async function renderWeeklyHighlights() {
             'Weekly briefing time. Let’s get you caught up.'
         ];
         const intro = introPhrases[(totalCommits + totalPushes) % introPhrases.length];
-        const kickoff = totalCommits
-            ? `We clocked <strong>${escapeHtml(totalCommits)}</strong> commits across <strong>${escapeHtml(activeRepos.size)}</strong> active repos.`
-            : `Quiet week on public repos — but we might have been building in private 👀`;
+        let kickoff = '';
 
         const kpi = (value, label) => `
             <div class="weekly-kpi">
@@ -750,13 +766,89 @@ async function renderWeeklyHighlights() {
             ? take(categorizedCommits.fix, 6).map(c => li(formatCommit(c))).join('')
             : li('No obvious “fix/bug” commits this week. Either we’re perfect… or it’s hidden in private repos.');
 
-        const [weeklyArchive, cachedRepos, cachedReleases] = await Promise.all([
+        const [weeklyArchive, cachedRepos, cachedReleases, cachedWeeklyStats] = await Promise.all([
             loadWeeklyLogArchive(),
             loadCachedData(),
-            loadCachedReleases()
+            loadCachedReleases(),
+            loadCachedWeeklyStats()
         ]);
 
+        const weeklyStatsCommits = (() => {
+            const stats = cachedWeeklyStats && typeof cachedWeeklyStats === 'object' ? cachedWeeklyStats : null;
+            const val = stats ? Number(stats.totalCommitContributions) : Number.NaN;
+            return Number.isFinite(val) ? Math.max(0, Math.round(val)) : null;
+        })();
+
+        const commitTotalForKpi = weeklyStatsCommits != null ? weeklyStatsCommits : totalCommits;
+
+        kickoff = commitTotalForKpi
+            ? (weeklyStatsCommits != null
+                ? `We clocked <strong>${escapeHtml(commitTotalForKpi)}</strong> commit contributions (7d). Public repos in the spotlight: <strong>${escapeHtml(activeRepos.size)}</strong>.`
+                : `We clocked <strong>${escapeHtml(commitTotalForKpi)}</strong> commits across <strong>${escapeHtml(activeRepos.size)}</strong> active repos.`)
+            : `Quiet week on public repos — but we might have been building in private 👀`;
+
+        if (highlights.length) {
+            highlights[0] = weeklyStatsCommits != null
+                ? `${escapeHtml(commitTotalForKpi)} commit contributions (7d)`
+                : `${escapeHtml(commitTotalForKpi)} commits across ${escapeHtml(activeRepos.size)} repos`;
+        }
+
         const diaryEntries = weeklyArchive && Array.isArray(weeklyArchive.entries) ? weeklyArchive.entries : [];
+
+        const requestedWeekKey = (() => {
+            const hash = String(window.location.hash || '');
+            const match = hash.match(/week=([0-9]{4}-[0-9]{2}-[0-9]{2})/i);
+            return match ? match[1] : '';
+        })();
+
+        const monthMap = {
+            jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
+            jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11
+        };
+        const pad2 = (n) => String(n).padStart(2, '0');
+
+        const parseWeekStart = (weekOf) => {
+            const raw = String(weekOf || '').trim();
+            if (!raw) return null;
+
+            const startPart = raw
+                .split(/[–—-]/)[0]
+                .replace(/\s+/g, ' ')
+                .trim();
+            const m = startPart.match(/^([A-Za-z]{3,9})\s+(\d{1,2})/);
+            if (!m) return null;
+            const monthKey = m[1].slice(0, 3).toLowerCase();
+            const month = Object.prototype.hasOwnProperty.call(monthMap, monthKey) ? monthMap[monthKey] : null;
+            const day = Number.parseInt(m[2], 10);
+            if (month == null || !Number.isFinite(day) || day <= 0 || day > 31) return null;
+            return { month, day };
+        };
+
+        const applyWeekKeys = (entries) => {
+            if (!Array.isArray(entries) || !entries.length) return;
+
+            const startParts = entries.map(entry => parseWeekStart(entry && entry.weekOf));
+            let year = now.getFullYear();
+
+            for (let i = entries.length - 1; i >= 0; i -= 1) {
+                const start = startParts[i];
+                if (!start) continue;
+
+                const nextStart = i + 1 < startParts.length ? startParts[i + 1] : null;
+                if (nextStart && start.month > nextStart.month) {
+                    year -= 1;
+                }
+
+                const key = `${year}-${pad2(start.month + 1)}-${pad2(start.day)}`;
+                entries[i].weekKey = key;
+            }
+        };
+
+        applyWeekKeys(diaryEntries);
+
+        const requestedDiaryIndex = requestedWeekKey
+            ? diaryEntries.findIndex(entry => entry && entry.weekKey === requestedWeekKey)
+            : -1;
         const savedDiaryIndex = (() => {
             try {
                 return Number.parseInt(window.localStorage.getItem('atrak_weekly_diary_index') || '', 10);
@@ -765,18 +857,13 @@ async function renderWeeklyHighlights() {
             }
         })();
         const defaultDiaryIndex = diaryEntries.length ? diaryEntries.length - 1 : -1;
-        const selectedDiaryIndex = Number.isFinite(savedDiaryIndex) && savedDiaryIndex >= 0 && savedDiaryIndex < diaryEntries.length
-            ? savedDiaryIndex
-            : defaultDiaryIndex;
+        const selectedDiaryIndex = requestedDiaryIndex >= 0
+            ? requestedDiaryIndex
+            : (Number.isFinite(savedDiaryIndex) && savedDiaryIndex >= 0 && savedDiaryIndex < diaryEntries.length
+                ? savedDiaryIndex
+                : defaultDiaryIndex);
         const selectedDiaryEntry = selectedDiaryIndex >= 0 ? diaryEntries[selectedDiaryIndex] : null;
         const diaryWeekCounter = selectedDiaryEntry && diaryEntries.length ? `${selectedDiaryIndex + 1}/${diaryEntries.length}` : '';
-        const setWeeklyHeader = (entry) => {
-            const weekOf = entry && entry.weekOf ? `Week of ${entry.weekOf}` : `${formatShortDate(weekAgo)} - ${formatShortDate(now)}`;
-            if (dateRangeEl) dateRangeEl.textContent = weekOf;
-            if (titleEl) titleEl.textContent = (entry && entry.headline) ? entry.headline : 'This Week at Atrak';
-            if (iconEl) iconEl.textContent = '📰';
-        };
-        setWeeklyHeader(selectedDiaryEntry);
 
         const currentMonthLabel = (() => {
             try {
@@ -943,16 +1030,6 @@ async function renderWeeklyHighlights() {
             return Object.entries(metrics).slice(0, 4).map(([k, v]) => `${k}: ${v}`).join(' • ');
         };
 
-        const diaryOptions = diaryEntries
-            .map((entry, idx) => ({ entry, idx }))
-            .slice()
-            .reverse()
-            .map(({ entry, idx }) => {
-                const label = entry.weekOf ? `Week of ${entry.weekOf}` : `Week #${idx + 1}`;
-                return `<option value="${idx}" ${idx === selectedDiaryIndex ? 'selected' : ''}>${escapeHtml(label)}</option>`;
-            })
-            .join('');
-
         const renderDiaryPreview = (entry) => {
             if (!entry) return '<div class="weekly-empty">No weekly posts yet.</div>';
             const blocks = entry.blocks || {};
@@ -985,8 +1062,9 @@ async function renderWeeklyHighlights() {
                 .map(({ entry, idx }) => {
                     const label = entry.weekOf ? `Week of ${entry.weekOf}` : `Week #${idx + 1}`;
                     const shortLabel = entry.weekOf ? entry.weekOf.replace(/\s+/g, ' ') : `Week ${idx + 1}`;
+                    const weekKey = entry && entry.weekKey ? String(entry.weekKey) : '';
                     const active = idx === selectedDiaryIndex;
-                    return `<button class="weekly-week-chip" type="button" data-weekly-week="${idx}" ${active ? 'aria-current="true"' : ''} aria-label="${escapeHtml(label)}">${escapeHtml(shortLabel)}</button>`;
+                    return `<button class="weekly-week-chip" type="button" data-weekly-week="${idx}" data-weekly-key="${escapeHtml(weekKey)}" ${active ? 'aria-current="true"' : ''} aria-label="${escapeHtml(label)}">${escapeHtml(shortLabel)}</button>`;
                 })
                 .join('')
             : '';
@@ -995,7 +1073,10 @@ async function renderWeeklyHighlights() {
             <section class="weekly-section weekly-section-wide weekly-diary" id="weekly-diary">
                 <div class="weekly-section-header">
                     <h4 class="weekly-section-title"><span class="weekly-section-icon">🗞️</span>Weekly News</h4>
-                    <span class="weekly-section-meta" id="weekly-news-meta">${selectedDiaryEntry && selectedDiaryEntry.weekOf ? escapeHtml(selectedDiaryEntry.weekOf) : escapeHtml(currentMonthLabel)}</span>
+                    <div class="weekly-section-actions">
+                        <span class="weekly-section-meta" id="weekly-news-meta">${selectedDiaryEntry && selectedDiaryEntry.weekOf ? escapeHtml(selectedDiaryEntry.weekOf) : escapeHtml(currentMonthLabel)}</span>
+                        <button class="weekly-share-btn" type="button" id="weekly-share-btn" aria-label="Copy link to this week">Share</button>
+                    </div>
                 </div>
                 ${weekChips ? `<div class="weekly-week-strip" role="navigation" aria-label="Browse weekly posts">${weekChips}</div>` : ''}
                 <div class="weekly-diary-meta" id="weekly-diary-meta">${selectedDiaryEntry ? `${escapeHtml(selectedDiaryEntry.projectTitle)} • ${escapeHtml(selectedDiaryEntry.weekOf || '')}${diaryWeekCounter ? ` • ${escapeHtml(diaryWeekCounter)}` : ''}` : 'No weekly posts loaded.'}</div>
@@ -1100,7 +1181,7 @@ async function renderWeeklyHighlights() {
 	        container.innerHTML = `
 	            <div class="weekly-digest weekly-digest-v2">
                     <div class="weekly-kpis">
-                        ${kpi(totalCommits, 'Commits (7d)')}
+                        ${kpi(commitTotalForKpi, 'Commits (7d)')}
                         ${kpi(totalPushes, 'Pushes')}
                         ${kpi(activeRepos.size, 'Repos Active')}
                         ${kpi(starsGained, 'Stars')}
@@ -1112,7 +1193,7 @@ async function renderWeeklyHighlights() {
                         <section class="weekly-section">
                             <div class="weekly-section-header">
                                 <h4 class="weekly-section-title"><span class="weekly-section-icon">🔥</span>Top Repos (This Week)</h4>
-                                <span class="weekly-section-meta">Live</span>
+                                <span class="weekly-section-meta">Public</span>
                             </div>
                             <ul class="weekly-list">
                                 ${topReposThisWeekList}
@@ -1148,6 +1229,7 @@ async function renderWeeklyHighlights() {
                 const metaEl = document.getElementById('weekly-diary-meta');
                 const metricsEl = document.getElementById('weekly-diary-metrics');
                 const newsMetaEl = document.getElementById('weekly-news-meta');
+                const shareBtn = document.getElementById('weekly-share-btn');
                 const weekButtons = Array.from(document.querySelectorAll('[data-weekly-week]'));
 
                 let currentIndex = selectedDiaryIndex;
@@ -1188,7 +1270,6 @@ async function renderWeeklyHighlights() {
                     }
 
                     const entry = diaryEntries[safeIndex];
-                    setWeeklyHeader(entry);
                     if (newsMetaEl) newsMetaEl.textContent = entry.weekOf || currentMonthLabel;
 
                     if (metaEl) {
@@ -1202,6 +1283,14 @@ async function renderWeeklyHighlights() {
                     if (previewEl) previewEl.innerHTML = renderDiaryPreview(entry);
                     if (bodyEl) bodyEl.innerHTML = renderDiaryBody(entry);
                     if (metricsEl) metricsEl.textContent = renderDiaryMetrics(entry) || '';
+
+                    if (entry && entry.weekKey) {
+                        try {
+                            window.history.replaceState(null, '', `#week=${entry.weekKey}`);
+                        } catch (_) {
+                            // ignore URL update errors
+                        }
+                    }
 
                     setActiveChip();
                     setControls();
@@ -1229,6 +1318,51 @@ async function renderWeeklyHighlights() {
                         updateWeek(idx, direction);
                     });
                 });
+
+                if (shareBtn && !shareBtn.dataset.bound) {
+                    shareBtn.dataset.bound = 'true';
+                    const originalLabel = shareBtn.textContent || 'Share';
+
+                    const getShareUrl = () => {
+                        const entry = diaryEntries[currentIndex];
+                        const key = entry && entry.weekKey ? String(entry.weekKey) : '';
+                        const url = new URL(window.location.href);
+                        url.hash = key ? `week=${key}` : 'updates';
+                        return url.toString();
+                    };
+
+                    shareBtn.addEventListener('click', async () => {
+                        const shareUrl = getShareUrl();
+                        let ok = false;
+
+                        try {
+                            if (navigator.clipboard && navigator.clipboard.writeText) {
+                                await navigator.clipboard.writeText(shareUrl);
+                                ok = true;
+                            }
+                        } catch (_) {
+                            ok = false;
+                        }
+
+                        if (!ok) {
+                            window.prompt('Copy this link:', shareUrl);
+                        }
+
+                        shareBtn.textContent = ok ? 'Copied!' : 'Copy link';
+                        window.setTimeout(() => {
+                            shareBtn.textContent = originalLabel;
+                        }, 1200);
+                    });
+                }
+
+                if (requestedWeekKey && requestedDiaryIndex >= 0) {
+                    const weeklyCard = document.getElementById('weekly-highlights');
+                    if (weeklyCard) {
+                        window.setTimeout(() => {
+                            weeklyCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 150);
+                    }
+                }
             } else {
                 const headerPrevBtn = document.getElementById('prev-week-btn');
                 const headerNextBtn = document.getElementById('next-week-btn');
@@ -1344,11 +1478,254 @@ async function renderLiveActivity() {
     }
 }
 
+// ============================================
+// RELEASES FEED (CACHED FROM GITHUB ACTIONS)
+// ============================================
+
+function formatBytes(bytes) {
+    const n = Number(bytes) || 0;
+    if (n <= 0) return '0 B';
+    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const idx = Math.min(units.length - 1, Math.floor(Math.log(n) / Math.log(1024)));
+    const value = n / (1024 ** idx);
+    return `${value.toFixed(value >= 10 || idx === 0 ? 0 : 1)} ${units[idx]}`;
+}
+
+function formatLongDate(isoString) {
+    try {
+        const date = new Date(isoString);
+        if (Number.isNaN(date.getTime())) return '';
+        return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    } catch (_) {
+        return '';
+    }
+}
+
+function getMonthKey(date) {
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) return '';
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    return `${y}-${m}`;
+}
+
+function formatMonthLabel(monthKey) {
+    const m = String(monthKey || '').match(/^(\d{4})-(\d{2})$/);
+    if (!m) return monthKey;
+    const year = Number(m[1]);
+    const month = Number(m[2]);
+    if (!Number.isFinite(year) || !Number.isFinite(month)) return monthKey;
+    try {
+        return new Date(year, month - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    } catch (_) {
+        return monthKey;
+    }
+}
+
+async function renderReleasesFeed() {
+    const listEl = document.getElementById('releases-live-list');
+    const controlsEl = document.getElementById('releases-live-controls');
+    const metaEl = document.getElementById('releases-live-meta');
+
+    if (!listEl || !controlsEl) return;
+
+    listEl.innerHTML = '<div class="releases-live-empty">Loading releases…</div>';
+
+    const [rawReleases, meta] = await Promise.all([
+        loadCachedReleases(),
+        loadCachedMeta()
+    ]);
+
+    const releases = Array.isArray(rawReleases) ? rawReleases : [];
+    if (!releases.length) {
+        listEl.innerHTML = '<div class="releases-live-empty">No cached releases yet.</div>';
+        if (metaEl) metaEl.textContent = 'Set up GitHub Actions caching to populate this feed.';
+        return;
+    }
+
+    const normalized = releases
+        .filter(r => r && typeof r === 'object')
+        .filter(r => !r.draft)
+        .map(r => {
+            const publishedRaw = typeof r.published_at === 'string' ? r.published_at : '';
+            const publishedAt = publishedRaw ? new Date(publishedRaw) : null;
+            const repoFull = typeof r.repo === 'string' ? r.repo : '';
+            const repoShort = repoFull ? (repoFull.split('/')[1] || repoFull) : 'repo';
+            const url = safeExternalUrl(r.url);
+            const repoUrl = safeExternalUrl(repoFull ? `https://github.com/${repoFull}` : '');
+            const monthKey = publishedAt && !Number.isNaN(publishedAt.getTime()) ? getMonthKey(publishedAt) : '';
+
+            const assetsRaw = Array.isArray(r.assets) ? r.assets : [];
+            const assets = assetsRaw
+                .filter(a => a && typeof a === 'object')
+                .map(a => ({
+                    name: typeof a.name === 'string' ? a.name : '',
+                    downloadUrl: safeExternalUrl(a.download_url),
+                    size: Number(a.size) || 0,
+                    downloads: Number(a.download_count) || 0,
+                }))
+                .filter(a => a.name && a.downloadUrl !== '#')
+                .slice(0, 6);
+
+            return {
+                repoFull,
+                repoShort,
+                name: typeof r.name === 'string' ? r.name : '',
+                tag: typeof r.tag === 'string' ? r.tag : '',
+                url,
+                repoUrl,
+                publishedAt,
+                monthKey,
+                prerelease: Boolean(r.prerelease),
+                zipballUrl: safeExternalUrl(typeof r.zipball_url === 'string' ? r.zipball_url : ''),
+                tarballUrl: safeExternalUrl(typeof r.tarball_url === 'string' ? r.tarball_url : ''),
+                assets,
+            };
+        })
+        .filter(r => r.url !== '#')
+        .sort((a, b) => {
+            const da = a.publishedAt ? a.publishedAt.getTime() : 0;
+            const db = b.publishedAt ? b.publishedAt.getTime() : 0;
+            return db - da;
+        });
+
+    const months = Array.from(new Set(normalized.map(r => r.monthKey).filter(Boolean)));
+    const repos = Array.from(new Set(normalized.map(r => r.repoShort).filter(Boolean))).sort((a, b) => a.localeCompare(b));
+
+    const currentMonthKey = getMonthKey(new Date());
+    let selectedMonth = months.includes(currentMonthKey) ? currentMonthKey : (months[0] || '');
+    let selectedRepo = '';
+
+    const renderControls = () => {
+        const monthOptions = [
+            `<option value="">All months</option>`,
+            ...months.map(mk => `<option value="${escapeHtml(mk)}" ${mk === selectedMonth ? 'selected' : ''}>${escapeHtml(formatMonthLabel(mk))}</option>`)
+        ].join('');
+
+        const repoOptions = [
+            `<option value="">All projects</option>`,
+            ...repos.map(repo => `<option value="${escapeHtml(repo)}" ${repo === selectedRepo ? 'selected' : ''}>${escapeHtml(formatDisplayName(repo))}</option>`)
+        ].join('');
+
+        controlsEl.innerHTML = `
+            <div class="releases-filter">
+                <label for="releases-month">Month</label>
+                <select id="releases-month">${monthOptions}</select>
+            </div>
+            <div class="releases-filter">
+                <label for="releases-project">Project</label>
+                <select id="releases-project">${repoOptions}</select>
+            </div>
+        `;
+
+        const monthEl = document.getElementById('releases-month');
+        const projectEl = document.getElementById('releases-project');
+
+        if (monthEl) {
+            monthEl.addEventListener('change', () => {
+                selectedMonth = String(monthEl.value || '');
+                renderList();
+            });
+        }
+
+        if (projectEl) {
+            projectEl.addEventListener('change', () => {
+                selectedRepo = String(projectEl.value || '');
+                renderList();
+            });
+        }
+    };
+
+    const renderList = () => {
+        const filtered = normalized
+            .filter(r => !selectedMonth || r.monthKey === selectedMonth)
+            .filter(r => !selectedRepo || r.repoShort === selectedRepo);
+
+        const maxItems = 20;
+        const shown = filtered.slice(0, maxItems);
+
+        if (!shown.length) {
+            listEl.innerHTML = '<div class="releases-live-empty">No releases match those filters.</div>';
+            return;
+        }
+
+        const cards = shown.map(rel => {
+            const dateLabel = rel.publishedAt ? formatLongDate(rel.publishedAt.toISOString()) : '';
+            const title = rel.name || rel.tag || 'Release';
+            const badges = [
+                rel.prerelease ? `<span class="releases-live-badge prerelease">Prerelease</span>` : ''
+            ].filter(Boolean).join('');
+
+            const assetsHtml = rel.assets.length
+                ? `
+                    <div class="releases-live-assets">
+                        <div class="releases-live-assets-title">Download assets</div>
+                        <ul class="releases-live-assets-list">
+                            ${rel.assets.map(a => `
+                                <li class="releases-live-assets-item">
+                                    <a href="${a.downloadUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(a.name)}</a>
+                                    <span class="releases-live-assets-meta">${escapeHtml(formatBytes(a.size))}${a.downloads ? ` • ${escapeHtml(a.downloads)} dl` : ''}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `
+                : `
+                    <div class="releases-live-assets">
+                        <div class="releases-live-assets-title">Downloads</div>
+                        <div class="releases-live-empty">No release assets uploaded — source only.</div>
+                    </div>
+                `;
+
+            const sourceLinks = [
+                rel.zipballUrl !== '#' ? `<a class="btn btn-secondary btn-sm" href="${rel.zipballUrl}" target="_blank" rel="noopener noreferrer">Source (zip)</a>` : '',
+                rel.tarballUrl !== '#' ? `<a class="btn btn-secondary btn-sm" href="${rel.tarballUrl}" target="_blank" rel="noopener noreferrer">Source (tar)</a>` : '',
+            ].filter(Boolean).join('');
+
+            return `
+                <article class="releases-live-item">
+                    <div class="releases-live-item-header">
+                        <div>
+                            <div class="releases-live-repo">${escapeHtml(formatDisplayName(rel.repoShort))}</div>
+                            <div class="releases-live-name">${escapeHtml(title)}</div>
+                            <div class="releases-live-tag">
+                                ${rel.tag ? `<code>${escapeHtml(rel.tag)}</code>` : ''}
+                                <span class="releases-live-badges">${badges}</span>
+                            </div>
+                        </div>
+                        <div class="releases-live-date">${escapeHtml(dateLabel)}</div>
+                    </div>
+
+                    <div class="releases-live-actions">
+                        <a class="btn btn-primary btn-sm" href="${rel.url}" target="_blank" rel="noopener noreferrer">View</a>
+                        ${rel.repoUrl !== '#' ? `<a class="btn btn-secondary btn-sm" href="${rel.repoUrl}" target="_blank" rel="noopener noreferrer">Repo</a>` : ''}
+                        ${sourceLinks}
+                    </div>
+                    ${assetsHtml}
+                </article>
+            `;
+        }).join('');
+
+        const truncated = filtered.length > maxItems
+            ? `<div class="releases-live-empty">Showing ${escapeHtml(maxItems)} of ${escapeHtml(filtered.length)} releases. Narrow filters to see more.</div>`
+            : '';
+
+        listEl.innerHTML = cards + truncated;
+    };
+
+    if (metaEl) {
+        metaEl.textContent = meta && meta.updatedAt ? `Cached daily • Updated ${formatUTCDateTime(meta.updatedAt)}` : 'Cached daily via GitHub Actions';
+    }
+
+    renderControls();
+    renderList();
+}
+
 // Export functions for use in other scripts
 window.GitHubProjects = {
     renderMoreProjects,
     renderLiveActivity,
     renderWeeklyHighlights,
+    renderReleasesFeed,
     getProjectDetails,
     fetchGitHubRepositories,
     getTechStack,
@@ -1378,6 +1755,7 @@ function initGitHubFeatures() {
     // Always render live activity if element exists
     renderLiveActivity();
     renderWeeklyHighlights();
+    renderReleasesFeed();
     
     // Only auto-load More Projects if the tab is active (visible) on page load
     const moreProjectsGrid = document.getElementById('more-projects-grid');
