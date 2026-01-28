@@ -1388,6 +1388,21 @@ section {
     margin-bottom: 40px;
 }
 
+.project-scroll-indicator {
+    position: static;
+    transform: none;
+    margin: 0 0 24px;
+    text-decoration: none;
+}
+
+.project-scroll-indicator:hover {
+    color: var(--text-primary);
+}
+
+.project-scroll-indicator .scroll-arrow {
+    border-color: var(--text-tertiary);
+}
+
 .project-header .section-description {
     margin: 0;
     max-width: none;
@@ -3516,6 +3531,13 @@ section {
 .project-icon-large {
     font-size: 4rem;
     margin-bottom: 1rem;
+}
+
+.project-icon-large img {
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
+    display: block;
 }
 
 /* Project Meta Bar */

@@ -10,7 +10,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="../assets/logo.png">
     <link rel="apple-touch-icon" sizes="120x120" href="../assets/logo.png">
     <link rel="apple-touch-icon" sizes="76x76" href="../assets/logo.png">
-    <link rel="stylesheet" href="../styles.css?v=19">
+    <link rel="stylesheet" href="../styles.css?v=21">
 </head>
 <body>
     <nav class="navbar">
@@ -58,6 +58,11 @@
                         Loading project details...
                     </p>
                 </div>
+
+                <a class="scroll-indicator project-scroll-indicator" href="#project-details" aria-label="Scroll down for more details">
+                    <span>Scroll for details</span>
+                    <div class="scroll-arrow"></div>
+                </a>
 
                 <div class="project-detail-grid" id="project-details">
                     <!-- Project details will be loaded here dynamically -->
@@ -112,8 +117,8 @@
         </div>
     </footer>
 
-    <script src="../github-projects.js?v=19"></script>
-    <script src="../script.js?v=19"></script>
+    <script src="../github-projects.js?v=21"></script>
+    <script src="../script.js?v=21"></script>
     <script>
         // Load project details on page load
         (async function() {
