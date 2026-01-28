@@ -82,7 +82,7 @@ Atrak/
 ├── projects/       # Project detail pages
 │   ├── guidepup.html
 │   ├── hoops-clips.html
-│   ├── lunar.html
+│   ├── atrak-agent.html
 │   └── ten-seconds-vip-manager.html
 └── README.md       # This file
 ```
