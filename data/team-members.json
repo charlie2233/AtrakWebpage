@@ -1,0 +1,93 @@
+[
+  {
+    "name": "Charlie Han",
+    "role": "Team Leader",
+    "bio": "Leads Atrak. Class of 2028. Competes in USACO Gold, competed in FBLA SSLC, and plays basketball.",
+    "traits": "disciplined, team-first, focused on shipping useful products.",
+    "stats": [
+      {
+        "value": "USACO",
+        "label": "Gold"
+      },
+      {
+        "value": "FBLA SSLC",
+        "label": "Competed"
+      }
+    ],
+    "social": {
+      "github": "https://github.com/charlie2233"
+    },
+    "avatar": {
+      "initials": "CH",
+      "gradient": "linear-gradient(135deg, rgba(59, 130, 246, 0.35), rgba(139, 92, 246, 0.25))"
+    },
+    "status": "active"
+  },
+  {
+    "name": "Yannon Chang",
+    "role": "Engineer",
+    "bio": "Backend maintenance + systems engineering. Core languages: Python, C++, Java. Hobby: basketball.",
+    "traits": "Class of 2029",
+    "stats": [
+      {
+        "value": "backend",
+        "label": "Focus"
+      },
+      {
+        "value": "Python/C++/Java",
+        "label": "Core"
+      }
+    ],
+    "social": {},
+    "avatar": {
+      "initials": "YC",
+      "gradient": "linear-gradient(135deg, #333, #111)"
+    },
+    "status": "active"
+  },
+  {
+    "name": "Larry Ling",
+    "role": "Product",
+    "bio": "Product strategy, roadmap, and delivery. Turns ideas into clear specs and shippable plans.",
+    "traits": "",
+    "stats": [
+      {
+        "value": "Roadmap",
+        "label": "Focus"
+      },
+      {
+        "value": "Delivery",
+        "label": "Ops"
+      }
+    ],
+    "social": {},
+    "avatar": {
+      "initials": "LL",
+      "gradient": "linear-gradient(135deg, #333, #111)"
+    },
+    "status": "active"
+  },
+  {
+    "name": "Caleb Zeng",
+    "role": "Design",
+    "bio": "UI/UX design and user research. Makes products beautiful and intuitive.",
+    "traits": "",
+    "stats": [
+      {
+        "value": "UI/UX",
+        "label": "Focus"
+      },
+      {
+        "value": "Research",
+        "label": "Skills"
+      }
+    ],
+    "social": {},
+    "avatar": {
+      "initials": "CZ",
+      "gradient": "linear-gradient(135deg, #333, #111)"
+    },
+    "status": "active"
+  }
+]
+

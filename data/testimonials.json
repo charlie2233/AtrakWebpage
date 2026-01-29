@@ -1,0 +1,35 @@
+[
+  {
+    "quote": "Atrak delivered exactly what we needed for our restaurant operations. The VIP Manager system has streamlined our daily workflow and made customer management effortless.",
+    "author": "Restaurant Owner",
+    "role": "Business Owner",
+    "company": "Ten Seconds",
+    "project": "VIP Manager",
+    "avatar": null
+  },
+  {
+    "quote": "The GuidePup app has been a game-changer for accessibility. The team's attention to detail and focus on user experience really shows in the final product.",
+    "author": "Accessibility Advocate",
+    "role": "User",
+    "company": null,
+    "project": "GuidePup",
+    "avatar": null
+  },
+  {
+    "quote": "Working with Atrak was a great experience. They understood our vision for the basketball video analysis tool and delivered a solution that exceeded our expectations.",
+    "author": "Basketball Coach",
+    "role": "Coach",
+    "company": null,
+    "project": "Hoops Clips",
+    "avatar": null
+  },
+  {
+    "quote": "The AI Predator Simulation project demonstrates impressive technical depth. The team's ability to combine complex algorithms with clean, maintainable code is remarkable.",
+    "author": "Tech Reviewer",
+    "role": "Industry Professional",
+    "company": null,
+    "project": "AI Predator Simulation",
+    "avatar": null
+  }
+]
+

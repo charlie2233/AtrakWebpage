@@ -1,0 +1,36 @@
+[
+  {
+    "slug": "building-guidepup-accessibility-first",
+    "title": "Building GuidePup: An Accessibility-First Approach",
+    "excerpt": "How we built an iOS app for blind users using GPT-4 Vision and React Native, prioritizing accessibility from day one.",
+    "date": "2026-01-15",
+    "author": "Charlie Han",
+    "tags": ["iOS", "Accessibility", "Swift", "React Native"],
+    "readingTime": 5,
+    "featuredImage": null,
+    "content": "Full blog post content would go here. This is a placeholder for the actual blog post content."
+  },
+  {
+    "slug": "ten-seconds-vip-manager-production",
+    "title": "Shipping a Production App: Lessons from Ten Seconds VIP Manager",
+    "excerpt": "What we learned building and deploying a real-world restaurant management system used daily in production.",
+    "date": "2026-01-10",
+    "author": "Charlie Han",
+    "tags": ["Full-Stack", "React", "Node.js", "Production"],
+    "readingTime": 7,
+    "featuredImage": null,
+    "content": "Full blog post content would go here. This is a placeholder for the actual blog post content."
+  },
+  {
+    "slug": "ai-predator-simulation-emergent-behaviors",
+    "title": "Emergent Behaviors in AI Predator Simulation",
+    "excerpt": "Exploring how simple rules can create complex, realistic hunting behaviors in our Python-based ecosystem simulation.",
+    "date": "2026-01-05",
+    "author": "Charlie Han",
+    "tags": ["AI", "Python", "Simulation", "Algorithms"],
+    "readingTime": 6,
+    "featuredImage": null,
+    "content": "Full blog post content would go here. This is a placeholder for the actual blog post content."
+  }
+]
+

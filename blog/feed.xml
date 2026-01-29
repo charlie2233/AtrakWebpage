@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Atrak Blog</title>
+    <link>https://atrak.dev/blog.html</link>
+    <description>Insights, tutorials, and stories from building real products</description>
+    <language>en-US</language>
+    <lastBuildDate>Mon, 15 Jan 2026 00:00:00 GMT</lastBuildDate>
+    <atom:link href="https://atrak.dev/blog/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Building GuidePup: An Accessibility-First Approach</title>
+      <link>https://atrak.dev/blog/building-guidepup-accessibility-first.html</link>
+      <guid isPermaLink="true">https://atrak.dev/blog/building-guidepup-accessibility-first.html</guid>
+      <description>How we built an iOS app for blind users using GPT-4 Vision and React Native, prioritizing accessibility from day one.</description>
+      <pubDate>Thu, 15 Jan 2026 00:00:00 GMT</pubDate>
+      <author>Charlie Han</author>
+      <category>iOS</category>
+      <category>Accessibility</category>
+      <category>Swift</category>
+      <category>React Native</category>
+    </item>
+    <item>
+      <title>Shipping a Production App: Lessons from Ten Seconds VIP Manager</title>
+      <link>https://atrak.dev/blog/ten-seconds-vip-manager-production.html</link>
+      <guid isPermaLink="true">https://atrak.dev/blog/ten-seconds-vip-manager-production.html</guid>
+      <description>What we learned building and deploying a real-world restaurant management system used daily in production.</description>
+      <pubDate>Sat, 10 Jan 2026 00:00:00 GMT</pubDate>
+      <author>Charlie Han</author>
+      <category>Full-Stack</category>
+      <category>React</category>
+      <category>Node.js</category>
+      <category>Production</category>
+    </item>
+    <item>
+      <title>Emergent Behaviors in AI Predator Simulation</title>
+      <link>https://atrak.dev/blog/ai-predator-simulation-emergent-behaviors.html</link>
+      <guid isPermaLink="true">https://atrak.dev/blog/ai-predator-simulation-emergent-behaviors.html</guid>
+      <description>Exploring how simple rules can create complex, realistic hunting behaviors in our Python-based ecosystem simulation.</description>
+      <pubDate>Mon, 05 Jan 2026 00:00:00 GMT</pubDate>
+      <author>Charlie Han</author>
+      <category>AI</category>
+      <category>Python</category>
+      <category>Simulation</category>
+      <category>Algorithms</category>
+    </item>
+  </channel>
+</rss>
+

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Atrak Blog — Insights, tutorials, and stories from building real products">
+    <title>Blog — Atrak</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/logo.png">
+    <link rel="stylesheet" href="styles.css?v=23">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a class="logo" href="index.html">
+                <span class="logo-icon"><img src="assets/logo.png" alt="Atrak Logo"></span>
+                <span class="logo-text">Atrak</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="releases.html">Releases</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#leadership">Team</a></li>
+                <li><a href="purpose.html">Purpose</a></li>
+                <li><a href="join.html">Join</a></li>
+                <li><a href="blog.html" class="active">Blog</a></li>
+                <li><a href="index.html#contact" class="nav-cta" data-open-contact-tab="suggestion">Suggestion Box</a></li>
+            </ul>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Blog Hero -->
+        <section class="releases-hero">
+            <div class="container">
+                <span class="section-tag">Insights & Stories</span>
+                <h1 class="section-title">Blog</h1>
+                <p class="section-description">
+                    Learnings, tutorials, and behind-the-scenes stories from building real products
+                </p>
+            </div>
+        </section>
+
+        <!-- Blog Content -->
+        <section class="releases-content">
+            <div class="container">
+                <!-- Filters -->
+                <div class="blog-filters glass-card" style="margin-bottom: 32px; padding: 24px;">
+                    <div class="blog-search" style="margin-bottom: 16px;">
+                        <input 
+                            type="text" 
+                            id="blog-search-input" 
+                            placeholder="Search posts..." 
+                            class="suggestion-form input"
+                            style="width: 100%; padding: 12px 16px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary);"
+                        >
+                    </div>
+                    <div class="blog-tags" id="blog-tags-filter">
+                        <button class="tag filter-tag active" data-tag="all">All</button>
+                        <!-- Tags will be loaded dynamically -->
+                    </div>
+                    <div style="margin-top: 16px; text-align: right;">
+                        <a href="blog/feed.xml" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer" style="font-size: 13px;">
+                            <span>📡</span> RSS Feed
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Blog Posts Grid -->
+                <div class="blog-posts-grid" id="blog-posts-grid">
+                    <!-- Posts will be loaded dynamically -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="blog-empty" class="blog-empty" style="display: none; text-align: center; padding: 60px 20px;">
+                    <p style="font-size: 18px; color: var(--text-secondary);">No posts found matching your search.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer reveal">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <span class="logo-icon">
+                            <img src="assets/logo.png" alt="Atrak Logo">
+                        </span>
+                        <span class="logo-text">Atrak</span>
+                    </div>
+                    <p class="footer-tagline">atrak.dev — building real products together</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <a href="index.html#projects">Projects</a>
+                        <a href="releases.html">Releases</a>
+                        <a href="index.html#leadership">Team</a>
+                        <a href="handbook.html">Handbook</a>
+                        <a href="index.html#contact" data-open-contact-tab="apply">Join</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Connect</h4>
+                        <a href="https://github.com/charlie2233" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a href="share.html">Share</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <a href="privacy.html">Privacy</a>
+                        <a href="terms.html">Terms</a>
+                        <a href="license.html">License</a>
+                        <a href="security.html">Security</a>
+                        <a href="code-of-conduct.html">Code of Conduct</a>
+                        <a href="contributing.html">Contributing</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Atrak. All rights reserved.</p>
+                <p class="footer-sync" id="footer-sync-status"></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="config.js?v=21"></script>
+    <script src="blog.js?v=1"></script>
+    <script src="script.js?v=21"></script>
+</body>
+</html>
+

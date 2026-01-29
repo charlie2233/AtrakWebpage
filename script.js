@@ -1032,6 +1032,11 @@ projectTabs.forEach(tab => {
         if (targetContent) {
             targetContent.classList.add('active');
             
+            // Activate reveal animations for elements in this tab
+            targetContent.querySelectorAll('.reveal:not(.active)').forEach(el => {
+                el.classList.add('active');
+            });
+            
             // Load GitHub projects when switching to More Projects tab
             if (targetTab === 'more' && window.GitHubProjects && typeof window.GitHubProjects.renderMoreProjects === 'function') {
                 window.GitHubProjects.renderMoreProjects();
@@ -1603,6 +1608,198 @@ function initSwipeGestures() {
 
 // Initialize swipe gestures on load
 document.addEventListener('DOMContentLoaded', initSwipeGestures);
+
+// ============================================
+// TESTIMONIALS
+// ============================================
+
+async function loadTestimonials() {
+    const container = document.getElementById('testimonials-grid');
+    if (!container) return;
+
+    try {
+        const response = await fetch('data/testimonials.json');
+        if (!response.ok) {
+            console.warn('Testimonials data not found');
+            return;
+        }
+
+        const testimonials = await response.json();
+        if (!Array.isArray(testimonials) || testimonials.length === 0) {
+            container.innerHTML = '<p class="empty-message">No testimonials available.</p>';
+            return;
+        }
+
+        container.innerHTML = testimonials.map(testimonial => {
+            const initials = testimonial.author
+                .split(' ')
+                .map(n => n[0])
+                .join('')
+                .toUpperCase()
+                .slice(0, 2);
+
+            const avatar = testimonial.avatar 
+                ? `<img src="${testimonial.avatar}" alt="${testimonial.author}" class="testimonial-avatar-img">`
+                : `<div class="testimonial-avatar">${initials}</div>`;
+
+            const projectInfo = testimonial.project 
+                ? `<div class="testimonial-project">${testimonial.project}</div>`
+                : '';
+
+            const roleInfo = testimonial.company 
+                ? `${testimonial.role}${testimonial.company ? ` • ${testimonial.company}` : ''}`
+                : testimonial.role;
+
+            return `
+                <div class="testimonial-card glass-card reveal">
+                    <p class="testimonial-quote">${escapeHtml(testimonial.quote)}</p>
+                    <div class="testimonial-author">
+                        ${avatar}
+                        <div class="testimonial-info">
+                            <div class="testimonial-name">${escapeHtml(testimonial.author)}</div>
+                            <div class="testimonial-role">${escapeHtml(roleInfo)}</div>
+                            ${projectInfo}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // Trigger reveal animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        container.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    } catch (error) {
+        console.error('Failed to load testimonials:', error);
+        container.innerHTML = '<p class="empty-message">Unable to load testimonials.</p>';
+    }
+}
+
+// Load testimonials on page load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadTestimonials);
+} else {
+    loadTestimonials();
+}
+
+// ============================================
+// VIDEO DEMO LAZY LOADING
+// ============================================
+
+function initVideoEmbeds() {
+    // Handle YouTube/Vimeo embeds with lazy loading
+    document.querySelectorAll('.video-placeholder[data-video-url]').forEach(placeholder => {
+        const videoUrl = placeholder.getAttribute('data-video-url');
+        const thumbnail = placeholder.querySelector('img');
+        const playButton = placeholder.querySelector('.video-play-button');
+        
+        if (!videoUrl) return;
+
+        // Create click handler
+        const loadVideo = () => {
+            if (placeholder.classList.contains('loaded')) return;
+            
+            placeholder.classList.add('loaded');
+            let embedUrl = '';
+            
+            // Parse YouTube URL
+            if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+                let videoId = '';
+                if (videoUrl.includes('youtu.be/')) {
+                    videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
+                } else if (videoUrl.includes('youtube.com/watch?v=')) {
+                    videoId = videoUrl.split('v=')[1].split('&')[0];
+                } else if (videoUrl.includes('youtube.com/embed/')) {
+                    videoId = videoUrl.split('embed/')[1].split('?')[0];
+                }
+                if (videoId) {
+                    embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+                }
+            }
+            // Parse Vimeo URL
+            else if (videoUrl.includes('vimeo.com')) {
+                const videoId = videoUrl.split('vimeo.com/')[1].split('?')[0];
+                if (videoId) {
+                    embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1`;
+                }
+            }
+            // Self-hosted video
+            else if (videoUrl.match(/\.(mp4|webm|ogg)$/i)) {
+                embedUrl = videoUrl;
+            }
+            
+            if (embedUrl) {
+                if (embedUrl.match(/\.(mp4|webm|ogg)$/i)) {
+                    // Self-hosted video
+                    placeholder.innerHTML = `
+                        <video controls autoplay class="video-player">
+                            <source src="${embedUrl}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    `;
+                } else {
+                    // YouTube/Vimeo embed
+                    placeholder.innerHTML = `
+                        <div class="video-container lazy">
+                            <iframe 
+                                src="${embedUrl}" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen
+                                loading="lazy"
+                                title="Video demo">
+                            </iframe>
+                        </div>
+                    `;
+                    
+                    // Mark as loaded after iframe loads
+                    const iframe = placeholder.querySelector('iframe');
+                    if (iframe) {
+                        iframe.addEventListener('load', () => {
+                            const container = placeholder.querySelector('.video-container');
+                            if (container) container.classList.add('loaded');
+                        });
+                    }
+                }
+            }
+        };
+        
+        // Add click handler
+        if (playButton) {
+            playButton.addEventListener('click', loadVideo);
+        }
+        placeholder.addEventListener('click', loadVideo);
+        
+        // Lazy load thumbnail if provided
+        if (thumbnail && thumbnail.dataset.src) {
+            const imgObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        thumbnail.src = thumbnail.dataset.src;
+                        thumbnail.removeAttribute('data-src');
+                        imgObserver.unobserve(thumbnail);
+                    }
+                });
+            }, { rootMargin: '50px' });
+            
+            imgObserver.observe(thumbnail);
+        }
+    });
+}
+
+// Initialize video embeds
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initVideoEmbeds);
+} else {
+    initVideoEmbeds();
+}
 
 // ============================================
 // TOAST NOTIFICATIONS
