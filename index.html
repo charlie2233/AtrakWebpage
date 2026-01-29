@@ -16,6 +16,19 @@
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
     <div class="noise"></div>
+    
+    <!-- Scroll progress indicator -->
+    <div class="scroll-progress" id="scroll-progress" role="progressbar" aria-label="Scroll progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+    <!-- Skip to main content link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Scroll to top button -->
+    <button class="scroll-to-top" id="scroll-to-top" aria-label="Scroll to top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
 
     <!-- Navigation -->
     <nav class="navbar">
@@ -43,6 +56,7 @@
         </div>
     </nav>
 
+    <main id="main-content">
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-container">
@@ -271,87 +285,16 @@
 		                        </div>
                     </div>
                 </div>
-
-                <!-- Coming Soon Projects -->
-                <div class="project-card reveal glass-card coming-soon">
-                    <div class="project-image">
-                        <div class="project-icon">🚀</div>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Project Alpha — Coming Soon</h3>
-                        <p class="project-description">
-                            A new project in active development. We're building something exciting that will 
-                            push the boundaries of what's possible with modern tech.
-                        </p>
-                        <div class="project-meta">
-                            <span class="project-manager">🔒 In Development</span>
-                        </div>
-                        <div class="project-tags">
-                            <span class="tag">Coming Soon</span>
-                            <span class="tag">In Progress</span>
-                        </div>
-                        <div class="project-actions">
-                            <button class="btn btn-secondary btn-sm" type="button" disabled aria-disabled="true">Details (Soon)</button>
-                            <button class="btn btn-secondary btn-sm" type="button" disabled aria-disabled="true">Repo (Soon)</button>
-                            <button class="btn btn-secondary btn-sm" type="button" disabled aria-disabled="true">Demo (Soon)</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card reveal glass-card coming-soon">
-                    <div class="project-image">
-                        <div class="project-icon">⚡</div>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Project Beta — Coming Soon</h3>
-                        <p class="project-description">
-                            Another innovative project on the horizon. Stay tuned for updates as we continue 
-                            to build and refine our vision.
-                        </p>
-                        <div class="project-meta">
-                            <span class="project-manager">🔒 In Development</span>
-                        </div>
-                        <div class="project-tags">
-                            <span class="tag">Coming Soon</span>
-                            <span class="tag">In Progress</span>
-                        </div>
-                        <div class="project-actions">
-                            <button class="btn btn-secondary btn-sm" type="button" disabled aria-disabled="true">Details (Soon)</button>
-                            <button class="btn btn-secondary btn-sm" type="button" disabled aria-disabled="true">Repo (Soon)</button>
-                            <button class="btn btn-secondary btn-sm" type="button" disabled aria-disabled="true">Demo (Soon)</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card reveal glass-card coming-soon">
-                    <div class="project-image">
-                        <div class="project-icon">🌙</div>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Project Gamma — Coming Soon</h3>
-                        <p class="project-description">
-                            Early stages of a new initiative. We're exploring new ideas and testing concepts 
-                            before we share more details.
-                        </p>
-                        <div class="project-meta">
-                            <span class="project-manager">🔒 In Development</span>
-                        </div>
-                        <div class="project-tags">
-                            <span class="tag">Coming Soon</span>
-                            <span class="tag">Early Stage</span>
-                        </div>
-                        <div class="project-actions">
-                            <button class="btn btn-secondary btn-sm" type="button" disabled aria-disabled="true">Details (Soon)</button>
-                            <button class="btn btn-secondary btn-sm" type="button" disabled aria-disabled="true">Repo (Soon)</button>
-                            <button class="btn btn-secondary btn-sm" type="button" disabled aria-disabled="true">Demo (Soon)</button>
-                        </div>
-                    </div>
-                </div>
             </div>
+            
+            <p class="projects-more-coming" style="text-align: center; margin-top: 32px; color: var(--text-tertiary); font-size: 14px; opacity: 0.6;">
+                More coming soon
+            </p>
             
             <!-- More Projects Tab Content -->
             <div class="project-tab-content" id="more-tab">
-                <div class="projects-grid pinned-projects-grid">
+                <div class="projects-grid" id="more-projects-grid">
+                    <!-- Pinned Project: APCSA MazeRunner -->
                     <div class="project-card reveal glass-card">
                         <div class="project-image">
                             <div class="project-icon">🧭</div>
@@ -379,12 +322,14 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="projects-grid" id="more-projects-grid">
                     <!-- Projects will be loaded dynamically from GitHub API -->
                 </div>
 
                 <p class="projects-meta" id="more-projects-meta" role="status" aria-live="polite"></p>
+                
+                <p class="projects-more-coming" style="text-align: center; margin-top: 24px; color: var(--text-tertiary); font-size: 14px; opacity: 0.6;">
+                    More coming soon
+                </p>
                 
                 <div class="section-actions reveal">
                     <a href="https://github.com/charlie2233?tab=repositories" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
@@ -983,10 +928,11 @@
                     <div class="suggestion-box glass-card reveal">
                     <form id="suggestion-form" class="suggestion-form" action="https://formspree.io/f/REPLACE_ME" method="POST" data-endpoint-key="suggestion" data-endpoint="https://formspree.io/f/REPLACE_ME" novalidate>
                         <label for="suggestion-message" class="suggestion-label">Your message</label>
-                        <textarea id="suggestion-message" name="message" rows="6" maxlength="1200" required placeholder="Write your suggestion..."></textarea>
+                        <textarea id="suggestion-message" name="message" rows="6" maxlength="1200" required placeholder="Write your suggestion..." aria-describedby="suggestion-message-error suggestion-message-count"></textarea>
                         <div class="form-meta">
-                            <span class="form-count" data-char-count="suggestion-message">0/1200</span>
+                            <span class="form-count" id="suggestion-message-count" data-char-count="suggestion-message" aria-live="polite">0/1200</span>
                         </div>
+                        <p id="suggestion-message-error" class="form-error" role="alert" aria-live="assertive"></p>
                         <input type="text" name="_gotcha" class="suggestion-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
                         <button type="submit" class="btn btn-primary">Send anonymously</button>
                         <p id="suggestion-status" class="form-status" role="status" aria-live="polite"></p>
@@ -1001,28 +947,32 @@
                             <div class="form-grid">
                                 <div class="form-field">
                                     <label for="join-name" class="suggestion-label">Name</label>
-                                    <input id="join-name" name="name" type="text" autocomplete="name" required placeholder="Your name">
+                                    <input id="join-name" name="name" type="text" autocomplete="name" required placeholder="Your name" aria-describedby="join-name-error">
+                                    <p id="join-name-error" class="form-error" role="alert" aria-live="assertive"></p>
                                 </div>
                                 <div class="form-field">
                                     <label for="join-email" class="suggestion-label">Email</label>
-                                    <input id="join-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+                                    <input id="join-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com" aria-describedby="join-email-error">
+                                    <p id="join-email-error" class="form-error" role="alert" aria-live="assertive"></p>
                                 </div>
                             </div>
 
                             <label for="join-interest" class="suggestion-label">Interest</label>
-                            <select id="join-interest" name="interest" required>
+                            <select id="join-interest" name="interest" required aria-describedby="join-interest-error">
                                 <option value="" disabled selected>Select one</option>
                                 <option>Engineering</option>
                                 <option>Design</option>
                                 <option>Product & Ops</option>
                                 <option>Other</option>
                             </select>
+                            <p id="join-interest-error" class="form-error" role="alert" aria-live="assertive"></p>
 
                             <label for="join-message" class="suggestion-label">Message</label>
-                            <textarea id="join-message" name="message" rows="7" maxlength="1600" required placeholder="Tell us what you want to work on and any links you’d like to share."></textarea>
+                            <textarea id="join-message" name="message" rows="7" maxlength="1600" required placeholder="Tell us what you want to work on and any links you'd like to share." aria-describedby="join-message-error join-message-count"></textarea>
                             <div class="form-meta">
-                                <span class="form-count" data-char-count="join-message">0/1600</span>
+                                <span class="form-count" id="join-message-count" data-char-count="join-message" aria-live="polite">0/1600</span>
                             </div>
+                            <p id="join-message-error" class="form-error" role="alert" aria-live="assertive"></p>
 
                             <input type="text" name="_gotcha" class="suggestion-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
                             <button type="submit" class="btn btn-primary">Send</button>
@@ -1085,6 +1035,7 @@
             </div>
         </div>
     </footer>
+    </main>
 
     <script src="config.js?v=21"></script>
     <script src="github-projects.js?v=26"></script>

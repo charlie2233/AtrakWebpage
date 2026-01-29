@@ -5631,6 +5631,660 @@ section {
     to { transform: translateX(0); opacity: 1; }
 }
 
+/* ============================================
+   LOADING STATES & SKELETON SCREENS
+   ============================================ */
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.skeleton {
+    background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.05) 25%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        rgba(255, 255, 255, 0.05) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.skeleton-text {
+    height: 1em;
+    margin-bottom: 0.5em;
+}
+
+.skeleton-text:last-child {
+    margin-bottom: 0;
+}
+
+.skeleton-title {
+    height: 1.5em;
+    width: 60%;
+    margin-bottom: 1em;
+}
+
+.skeleton-description {
+    height: 1em;
+    width: 100%;
+    margin-bottom: 0.5em;
+}
+
+.skeleton-description.short {
+    width: 80%;
+}
+
+.skeleton-card {
+    padding: 32px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.skeleton-image {
+    width: 100%;
+    height: 160px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+}
+
+.skeleton-button {
+    height: 36px;
+    width: 100px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.skeleton-tag {
+    height: 24px;
+    width: 80px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.skeleton-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    margin-bottom: 16px;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .skeleton {
+        animation: none;
+        background: rgba(255, 255, 255, 0.05);
+    }
+}
+
+/* ============================================
+   KEYBOARD NAVIGATION & ACCESSIBILITY
+   ============================================ */
+
+/* Skip to main content link */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    z-index: 10000;
+    padding: 12px 24px;
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 0 0 8px 0;
+    transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+    top: 0;
+    outline: 3px solid var(--accent-secondary);
+    outline-offset: 2px;
+}
+
+/* Enhanced focus indicators */
+*:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+/* Remove default outline for mouse users */
+*:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Better focus for interactive elements */
+.btn:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+.nav-links a:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+/* Screen reader only content */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Live region for announcements */
+.live-region {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* ============================================
+   SMOOTH SCROLL & SCROLL INDICATORS
+   ============================================ */
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Scroll progress indicator */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    z-index: 10000;
+    transition: width 0.1s ease-out;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+/* Scroll to top button */
+.scroll-to-top {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    color: var(--bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.scroll-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.scroll-to-top:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.scroll-to-top:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+.scroll-to-top svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Smooth scroll offset for sticky navbar */
+@media (min-width: 769px) {
+    html {
+        scroll-padding-top: 100px;
+    }
+}
+
+@media (max-width: 768px) {
+    html {
+        scroll-padding-top: 80px;
+    }
+}
+
+/* ============================================
+   ENHANCED ANIMATIONS & MICRO-INTERACTIONS
+   ============================================ */
+
+/* Button press animation */
+.btn {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary:active {
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+}
+
+.btn-secondary:active {
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+}
+
+/* Enhanced card hover effects */
+.project-card,
+.leader-card,
+.glass-card {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s ease,
+                border-color 0.3s ease;
+}
+
+.project-card:hover,
+.leader-card:hover {
+    transform: translateY(-4px) scale(1.01);
+}
+
+/* Form input focus states */
+input[type="text"],
+input[type="email"],
+input[type="url"],
+textarea,
+select {
+    transition: all 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    transform: translateY(-1px);
+}
+
+/* Stagger animations for list items */
+@keyframes staggerFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stagger-item {
+    animation: staggerFadeIn 0.4s ease-out backwards;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0.05s; }
+.stagger-item:nth-child(2) { animation-delay: 0.1s; }
+.stagger-item:nth-child(3) { animation-delay: 0.15s; }
+.stagger-item:nth-child(4) { animation-delay: 0.2s; }
+.stagger-item:nth-child(5) { animation-delay: 0.25s; }
+.stagger-item:nth-child(6) { animation-delay: 0.3s; }
+.stagger-item:nth-child(7) { animation-delay: 0.35s; }
+.stagger-item:nth-child(8) { animation-delay: 0.4s; }
+
+/* Enhanced tag hover */
+.tag {
+    transition: all 0.2s ease;
+}
+
+.tag:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+}
+
+/* Link hover animation */
+a:not(.btn):not(.nav-cta) {
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+a:not(.btn):not(.nav-cta)::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent-primary);
+    transition: width 0.3s ease;
+}
+
+a:not(.btn):not(.nav-cta):hover::after {
+    width: 100%;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .btn:active {
+        transform: none;
+    }
+    
+    .project-card:hover,
+    .leader-card:hover {
+        transform: none;
+    }
+    
+    input:focus,
+    textarea:focus,
+    select:focus {
+        transform: none;
+    }
+    
+    .tag:hover {
+        transform: none;
+    }
+}
+
+/* ============================================
+   MOBILE UX IMPROVEMENTS
+   ============================================ */
+
+/* Better touch targets (minimum 44x44px) */
+@media (max-width: 768px) {
+    .btn,
+    button,
+    .nav-links a,
+    .project-card,
+    .leader-card,
+    .timeline-node {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    .btn-sm {
+        min-height: 36px;
+        padding: 8px 16px;
+    }
+    
+    /* Ensure interactive elements are easily tappable */
+    .project-actions a,
+    .project-actions button {
+        min-height: 40px;
+        padding: 10px 16px;
+    }
+}
+
+/* Swipe gesture indicators */
+.swipe-hint {
+    display: none;
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: var(--text-tertiary);
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .timeline-scroll .swipe-hint,
+    .weekly-card .swipe-hint,
+    .carousel-track .swipe-hint {
+        display: block;
+    }
+}
+
+/* Touch-friendly scroll areas */
+@media (max-width: 768px) {
+    .timeline-scroll,
+    .carousel-track {
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+    }
+}
+
+/* Pull-to-refresh indicator (for future implementation) */
+.pull-to-refresh {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 0 0 12px 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10000;
+}
+
+.pull-to-refresh.active {
+    opacity: 1;
+}
+
+/* ============================================
+   ACCESSIBILITY ENHANCEMENTS
+   ============================================ */
+
+/* Form error messages */
+.form-error {
+    color: #ef4444;
+    font-size: 13px;
+    margin-top: 4px;
+    margin-bottom: 0;
+    min-height: 20px;
+}
+
+.form-error:empty {
+    display: none;
+}
+
+/* Ensure sufficient color contrast */
+:root {
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --text-tertiary: #666666;
+    --accent-primary: #3b82f6;
+    --accent-secondary: #8b5cf6;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .glass-card {
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .btn {
+        border: 2px solid currentColor;
+    }
+}
+
+/* Focus visible improvements */
+*:focus-visible {
+    outline-width: 3px;
+    outline-style: solid;
+    outline-offset: 2px;
+}
+
+/* ============================================
+   TOAST NOTIFICATIONS
+   ============================================ */
+
+.toast-container {
+    position: fixed;
+    top: 100px;
+    right: 24px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none;
+}
+
+.toast {
+    min-width: 300px;
+    max-width: 400px;
+    padding: 16px 20px;
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    pointer-events: auto;
+    animation: toastSlideIn 0.3s ease-out;
+    backdrop-filter: blur(10px);
+}
+
+.toast.success {
+    border-left: 4px solid #22c55e;
+}
+
+.toast.error {
+    border-left: 4px solid #ef4444;
+}
+
+.toast.info {
+    border-left: 4px solid var(--accent-primary);
+}
+
+.toast-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.toast.success .toast-icon {
+    color: #22c55e;
+}
+
+.toast.error .toast-icon {
+    color: #ef4444;
+}
+
+.toast.info .toast-icon {
+    color: var(--accent-primary);
+}
+
+.toast-content {
+    flex: 1;
+}
+
+.toast-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.toast-message {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.toast-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+@keyframes toastSlideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes toastSlideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
+.toast.removing {
+    animation: toastSlideOut 0.3s ease-in forwards;
+}
+
+@media (max-width: 768px) {
+    .toast-container {
+        top: 80px;
+        right: 16px;
+        left: 16px;
+    }
+    
+    .toast {
+        min-width: auto;
+        max-width: 100%;
+    }
+}
+
 .weekly-diary-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

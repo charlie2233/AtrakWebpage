@@ -33,8 +33,7 @@ const FEATURED_PROJECT_REPOS = [
     'rork-guide-pup--vision-assistant',
     'Basketball_action_recoginition_sever',
     'AI-predator-simulation',
-    'LunarWeb',
-    'MazeRunner67ers_APCSA_Java'
+    'LunarWeb'
 ];
 
 // Cache for GitHub data
@@ -431,6 +430,71 @@ function createProjectCard(project) {
 }
 
 /**
+ * Create skeleton loader for project card
+ */
+function createProjectSkeleton() {
+    return `
+        <div class="project-card glass-card skeleton-card">
+            <div class="skeleton-image skeleton"></div>
+            <div class="project-content">
+                <div class="skeleton-title skeleton"></div>
+                <div class="skeleton-description skeleton"></div>
+                <div class="skeleton-description skeleton short"></div>
+                <div class="skeleton-text skeleton" style="width: 40%; margin-top: 16px;"></div>
+                <div style="display: flex; gap: 8px; margin-top: 16px;">
+                    <div class="skeleton-tag skeleton"></div>
+                    <div class="skeleton-tag skeleton"></div>
+                </div>
+                <div style="display: flex; gap: 8px; margin-top: 16px;">
+                    <div class="skeleton-button skeleton"></div>
+                    <div class="skeleton-button skeleton"></div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Create skeleton loader for weekly highlights
+ */
+function createWeeklyHighlightsSkeleton() {
+    return `
+        <div class="weekly-stats-row">
+            <div class="fun-stat skeleton" style="width: 120px; height: 40px; border-radius: 8px;"></div>
+            <div class="fun-stat skeleton" style="width: 120px; height: 40px; border-radius: 8px;"></div>
+            <div class="fun-stat skeleton" style="width: 120px; height: 40px; border-radius: 8px;"></div>
+        </div>
+        <div class="weekly-sections-grid">
+            <div class="weekly-section">
+                <div class="skeleton-text skeleton" style="width: 100px; height: 14px; margin-bottom: 12px;"></div>
+                <ul class="highlight-list">
+                    <li class="highlight-item">
+                        <span class="skeleton-text skeleton" style="width: 80%; height: 14px;"></span>
+                    </li>
+                    <li class="highlight-item">
+                        <span class="skeleton-text skeleton" style="width: 70%; height: 14px;"></span>
+                    </li>
+                    <li class="highlight-item">
+                        <span class="skeleton-text skeleton" style="width: 85%; height: 14px;"></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="weekly-section">
+                <div class="skeleton-text skeleton" style="width: 100px; height: 14px; margin-bottom: 12px;"></div>
+                <ul class="highlight-list">
+                    <li class="highlight-item">
+                        <span class="skeleton-text skeleton" style="width: 75%; height: 14px;"></span>
+                    </li>
+                    <li class="highlight-item">
+                        <span class="skeleton-text skeleton" style="width: 90%; height: 14px;"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    `;
+}
+
+/**
  * Render the More Projects section
  */
 async function renderMoreProjects() {
@@ -440,14 +504,21 @@ async function renderMoreProjects() {
         return;
     }
 
-    // Skip if already loaded (has children other than loading/error messages)
-    const hasProjectCards = container.querySelector('.project-card');
-    if (hasProjectCards) {
-        return;
+    // Check if we already have loaded GitHub projects (not just the pinned MazeRunner)
+    const existingGitHubProjects = container.querySelectorAll('.project-card:not(.skeleton-card)');
+    const hasMazeRunner = Array.from(existingGitHubProjects).some(card => 
+        card.querySelector('a[href*="MazeRunner67ers_APCSA_Java"]')
+    );
+    const hasOtherProjects = existingGitHubProjects.length > (hasMazeRunner ? 1 : 0);
+    
+    if (hasOtherProjects) {
+        return; // Already loaded
     }
 
-    // Show loading state
-    container.innerHTML = '<p class="loading-message">Loading projects from GitHub...</p>';
+    // Show skeleton loading state (append after existing cards)
+    const skeletonCount = 6;
+    const skeletons = Array(skeletonCount).fill(0).map(() => createProjectSkeleton()).join('');
+    container.insertAdjacentHTML('beforeend', skeletons);
     setMoreProjectsMeta('Loading GitHub data…');
 
     try {
@@ -457,13 +528,20 @@ async function renderMoreProjects() {
         const displayProjects = projects.slice(0, 6);
         const combinedHtml = displayProjects.map(project => createProjectCard(project)).join('');
 
+        // Remove skeleton loaders
+        container.querySelectorAll('.skeleton-card').forEach(skeleton => skeleton.remove());
+
         if (!combinedHtml.trim()) {
-            container.innerHTML = '<p class="empty-message">No additional projects found.</p>';
+            // Only show empty message if there are no projects at all (including MazeRunner)
+            if (container.querySelectorAll('.project-card').length === 0) {
+                container.innerHTML = '<p class="empty-message">No additional projects found.</p>';
+            }
             setMoreProjectsMeta('');
             return;
         }
 
-        container.innerHTML = combinedHtml;
+        // Append new projects (don't replace existing like MazeRunner)
+        container.insertAdjacentHTML('beforeend', combinedHtml);
 
         if (lastGitHubFetchSource === 'cache') {
             const meta = await loadCachedMeta();
@@ -574,6 +652,11 @@ async function renderWeeklyHighlights() {
     const iconEl = document.getElementById('weekly-icon');
     
     if (!container) return;
+    
+    // Show skeleton loader while fetching
+    if (container.innerHTML.includes('weekly-loading') || container.innerHTML.trim() === '') {
+        container.innerHTML = createWeeklyHighlightsSkeleton();
+    }
     
     try {
         let events = [];
