@@ -423,8 +423,38 @@ function createProjectCard(project) {
 	                    }
 	                </div>
 	            </div>
-	        </div>
-	    `;
+        </div>
+    `;
+}
+
+function createLocalProjectCard() {
+    return `
+        <div class="project-card reveal glass-card">
+            <div class="project-image">
+                <div class="project-icon">🧭</div>
+            </div>
+            <div class="project-content">
+                <h3 class="project-title">APCSA MazeRunner</h3>
+                <p class="project-description">
+                    APCSA Java maze runner project stored locally in Documents. Classic maze traversal with custom levels and UI.
+                </p>
+                <div class="project-meta">
+                    <span class="project-date">Location: Documents</span>
+                </div>
+                <div class="project-tags">
+                    <span class="tag">Java</span>
+                    <span class="tag">APCSA</span>
+                    <span class="tag">Maze</span>
+                </div>
+                <div class="project-actions">
+                    <a href="#contact" class="btn btn-secondary btn-sm" data-open-contact-tab="apply">Request Access</a>
+                    <button class="btn btn-secondary btn-sm" type="button" disabled aria-disabled="true">Docs (Local)</button>
+                    <button class="btn btn-secondary btn-sm" type="button" disabled aria-disabled="true">Repo (Local)</button>
+                    <button class="btn btn-secondary btn-sm" type="button" disabled aria-disabled="true">Demo (Local)</button>
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 /**
@@ -443,6 +473,8 @@ async function renderMoreProjects() {
         return;
     }
 
+    const localProjectHtml = createLocalProjectCard();
+
     // Show loading state
     container.innerHTML = '<p class="loading-message">Loading projects from GitHub...</p>';
     setMoreProjectsMeta('Loading GitHub data…');
@@ -450,16 +482,18 @@ async function renderMoreProjects() {
     try {
         const projects = await fetchGitHubRepositories();
         
-        if (projects.length === 0) {
+        // Limit to top 6 most recently updated projects
+        const displayProjects = projects.slice(0, 6);
+        const githubProjectsHtml = displayProjects.map(project => createProjectCard(project)).join('');
+        const combinedHtml = `${localProjectHtml}${githubProjectsHtml}`;
+
+        if (!combinedHtml.trim()) {
             container.innerHTML = '<p class="empty-message">No additional projects found.</p>';
             setMoreProjectsMeta('');
             return;
         }
 
-        // Limit to top 6 most recently updated projects
-        const displayProjects = projects.slice(0, 6);
-        
-        container.innerHTML = displayProjects.map(project => createProjectCard(project)).join('');
+        container.innerHTML = combinedHtml;
 
         if (lastGitHubFetchSource === 'cache') {
             const meta = await loadCachedMeta();
@@ -475,7 +509,7 @@ async function renderMoreProjects() {
             setMoreProjectsMeta('Live from GitHub API');
             setFooterSyncStatus('Live GitHub data');
         } else {
-            setMoreProjectsMeta('');
+            setMoreProjectsMeta('Local project + GitHub data unavailable');
         }
         
         // Re-trigger reveal animations for new elements
@@ -486,8 +520,8 @@ async function renderMoreProjects() {
         
     } catch (error) {
         console.error('Failed to render projects:', error);
-        container.innerHTML = '<p class="error-message">Failed to load projects. Please try again later.</p>';
-        setMoreProjectsMeta('');
+        container.innerHTML = `${localProjectHtml}<p class="error-message">Failed to load GitHub projects. Please try again later.</p>`;
+        setMoreProjectsMeta('Showing local project only');
     }
 }
 
