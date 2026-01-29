@@ -36,6 +36,21 @@ const FEATURED_PROJECT_REPOS = [
     'LunarWeb'
 ];
 
+const PINNED_PROJECTS = [
+    {
+        name: 'MazeRunner67ers_APCSA_Java',
+        fullName: 'charlie2233/MazeRunner67ers_APCSA_Java',
+        displayName: 'APCSA MazeRunner',
+        description: 'APCSA Java maze runner featuring grid-based navigation, collision checks, and multi-level progression with custom maps.',
+        url: 'https://github.com/charlie2233/MazeRunner67ers_APCSA_Java',
+        homepage: null,
+        language: 'Java',
+        topics: ['APCSA', 'Maze', 'Game'],
+        icon: '🧭',
+        updatedAt: new Date('2025-12-20T07:06:06Z')
+    }
+];
+
 // Cache for GitHub data
 let githubProjectsCache = null;
 let cacheTimestamp = null;
@@ -390,16 +405,18 @@ function formatDisplayName(name) {
  */
 function createProjectCard(project) {
     const techStack = getTechStack(project);
-    const displayName = formatDisplayName(project.name);
+    const displayName = project.displayName || formatDisplayName(project.name);
+    const icon = project.icon || '📦';
+    const repoAttr = project.fullName ? ` data-repo="${project.fullName}"` : '';
     
     const tagsHTML = techStack.length > 0
         ? techStack.map(tech => `<span class="tag">${tech}</span>`).join('')
         : '<span class="tag">General</span>';
     
     return `
-        <div class="project-card reveal glass-card">
+        <div class="project-card reveal glass-card"${repoAttr}>
             <div class="project-image">
-                <div class="project-icon">📦</div>
+                <div class="project-icon">${icon}</div>
             </div>
 	            <div class="project-content">
 	                <h3 class="project-title">${displayName}</h3>
@@ -427,36 +444,6 @@ function createProjectCard(project) {
     `;
 }
 
-function createLocalProjectCard() {
-    return `
-        <div class="project-card reveal glass-card">
-            <div class="project-image">
-                <div class="project-icon">🧭</div>
-            </div>
-            <div class="project-content">
-                <h3 class="project-title">APCSA MazeRunner</h3>
-                <p class="project-description">
-                    APCSA Java maze runner project stored locally in Documents. Classic maze traversal with custom levels and UI.
-                </p>
-                <div class="project-meta">
-                    <span class="project-date">Location: Documents</span>
-                </div>
-                <div class="project-tags">
-                    <span class="tag">Java</span>
-                    <span class="tag">APCSA</span>
-                    <span class="tag">Maze</span>
-                </div>
-                <div class="project-actions">
-                    <a href="#contact" class="btn btn-secondary btn-sm" data-open-contact-tab="apply">Request Access</a>
-                    <button class="btn btn-secondary btn-sm" type="button" disabled aria-disabled="true">Docs (Local)</button>
-                    <button class="btn btn-secondary btn-sm" type="button" disabled aria-disabled="true">Repo (Local)</button>
-                    <button class="btn btn-secondary btn-sm" type="button" disabled aria-disabled="true">Demo (Local)</button>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
 /**
  * Render the More Projects section
  */
@@ -467,13 +454,19 @@ async function renderMoreProjects() {
         return;
     }
 
+    const pinnedNames = new Set(PINNED_PROJECTS.map(project => project.fullName.toLowerCase()));
+    const pinnedProjects = PINNED_PROJECTS.slice();
+
     // Skip if already loaded (has children other than loading/error messages)
     const hasProjectCards = container.querySelector('.project-card');
     if (hasProjectCards) {
+        const hasPinned = container.querySelector(`[data-repo="${PINNED_PROJECTS[0].fullName}"]`);
+        if (!hasPinned && pinnedProjects.length) {
+            const pinnedHtml = pinnedProjects.map(project => createProjectCard(project)).join('');
+            container.insertAdjacentHTML('afterbegin', pinnedHtml);
+        }
         return;
     }
-
-    const localProjectHtml = createLocalProjectCard();
 
     // Show loading state
     container.innerHTML = '<p class="loading-message">Loading projects from GitHub...</p>';
@@ -481,11 +474,27 @@ async function renderMoreProjects() {
 
     try {
         const projects = await fetchGitHubRepositories();
+        const normalizedProjects = Array.isArray(projects) ? projects : [];
+
+        const hydratedPinned = pinnedProjects.map(project => {
+            const match = normalizedProjects.find(repo => repo.fullName.toLowerCase() === project.fullName.toLowerCase());
+            if (!match) return project;
+            return {
+                ...project,
+                url: match.url || project.url,
+                homepage: match.homepage || project.homepage,
+                language: match.language || project.language,
+                topics: match.topics && match.topics.length ? match.topics : project.topics,
+                updatedAt: match.updatedAt || project.updatedAt
+            };
+        });
         
         // Limit to top 6 most recently updated projects
-        const displayProjects = projects.slice(0, 6);
+        const remainingProjects = normalizedProjects.filter(project => !pinnedNames.has(project.fullName.toLowerCase()));
+        const displayProjects = remainingProjects.slice(0, 6);
+        const pinnedHtml = hydratedPinned.map(project => createProjectCard(project)).join('');
         const githubProjectsHtml = displayProjects.map(project => createProjectCard(project)).join('');
-        const combinedHtml = `${localProjectHtml}${githubProjectsHtml}`;
+        const combinedHtml = `${pinnedHtml}${githubProjectsHtml}`;
 
         if (!combinedHtml.trim()) {
             container.innerHTML = '<p class="empty-message">No additional projects found.</p>';
@@ -509,7 +518,7 @@ async function renderMoreProjects() {
             setMoreProjectsMeta('Live from GitHub API');
             setFooterSyncStatus('Live GitHub data');
         } else {
-            setMoreProjectsMeta('Local project + GitHub data unavailable');
+            setMoreProjectsMeta('Pinned projects + GitHub data unavailable');
         }
         
         // Re-trigger reveal animations for new elements
@@ -520,8 +529,9 @@ async function renderMoreProjects() {
         
     } catch (error) {
         console.error('Failed to render projects:', error);
-        container.innerHTML = `${localProjectHtml}<p class="error-message">Failed to load GitHub projects. Please try again later.</p>`;
-        setMoreProjectsMeta('Showing local project only');
+        const pinnedHtml = pinnedProjects.map(project => createProjectCard(project)).join('');
+        container.innerHTML = `${pinnedHtml}<p class="error-message">Failed to load GitHub projects. Please try again later.</p>`;
+        setMoreProjectsMeta('Showing pinned projects only');
     }
 }
 
