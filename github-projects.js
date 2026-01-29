@@ -33,22 +33,8 @@ const FEATURED_PROJECT_REPOS = [
     'rork-guide-pup--vision-assistant',
     'Basketball_action_recoginition_sever',
     'AI-predator-simulation',
-    'LunarWeb'
-];
-
-const PINNED_PROJECTS = [
-    {
-        name: 'MazeRunner67ers_APCSA_Java',
-        fullName: 'charlie2233/MazeRunner67ers_APCSA_Java',
-        displayName: 'APCSA MazeRunner',
-        description: 'APCSA Java maze runner featuring grid-based navigation, collision checks, and multi-level progression with custom maps.',
-        url: 'https://github.com/charlie2233/MazeRunner67ers_APCSA_Java',
-        homepage: null,
-        language: 'Java',
-        topics: ['APCSA', 'Maze', 'Game'],
-        icon: '🧭',
-        updatedAt: new Date('2025-12-20T07:06:06Z')
-    }
+    'LunarWeb',
+    'MazeRunner67ers_APCSA_Java'
 ];
 
 // Cache for GitHub data
@@ -454,17 +440,9 @@ async function renderMoreProjects() {
         return;
     }
 
-    const pinnedNames = new Set(PINNED_PROJECTS.map(project => project.fullName.toLowerCase()));
-    const pinnedProjects = PINNED_PROJECTS.slice();
-
     // Skip if already loaded (has children other than loading/error messages)
     const hasProjectCards = container.querySelector('.project-card');
     if (hasProjectCards) {
-        const hasPinned = container.querySelector(`[data-repo="${PINNED_PROJECTS[0].fullName}"]`);
-        if (!hasPinned && pinnedProjects.length) {
-            const pinnedHtml = pinnedProjects.map(project => createProjectCard(project)).join('');
-            container.insertAdjacentHTML('afterbegin', pinnedHtml);
-        }
         return;
     }
 
@@ -474,27 +452,10 @@ async function renderMoreProjects() {
 
     try {
         const projects = await fetchGitHubRepositories();
-        const normalizedProjects = Array.isArray(projects) ? projects : [];
-
-        const hydratedPinned = pinnedProjects.map(project => {
-            const match = normalizedProjects.find(repo => repo.fullName.toLowerCase() === project.fullName.toLowerCase());
-            if (!match) return project;
-            return {
-                ...project,
-                url: match.url || project.url,
-                homepage: match.homepage || project.homepage,
-                language: match.language || project.language,
-                topics: match.topics && match.topics.length ? match.topics : project.topics,
-                updatedAt: match.updatedAt || project.updatedAt
-            };
-        });
         
         // Limit to top 6 most recently updated projects
-        const remainingProjects = normalizedProjects.filter(project => !pinnedNames.has(project.fullName.toLowerCase()));
-        const displayProjects = remainingProjects.slice(0, 6);
-        const pinnedHtml = hydratedPinned.map(project => createProjectCard(project)).join('');
-        const githubProjectsHtml = displayProjects.map(project => createProjectCard(project)).join('');
-        const combinedHtml = `${pinnedHtml}${githubProjectsHtml}`;
+        const displayProjects = projects.slice(0, 6);
+        const combinedHtml = displayProjects.map(project => createProjectCard(project)).join('');
 
         if (!combinedHtml.trim()) {
             container.innerHTML = '<p class="empty-message">No additional projects found.</p>';
@@ -518,7 +479,7 @@ async function renderMoreProjects() {
             setMoreProjectsMeta('Live from GitHub API');
             setFooterSyncStatus('Live GitHub data');
         } else {
-            setMoreProjectsMeta('Pinned projects + GitHub data unavailable');
+            setMoreProjectsMeta('');
         }
         
         // Re-trigger reveal animations for new elements
@@ -529,9 +490,8 @@ async function renderMoreProjects() {
         
     } catch (error) {
         console.error('Failed to render projects:', error);
-        const pinnedHtml = pinnedProjects.map(project => createProjectCard(project)).join('');
-        container.innerHTML = `${pinnedHtml}<p class="error-message">Failed to load GitHub projects. Please try again later.</p>`;
-        setMoreProjectsMeta('Showing pinned projects only');
+        container.innerHTML = '<p class="error-message">Failed to load GitHub projects. Please try again later.</p>';
+        setMoreProjectsMeta('');
     }
 }
 

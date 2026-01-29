@@ -10,7 +10,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="assets/logo.png">
     <link rel="apple-touch-icon" sizes="120x120" href="assets/logo.png">
     <link rel="apple-touch-icon" sizes="76x76" href="assets/logo.png">
-    <link rel="stylesheet" href="styles.css?v=22">
+    <link rel="stylesheet" href="styles.css?v=23">
 </head>
 <body>
     <nav class="navbar">
@@ -23,11 +23,12 @@
             </a>
             <ul class="nav-links">
                 <li><a href="index.html#projects">Projects</a></li>
-                <li><a href="index.html#leadership">Team</a></li>
-                <li><a href="handbook.html" class="active">Handbook</a></li>
                 <li><a href="releases.html">Releases</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#leadership">Team</a></li>
+                <li><a href="purpose.html">Purpose</a></li>
                 <li><a href="join.html">Join</a></li>
-                <li><a href="index.html#contact" class="nav-cta">Suggestion Box</a></li>
+                <li><a href="index.html#contact" class="nav-cta" data-open-contact-tab="suggestion">Suggestion Box</a></li>
             </ul>
             <button class="mobile-menu-btn" aria-label="Toggle menu">
                 <span></span>
@@ -360,5 +361,72 @@
     </footer>
 
     <script src="script.js?v=21"></script>
+    <script>
+        // Handbook scroll-based navigation highlighting
+        (function() {
+            const navLinks = document.querySelectorAll('.handbook-nav a');
+            const sections = document.querySelectorAll('.handbook-section');
+            
+            if (navLinks.length === 0 || sections.length === 0) return;
+            
+            // Create intersection observer
+            const observerOptions = {
+                root: null,
+                rootMargin: '-20% 0px -60% 0px',
+                threshold: 0
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        // Remove active class from all links
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                        });
+                        // Add active class to corresponding link
+                        const activeLink = document.querySelector(`.handbook-nav a[href="#${id}"]`);
+                        if (activeLink) {
+                            activeLink.classList.add('active');
+                        }
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all sections
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            
+            // Handle initial scroll position
+            function updateActiveOnLoad() {
+                const scrollPos = window.scrollY + 200; // Offset for sticky nav
+                let currentSection = null;
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.offsetHeight;
+                    
+                    if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                        currentSection = section;
+                    }
+                });
+                
+                if (currentSection) {
+                    const id = currentSection.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            }
+            
+            // Update on page load
+            window.addEventListener('load', updateActiveOnLoad);
+            window.addEventListener('scroll', updateActiveOnLoad);
+        })();
+    </script>
 </body>
 </html>
