@@ -543,6 +543,15 @@ async function renderMoreProjects() {
         // Append new projects (don't replace existing like MazeRunner)
         container.insertAdjacentHTML('beforeend', combinedHtml);
 
+        // Re-trigger reveal animations for new elements
+        const newElements = container.querySelectorAll('.reveal:not(.active)');
+        if (window.revealObserver) {
+            newElements.forEach(el => window.revealObserver.observe(el));
+        } else {
+            // Fallback: if observer isn't ready yet, just show them
+            newElements.forEach(el => el.classList.add('active'));
+        }
+        
         if (lastGitHubFetchSource === 'cache') {
             const meta = await loadCachedMeta();
             if (meta && meta.updatedAt) {
@@ -558,12 +567,6 @@ async function renderMoreProjects() {
             setFooterSyncStatus('Live GitHub data');
         } else {
             setMoreProjectsMeta('');
-        }
-        
-        // Re-trigger reveal animations for new elements
-        const revealElements = container.querySelectorAll('.reveal');
-        if (window.revealObserver) {
-            revealElements.forEach(el => window.revealObserver.observe(el));
         }
         
     } catch (error) {

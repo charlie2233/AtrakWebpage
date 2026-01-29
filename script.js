@@ -99,6 +99,9 @@ if (supportsIntersectionObserver && !prefersReducedMotion) {
         });
     }, { threshold: 0.1 });
 
+    // Make observer available globally for dynamic content
+    window.revealObserver = revealObserver;
+
     allRevealElements.forEach(el => {
         if (!el.classList.contains('active')) {
             revealObserver.observe(el);
