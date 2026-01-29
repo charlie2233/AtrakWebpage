@@ -1,5 +1,9 @@
-// Atrak - Modern Tech Team Website JavaScript
 
+// Main JavaScript for Atrak - Modern Tech Team Website
+// This file handles UI interactions, accessibility, animations, forms, and more.
+
+
+// Accessibility and feature detection
 const prefersReducedMotion = typeof window !== 'undefined'
     && typeof window.matchMedia === 'function'
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -10,13 +14,19 @@ const enableHoverEffects = hasFinePointer && !prefersReducedMotion;
 const enableHeroParallax = enableHoverEffects;
 const supportsIntersectionObserver = typeof window !== 'undefined' && 'IntersectionObserver' in window;
 
+
+// ================================
 // Custom Cursor
+// ================================
+// Adds a custom dot/outline cursor for desktop users with fine pointer
 const cursorDot = document.querySelector('.cursor-dot');
 const cursorOutline = document.querySelector('.cursor-outline');
+
 
 if (cursorDot && cursorOutline && !prefersReducedMotion && hasFinePointer) {
     document.body.classList.add('cursor-enabled');
 
+    // Move cursor elements on mouse move
     window.addEventListener('mousemove', (e) => {
         const posX = e.clientX;
         const posY = e.clientY;
@@ -30,6 +40,7 @@ if (cursorDot && cursorOutline && !prefersReducedMotion && hasFinePointer) {
         }, { duration: 500, fill: "forwards" });
     });
 
+    // Cursor hover effect for interactive elements
     document.querySelectorAll('a, button, .project-card').forEach(el => {
         el.addEventListener('mouseenter', () => {
             cursorDot.classList.add('active');
@@ -42,7 +53,11 @@ if (cursorDot && cursorOutline && !prefersReducedMotion && hasFinePointer) {
     });
 }
 
+
+// ================================
 // Glass Card Mouse Tracker
+// ================================
+// Tracks mouse position for glass/project/stat cards for interactive effects
 document.querySelectorAll('.glass-card, .project-card, .stat-item').forEach(card => {
     card.addEventListener('mousemove', (e) => {
         const rect = card.getBoundingClientRect();
@@ -53,7 +68,10 @@ document.querySelectorAll('.glass-card, .project-card, .stat-item').forEach(card
     });
 });
 
+// ================================
 // Scroll Reveal (fails open so content never gets stuck hidden)
+// ================================
+// Reveals elements as they enter the viewport
 if (supportsIntersectionObserver && !prefersReducedMotion) {
     const revealElements = Array.from(document.querySelectorAll('.reveal'));
     const autoRevealElements = Array.from(document.querySelectorAll('.project-card, .leader-card, .stat-item, .feature'));
@@ -90,7 +108,10 @@ if (supportsIntersectionObserver && !prefersReducedMotion) {
     document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
 }
 
+// ================================
 // Hero Parallax
+// ================================
+// Adds parallax effect to hero section cards
 const hero = document.querySelector('.hero');
 if (hero && enableHeroParallax) {
     window.addEventListener('mousemove', (e) => {
@@ -105,7 +126,10 @@ if (hero && enableHeroParallax) {
     });
 }
 
+// ================================
 // Infinite Card Rotation
+// ================================
+// Rotates visual cards in a stack with animation
 const cardStack = document.getElementById('card-stack');
 if (cardStack) {
     const cards = Array.from(cardStack.querySelectorAll('.visual-card'));
@@ -159,7 +183,11 @@ if (cardStack) {
     });
 }
 
+
+// ================================
 // Mobile Menu Toggle
+// ================================
+// Handles mobile navigation menu open/close
 const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
 const navLinks = document.querySelector('.nav-links');
 const navbar = document.querySelector('.navbar');
@@ -171,7 +199,10 @@ if (mobileMenuBtn && navLinks) {
     });
 }
 
+// ================================
 // Smooth Scroll for Navigation Links
+// ================================
+// Smoothly scrolls to anchor targets and closes mobile menu
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         const href = this.getAttribute('href');
@@ -197,7 +228,11 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
+
+// ================================
 // Consolidated Scroll Handler with Throttling
+// ================================
+// Handles navbar background, parallax, and nav highlighting on scroll
 let lastScroll = 0;
 let ticking = false;
 const floatingCards = document.querySelectorAll('.floating-card');
@@ -258,7 +293,10 @@ window.addEventListener('scroll', () => {
     }
 });
 
+// ================================
 // Dynamic Stats Counter
+// ================================
+// Animates numbers in stats section when visible
 const stats = document.querySelectorAll('.stat-number');
 let statsAnimated = false;
 
@@ -301,7 +339,10 @@ if (supportsIntersectionObserver) {
     }
 }
 
+// ================================
 // Project Card Tilt Effect
+// ================================
+// Adds 3D tilt and click/keyboard navigation to project cards
 const projectCards = document.querySelectorAll('.project-card');
 
 // Make project cards clickable (opens the "Details" link)
@@ -360,7 +401,10 @@ if (enableHoverEffects) {
     });
 }
 
+// ================================
 // Leader Card Hover Effect
+// ================================
+// Dims other leader cards on hover for focus effect
 const leaderCards = document.querySelectorAll('.leader-card');
 
 if (enableHoverEffects) {
@@ -381,7 +425,11 @@ if (enableHoverEffects) {
     });
 }
 
+
+// ================================
 // Forms (Suggestion Box + Join/Contact)
+// ================================
+// Handles async form submission, validation, and feedback
 const formConfig = (window.ATRAK_CONFIG && typeof window.ATRAK_CONFIG === 'object')
     ? window.ATRAK_CONFIG
     : (window.LUNARWEB_CONFIG && typeof window.LUNARWEB_CONFIG === 'object')
@@ -389,6 +437,7 @@ const formConfig = (window.ATRAK_CONFIG && typeof window.ATRAK_CONFIG === 'objec
         : {};
 const configuredFormEndpoints = formConfig.forms && typeof formConfig.forms === 'object' ? formConfig.forms : {};
 
+// Determines the endpoint for a given form
 const getFormEndpoint = (form) => {
     const endpointKey = (form.dataset.endpointKey || '').trim();
     if (endpointKey && typeof configuredFormEndpoints[endpointKey] === 'string') {
@@ -407,6 +456,7 @@ const getFormEndpoint = (form) => {
     return (form.action || '').trim();
 };
 
+// Updates the form status message and state
 const setFormStatus = (statusEl, message, state) => {
     if (!statusEl) return;
     statusEl.textContent = message || '';
@@ -414,6 +464,7 @@ const setFormStatus = (statusEl, message, state) => {
     if (state) statusEl.classList.add(state);
 };
 
+// Sets up live character counters for form fields
 const setupCharCounters = (form) => {
     const counters = Array.from(form.querySelectorAll('[data-char-count]'));
     const updates = [];
@@ -439,6 +490,7 @@ const setupCharCounters = (form) => {
     return () => updates.forEach(fn => fn());
 };
 
+// Wires up async form submission and validation
 const wireAsyncForm = (form, options) => {
     if (!form) return;
 
@@ -628,6 +680,10 @@ wireAsyncForm(document.querySelector('#security-form'), {
     successMessage: 'Thanks — your security report was sent.'
 });
 
+// ================================
+// Share Page Functionality
+// ================================
+// Handles sharing links, copy, and social buttons
 const initSharePage = () => {
     const shareRoot = document.querySelector('[data-share-page]');
     if (!shareRoot) return;
@@ -706,8 +762,10 @@ const initSharePage = () => {
 
 initSharePage();
 
+// ================================
 // Cursor Follow Effect (Optional - for enhanced UX)
-// Only enable if the page doesn't already use the dot/outline cursor.
+// ================================
+// Adds a simple custom cursor if dot/outline cursor is not present
 if (enableHoverEffects && !cursorDot && !cursorOutline) {
     const cursor = document.createElement('div');
     cursor.className = 'custom-cursor';
@@ -774,7 +832,7 @@ if (enableHoverEffects && !cursorDot && !cursorOutline) {
 console.log('%cAtrak ', 'background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); color: white; padding: 8px 16px; border-radius: 4px; font-size: 16px; font-weight: bold;');
 console.log('%cBuilding the future, one line of code at a time.', 'color: #a0a0a0; font-size: 12px;');
 
-// Helper to initialize a single timeline item's interactions
+// Helper to initialize a single timeline item's interactions (expand/collapse)
 const initTimelineItem = (item, node) => {
     const toggleExpand = () => {
         const isExpanded = item.getAttribute('data-expanded') === 'true';
@@ -818,7 +876,10 @@ const initTimelineItem = (item, node) => {
     });
 };
 
+// ================================
 // Timeline Interactive Features
+// ================================
+// Handles timeline expand/collapse and horizontal scroll
 const initTimeline = () => {
     const timelineItems = document.querySelectorAll('.timeline-item');
     const timelineNodes = document.querySelectorAll('.timeline-node');
@@ -845,7 +906,7 @@ const initTimeline = () => {
     });
 };
 
-// Helper function to announce changes to screen readers
+// Helper function to announce changes to screen readers (for accessibility)
 const announceToScreenReader = (message) => {
     const announcement = document.createElement('div');
     announcement.setAttribute('role', 'status');
@@ -949,7 +1010,11 @@ if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
     document.body.classList.add('reduce-motion');
 }
 
+
+// ================================
 // Project Tabs Functionality
+// ================================
+// Handles switching between project tabs and loading more projects
 const projectTabs = document.querySelectorAll('.project-tab');
 const projectTabContents = document.querySelectorAll('.project-tab-content');
 
@@ -990,6 +1055,7 @@ if (projectTabs.length) {
 // ================================
 // Contact Tabs (Index Page)
 // ================================
+// Handles switching between contact/join tabs
 const initContactTabs = () => {
     const tabs = Array.from(document.querySelectorAll('.contact-tab'));
     const panels = Array.from(document.querySelectorAll('.contact-tab-content'));
@@ -1060,6 +1126,7 @@ if (document.readyState === 'loading') {
 // ================================
 // Run Tabs (Project Pages)
 // ================================
+// Handles switching between run tabs on project pages
 const runTabs = document.querySelectorAll('.run-tab');
 if (runTabs.length) {
     runTabs.forEach(tab => {
@@ -1087,6 +1154,7 @@ if (runTabs.length) {
 // ================================
 // Media Carousels (Project Demo Screenshots)
 // ================================
+// Handles media carousels for project demo screenshots
 const initMediaCarousels = () => {
     const carousels = Array.from(document.querySelectorAll('[data-carousel]'));
     if (!carousels.length) return;
@@ -1166,6 +1234,7 @@ if (document.readyState === 'loading') {
 // ============================================
 // KEYBOARD NAVIGATION ENHANCEMENTS
 // ============================================
+// Improves accessibility for keyboard users
 
 // Create live region for screen reader announcements
 const liveRegion = document.createElement('div');
@@ -1345,6 +1414,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================
 // SMOOTH SCROLL IMPROVEMENTS
 // ============================================
+// Adds scroll progress bar and smooth scroll to top
 
 // Scroll progress indicator
 function updateScrollProgress() {
@@ -1441,6 +1511,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================
 // MOBILE UX - SWIPE GESTURES
 // ============================================
+// Adds swipe gesture support for sliders and carousels
 
 // Swipe detection for weekly highlights slider
 function initSwipeGestures() {
@@ -1536,6 +1607,7 @@ document.addEventListener('DOMContentLoaded', initSwipeGestures);
 // ============================================
 // TOAST NOTIFICATIONS
 // ============================================
+// Shows toast notifications for user feedback
 
 function createToastContainer() {
     let container = document.getElementById('toast-container');
