@@ -90,7 +90,7 @@ function createBlogPostCard(post) {
 
     return `
         <article class="blog-post-card glass-card reveal">
-            <a href="blog/${post.slug}.html" class="blog-post-link">
+            <a href="blog/blog-post.html?slug=${encodeURIComponent(post.slug)}" class="blog-post-link">
                 <div class="blog-post-image-wrapper">
                     ${featuredImage}
                 </div>
@@ -297,7 +297,7 @@ function generateRSSFeed(posts) {
     const feedUrl = `${siteUrl}/blog/feed.xml`;
     
     const rssItems = posts.map(post => {
-        const postUrl = `${siteUrl}/blog/${post.slug}.html`;
+        const postUrl = `${siteUrl}/blog/blog-post.html?slug=${encodeURIComponent(post.slug)}`;
         const pubDate = new Date(post.date).toUTCString();
         const description = escapeHtml(post.excerpt);
         
