@@ -1064,8 +1064,97 @@ wireAsyncForm(document.querySelector('#suggestion-form'), {
 
 wireAsyncForm(document.querySelector('#join-form'), {
     minMessageLength: 20,
-    successMessage: 'Thanks — your message was sent. We’ll reply soon.'
+    successMessage: 'Thanks — your message was sent. We'll reply soon.'
 });
+
+// ================================
+// Repository Access Request Handler
+// ================================
+function initRepoRequestHandler() {
+    const repoCheckbox = document.getElementById('join-repo-request');
+    const repoFields = document.getElementById('repo-request-fields');
+    
+    if (!repoCheckbox || !repoFields) return;
+    
+    // Show/hide repo request fields
+    repoCheckbox.addEventListener('change', (e) => {
+        if (e.target.checked) {
+            repoFields.style.display = 'block';
+            const repoNameField = document.getElementById('join-repo-name');
+            if (repoNameField) repoNameField.setAttribute('required', 'required');
+        } else {
+            repoFields.style.display = 'none';
+            const repoNameField = document.getElementById('join-repo-name');
+            const repoReasonField = document.getElementById('join-repo-reason');
+            if (repoNameField) {
+                repoNameField.removeAttribute('required');
+                repoNameField.value = '';
+            }
+            if (repoReasonField) repoReasonField.value = '';
+        }
+    });
+    
+    // Handle form submission for repo access requests
+    const joinForm = document.getElementById('join-form');
+    if (joinForm) {
+        // Intercept form submission to create GitHub issue
+        const originalSubmit = joinForm.onsubmit;
+        joinForm.addEventListener('submit', async (e) => {
+            if (repoCheckbox.checked) {
+                const repoName = document.getElementById('join-repo-name')?.value.trim();
+                const repoReason = document.getElementById('join-repo-reason')?.value.trim();
+                const name = document.getElementById('join-name')?.value.trim();
+                const email = document.getElementById('join-email')?.value.trim();
+                const message = document.getElementById('join-message')?.value.trim();
+                const interest = document.getElementById('join-interest')?.value;
+                
+                if (!repoName) {
+                    e.preventDefault();
+                    const errorEl = document.getElementById('join-repo-name-error');
+                    if (errorEl) errorEl.textContent = 'Repository name is required.';
+                    showToast('Please provide a repository name.', 'error');
+                    return;
+                }
+                
+                // Create GitHub issue URL
+                const repoOwner = 'charlie2233';
+                const issueTitle = encodeURIComponent(`Repository Access Request: ${repoName}`);
+                const issueBody = encodeURIComponent(`## Repository Access Request
+
+**Requested Repository:** \`${repoName}\`
+
+**Requester Information:**
+- Name: ${name}
+- Email: ${email}
+- Interest: ${interest || 'Not specified'}
+
+**Reason for Access:**
+${repoReason || 'No reason provided.'}
+
+**Additional Message:**
+${message || 'No additional message.'}
+
+---
+*This request was submitted via the Atrak website contact form.*`);
+
+                const githubIssueUrl = `https://github.com/${repoOwner}/${repoName}/issues/new?title=${issueTitle}&body=${issueBody}`;
+                
+                // Open GitHub issue creation in new tab
+                window.open(githubIssueUrl, '_blank', 'noopener,noreferrer');
+                
+                // Show info message
+                showToast('Opening GitHub issue page. Please complete the issue submission there. Your contact form will also be sent.', 'info', 8000);
+            }
+        });
+    }
+}
+
+// Initialize repo request handler when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRepoRequestHandler);
+} else {
+    initRepoRequestHandler();
+}
 
 wireAsyncForm(document.querySelector('#security-form'), {
     minMessageLength: 30,

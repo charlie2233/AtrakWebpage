@@ -144,9 +144,28 @@
                             </select>
 
                             <label for="join-message" class="suggestion-label">Message</label>
-                            <textarea id="join-message" name="message" rows="7" maxlength="1600" required placeholder="Tell us what you want to work on and any links you’d like to share."></textarea>
+                            <textarea id="join-message" name="message" rows="7" maxlength="1600" required placeholder="Tell us what you want to work on and any links you'd like to share."></textarea>
                             <div class="form-meta">
                                 <span class="form-count" data-char-count="join-message">0/1600</span>
+                            </div>
+
+                            <div class="form-checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="join-repo-request" name="repo_request" value="yes">
+                                    <span>Request Repository Access</span>
+                                </label>
+                                <p class="form-hint">Check this if you're requesting access to a private repository (like Ten Seconds VIP Manager)</p>
+                            </div>
+
+                            <div id="repo-request-fields" class="repo-request-fields" style="display: none;">
+                                <label for="join-repo-name" class="suggestion-label">Repository Name</label>
+                                <input id="join-repo-name" name="repo_name" type="text" placeholder="e.g., rork-ten-seconds-vip-manager">
+                                
+                                <label for="join-repo-reason" class="suggestion-label">Reason for Access</label>
+                                <textarea id="join-repo-reason" name="repo_reason" rows="3" maxlength="500" placeholder="Briefly explain why you need access to this repository..."></textarea>
+                                <div class="form-meta">
+                                    <span class="form-count" data-char-count="join-repo-reason">0/500</span>
+                                </div>
                             </div>
 
                             <input type="text" name="_gotcha" class="suggestion-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
