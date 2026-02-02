@@ -4,13 +4,20 @@
 
 
 // Accessibility and feature detection
-const prefersReducedMotion = typeof window !== 'undefined'
-    && typeof window.matchMedia === 'function'
-    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const hasFinePointer = typeof window !== 'undefined'
-    && typeof window.matchMedia === 'function'
-    && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-const enableHoverEffects = hasFinePointer && !prefersReducedMotion;
+// Use "any-*" queries so hybrid laptops (touch + trackpad/mouse) keep desktop effects.
+const supportsMediaQueries = typeof window !== 'undefined' && typeof window.matchMedia === 'function';
+const prefersReducedMotion = supportsMediaQueries
+    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    : false;
+const hasAnyHover = supportsMediaQueries
+    ? (window.matchMedia('(hover: hover)').matches || window.matchMedia('(any-hover: hover)').matches)
+    : true;
+const hasAnyFinePointer = supportsMediaQueries
+    ? (window.matchMedia('(pointer: fine)').matches || window.matchMedia('(any-pointer: fine)').matches)
+    : true;
+// Back-compat name used by some blocks below.
+const hasFinePointer = hasAnyFinePointer;
+const enableHoverEffects = hasAnyHover && hasAnyFinePointer && !prefersReducedMotion;
 const enableHeroParallax = enableHoverEffects;
 const supportsIntersectionObserver = typeof window !== 'undefined' && 'IntersectionObserver' in window;
 
