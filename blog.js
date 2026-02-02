@@ -9,6 +9,80 @@ let filteredPosts = [];
 let teamMembers = [];
 
 /**
+ * Content moderation - checks for inappropriate content
+ */
+const CONTENT_MODERATION = {
+    // Adult content keywords (UK 18+)
+    adultKeywords: [
+        'porn', 'pornography', 'xxx', 'nsfw', 'explicit', 'sexual', 'nude', 'naked',
+        'adult content', '18+', 'mature content', 'erotic', 'sex', 'intimate'
+    ],
+    
+    // Illegal activity keywords
+    illegalKeywords: [
+        'hack', 'hacking', 'crack', 'cracking', 'pirate', 'piracy', 'warez',
+        'illegal download', 'stolen', 'fraud', 'scam', 'phishing', 'malware',
+        'virus', 'trojan', 'drug', 'drugs', 'cocaine', 'heroin', 'marijuana',
+        'weapon', 'weapons', 'gun', 'guns', 'bomb', 'terrorism', 'terrorist'
+    ],
+    
+    // Other red flag content
+    redFlagKeywords: [
+        'violence', 'violent', 'gore', 'blood', 'kill', 'murder', 'suicide',
+        'self-harm', 'harmful', 'dangerous', 'illegal', 'unlawful'
+    ]
+};
+
+/**
+ * Check if blog post content violates moderation rules
+ */
+function checkContentModeration(post) {
+    const violations = [];
+    const content = `${post.title} ${post.excerpt} ${post.content}`.toLowerCase();
+    
+    // Check for adult content
+    const adultMatches = CONTENT_MODERATION.adultKeywords.filter(keyword => 
+        content.includes(keyword.toLowerCase())
+    );
+    if (adultMatches.length > 0) {
+        violations.push({
+            type: 'adult',
+            severity: 'high',
+            message: 'UK 18+ Content Detected',
+            keywords: adultMatches
+        });
+    }
+    
+    // Check for illegal content
+    const illegalMatches = CONTENT_MODERATION.illegalKeywords.filter(keyword => 
+        content.includes(keyword.toLowerCase())
+    );
+    if (illegalMatches.length > 0) {
+        violations.push({
+            type: 'illegal',
+            severity: 'critical',
+            message: 'Illegal Content Detected',
+            keywords: illegalMatches
+        });
+    }
+    
+    // Check for other red flags
+    const redFlagMatches = CONTENT_MODERATION.redFlagKeywords.filter(keyword => 
+        content.includes(keyword.toLowerCase())
+    );
+    if (redFlagMatches.length > 0 && violations.length === 0) {
+        violations.push({
+            type: 'redflag',
+            severity: 'medium',
+            message: 'Content Review Required',
+            keywords: redFlagMatches
+        });
+    }
+    
+    return violations.length > 0 ? violations : null;
+}
+
+/**
  * Calculate reading time from content
  */
 function calculateReadingTime(content) {
@@ -17,51 +91,6 @@ function calculateReadingTime(content) {
     return Math.ceil(words / wordsPerMinute);
 }
 
-/**
- * Check if blog post content is excessive
- * Flags posts with:
- * - More than 5000 words, OR
- * - More than 30000 characters, OR
- * - Reading time over 25 minutes
- */
-function isExcessiveContent(post) {
-    if (!post.content) return false;
-    
-    const wordCount = post.content.split(/\s+/).length;
-    const charCount = post.content.length;
-    const readingTime = post.readingTime || calculateReadingTime(post.content);
-    
-    // Thresholds for excessive content
-    const MAX_WORDS = 5000;
-    const MAX_CHARS = 30000;
-    const MAX_READING_TIME = 25; // minutes
-    
-    return wordCount > MAX_WORDS || 
-           charCount > MAX_CHARS || 
-           readingTime > MAX_READING_TIME;
-}
-
-/**
- * Get excessive content warning message
- */
-function getExcessiveContentWarning(post) {
-    if (!post.content) return null;
-    
-    const wordCount = post.content.split(/\s+/).length;
-    const charCount = post.content.length;
-    const readingTime = post.readingTime || calculateReadingTime(post.content);
-    
-    const issues = [];
-    if (wordCount > 5000) issues.push(`${wordCount.toLocaleString()} words`);
-    if (charCount > 30000) issues.push(`${(charCount / 1000).toFixed(1)}k chars`);
-    if (readingTime > 25) issues.push(`${readingTime} min read`);
-    
-    if (issues.length > 0) {
-        return `⚠️ Long content: ${issues.join(', ')}`;
-    }
-    
-    return null;
-}
 
 /**
  * Format date for display
@@ -103,6 +132,30 @@ function incrementViewCount(slug) {
         console.error('Error incrementing view count:', e);
         return 0;
     }
+}
+
+/**
+ * Create moderation badge for flagged content
+ */
+function createModerationBadge(violations) {
+    if (!violations || violations.length === 0) return '';
+    
+    // Get highest severity
+    const severityOrder = { 'critical': 3, 'high': 2, 'medium': 1 };
+    const highestViolation = violations.reduce((prev, curr) => 
+        severityOrder[curr.severity] > severityOrder[prev.severity] ? curr : prev
+    );
+    
+    const severityClass = `moderation-${highestViolation.severity}`;
+    const icon = highestViolation.severity === 'critical' ? '🚨' : 
+                 highestViolation.severity === 'high' ? '⚠️' : '🔍';
+    
+    return `
+        <div class="moderation-flag ${severityClass}" title="${highestViolation.message}">
+            <span class="moderation-icon">${icon}</span>
+            <span class="moderation-text">${highestViolation.message}</span>
+        </div>
+    `;
 }
 
 /**
@@ -197,12 +250,14 @@ function createBlogPostCard(post) {
     const authorInfo = getAuthorInfo(post.author);
     const authorAvatar = createAuthorAvatar(authorInfo);
     const authorRole = authorInfo ? authorInfo.role : 'Team Member';
-    const isExcessive = isExcessiveContent(post);
-    const warningMessage = isExcessive ? getExcessiveContentWarning(post) : null;
+    
+    // Check content moderation
+    const violations = checkContentModeration(post);
+    const moderationBadge = violations ? createModerationBadge(violations) : '';
 
     return `
-        <article class="blog-post-card glass-card reveal ${isExcessive ? 'excessive-content' : ''}">
-            ${isExcessive ? '<div class="excessive-content-flag" title="' + escapeHtml(warningMessage) + '">🚩 Excessive Content</div>' : ''}
+        <article class="blog-post-card glass-card reveal ${violations ? 'has-moderation-flag' : ''}">
+            ${moderationBadge}
             <a href="blog/blog-post.html?slug=${encodeURIComponent(post.slug)}" class="blog-post-link">
                 <div class="blog-post-image-wrapper">
                     ${featuredImage}
@@ -212,7 +267,6 @@ function createBlogPostCard(post) {
                         <span class="blog-post-date">Published ${formatDate(post.date)}</span>
                         <span class="blog-post-reading-time">${post.readingTime || calculateReadingTime(post.content)} min read</span>
                         <span class="blog-post-views">👁️ ${getViewCount(post.slug)} views</span>
-                        ${isExcessive ? '<span class="blog-post-warning">⚠️ Very Long</span>' : ''}
                     </div>
                     <h3 class="blog-post-title">${escapeHtml(post.title)}</h3>
                     <p class="blog-post-excerpt">${escapeHtml(post.excerpt)}</p>
@@ -339,6 +393,21 @@ function filterPosts(selectedTag = null) {
     });
 
     renderBlogPosts(filteredPosts);
+    
+    // Update moderation notice
+    checkAndShowModerationNotice(filteredPosts);
+}
+
+/**
+ * Check for moderated content and show notice
+ */
+function checkAndShowModerationNotice(posts) {
+    const hasFlaggedContent = posts.some(post => checkContentModeration(post) !== null);
+    const notice = document.getElementById('moderation-notice');
+    
+    if (notice) {
+        notice.style.display = hasFlaggedContent ? 'block' : 'none';
+    }
 }
 
 /**
@@ -394,6 +463,9 @@ async function initBlog() {
         // Initial render
         filteredPosts = [...allBlogPosts];
         renderBlogPosts(filteredPosts);
+        
+        // Check for moderation flags and show notice if needed
+        checkAndShowModerationNotice(allBlogPosts);
 
         // Search input handler
         const searchInput = document.getElementById('blog-search-input');
