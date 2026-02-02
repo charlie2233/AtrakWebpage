@@ -2,7 +2,8 @@
 // BLOG RENDERING & FILTERING
 // ============================================
 
-const BLOG_POSTS_PATH = 'data/blog-posts.json';
+const BLOG_POSTS_PREVIEW_PATH = 'data/blog-posts-preview.json';
+const BLOG_POSTS_DIR = 'data/blog-posts/';
 const TEAM_MEMBERS_PATH = 'data/team-members.json';
 let allBlogPosts = [];
 let filteredPosts = [];
@@ -35,10 +36,13 @@ const CONTENT_MODERATION = {
 
 /**
  * Check if blog post content violates moderation rules
+ * Works with preview data (title, excerpt) or full post (with content)
  */
 function checkContentModeration(post) {
     const violations = [];
-    const content = `${post.title} ${post.excerpt} ${post.content}`.toLowerCase();
+    const content = post.content 
+        ? `${post.title} ${post.excerpt} ${post.content}`.toLowerCase()
+        : `${post.title} ${post.excerpt}`.toLowerCase();
     
     // Check for adult content
     const adultMatches = CONTENT_MODERATION.adultKeywords.filter(keyword => 
@@ -251,7 +255,7 @@ function createBlogPostCard(post) {
     const authorAvatar = createAuthorAvatar(authorInfo);
     const authorRole = authorInfo ? authorInfo.role : 'Team Member';
     
-    // Check content moderation
+    // Check content moderation (using preview data - title, excerpt)
     const violations = checkContentModeration(post);
     const moderationBadge = violations ? createModerationBadge(violations) : '';
 
@@ -415,9 +419,9 @@ function checkAndShowModerationNotice(posts) {
  */
 async function initBlog() {
     try {
-        // Load team members and blog posts in parallel
+        // Load team members and blog posts preview in parallel
         const [postsResponse, teamResponse] = await Promise.all([
-            fetch(BLOG_POSTS_PATH),
+            fetch(BLOG_POSTS_PREVIEW_PATH),
             fetch(TEAM_MEMBERS_PATH)
         ]);
 
@@ -429,9 +433,9 @@ async function initBlog() {
             }
         }
 
-        // Load blog posts
+        // Load blog posts preview (without full content)
         if (!postsResponse.ok) {
-            console.warn('Blog posts data not found');
+            console.warn('Blog posts preview data not found');
             document.getElementById('blog-posts-grid').innerHTML = '<p class="empty-message">No blog posts available.</p>';
             return;
         }
@@ -442,12 +446,8 @@ async function initBlog() {
             return;
         }
 
-        // Calculate reading times if not provided
-        allBlogPosts.forEach(post => {
-            if (!post.readingTime && post.content) {
-                post.readingTime = calculateReadingTime(post.content);
-            }
-        });
+        // Note: Reading times should be in preview data
+        // If not provided, we'll calculate when loading full post
 
         // Render tag filters
         renderTagFilters(allBlogPosts);

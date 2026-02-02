@@ -1839,19 +1839,27 @@ async function loadSyncStatus() {
 
 // Auto-initialize
 function initGitHubFeatures() {
-    // Always load sync status
+    const schedule = (fn) => {
+        if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+            window.requestIdleCallback(() => fn(), { timeout: 1200 });
+        } else {
+            setTimeout(fn, 0);
+        }
+    };
+
+    // Always load sync status (cheap)
     loadSyncStatus();
     
-    // Always render live activity if element exists
-    renderLiveActivity();
-    renderWeeklyHighlights();
-    renderReleasesFeed();
+    // Defer heavier rendering to idle time so core interactions feel instant
+    schedule(renderLiveActivity);
+    schedule(renderWeeklyHighlights);
+    schedule(renderReleasesFeed);
     
     // Only auto-load More Projects if the tab is active (visible) on page load
     const moreProjectsGrid = document.getElementById('more-projects-grid');
     const moreTab = document.getElementById('more-tab');
     if (moreProjectsGrid && moreTab && moreTab.classList.contains('active')) {
-        renderMoreProjects();
+        schedule(renderMoreProjects);
     }
 }
 

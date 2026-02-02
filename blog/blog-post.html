@@ -104,13 +104,10 @@
             }
 
             try {
-                // Load blog posts
-                const postsResponse = await fetch('../data/blog-posts.json');
-                if (!postsResponse.ok) throw new Error('Failed to load posts');
-                const posts = await postsResponse.json();
-                
-                // Find post by slug
-                const post = posts.find(p => p.slug === slug);
+                // Load individual blog post
+                const postResponse = await fetch(`../data/blog-posts/${slug}.json`);
+                if (!postResponse.ok) throw new Error('Failed to load post');
+                const post = await postResponse.json();
                 if (!post) {
                     contentEl.innerHTML = '<div class="container"><div class="glass-card"><h1>Post Not Found</h1><p>The blog post you\'re looking for doesn\'t exist.</p><a href="../blog.html" class="btn btn-primary">Back to Blog</a></div></div>';
                     return;

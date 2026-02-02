@@ -5,14 +5,52 @@
     <link>https://atrak.dev/blog.html</link>
     <description>Insights, tutorials, and stories from building real products</description>
     <language>en-US</language>
-    <lastBuildDate>Mon, 15 Jan 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 02 Feb 2026 20:06:19 -0000</lastBuildDate>
     <atom:link href="https://atrak.dev/blog/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>C++ Performance Optimization: From Theory to Practice</title>
+      <link>https://atrak.dev/blog/c-plus-plus-performance-optimization.html</link>
+      <guid isPermaLink="true">https://atrak.dev/blog/c-plus-plus-performance-optimization.html</guid>
+      <description>Deep dive into C++ optimization techniques we use in production systems. Memory management, cache efficiency, and modern C++20 features that actually matter.</description>
+      <pubDate>Tue, 20 Jan 2026 00:00:00 -0000</pubDate>
+      <author>Yannon Chang</author>
+      <category>C++</category>
+      <category>Performance</category>
+      <category>Systems Programming</category>
+      <category>Optimization</category>
+    </item>
+    <item>
+      <title>Building Production Computer Vision Pipelines in Python</title>
+      <link>https://atrak.dev/blog/python-computer-vision-pipeline.html</link>
+      <guid isPermaLink="true">https://atrak.dev/blog/python-computer-vision-pipeline.html</guid>
+      <description>How we built Hoops Clips: a complete guide to production-ready computer vision with PyTorch, OpenCV, and proper error handling.</description>
+      <pubDate>Sun, 18 Jan 2026 00:00:00 -0000</pubDate>
+      <author>Charlie Han</author>
+      <category>Python</category>
+      <category>Computer Vision</category>
+      <category>PyTorch</category>
+      <category>OpenCV</category>
+      <category>Production</category>
+    </item>
+    <item>
+      <title>Building Accessible React Native Apps: Lessons from GuidePup</title>
+      <link>https://atrak.dev/blog/react-native-accessibility-guidepup.html</link>
+      <guid isPermaLink="true">https://atrak.dev/blog/react-native-accessibility-guidepup.html</guid>
+      <description>A comprehensive guide to accessibility in React Native, covering VoiceOver, semantic HTML, and building apps that work for everyone.</description>
+      <pubDate>Fri, 16 Jan 2026 00:00:00 -0000</pubDate>
+      <author>Charlie Han</author>
+      <category>React Native</category>
+      <category>Accessibility</category>
+      <category>iOS</category>
+      <category>Mobile</category>
+      <category>Inclusive Design</category>
+    </item>
     <item>
       <title>Building GuidePup: An Accessibility-First Approach</title>
       <link>https://atrak.dev/blog/building-guidepup-accessibility-first.html</link>
       <guid isPermaLink="true">https://atrak.dev/blog/building-guidepup-accessibility-first.html</guid>
       <description>How we built an iOS app for blind users using GPT-4 Vision and React Native, prioritizing accessibility from day one.</description>
-      <pubDate>Thu, 15 Jan 2026 00:00:00 GMT</pubDate>
+      <pubDate>Thu, 15 Jan 2026 00:00:00 -0000</pubDate>
       <author>Charlie Han</author>
       <category>iOS</category>
       <category>Accessibility</category>
@@ -24,7 +62,7 @@
       <link>https://atrak.dev/blog/ten-seconds-vip-manager-production.html</link>
       <guid isPermaLink="true">https://atrak.dev/blog/ten-seconds-vip-manager-production.html</guid>
       <description>What we learned building and deploying a real-world restaurant management system used daily in production.</description>
-      <pubDate>Sat, 10 Jan 2026 00:00:00 GMT</pubDate>
+      <pubDate>Sat, 10 Jan 2026 00:00:00 -0000</pubDate>
       <author>Charlie Han</author>
       <category>Full-Stack</category>
       <category>React</category>
@@ -36,7 +74,7 @@
       <link>https://atrak.dev/blog/ai-predator-simulation-emergent-behaviors.html</link>
       <guid isPermaLink="true">https://atrak.dev/blog/ai-predator-simulation-emergent-behaviors.html</guid>
       <description>Exploring how simple rules can create complex, realistic hunting behaviors in our Python-based ecosystem simulation.</description>
-      <pubDate>Mon, 05 Jan 2026 00:00:00 GMT</pubDate>
+      <pubDate>Mon, 05 Jan 2026 00:00:00 -0000</pubDate>
       <author>Charlie Han</author>
       <category>AI</category>
       <category>Python</category>
@@ -45,4 +83,3 @@
     </item>
   </channel>
 </rss>
-
