@@ -14,7 +14,7 @@ A modern, minimal tech team website + project hub (atrak.dev) featuring a clean 
 ### Sections
 - 🏠 **Hero Section**: Eye-catching landing with gradient text and floating card animations
 - 📊 **Stats Display**: Animated counter showing key metrics
-- 📈 **Impact Analytics**: JSON-driven metrics and recent wins cards
+- 📈 **Impact Analytics**: Auto-aggregated metrics, trend chart, and release milestones
 - 🚀 **Projects Showcase**: Notable technical projects with modern card layouts
 - 📖 **About Section**: Company information with interactive code preview
 - 👥 **Leadership Team**: Team member profiles with social links

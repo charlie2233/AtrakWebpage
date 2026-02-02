@@ -410,28 +410,232 @@ const renderImpactReveals = (root) => {
     }
 };
 
+const fetchJsonSafe = async (path) => {
+    try {
+        const response = await fetch(path);
+        if (!response.ok) return null;
+        return await response.json();
+    } catch (_) {
+        return null;
+    }
+};
+
+const fetchTextSafe = async (path) => {
+    try {
+        const response = await fetch(path);
+        if (!response.ok) return null;
+        return await response.text();
+    } catch (_) {
+        return null;
+    }
+};
+
+const parseMetricValue = (metrics, label) => {
+    if (!Array.isArray(metrics)) return null;
+    const regex = new RegExp(`${label}\\s*:?\\s*(\\d+)`, 'i');
+    for (let i = 0; i < metrics.length; i += 1) {
+        const entry = metrics[i];
+        if (typeof entry !== 'string') continue;
+        const match = entry.match(regex);
+        if (match && match[1]) return Number.parseInt(match[1], 10);
+    }
+    return null;
+};
+
+const buildTrendData = (weeklyHistory) => {
+    if (!Array.isArray(weeklyHistory)) return [];
+    return weeklyHistory.map((week) => {
+        const commitCount = parseMetricValue(week.metrics, 'Commits');
+        return {
+            label: week.dateRange || '',
+            value: Number.isFinite(commitCount) ? commitCount : 0
+        };
+    }).filter(item => item.label || Number.isFinite(item.value));
+};
+
+const renderTrendChart = (container, summaryEl, data) => {
+    if (!container) return;
+    if (!Array.isArray(data) || data.length < 2) {
+        container.innerHTML = '<p class="empty-message">No trend data yet.</p>';
+        if (summaryEl) summaryEl.textContent = '';
+        return;
+    }
+
+    const trimmed = data.slice(-12);
+    const values = trimmed.map(item => item.value);
+    const maxValue = Math.max.apply(null, values.concat([1]));
+    const minValue = Math.min.apply(null, values.concat([0]));
+    const range = maxValue - minValue || 1;
+
+    const width = 600;
+    const height = 160;
+    const padding = 20;
+    const step = trimmed.length > 1 ? (width - padding * 2) / (trimmed.length - 1) : 0;
+
+    const points = trimmed.map((item, index) => {
+        const x = padding + (index * step);
+        const y = height - padding - ((item.value - minValue) / range) * (height - padding * 2);
+        return { x, y };
+    });
+
+    const linePath = points.map((point, index) => {
+        const prefix = index === 0 ? 'M' : 'L';
+        return `${prefix}${point.x.toFixed(1)},${point.y.toFixed(1)}`;
+    }).join(' ');
+
+    const areaPath = `M${points[0].x.toFixed(1)},${(height - padding).toFixed(1)} ` +
+        points.map(point => `L${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(' ') +
+        ` L${points[points.length - 1].x.toFixed(1)},${(height - padding).toFixed(1)} Z`;
+
+    container.innerHTML = `
+        <svg viewBox="0 0 ${width} ${height}" role="presentation" aria-hidden="true">
+            <defs>
+                <linearGradient id="impactTrendGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="rgba(59, 130, 246, 0.35)"></stop>
+                    <stop offset="100%" stop-color="rgba(59, 130, 246, 0)"></stop>
+                </linearGradient>
+            </defs>
+            <path d="${areaPath}" fill="url(#impactTrendGradient)"></path>
+            <path d="${linePath}" fill="none" stroke="rgba(59, 130, 246, 0.9)" stroke-width="2"></path>
+            <circle cx="${points[points.length - 1].x.toFixed(1)}" cy="${points[points.length - 1].y.toFixed(1)}" r="3" fill="rgba(139, 92, 246, 0.9)"></circle>
+        </svg>
+    `;
+
+    if (summaryEl) {
+        const total = trimmed.reduce((sum, item) => sum + item.value, 0);
+        const average = Math.round(total / trimmed.length);
+        summaryEl.innerHTML = `
+            <span>Weeks: ${trimmed.length}</span>
+            <span>Latest: ${trimmed[trimmed.length - 1].value}</span>
+            <span>Avg: ${average}</span>
+            <span>Peak: ${maxValue}</span>
+        `;
+    }
+};
+
+const parseReleaseMilestones = (htmlText) => {
+    if (!htmlText) return [];
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlText, 'text/html');
+    const posts = Array.from(doc.querySelectorAll('.release-post'));
+
+    return posts.map(post => {
+        const dateEl = post.querySelector('.release-date');
+        const versionEl = post.querySelector('.release-version');
+        const shippedItems = post.querySelectorAll('.release-section.shipped .release-list li');
+        const stats = Array.from(post.querySelectorAll('.release-section.stats .stat-item'));
+        const statText = stats.slice(0, 2).map(stat => {
+            const valueEl = stat.querySelector('.stat-value');
+            const labelEl = stat.querySelector('.stat-label');
+            if (!valueEl || !labelEl) return '';
+            return `${valueEl.textContent.trim()} ${labelEl.textContent.trim()}`;
+        }).filter(Boolean);
+        const id = post.getAttribute('id') || '';
+
+        const date = dateEl ? dateEl.textContent.trim() : '';
+        const version = versionEl ? versionEl.textContent.trim() : '';
+        const shippedCount = shippedItems.length;
+
+        return {
+            title: [date, version].filter(Boolean).join(' - '),
+            shippedCount,
+            stats: statText,
+            link: id ? `releases.html#${id}` : 'releases.html'
+        };
+    }).filter(item => item.title);
+};
+
+const renderMilestones = (container, milestones) => {
+    if (!container) return;
+    if (!Array.isArray(milestones) || milestones.length === 0) {
+        container.innerHTML = '<li class="empty-message">No milestones yet.</li>';
+        return;
+    }
+
+    container.innerHTML = milestones.slice(0, 4).map(item => {
+        const metaParts = [];
+        if (Number.isFinite(item.shippedCount) && item.shippedCount > 0) {
+            metaParts.push(`${item.shippedCount} shipped`);
+        }
+        if (Array.isArray(item.stats) && item.stats.length) {
+            metaParts.push(item.stats.join(' | '));
+        }
+
+        return `
+            <li class="impact-milestone-item">
+                <div class="impact-milestone-title">${escapeHtml(item.title)}</div>
+                ${metaParts.length ? `<div class="impact-milestone-meta">${escapeHtml(metaParts.join(' | '))}</div>` : ''}
+                <a class="impact-milestone-link" href="${escapeHtml(item.link)}">View release</a>
+            </li>
+        `;
+    }).join('');
+};
+
 async function loadImpactAnalytics() {
     const metricsGrid = document.getElementById('impact-metrics');
     const winsGrid = document.getElementById('impact-wins');
     const updatedEl = document.getElementById('impact-updated');
+    const trendChart = document.getElementById('impact-trend-chart');
+    const trendSummary = document.getElementById('impact-trend-summary');
+    const milestonesList = document.getElementById('impact-milestones');
 
-    if (!metricsGrid && !winsGrid) return;
+    if (!metricsGrid && !winsGrid && !trendChart && !milestonesList) return;
 
     try {
-        const response = await fetch('data/impact-analytics.json');
-        if (!response.ok) {
-            if (metricsGrid) metricsGrid.innerHTML = '<p class="error-message">Impact metrics unavailable.</p>';
-            if (winsGrid) winsGrid.innerHTML = '<p class="error-message">Wins unavailable.</p>';
-            return;
+        const [
+            manualData,
+            githubMeta,
+            githubWeekly,
+            weeklyHistory,
+            releaseHtml
+        ] = await Promise.all([
+            fetchJsonSafe('data/impact-analytics.json'),
+            fetchJsonSafe('data/github-meta.json'),
+            fetchJsonSafe('data/github-weekly.json'),
+            fetchJsonSafe('data/weekly-history.json'),
+            fetchTextSafe('releases.html')
+        ]);
+
+        const wins = manualData && Array.isArray(manualData.wins) ? manualData.wins : [];
+        const weeklyTrend = buildTrendData(weeklyHistory);
+        const milestones = parseReleaseMilestones(releaseHtml);
+
+        const metrics = [];
+        if (githubMeta && typeof githubMeta.repoCount === 'number') {
+            metrics.push({
+                value: String(githubMeta.repoCount),
+                label: 'Repos tracked',
+                description: 'Public repos synced from GitHub.'
+            });
+        }
+        if (githubMeta && typeof githubMeta.totalStars === 'number') {
+            metrics.push({
+                value: String(githubMeta.totalStars),
+                label: 'GitHub stars',
+                description: 'Stars across tracked repos.'
+            });
+        }
+        if (githubWeekly && typeof githubWeekly.totalCommitContributions === 'number') {
+            metrics.push({
+                value: String(githubWeekly.totalCommitContributions),
+                label: 'Weekly commits',
+                description: 'Latest GitHub activity window.'
+            });
+        }
+        if (Array.isArray(weeklyHistory)) {
+            metrics.push({
+                value: String(weeklyHistory.length),
+                label: 'Weekly logs',
+                description: 'Release cadence tracked.'
+            });
         }
 
-        const data = await response.json();
-        const metrics = Array.isArray(data.metrics) ? data.metrics : [];
-        const wins = Array.isArray(data.wins) ? data.wins : [];
+        const fallbackMetrics = manualData && Array.isArray(manualData.metrics) ? manualData.metrics : [];
+        const finalMetrics = metrics.length ? metrics : fallbackMetrics;
 
         if (metricsGrid) {
-            if (metrics.length) {
-                metricsGrid.innerHTML = metrics
+            if (finalMetrics.length) {
+                metricsGrid.innerHTML = finalMetrics
                     .filter(metric => metric && metric.value !== undefined && metric.label)
                     .map(metric => {
                         const value = metric.value === null || metric.value === undefined ? '' : String(metric.value);
@@ -488,21 +692,31 @@ async function loadImpactAnalytics() {
             }
         }
 
+        renderTrendChart(trendChart, trendSummary, weeklyTrend);
+        renderMilestones(milestonesList, milestones);
+
         if (updatedEl) {
             const parts = [];
-            if (data.updated) {
-                const formatted = formatImpactDate(String(data.updated));
+            if (githubMeta && githubMeta.updatedAt) {
+                const formatted = formatImpactDate(String(githubMeta.updatedAt));
+                if (formatted) parts.push(`Updated ${formatted}`);
+            } else if (manualData && manualData.updated) {
+                const formatted = formatImpactDate(String(manualData.updated));
                 if (formatted) parts.push(`Updated ${formatted}`);
             }
-            if (data.source) {
-                parts.push(`Source: ${String(data.source)}`);
+            if (githubMeta && githubMeta.source) {
+                parts.push(`Source: ${String(githubMeta.source)}`);
+            } else if (manualData && manualData.source) {
+                parts.push(`Source: ${String(manualData.source)}`);
             }
-            updatedEl.textContent = parts.join(' • ');
+            updatedEl.textContent = parts.join(' | ');
         }
     } catch (error) {
         console.error('Failed to load impact analytics:', error);
         if (metricsGrid) metricsGrid.innerHTML = '<p class="error-message">Unable to load impact metrics.</p>';
         if (winsGrid) winsGrid.innerHTML = '<p class="error-message">Unable to load wins.</p>';
+        if (trendChart) trendChart.innerHTML = '<p class="error-message">Unable to load trend data.</p>';
+        if (milestonesList) milestonesList.innerHTML = '<li class="error-message">Unable to load milestones.</li>';
     }
 }
 
@@ -1324,16 +1538,68 @@ const initContactTabs = () => {
         if (!link) return;
         const desiredTab = (link.dataset.openContactTab || '').trim();
         if (!desiredTab) return;
-        setActiveTab(desiredTab);
+        
+        // If link has href with #contact, scroll to contact section first
+        const href = link.getAttribute('href');
+        if (href && href.includes('#contact')) {
+            e.preventDefault();
+            const contactSection = document.getElementById('contact');
+            if (contactSection) {
+                const navHeight = document.querySelector('.navbar')?.getBoundingClientRect().height || 0;
+                const offsetTop = contactSection.getBoundingClientRect().top + window.pageYOffset - navHeight - 16;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+                // Wait for scroll, then open tab
+                setTimeout(() => setActiveTab(desiredTab), 300);
+            } else {
+                setActiveTab(desiredTab);
+            }
+        } else {
+            setActiveTab(desiredTab);
+        }
     });
 
-    const initialHash = (window.location && typeof window.location.hash === 'string')
-        ? window.location.hash.toLowerCase()
-        : '';
+    // Handle hash on page load and hash changes
+    const handleHash = () => {
+        const hash = (window.location && typeof window.location.hash === 'string')
+            ? window.location.hash.toLowerCase()
+            : '';
+        
+        if (hash === '#contact' || hash === '#contact-apply' || hash === '#apply') {
+            const contactSection = document.getElementById('contact');
+            if (contactSection) {
+                const navHeight = document.querySelector('.navbar')?.getBoundingClientRect().height || 0;
+                const offsetTop = contactSection.getBoundingClientRect().top + window.pageYOffset - navHeight - 16;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+            
+            if (hash === '#contact-apply' || hash === '#apply') {
+                setActiveTab('apply');
+            } else {
+                // Check if there's a data-open-contact-tab in the URL or use default
+                const urlParams = new URLSearchParams(window.location.search);
+                const tab = urlParams.get('tab') || 'suggestion';
+                setActiveTab(tab);
+            }
+        }
+    };
+
     const initialActive = tabs.find(tab => tab.classList.contains('active'));
     setActiveTab(initialActive ? initialActive.dataset.tab : tabs[0].dataset.tab);
-
-    if (initialHash === '#contact-apply' || initialHash === '#apply') setActiveTab('apply');
+    
+    // Handle initial hash
+    handleHash();
+    
+    // Handle hash changes (when navigating from other pages)
+    window.addEventListener('hashchange', handleHash);
+    
+    // Also check hash after a short delay (for page loads from other pages)
+    setTimeout(handleHash, 100);
 };
 
 if (document.readyState === 'loading') {

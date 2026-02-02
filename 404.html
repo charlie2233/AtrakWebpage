@@ -41,6 +41,50 @@
             margin-left: auto;
             margin-right: auto;
         }
+        .error-icons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin: 24px 0 32px;
+        }
+        .error-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+            animation: iconFloat 6s ease-in-out infinite;
+        }
+        .error-icon:nth-child(2) {
+            animation-delay: -2s;
+        }
+        .error-icon:nth-child(3) {
+            animation-delay: -4s;
+        }
+        .error-icon img {
+            width: 60%;
+            height: 60%;
+            object-fit: contain;
+            filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+        }
+        @keyframes iconFloat {
+            0% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-6px) scale(1.02);
+            }
+            100% {
+                transform: translateY(0) scale(1);
+            }
+        }
     </style>
 </head>
 <body>
@@ -73,6 +117,17 @@
                 <div class="error-content">
                     <h1>404</h1>
                     <h2>Page Not Found</h2>
+                    <div class="error-icons" aria-hidden="true">
+                        <div class="error-icon">
+                            <img src="assets/guidepup-icon.png" alt="">
+                        </div>
+                        <div class="error-icon">
+                            <img src="assets/hoops_ClipsIcon.png" alt="">
+                        </div>
+                        <div class="error-icon">
+                            <img src="assets/ten-seconds-icon.jpg" alt="">
+                        </div>
+                    </div>
                     <p>The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
                     <a href="index.html" class="btn btn-primary">Back to Home</a>
                 </div>

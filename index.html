@@ -122,9 +122,15 @@
                 </div>
             </div>
             <div class="hero-visual reveal">
-                <div class="floating-card card-1"></div>
-                <div class="floating-card card-2"></div>
-                <div class="floating-card card-3"></div>
+                <div class="floating-card card-1">
+                    <img src="assets/guidepup-icon.png" alt="GuidePup icon" loading="lazy">
+                </div>
+                <div class="floating-card card-2">
+                    <img src="assets/hoops_ClipsIcon.png" alt="Hoops Clips icon" loading="lazy">
+                </div>
+                <div class="floating-card card-3">
+                    <img src="assets/ten-seconds-icon.jpg" alt="Ten Seconds icon" loading="lazy">
+                </div>
             </div>
         </div>
         <div class="scroll-indicator">
@@ -178,6 +184,27 @@
                     </div>
                     <div class="impact-wins-grid" id="impact-wins" aria-live="polite">
                         <p class="loading-message">Loading wins...</p>
+                    </div>
+                </div>
+                <div class="impact-dashboard">
+                    <div class="impact-trend-card glass-card">
+                        <div class="impact-card-header">
+                            <h3>Weekly Momentum</h3>
+                            <p>Commits trend from weekly logs</p>
+                        </div>
+                        <div class="impact-trend-chart" id="impact-trend-chart" role="img" aria-label="Weekly commits trend chart">
+                            <p class="loading-message">Loading trend...</p>
+                        </div>
+                        <div class="impact-trend-summary" id="impact-trend-summary"></div>
+                    </div>
+                    <div class="impact-milestones-card glass-card">
+                        <div class="impact-card-header">
+                            <h3>Release Milestones</h3>
+                            <p>Auto-collected from release notes</p>
+                        </div>
+                        <ul class="impact-milestones-list" id="impact-milestones" aria-live="polite">
+                            <li class="loading-message">Loading milestones...</li>
+                        </ul>
                     </div>
                 </div>
                 <div class="impact-updated" id="impact-updated" aria-live="polite"></div>

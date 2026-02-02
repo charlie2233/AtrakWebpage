@@ -3,8 +3,10 @@
 // ============================================
 
 const BLOG_POSTS_PATH = 'data/blog-posts.json';
+const TEAM_MEMBERS_PATH = 'data/team-members.json';
 let allBlogPosts = [];
 let filteredPosts = [];
+let teamMembers = [];
 
 /**
  * Calculate reading time from content
@@ -37,6 +39,37 @@ function escapeHtml(text) {
 }
 
 /**
+ * Get author info from team members
+ */
+function getAuthorInfo(authorName) {
+    if (!Array.isArray(teamMembers) || !authorName) return null;
+    return teamMembers.find(member => member.name === authorName) || null;
+}
+
+/**
+ * Create author avatar HTML
+ */
+function createAuthorAvatar(authorInfo) {
+    if (!authorInfo || !authorInfo.avatar) {
+        // Fallback avatar
+        return `
+            <div class="blog-author-avatar" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.35), rgba(139, 92, 246, 0.25));">
+                <span>?</span>
+            </div>
+        `;
+    }
+    
+    const initials = authorInfo.avatar.initials || '?';
+    const gradient = authorInfo.avatar.gradient || 'linear-gradient(135deg, rgba(59, 130, 246, 0.35), rgba(139, 92, 246, 0.25))';
+    
+    return `
+        <div class="blog-author-avatar" style="background: ${gradient};">
+            <span>${escapeHtml(initials)}</span>
+        </div>
+    `;
+}
+
+/**
  * Create blog post card HTML
  */
 function createBlogPostCard(post) {
@@ -49,6 +82,11 @@ function createBlogPostCard(post) {
     const tags = post.tags.map(tag => 
         `<span class="tag blog-tag">${escapeHtml(tag)}</span>`
     ).join('');
+
+    // Get author info
+    const authorInfo = getAuthorInfo(post.author);
+    const authorAvatar = createAuthorAvatar(authorInfo);
+    const authorRole = authorInfo ? authorInfo.role : 'Team Member';
 
     return `
         <article class="blog-post-card glass-card reveal">
@@ -67,7 +105,13 @@ function createBlogPostCard(post) {
                         <div class="blog-post-tags">
                             ${tags}
                         </div>
-                        <span class="blog-post-author">By ${escapeHtml(post.author)}</span>
+                        <div class="blog-post-author-info">
+                            ${authorAvatar}
+                            <div class="blog-author-details">
+                                <span class="blog-post-author-name">${escapeHtml(post.author)}</span>
+                                <span class="blog-post-author-role">${escapeHtml(authorRole)}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </a>
@@ -182,14 +226,28 @@ function filterPosts(selectedTag = null) {
  */
 async function initBlog() {
     try {
-        const response = await fetch(BLOG_POSTS_PATH);
-        if (!response.ok) {
+        // Load team members and blog posts in parallel
+        const [postsResponse, teamResponse] = await Promise.all([
+            fetch(BLOG_POSTS_PATH),
+            fetch(TEAM_MEMBERS_PATH)
+        ]);
+
+        // Load team members
+        if (teamResponse.ok) {
+            teamMembers = await teamResponse.json();
+            if (!Array.isArray(teamMembers)) {
+                teamMembers = [];
+            }
+        }
+
+        // Load blog posts
+        if (!postsResponse.ok) {
             console.warn('Blog posts data not found');
             document.getElementById('blog-posts-grid').innerHTML = '<p class="empty-message">No blog posts available.</p>';
             return;
         }
 
-        allBlogPosts = await response.json();
+        allBlogPosts = await postsResponse.json();
         if (!Array.isArray(allBlogPosts) || allBlogPosts.length === 0) {
             document.getElementById('blog-posts-grid').innerHTML = '<p class="empty-message">No blog posts available.</p>';
             return;
