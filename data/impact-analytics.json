@@ -1,0 +1,60 @@
+{
+  "updated": "2026-01-23",
+  "source": "Internal project tracker + release logs",
+  "metrics": [
+    {
+      "value": "4+",
+      "label": "Notable projects shipped",
+      "description": "Accessibility, CV, and ops tooling delivered end-to-end."
+    },
+    {
+      "value": "1",
+      "label": "App Store submission",
+      "description": "GuidePup submitted for review."
+    },
+    {
+      "value": "1",
+      "label": "Live business deployment",
+      "description": "Ten Seconds VIP Manager running in production."
+    },
+    {
+      "value": "26",
+      "label": "Weekly updates logged",
+      "description": "Continuous shipping cadence tracked in releases."
+    }
+  ],
+  "wins": [
+    {
+      "title": "GuidePup submitted to the App Store",
+      "project": "GuidePup",
+      "description": "Accessibility-first vision assistant reached review-ready milestone.",
+      "date": "2026-01-05",
+      "link": "projects/guidepup.html",
+      "linkLabel": "View project"
+    },
+    {
+      "title": "Ten Seconds VIP Manager launched",
+      "project": "Ten Seconds",
+      "description": "Live deployment supporting real-world operations and staff workflows.",
+      "date": "2025-12-12",
+      "link": "projects/ten-seconds-vip-manager.html",
+      "linkLabel": "See case study"
+    },
+    {
+      "title": "Hoops Clips pipeline shipped",
+      "project": "Hoops Clips",
+      "description": "Computer-vision highlights pipeline delivered for internal trials.",
+      "date": "2025-11-18",
+      "link": "projects/hoops-clips.html",
+      "linkLabel": "Project details"
+    },
+    {
+      "title": "Atrak Agent demoed in public",
+      "project": "Atrak Agent",
+      "description": "Local-first agent demoed with live memory + tool workflows.",
+      "date": "2025-10-22",
+      "link": "projects/atrak-agent.html",
+      "linkLabel": "Read more"
+    }
+  ]
+}

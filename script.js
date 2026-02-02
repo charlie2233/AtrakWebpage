@@ -364,6 +364,155 @@ if (supportsIntersectionObserver) {
 }
 
 // ================================
+// Impact Analytics
+// ================================
+const formatImpactDate = (input) => {
+    if (!input) return '';
+    if (input instanceof Date) {
+        if (Number.isNaN(input.getTime())) return '';
+        return input.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+    if (typeof input !== 'string') return '';
+
+    const raw = input.trim();
+    if (!raw) return '';
+
+    let dateObj = null;
+    let showDay = false;
+
+    if (/^\d{4}-\d{2}$/.test(raw)) {
+        dateObj = new Date(`${raw}-01T00:00:00`);
+    } else if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+        dateObj = new Date(`${raw}T00:00:00`);
+        showDay = true;
+    } else {
+        dateObj = new Date(raw);
+        showDay = /\d{2}/.test(raw);
+    }
+
+    if (dateObj && !Number.isNaN(dateObj.getTime())) {
+        const options = showDay
+            ? { month: 'short', day: 'numeric', year: 'numeric' }
+            : { month: 'short', year: 'numeric' };
+        return dateObj.toLocaleDateString('en-US', options);
+    }
+
+    return raw;
+};
+
+const renderImpactReveals = (root) => {
+    if (!root) return;
+    const revealElements = root.querySelectorAll('.reveal');
+    if (window.revealObserver) {
+        revealElements.forEach(el => window.revealObserver.observe(el));
+    } else {
+        revealElements.forEach(el => el.classList.add('active'));
+    }
+};
+
+async function loadImpactAnalytics() {
+    const metricsGrid = document.getElementById('impact-metrics');
+    const winsGrid = document.getElementById('impact-wins');
+    const updatedEl = document.getElementById('impact-updated');
+
+    if (!metricsGrid && !winsGrid) return;
+
+    try {
+        const response = await fetch('data/impact-analytics.json');
+        if (!response.ok) {
+            if (metricsGrid) metricsGrid.innerHTML = '<p class="error-message">Impact metrics unavailable.</p>';
+            if (winsGrid) winsGrid.innerHTML = '<p class="error-message">Wins unavailable.</p>';
+            return;
+        }
+
+        const data = await response.json();
+        const metrics = Array.isArray(data.metrics) ? data.metrics : [];
+        const wins = Array.isArray(data.wins) ? data.wins : [];
+
+        if (metricsGrid) {
+            if (metrics.length) {
+                metricsGrid.innerHTML = metrics
+                    .filter(metric => metric && metric.value !== undefined && metric.label)
+                    .map(metric => {
+                        const value = metric.value === null || metric.value === undefined ? '' : String(metric.value);
+                        const label = String(metric.label);
+                        const description = metric.description ? String(metric.description) : '';
+                        return `
+                            <div class="impact-metric-card glass-card reveal">
+                                <div class="impact-metric-value">${escapeHtml(value)}</div>
+                                <div class="impact-metric-label">${escapeHtml(label)}</div>
+                                ${description ? `<div class="impact-metric-description">${escapeHtml(description)}</div>` : ''}
+                            </div>
+                        `;
+                    })
+                    .join('');
+                renderImpactReveals(metricsGrid);
+            } else {
+                metricsGrid.innerHTML = '<p class="empty-message">No impact metrics yet.</p>';
+            }
+        }
+
+        if (winsGrid) {
+            if (wins.length) {
+                winsGrid.innerHTML = wins
+                    .filter(win => win && win.title)
+                    .map(win => {
+                        const title = String(win.title);
+                        const project = win.project ? String(win.project) : '';
+                        const description = win.description ? String(win.description) : '';
+                        const dateLabel = win.date ? formatImpactDate(String(win.date)) : '';
+                        const link = win.link ? String(win.link) : '';
+                        const linkLabel = win.linkLabel ? String(win.linkLabel) : 'View details';
+
+                        const isExternal = link ? /^https?:\/\//i.test(link) : false;
+                        const linkAttrs = link
+                            ? `${isExternal ? ' target=\"_blank\" rel=\"noopener noreferrer\"' : ''}`
+                            : '';
+
+                        return `
+                            <div class="impact-win-card glass-card reveal">
+                                <div class="impact-win-meta">
+                                    ${project ? `<span class="tag impact-win-tag">${escapeHtml(project)}</span>` : '<span></span>'}
+                                    ${dateLabel ? `<span class="impact-win-date">${escapeHtml(dateLabel)}</span>` : ''}
+                                </div>
+                                <h3 class="impact-win-title">${escapeHtml(title)}</h3>
+                                ${description ? `<p class="impact-win-description">${escapeHtml(description)}</p>` : ''}
+                                ${link ? `<a class="impact-win-link" href="${escapeHtml(link)}"${linkAttrs}>${escapeHtml(linkLabel)} &rarr;</a>` : ''}
+                            </div>
+                        `;
+                    })
+                    .join('');
+                renderImpactReveals(winsGrid);
+            } else {
+                winsGrid.innerHTML = '<p class="empty-message">No wins logged yet.</p>';
+            }
+        }
+
+        if (updatedEl) {
+            const parts = [];
+            if (data.updated) {
+                const formatted = formatImpactDate(String(data.updated));
+                if (formatted) parts.push(`Updated ${formatted}`);
+            }
+            if (data.source) {
+                parts.push(`Source: ${String(data.source)}`);
+            }
+            updatedEl.textContent = parts.join(' • ');
+        }
+    } catch (error) {
+        console.error('Failed to load impact analytics:', error);
+        if (metricsGrid) metricsGrid.innerHTML = '<p class="error-message">Unable to load impact metrics.</p>';
+        if (winsGrid) winsGrid.innerHTML = '<p class="error-message">Unable to load wins.</p>';
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadImpactAnalytics);
+} else {
+    loadImpactAnalytics();
+}
+
+// ================================
 // Project Card Tilt Effect
 // ================================
 // Adds 3D tilt and click/keyboard navigation to project cards
