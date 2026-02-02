@@ -161,7 +161,8 @@ function filterPosts(selectedTag = null) {
 
         // Search filter
         if (searchTerm) {
-            const searchableText = `${post.title} ${post.excerpt} ${post.tags?.join(' ') || ''} ${post.author || ''}`.toLowerCase();
+            const tagsText = Array.isArray(post.tags) ? post.tags.join(' ') : '';
+            const searchableText = `${post.title} ${post.excerpt} ${tagsText} ${post.author || ''}`.toLowerCase();
             if (!searchableText.includes(searchTerm)) {
                 return false;
             }
@@ -297,4 +298,3 @@ window.Blog = {
     generateRSSFeed,
     createRSSFeed
 };
-

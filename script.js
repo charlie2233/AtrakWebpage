@@ -10,15 +10,14 @@ const prefersReducedMotion = supportsMediaQueries
     ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
     : false;
 const hasAnyHover = supportsMediaQueries
-    ? (window.matchMedia('(hover: hover)').matches || window.matchMedia('(any-hover: hover)').matches)
+    ? (window.matchMedia('(any-hover: hover)').matches || window.matchMedia('(hover: hover)').matches)
     : true;
 const hasAnyFinePointer = supportsMediaQueries
-    ? (window.matchMedia('(pointer: fine)').matches || window.matchMedia('(any-pointer: fine)').matches)
+    ? (window.matchMedia('(any-pointer: fine)').matches || window.matchMedia('(pointer: fine)').matches)
     : true;
-// Back-compat name used by some blocks below.
-const hasFinePointer = hasAnyFinePointer;
-const enableHoverEffects = hasAnyHover && hasAnyFinePointer && !prefersReducedMotion;
-const enableHeroParallax = enableHoverEffects;
+let enableHoverEffects = (hasAnyFinePointer || hasAnyHover) && !prefersReducedMotion;
+let enableHeroParallax = enableHoverEffects;
+const supportsPointerEvents = typeof window !== 'undefined' && 'PointerEvent' in window;
 const supportsIntersectionObserver = typeof window !== 'undefined' && 'IntersectionObserver' in window;
 
 
@@ -29,31 +28,45 @@ const supportsIntersectionObserver = typeof window !== 'undefined' && 'Intersect
 const cursorDot = document.querySelector('.cursor-dot');
 const cursorOutline = document.querySelector('.cursor-outline');
 
+let customCursorEnabled = false;
+const updateCursorEnabled = () => {
+    if (!cursorDot || !cursorOutline) return;
+    customCursorEnabled = Boolean(enableHoverEffects && !prefersReducedMotion);
+    document.body.classList.toggle('cursor-enabled', customCursorEnabled);
+};
 
-if (cursorDot && cursorOutline && !prefersReducedMotion && hasFinePointer) {
-    document.body.classList.add('cursor-enabled');
+if (cursorDot && cursorOutline && !prefersReducedMotion) {
+    updateCursorEnabled();
 
     // Move cursor elements on mouse move
     window.addEventListener('mousemove', (e) => {
+        if (!customCursorEnabled) return;
         const posX = e.clientX;
         const posY = e.clientY;
 
         cursorDot.style.left = `${posX}px`;
         cursorDot.style.top = `${posY}px`;
 
-        cursorOutline.animate({
-            left: `${posX}px`,
-            top: `${posY}px`
-        }, { duration: 500, fill: "forwards" });
-    });
+        if (typeof cursorOutline.animate === 'function') {
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: 'forwards' });
+        } else {
+            cursorOutline.style.left = `${posX}px`;
+            cursorOutline.style.top = `${posY}px`;
+        }
+    }, { passive: true });
 
     // Cursor hover effect for interactive elements
     document.querySelectorAll('a, button, .project-card').forEach(el => {
         el.addEventListener('mouseenter', () => {
+            if (!customCursorEnabled) return;
             cursorDot.classList.add('active');
             cursorOutline.classList.add('active');
         });
         el.addEventListener('mouseleave', () => {
+            if (!customCursorEnabled) return;
             cursorDot.classList.remove('active');
             cursorOutline.classList.remove('active');
         });
@@ -123,8 +136,9 @@ if (supportsIntersectionObserver && !prefersReducedMotion) {
 // ================================
 // Adds parallax effect to hero section cards
 const hero = document.querySelector('.hero');
-if (hero && enableHeroParallax) {
+if (hero) {
     window.addEventListener('mousemove', (e) => {
+        if (!enableHeroParallax) return;
         const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
         const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
         
@@ -133,7 +147,7 @@ if (hero && enableHeroParallax) {
             const depth = (index + 1) * 0.5;
             card.style.transform = `translate(${moveX * depth}px, ${moveY * depth}px) rotate(${moveX * 0.5}px)`;
         });
-    });
+    }, { passive: true });
 }
 
 // ================================
@@ -389,27 +403,27 @@ projectCards.forEach(card => {
     });
 });
 
-if (enableHoverEffects) {
-    projectCards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+projectCards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+        if (!enableHoverEffects) return;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
 
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
 
-            const rotateX = (y - centerY) / 10;
-            const rotateY = (centerX - x) / 10;
+        const rotateX = (y - centerY) / 10;
+        const rotateY = (centerX - x) / 10;
 
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
-        });
-
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
-        });
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
     });
-}
+
+    card.addEventListener('mouseleave', () => {
+        if (!enableHoverEffects) return;
+        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+    });
+});
 
 // ================================
 // Leader Card Hover Effect
@@ -417,23 +431,23 @@ if (enableHoverEffects) {
 // Dims other leader cards on hover for focus effect
 const leaderCards = document.querySelectorAll('.leader-card');
 
-if (enableHoverEffects) {
-    leaderCards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            leaderCards.forEach(otherCard => {
-                if (otherCard !== card) {
-                    otherCard.style.opacity = '0.5';
-                }
-            });
-        });
-
-        card.addEventListener('mouseleave', () => {
-            leaderCards.forEach(otherCard => {
-                otherCard.style.opacity = '1';
-            });
+leaderCards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+        if (!enableHoverEffects) return;
+        leaderCards.forEach(otherCard => {
+            if (otherCard !== card) {
+                otherCard.style.opacity = '0.5';
+            }
         });
     });
-}
+
+    card.addEventListener('mouseleave', () => {
+        if (!enableHoverEffects) return;
+        leaderCards.forEach(otherCard => {
+            otherCard.style.opacity = '1';
+        });
+    });
+});
 
 
 // ================================
@@ -546,7 +560,8 @@ const wireAsyncForm = (form, options) => {
         if (!form.checkValidity()) {
             // Show field-specific errors
             form.querySelectorAll('input:invalid, textarea:invalid, select:invalid').forEach(field => {
-                const errorId = field.getAttribute('aria-describedby')?.split(' ').find(id => id.includes('error'));
+                const describedBy = field.getAttribute('aria-describedby');
+                const errorId = describedBy ? describedBy.split(' ').find(id => id.includes('error')) : null;
                 const errorEl = errorId ? document.getElementById(errorId) : null;
                 field.setAttribute('aria-invalid', 'true');
                 
@@ -574,7 +589,8 @@ const wireAsyncForm = (form, options) => {
         if (messageEl) {
             const message = messageEl.value.trim();
             if (message.length < minMessageLength) {
-                const errorId = messageEl.getAttribute('aria-describedby')?.split(' ').find(id => id.includes('error'));
+                const describedBy = messageEl.getAttribute('aria-describedby');
+                const errorId = describedBy ? describedBy.split(' ').find(id => id.includes('error')) : null;
                 const errorEl = errorId ? document.getElementById(errorId) : null;
                 if (errorEl) {
                     errorEl.textContent = `Please write at least ${minMessageLength} characters.`;
@@ -646,7 +662,8 @@ const wireAsyncForm = (form, options) => {
             setStatus(errorMessage, 'is-error');
             showToast(errorMessage, 'error');
         } catch (error) {
-            const errorMessage = error.message?.includes('Failed to fetch') || error.message?.includes('network')
+            const errorMessageText = error && typeof error.message === 'string' ? error.message : '';
+            const errorMessage = errorMessageText.includes('Failed to fetch') || errorMessageText.includes('network')
                 ? 'Network error. Please check your connection and try again.'
                 : 'Network error. Please try again.';
             setStatus(errorMessage, 'is-error');
@@ -663,7 +680,9 @@ const wireAsyncForm = (form, options) => {
                     retryBtn.remove();
                     form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
                 });
-                statusEl?.parentNode?.insertBefore(retryBtn, statusEl.nextSibling);
+                if (statusEl && statusEl.parentNode) {
+                    statusEl.parentNode.insertBefore(retryBtn, statusEl.nextSibling);
+                }
             }
         } finally {
             if (submitButton) {
@@ -776,7 +795,12 @@ initSharePage();
 // Cursor Follow Effect (Optional - for enhanced UX)
 // ================================
 // Adds a simple custom cursor if dot/outline cursor is not present
-if (enableHoverEffects && !cursorDot && !cursorOutline) {
+let fallbackCursorInitialized = false;
+const initFallbackCursor = () => {
+    if (fallbackCursorInitialized) return;
+    if (!enableHoverEffects || cursorDot || cursorOutline) return;
+
+    fallbackCursorInitialized = true;
     const cursor = document.createElement('div');
     cursor.className = 'custom-cursor';
     document.body.appendChild(cursor);
@@ -792,6 +816,7 @@ if (enableHoverEffects && !cursorDot && !cursorOutline) {
     }
 
     document.addEventListener('mousemove', (e) => {
+        if (!enableHoverEffects) return;
         cursorX = e.clientX;
         cursorY = e.clientY;
 
@@ -799,16 +824,18 @@ if (enableHoverEffects && !cursorDot && !cursorOutline) {
             cursorTicking = true;
             window.requestAnimationFrame(updateCursor);
         }
-    });
+    }, { passive: true });
 
     // Add hover effects
     document.querySelectorAll('a, button').forEach(element => {
         element.addEventListener('mouseenter', () => {
+            if (!enableHoverEffects) return;
             cursor.style.transform = 'scale(1.5)';
             cursor.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
         });
 
         element.addEventListener('mouseleave', () => {
+            if (!enableHoverEffects) return;
             cursor.style.transform = 'scale(1)';
             cursor.style.backgroundColor = 'transparent';
         });
@@ -836,6 +863,33 @@ if (enableHoverEffects && !cursorDot && !cursorOutline) {
         }
     `;
     document.head.appendChild(style);
+};
+
+initFallbackCursor();
+
+// Some Windows browsers misreport hover/pointer capabilities.
+// If we detect a real mouse/pen pointer, enable hover effects on the fly.
+if (!enableHoverEffects && !prefersReducedMotion) {
+    const enableFromPointer = (event) => {
+        if (enableHoverEffects) return;
+        const pointerType = event && event.pointerType ? event.pointerType : 'mouse';
+        if (pointerType !== 'mouse' && pointerType !== 'pen') return;
+
+        enableHoverEffects = true;
+        enableHeroParallax = true;
+        updateCursorEnabled();
+        initFallbackCursor();
+
+        if (supportsPointerEvents) {
+            window.removeEventListener('pointermove', enableFromPointer);
+        }
+        window.removeEventListener('mousemove', enableFromPointer);
+    };
+
+    if (supportsPointerEvents) {
+        window.addEventListener('pointermove', enableFromPointer, { passive: true });
+    }
+    window.addEventListener('mousemove', enableFromPointer, { passive: true });
 }
 
 // Console Message
@@ -862,7 +916,8 @@ const initTimelineItem = (item, node) => {
         }
         
         // Announce change for screen readers
-        const title = item.querySelector('.update-title')?.textContent || 'Timeline item';
+        const titleEl = item.querySelector('.update-title');
+        const title = titleEl && titleEl.textContent ? titleEl.textContent : 'Timeline item';
         const announcement = !isExpanded ? `${title} expanded` : `${title} collapsed`;
         announceToScreenReader(announcement);
     };
@@ -1604,11 +1659,13 @@ function initSwipeGestures() {
             if (Math.abs(diff) > swipeThreshold) {
                 if (diff > 0) {
                     // Swipe left - next
-                    const nextBtn = carousel.closest('.media-carousel')?.querySelector('.carousel-btn:last-of-type');
+                    const carouselRoot = carousel.closest('.media-carousel');
+                    const nextBtn = carouselRoot ? carouselRoot.querySelector('.carousel-btn:last-of-type') : null;
                     if (nextBtn && !nextBtn.disabled) nextBtn.click();
                 } else {
                     // Swipe right - previous
-                    const prevBtn = carousel.closest('.media-carousel')?.querySelector('.carousel-btn:first-of-type');
+                    const carouselRoot = carousel.closest('.media-carousel');
+                    const prevBtn = carouselRoot ? carouselRoot.querySelector('.carousel-btn:first-of-type') : null;
                     if (prevBtn && !prevBtn.disabled) prevBtn.click();
                 }
             }

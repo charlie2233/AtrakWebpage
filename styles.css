@@ -4339,7 +4339,7 @@ section {
     }
 }
 
-@media (hover: none) {
+@media (hover: none) and (any-hover: none) {
     .glass-card:hover,
     .project-card:hover,
     .btn-primary:hover,
