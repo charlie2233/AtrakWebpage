@@ -7,13 +7,13 @@
 
 window.ATRAK_CONFIG = {
     forms: {
-        // You can use one ID for everything, or separate ones to keep emails organized.
-        // Replace 'REPLACE_ME' with your actual Formspree ID.
-        default: 'https://formspree.io/f/REPLACE_ME',
-        suggestion: 'https://formspree.io/f/REPLACE_ME',
-        join: 'https://formspree.io/f/REPLACE_ME',
-        security: 'https://formspree.io/f/REPLACE_ME',
-        sponsor: 'https://formspree.io/f/REPLACE_ME'
+        // Using the same Formspree form ID for all forms
+        // You can create separate forms later if you want to organize emails differently
+        default: 'https://formspree.io/f/mvzqdnov',
+        suggestion: 'https://formspree.io/f/mvzqdnov',
+        join: 'https://formspree.io/f/mvzqdnov',
+        security: 'https://formspree.io/f/mvzqdnov',
+        sponsor: 'https://formspree.io/f/mvzqdnov'
     }
 };
 
