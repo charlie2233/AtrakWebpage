@@ -4,6 +4,8 @@
     "role": "Team Leader",
     "bio": "Leads Atrak. Class of 2028. Competes in USACO Gold, competed in FBLA SSLC, and plays basketball.",
     "traits": "disciplined, team-first, focused on shipping useful products.",
+    "hobbies": ["Basketball", "Competitive Programming", "Building Products"],
+    "favoriteFoods": ["Hotpot", "Ice Cream", "Fried Chicken", "Kebab"],
     "stats": [
       {
         "value": "USACO",
@@ -28,6 +30,8 @@
     "role": "Engineer",
     "bio": "Backend maintenance + systems engineering. Core languages: Python, C++, Java. Hobby: basketball.",
     "traits": "Class of 2029",
+    "hobbies": ["Basketball", "Systems Engineering", "Backend Development"],
+    "favoriteFoods": [],
     "stats": [
       {
         "value": "backend",
@@ -50,6 +54,8 @@
     "role": "Product",
     "bio": "Product strategy, roadmap, and delivery. Turns ideas into clear specs and shippable plans.",
     "traits": "",
+    "hobbies": ["Product Strategy", "Planning"],
+    "favoriteFoods": [],
     "stats": [
       {
         "value": "Roadmap",
@@ -72,6 +78,8 @@
     "role": "Design",
     "bio": "UI/UX design and user research. Makes products beautiful and intuitive.",
     "traits": "",
+    "hobbies": ["UI/UX Design", "User Research", "Visual Design"],
+    "favoriteFoods": [],
     "stats": [
       {
         "value": "UI/UX",

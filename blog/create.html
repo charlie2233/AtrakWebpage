@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create Blog Post — Atrak">
+    <title>Create Blog Post — Atrak</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="stylesheet" href="../styles.css?v=24">
+    <style>
+        .create-blog-page {
+            padding: 120px 0 80px;
+            min-height: 80vh;
+        }
+        .create-form {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .form-section {
+            margin-bottom: 32px;
+        }
+        .form-section label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .form-section input,
+        .form-section textarea,
+        .form-section select {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: inherit;
+        }
+        .form-section textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .form-section textarea#content {
+            min-height: 400px;
+            font-family: var(--font-mono);
+            font-size: 14px;
+        }
+        .form-section small {
+            display: block;
+            margin-top: 6px;
+            color: var(--text-tertiary);
+            font-size: 13px;
+        }
+        .tags-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .tag-input-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--accent-primary);
+        }
+        .tag-input-item button {
+            background: none;
+            border: none;
+            color: var(--accent-primary);
+            cursor: pointer;
+            padding: 0;
+            font-size: 16px;
+            line-height: 1;
+        }
+        .tag-input-item button:hover {
+            color: var(--accent-secondary);
+        }
+        .preview-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid var(--border-color);
+        }
+        .json-output {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .copy-button {
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a class="logo" href="../index.html">
+                <span class="logo-icon"><img src="../assets/logo.png" alt="Atrak Logo"></span>
+                <span class="logo-text">Atrak</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="../index.html#projects">Projects</a></li>
+                <li><a href="../releases.html">Releases</a></li>
+                <li><a href="../index.html#about">About</a></li>
+                <li><a href="../index.html#leadership">Team</a></li>
+                <li><a href="../purpose.html">Purpose</a></li>
+                <li><a href="../join.html">Join</a></li>
+                <li><a href="../blog.html">Blog</a></li>
+                <li><a href="../index.html#contact" class="nav-cta" data-open-contact-tab="suggestion">Suggestion Box</a></li>
+            </ul>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <section class="create-blog-page">
+            <div class="container">
+                <div class="create-form glass-card">
+                    <div class="section-header" style="margin-bottom: 32px;">
+                        <span class="section-tag">Blog Editor</span>
+                        <h1 class="section-title">Create Blog Post</h1>
+                        <p class="section-description">
+                            Fill out the form below to generate a blog post JSON entry. Copy the output and add it to <code>data/blog-posts.json</code>
+                        </p>
+                    </div>
+
+                    <form id="blog-create-form">
+                        <div class="form-section">
+                            <label for="title">Title *</label>
+                            <input type="text" id="title" name="title" required placeholder="e.g., Building GuidePup: An Accessibility-First Approach">
+                            <small>Keep it under 60 characters for SEO</small>
+                        </div>
+
+                        <div class="form-section">
+                            <label for="slug">Slug *</label>
+                            <input type="text" id="slug" name="slug" required placeholder="e.g., building-guidepup-accessibility-first">
+                            <small>URL-friendly version of title (lowercase, hyphens instead of spaces)</small>
+                        </div>
+
+                        <div class="form-section">
+                            <label for="excerpt">Excerpt *</label>
+                            <textarea id="excerpt" name="excerpt" required placeholder="Short description of the blog post (under 155 characters for SEO)"></textarea>
+                            <small>This appears in blog listings and search results</small>
+                        </div>
+
+                        <div class="form-section">
+                            <label for="author">Author *</label>
+                            <select id="author" name="author" required>
+                                <option value="">Select author...</option>
+                                <option value="Charlie Han">Charlie Han</option>
+                                <option value="Yannon Chang">Yannon Chang</option>
+                                <option value="Larry Ling">Larry Ling</option>
+                                <option value="Caleb Zeng">Caleb Zeng</option>
+                            </select>
+                            <small>Select from team members</small>
+                        </div>
+
+                        <div class="form-section">
+                            <label for="date">Publish Date *</label>
+                            <input type="date" id="date" name="date" required>
+                            <small>When the post was/will be published</small>
+                        </div>
+
+                        <div class="form-section">
+                            <label for="readingTime">Reading Time (minutes)</label>
+                            <input type="number" id="readingTime" name="readingTime" min="1" placeholder="Auto-calculated if left empty">
+                            <small>Leave empty to auto-calculate from content</small>
+                        </div>
+
+                        <div class="form-section">
+                            <label for="tags">Tags</label>
+                            <input type="text" id="tags-input" placeholder="Type a tag and press Enter">
+                            <div class="tags-input" id="tags-container"></div>
+                            <input type="hidden" id="tags" name="tags">
+                            <small>Press Enter after each tag to add it</small>
+                        </div>
+
+                        <div class="form-section">
+                            <label for="featuredImage">Featured Image URL (optional)</label>
+                            <input type="url" id="featuredImage" name="featuredImage" placeholder="https://example.com/image.jpg">
+                            <small>URL to featured image for the blog post</small>
+                        </div>
+
+                        <div class="form-section">
+                            <label for="content">Content *</label>
+                            <textarea id="content" name="content" required placeholder="Write your blog post content here. Use Markdown syntax:
+
+## Headers
+### Subheaders
+**Bold text**
+*Italic text*
+`code`
+- Lists
+- More items
+
+```cpp
+// Code blocks
+```"></textarea>
+                            <small>Use Markdown syntax for formatting</small>
+                        </div>
+
+                        <div class="form-actions" style="display: flex; gap: 12px; margin-top: 32px;">
+                            <button type="submit" class="btn btn-primary">Generate JSON</button>
+                            <button type="button" class="btn btn-secondary" id="preview-btn">Preview</button>
+                            <button type="reset" class="btn btn-secondary">Reset Form</button>
+                        </div>
+                    </form>
+
+                    <div class="preview-section" id="preview-section" style="display: none;">
+                        <h3 style="margin-bottom: 16px;">Generated JSON</h3>
+                        <div class="json-output" id="json-output"></div>
+                        <button type="button" class="btn btn-primary copy-button" id="copy-btn">Copy JSON</button>
+                        <p style="margin-top: 16px; font-size: 14px; color: var(--text-tertiary);">
+                            Copy the JSON above and add it to the <code>data/blog-posts.json</code> array. Make sure to add a comma after the previous entry.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <span class="logo-icon">
+                            <img src="../assets/logo.png" alt="Atrak Logo">
+                        </span>
+                        <span class="logo-text">Atrak</span>
+                    </div>
+                    <p class="footer-tagline">atrak.dev — building real products together</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <a href="../index.html#projects">Projects</a>
+                        <a href="../releases.html">Releases</a>
+                        <a href="../index.html#leadership">Team</a>
+                        <a href="../handbook.html">Handbook</a>
+                        <a href="../index.html#contact" data-open-contact-tab="apply">Join</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Connect</h4>
+                        <a href="https://github.com/charlie2233" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a href="../share.html">Share</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <a href="../privacy.html">Privacy</a>
+                        <a href="../terms.html">Terms</a>
+                        <a href="../license.html">License</a>
+                        <a href="../security.html">Security</a>
+                        <a href="../code-of-conduct.html">Code of Conduct</a>
+                        <a href="../contributing.html">Contributing</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Atrak. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../config.js?v=21"></script>
+    <script src="../script.js?v=22"></script>
+    <script>
+        const tags = [];
+        const tagsInput = document.getElementById('tags-input');
+        const tagsContainer = document.getElementById('tags-container');
+        const tagsHidden = document.getElementById('tags');
+
+        // Handle tag input
+        tagsInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const tag = tagsInput.value.trim();
+                if (tag && !tags.includes(tag)) {
+                    tags.push(tag);
+                    updateTagsDisplay();
+                    tagsInput.value = '';
+                }
+            }
+        });
+
+        function updateTagsDisplay() {
+            tagsContainer.innerHTML = tags.map(tag => `
+                <div class="tag-input-item">
+                    <span>${escapeHtml(tag)}</span>
+                    <button type="button" onclick="removeTag('${escapeHtml(tag)}')" aria-label="Remove tag">×</button>
+                </div>
+            `).join('');
+            tagsHidden.value = JSON.stringify(tags);
+        }
+
+        function removeTag(tag) {
+            const index = tags.indexOf(tag);
+            if (index > -1) {
+                tags.splice(index, 1);
+                updateTagsDisplay();
+            }
+        }
+
+        window.removeTag = removeTag;
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Auto-generate slug from title
+        document.getElementById('title').addEventListener('input', (e) => {
+            const slugInput = document.getElementById('slug');
+            if (!slugInput.value || slugInput.dataset.autoGenerated === 'true') {
+                const slug = e.target.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+                slugInput.value = slug;
+                slugInput.dataset.autoGenerated = 'true';
+            }
+        });
+
+        document.getElementById('slug').addEventListener('input', (e) => {
+            e.target.dataset.autoGenerated = 'false';
+        });
+
+        // Set default date to today
+        document.getElementById('date').valueAsDate = new Date();
+
+        // Calculate reading time
+        function calculateReadingTime(content) {
+            const wordsPerMinute = 200;
+            const words = content.split(/\s+/).length;
+            return Math.ceil(words / wordsPerMinute);
+        }
+
+        document.getElementById('content').addEventListener('input', (e) => {
+            const readingTimeInput = document.getElementById('readingTime');
+            if (!readingTimeInput.value) {
+                const time = calculateReadingTime(e.target.value);
+                readingTimeInput.placeholder = `Auto: ${time} min`;
+            }
+        });
+
+        // Form submission
+        document.getElementById('blog-create-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            generateJSON();
+        });
+
+        document.getElementById('preview-btn').addEventListener('click', () => {
+            generateJSON();
+        });
+
+        function generateJSON() {
+            const form = document.getElementById('blog-create-form');
+            const formData = new FormData(form);
+            
+            const blogPost = {
+                slug: formData.get('slug'),
+                title: formData.get('title'),
+                excerpt: formData.get('excerpt'),
+                date: formData.get('date'),
+                author: formData.get('author'),
+                tags: tags.length ? tags : [],
+                readingTime: formData.get('readingTime') ? parseInt(formData.get('readingTime')) : null,
+                featuredImage: formData.get('featuredImage') || null,
+                content: formData.get('content')
+            };
+
+            // Remove null/empty values
+            if (!blogPost.readingTime) delete blogPost.readingTime;
+            if (!blogPost.featuredImage) delete blogPost.featuredImage;
+
+            const jsonOutput = JSON.stringify(blogPost, null, 2);
+            document.getElementById('json-output').textContent = jsonOutput;
+            document.getElementById('preview-section').style.display = 'block';
+            document.getElementById('preview-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Copy to clipboard
+        document.getElementById('copy-btn').addEventListener('click', () => {
+            const jsonText = document.getElementById('json-output').textContent;
+            navigator.clipboard.writeText(jsonText).then(() => {
+                const btn = document.getElementById('copy-btn');
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                btn.classList.add('btn-success');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('btn-success');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy. Please select and copy manually.');
+            });
+        });
+    </script>
+</body>
+</html>
+

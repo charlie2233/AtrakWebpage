@@ -18,15 +18,125 @@ function calculateReadingTime(content) {
 }
 
 /**
+ * Check if blog post content is excessive
+ * Flags posts with:
+ * - More than 5000 words, OR
+ * - More than 30000 characters, OR
+ * - Reading time over 25 minutes
+ */
+function isExcessiveContent(post) {
+    if (!post.content) return false;
+    
+    const wordCount = post.content.split(/\s+/).length;
+    const charCount = post.content.length;
+    const readingTime = post.readingTime || calculateReadingTime(post.content);
+    
+    // Thresholds for excessive content
+    const MAX_WORDS = 5000;
+    const MAX_CHARS = 30000;
+    const MAX_READING_TIME = 25; // minutes
+    
+    return wordCount > MAX_WORDS || 
+           charCount > MAX_CHARS || 
+           readingTime > MAX_READING_TIME;
+}
+
+/**
+ * Get excessive content warning message
+ */
+function getExcessiveContentWarning(post) {
+    if (!post.content) return null;
+    
+    const wordCount = post.content.split(/\s+/).length;
+    const charCount = post.content.length;
+    const readingTime = post.readingTime || calculateReadingTime(post.content);
+    
+    const issues = [];
+    if (wordCount > 5000) issues.push(`${wordCount.toLocaleString()} words`);
+    if (charCount > 30000) issues.push(`${(charCount / 1000).toFixed(1)}k chars`);
+    if (readingTime > 25) issues.push(`${readingTime} min read`);
+    
+    if (issues.length > 0) {
+        return `⚠️ Long content: ${issues.join(', ')}`;
+    }
+    
+    return null;
+}
+
+/**
  * Format date for display
  */
 function formatDate(dateString) {
+    if (!dateString) return '';
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString; // Return original if invalid
+    
     return date.toLocaleDateString('en-US', { 
         year: 'numeric', 
         month: 'long', 
         day: 'numeric' 
     });
+}
+
+/**
+ * Get view count for a blog post
+ */
+function getViewCount(slug) {
+    try {
+        const views = JSON.parse(localStorage.getItem('blog_views') || '{}');
+        return views[slug] || 0;
+    } catch (e) {
+        return 0;
+    }
+}
+
+/**
+ * Increment view count for a blog post
+ */
+function incrementViewCount(slug) {
+    try {
+        const views = JSON.parse(localStorage.getItem('blog_views') || '{}');
+        views[slug] = (views[slug] || 0) + 1;
+        localStorage.setItem('blog_views', JSON.stringify(views));
+        return views[slug];
+    } catch (e) {
+        console.error('Error incrementing view count:', e);
+        return 0;
+    }
+}
+
+/**
+ * Get comments for a blog post
+ */
+function getComments(slug) {
+    try {
+        const comments = JSON.parse(localStorage.getItem('blog_comments') || '{}');
+        return comments[slug] || [];
+    } catch (e) {
+        return [];
+    }
+}
+
+/**
+ * Add comment to a blog post
+ */
+function addComment(slug, comment) {
+    try {
+        const comments = JSON.parse(localStorage.getItem('blog_comments') || '{}');
+        if (!comments[slug]) {
+            comments[slug] = [];
+        }
+        comments[slug].push({
+            ...comment,
+            id: Date.now().toString(),
+            date: new Date().toISOString()
+        });
+        localStorage.setItem('blog_comments', JSON.stringify(comments));
+        return comments[slug];
+    } catch (e) {
+        console.error('Error adding comment:', e);
+        return [];
+    }
 }
 
 /**
@@ -87,17 +197,22 @@ function createBlogPostCard(post) {
     const authorInfo = getAuthorInfo(post.author);
     const authorAvatar = createAuthorAvatar(authorInfo);
     const authorRole = authorInfo ? authorInfo.role : 'Team Member';
+    const isExcessive = isExcessiveContent(post);
+    const warningMessage = isExcessive ? getExcessiveContentWarning(post) : null;
 
     return `
-        <article class="blog-post-card glass-card reveal">
+        <article class="blog-post-card glass-card reveal ${isExcessive ? 'excessive-content' : ''}">
+            ${isExcessive ? '<div class="excessive-content-flag" title="' + escapeHtml(warningMessage) + '">🚩 Excessive Content</div>' : ''}
             <a href="blog/blog-post.html?slug=${encodeURIComponent(post.slug)}" class="blog-post-link">
                 <div class="blog-post-image-wrapper">
                     ${featuredImage}
                 </div>
                 <div class="blog-post-content">
                     <div class="blog-post-meta">
-                        <span class="blog-post-date">${formatDate(post.date)}</span>
+                        <span class="blog-post-date">Published ${formatDate(post.date)}</span>
                         <span class="blog-post-reading-time">${post.readingTime || calculateReadingTime(post.content)} min read</span>
+                        <span class="blog-post-views">👁️ ${getViewCount(post.slug)} views</span>
+                        ${isExcessive ? '<span class="blog-post-warning">⚠️ Very Long</span>' : ''}
                     </div>
                     <h3 class="blog-post-title">${escapeHtml(post.title)}</h3>
                     <p class="blog-post-excerpt">${escapeHtml(post.excerpt)}</p>
@@ -216,7 +331,12 @@ function filterPosts(selectedTag = null) {
     });
 
     // Sort by date (newest first)
-    filteredPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+    filteredPosts.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) return 0;
+        return dateB - dateA; // Newest first
+    });
 
     renderBlogPosts(filteredPosts);
 }
@@ -263,9 +383,16 @@ async function initBlog() {
         // Render tag filters
         renderTagFilters(allBlogPosts);
 
+        // Sort all posts by date (newest first) before initial render
+        allBlogPosts.sort((a, b) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+            if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) return 0;
+            return dateB - dateA; // Newest first
+        });
+        
         // Initial render
         filteredPosts = [...allBlogPosts];
-        filteredPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
         renderBlogPosts(filteredPosts);
 
         // Search input handler

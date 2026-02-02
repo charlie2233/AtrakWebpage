@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Team Member Profile — Atrak">
+    <title>Team Member Profile — Atrak</title>
+    <link rel="icon" type="image/png" href="../../assets/logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/logo.png">
+    <link rel="stylesheet" href="../../styles.css?v=24">
+    <style>
+        .profile-page {
+            padding: 120px 0 80px;
+            min-height: 80vh;
+        }
+        .profile-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .profile-avatar-large {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: 700;
+            position: relative;
+            border: 3px solid var(--border-color);
+        }
+        .profile-avatar-large::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-primary);
+            opacity: 0.3;
+            animation: pulse-ring 2s ease-out infinite;
+        }
+        @keyframes pulse-ring {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.05); opacity: 0.5; }
+        }
+        .profile-name {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .profile-role {
+            font-size: 20px;
+            color: var(--accent-primary);
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+        .profile-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 20px;
+            font-size: 13px;
+            color: #22c55e;
+        }
+        .profile-status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulse 2s ease-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .profile-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .profile-section {
+            margin-bottom: 40px;
+        }
+        .profile-section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        .profile-bio {
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+        .profile-traits {
+            font-size: 16px;
+            color: var(--text-tertiary);
+            font-style: italic;
+        }
+        .profile-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+        .profile-stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        .profile-stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 8px;
+        }
+        .profile-stat-label {
+            font-size: 14px;
+            color: var(--text-tertiary);
+        }
+        .profile-social {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .profile-social-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .profile-social-link:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+        .profile-tags-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .profile-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 14px;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+        .profile-tag:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+        .profile-tag.food-tag {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        .profile-tag.food-tag:hover {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: var(--accent-primary);
+        }
+        @media (max-width: 768px) {
+            .profile-avatar-large {
+                width: 120px;
+                height: 120px;
+                font-size: 36px;
+            }
+            .profile-name {
+                font-size: 32px;
+            }
+            .profile-role {
+                font-size: 18px;
+            }
+            .profile-bio {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a class="logo" href="../../index.html">
+                <span class="logo-icon"><img src="../../assets/logo.png" alt="Atrak Logo"></span>
+                <span class="logo-text">Atrak</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="../../index.html#projects">Projects</a></li>
+                <li><a href="../../releases.html">Releases</a></li>
+                <li><a href="../../index.html#about">About</a></li>
+                <li><a href="../../index.html#leadership">Team</a></li>
+                <li><a href="../../purpose.html">Purpose</a></li>
+                <li><a href="../../join.html">Join</a></li>
+                <li><a href="../../blog.html">Blog</a></li>
+                <li><a href="../../index.html#contact" class="nav-cta" data-open-contact-tab="suggestion">Suggestion Box</a></li>
+            </ul>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <section class="profile-page">
+            <div class="container">
+                <div id="profile-content" class="profile-content">
+                    <div class="profile-loading glass-card" style="text-align: center; padding: 60px 20px;">
+                        <p>Loading profile...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <span class="logo-icon">
+                            <img src="../../assets/logo.png" alt="Atrak Logo">
+                        </span>
+                        <span class="logo-text">Atrak</span>
+                    </div>
+                    <p class="footer-tagline">atrak.dev — building real products together</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <a href="../../index.html#projects">Projects</a>
+                        <a href="../../releases.html">Releases</a>
+                        <a href="../../index.html#leadership">Team</a>
+                        <a href="../../handbook.html">Handbook</a>
+                        <a href="../../index.html#contact" data-open-contact-tab="apply">Join</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Connect</h4>
+                        <a href="https://github.com/charlie2233" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a href="../../share.html">Share</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <a href="../../privacy.html">Privacy</a>
+                        <a href="../../terms.html">Terms</a>
+                        <a href="../../license.html">License</a>
+                        <a href="../../security.html">Security</a>
+                        <a href="../../code-of-conduct.html">Code of Conduct</a>
+                        <a href="../../contributing.html">Contributing</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Atrak. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../config.js?v=21"></script>
+    <script src="../../script.js?v=22"></script>
+    <script>
+        // Load and render team member profile
+        (async function() {
+            const contentEl = document.getElementById('profile-content');
+            if (!contentEl) return;
+
+            // Get member name from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const memberName = urlParams.get('name') || decodeURIComponent(window.location.pathname.split('/').pop().replace('.html', '').replace(/-/g, ' '));
+
+            if (!memberName) {
+                contentEl.innerHTML = '<div class="glass-card"><div style="text-align: center; padding: 60px 20px;"><h2>Profile Not Found</h2><p>The team member profile you\'re looking for doesn\'t exist.</p><a href="../../index.html#leadership" class="btn btn-primary">Back to Team</a></div></div>';
+                return;
+            }
+
+            try {
+                // Load team members
+                const teamResponse = await fetch('../../data/team-members.json');
+                if (!teamResponse.ok) throw new Error('Failed to load team members');
+                const teamMembers = await teamResponse.json();
+                
+                // Find member by name
+                const member = teamMembers.find(m => 
+                    m.name.toLowerCase() === memberName.toLowerCase() ||
+                    m.name.toLowerCase().replace(/\s+/g, '-') === memberName.toLowerCase()
+                );
+                
+                if (!member) {
+                    contentEl.innerHTML = '<div class="glass-card"><div style="text-align: center; padding: 60px 20px;"><h2>Profile Not Found</h2><p>The team member profile you\'re looking for doesn\'t exist.</p><a href="../../index.html#leadership" class="btn btn-primary">Back to Team</a></div></div>';
+                    return;
+                }
+
+                // Build social links
+                const socialLinks = [];
+                if (member.social?.github) {
+                    socialLinks.push(`<a href="${escapeHtml(member.social.github)}" target="_blank" rel="noopener noreferrer" class="profile-social-link"><span>🔗</span> GitHub</a>`);
+                }
+                if (member.social?.linkedin) {
+                    socialLinks.push(`<a href="${escapeHtml(member.social.linkedin)}" target="_blank" rel="noopener noreferrer" class="profile-social-link"><span>💼</span> LinkedIn</a>`);
+                }
+                if (member.social?.twitter) {
+                    socialLinks.push(`<a href="${escapeHtml(member.social.twitter)}" target="_blank" rel="noopener noreferrer" class="profile-social-link"><span>🐦</span> Twitter</a>`);
+                }
+                if (member.social?.email) {
+                    socialLinks.push(`<a href="mailto:${escapeHtml(member.social.email)}" class="profile-social-link"><span>✉️</span> Email</a>`);
+                }
+
+                // Build stats
+                const statsHtml = member.stats && member.stats.length > 0
+                    ? `<div class="profile-stats-grid">
+                        ${member.stats.map(stat => `
+                            <div class="profile-stat-card">
+                                <div class="profile-stat-value">${escapeHtml(stat.value)}</div>
+                                <div class="profile-stat-label">${escapeHtml(stat.label)}</div>
+                            </div>
+                        `).join('')}
+                    </div>`
+                    : '';
+
+                contentEl.innerHTML = `
+                    <nav class="breadcrumb" aria-label="Breadcrumb" style="margin-bottom: 32px;">
+                        <ol>
+                            <li><a href="../../index.html">Home</a></li>
+                            <li><a href="../../index.html#leadership">Team</a></li>
+                            <li>${escapeHtml(member.name)}</li>
+                        </ol>
+                    </nav>
+
+                    <div class="glass-card" style="padding: 48px;">
+                        <div class="profile-header">
+                            <div class="profile-avatar-large" style="background: ${member.avatar?.gradient || 'linear-gradient(135deg, rgba(59, 130, 246, 0.35), rgba(139, 92, 246, 0.25))'};">
+                                ${escapeHtml(member.avatar?.initials || '?')}
+                            </div>
+                            <h1 class="profile-name">${escapeHtml(member.name)}</h1>
+                            <div class="profile-role">${escapeHtml(member.role)}</div>
+                            ${member.status === 'active' ? `
+                                <div class="profile-status">
+                                    <span class="profile-status-indicator"></span>
+                                    Active
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="profile-content">
+                            ${member.bio ? `
+                                <div class="profile-section">
+                                    <h2 class="profile-section-title">About</h2>
+                                    <p class="profile-bio">${escapeHtml(member.bio)}</p>
+                                    ${member.traits ? `<p class="profile-traits">${escapeHtml(member.traits)}</p>` : ''}
+                                </div>
+                            ` : ''}
+
+                            ${member.hobbies && member.hobbies.length > 0 ? `
+                                <div class="profile-section">
+                                    <h2 class="profile-section-title">Hobbies</h2>
+                                    <div class="profile-tags-list">
+                                        ${member.hobbies.map(hobby => `
+                                            <span class="profile-tag">${escapeHtml(hobby)}</span>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            ${member.favoriteFoods && member.favoriteFoods.length > 0 ? `
+                                <div class="profile-section">
+                                    <h2 class="profile-section-title">Favorite Foods</h2>
+                                    <div class="profile-tags-list">
+                                        ${member.favoriteFoods.map(food => `
+                                            <span class="profile-tag food-tag">🍽️ ${escapeHtml(food)}</span>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            ${statsHtml ? `
+                                <div class="profile-section">
+                                    <h2 class="profile-section-title">Stats & Focus</h2>
+                                    ${statsHtml}
+                                </div>
+                            ` : ''}
+
+                            ${socialLinks.length > 0 ? `
+                                <div class="profile-section">
+                                    <h2 class="profile-section-title">Connect</h2>
+                                    <div class="profile-social">
+                                        ${socialLinks.join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+
+                // Update page title and meta
+                document.title = `${escapeHtml(member.name)} — ${escapeHtml(member.role)} | Atrak Team`;
+                const metaDesc = document.querySelector('meta[name="description"]');
+                if (metaDesc) {
+                    metaDesc.content = `${escapeHtml(member.name)} - ${escapeHtml(member.role)} at Atrak. ${escapeHtml(member.bio || '')}`;
+                }
+
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                contentEl.innerHTML = '<div class="glass-card"><div style="text-align: center; padding: 60px 20px;"><h2>Error</h2><p>Failed to load profile. Please try again later.</p><a href="../../index.html#leadership" class="btn btn-primary">Back to Team</a></div></div>';
+            }
+        })();
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
+

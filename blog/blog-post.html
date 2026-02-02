@@ -212,8 +212,9 @@
                         <article class="blog-post-article glass-card">
                             <header class="blog-post-header">
                                 <div class="blog-post-meta-top">
-                                    <span class="blog-post-date">${formatDate(post.date)}</span>
+                                    <span class="blog-post-date">Published ${formatDate(post.date)}</span>
                                     <span class="blog-post-reading-time">${post.readingTime || calculateReadingTime(post.content)} min read</span>
+                                    <span class="blog-post-views">👁️ <span id="view-count">0</span> views</span>
                                 </div>
                                 <h1 class="blog-post-title-main">${escapeHtml(post.title)}</h1>
                                 <div class="blog-post-author-section">
@@ -236,6 +237,30 @@
                                 <a href="../blog.html" class="btn btn-secondary">← Back to Blog</a>
                             </footer>
                         </article>
+                        
+                        <!-- Comments Section -->
+                        <section class="blog-comments-section glass-card" style="margin-top: 40px;">
+                            <h2 class="comments-title">Comments</h2>
+                            <div id="comments-list" class="comments-list">
+                                <!-- Comments will be loaded here -->
+                            </div>
+                            <form id="comment-form" class="comment-form">
+                                <h3>Add a Comment</h3>
+                                <div class="form-group">
+                                    <label for="comment-name">Name *</label>
+                                    <input type="text" id="comment-name" name="name" required placeholder="Your name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="comment-email">Email (optional)</label>
+                                    <input type="email" id="comment-email" name="email" placeholder="your@email.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="comment-text">Comment *</label>
+                                    <textarea id="comment-text" name="text" required rows="4" placeholder="Share your thoughts..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Post Comment</button>
+                            </form>
+                        </section>
                     </div>
                 `;
 
@@ -245,6 +270,17 @@
                 if (metaDesc) {
                     metaDesc.content = escapeHtml(post.excerpt);
                 }
+
+                // Increment view count
+                const viewCount = incrementViewCount(slug);
+                const viewCountEl = document.getElementById('view-count');
+                if (viewCountEl) {
+                    viewCountEl.textContent = viewCount;
+                }
+
+                // Load and display comments
+                loadComments(slug);
+                setupCommentForm(slug);
 
             } catch (error) {
                 console.error('Error loading blog post:', error);
@@ -272,6 +308,114 @@
             const wordsPerMinute = 200;
             const words = content.split(/\s+/).length;
             return Math.ceil(words / wordsPerMinute);
+        }
+
+        // View count functions
+        function incrementViewCount(slug) {
+            try {
+                const views = JSON.parse(localStorage.getItem('blog_views') || '{}');
+                views[slug] = (views[slug] || 0) + 1;
+                localStorage.setItem('blog_views', JSON.stringify(views));
+                return views[slug];
+            } catch (e) {
+                console.error('Error incrementing view count:', e);
+                return 0;
+            }
+        }
+
+        // Comment functions
+        function getComments(slug) {
+            try {
+                const comments = JSON.parse(localStorage.getItem('blog_comments') || '{}');
+                return comments[slug] || [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function addComment(slug, comment) {
+            try {
+                const comments = JSON.parse(localStorage.getItem('blog_comments') || '{}');
+                if (!comments[slug]) {
+                    comments[slug] = [];
+                }
+                comments[slug].push({
+                    ...comment,
+                    id: Date.now().toString(),
+                    date: new Date().toISOString()
+                });
+                localStorage.setItem('blog_comments', JSON.stringify(comments));
+                return comments[slug];
+            } catch (e) {
+                console.error('Error adding comment:', e);
+                return [];
+            }
+        }
+
+        function loadComments(slug) {
+            const commentsList = document.getElementById('comments-list');
+            if (!commentsList) return;
+
+            const comments = getComments(slug);
+            
+            if (comments.length === 0) {
+                commentsList.innerHTML = '<p class="no-comments">No comments yet. Be the first to comment!</p>';
+                return;
+            }
+
+            // Sort comments by date (newest first)
+            const sortedComments = [...comments].sort((a, b) => 
+                new Date(b.date) - new Date(a.date)
+            );
+
+            commentsList.innerHTML = sortedComments.map(comment => `
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <div class="comment-author">
+                            <span class="comment-author-name">${escapeHtml(comment.name)}</span>
+                            <span class="comment-date">${formatDate(comment.date)}</span>
+                        </div>
+                    </div>
+                    <div class="comment-body">
+                        ${escapeHtml(comment.text).replace(/\n/g, '<br>')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function setupCommentForm(slug) {
+            const form = document.getElementById('comment-form');
+            if (!form) return;
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('comment-name').value.trim();
+                const email = document.getElementById('comment-email').value.trim();
+                const text = document.getElementById('comment-text').value.trim();
+
+                if (!name || !text) {
+                    alert('Please fill in all required fields.');
+                    return;
+                }
+
+                const comment = {
+                    name,
+                    email: email || null,
+                    text
+                };
+
+                addComment(slug, comment);
+                form.reset();
+                loadComments(slug);
+                
+                // Show success message
+                const successMsg = document.createElement('div');
+                successMsg.className = 'comment-success';
+                successMsg.textContent = 'Comment posted successfully!';
+                form.insertBefore(successMsg, form.firstChild);
+                setTimeout(() => successMsg.remove(), 3000);
+            });
         }
     </script>
 </body>
