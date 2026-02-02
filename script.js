@@ -1072,6 +1072,18 @@ wireAsyncForm(document.querySelector('#security-form'), {
     successMessage: 'Thanks — your security report was sent.'
 });
 
+wireAsyncForm(document.querySelector('#sponsor-form'), {
+    minMessageLength: 20,
+    successMessage: 'Thanks — we will follow up soon.'
+});
+
+// One-pager print buttons
+document.querySelectorAll('[data-print-one-pager]').forEach(button => {
+    button.addEventListener('click', () => {
+        window.print();
+    });
+});
+
 // ================================
 // Share Page Functionality
 // ================================

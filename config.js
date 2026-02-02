@@ -12,7 +12,8 @@ window.ATRAK_CONFIG = {
         default: 'https://formspree.io/f/REPLACE_ME',
         suggestion: 'https://formspree.io/f/REPLACE_ME',
         join: 'https://formspree.io/f/REPLACE_ME',
-        security: 'https://formspree.io/f/REPLACE_ME'
+        security: 'https://formspree.io/f/REPLACE_ME',
+        sponsor: 'https://formspree.io/f/REPLACE_ME'
     }
 };
 

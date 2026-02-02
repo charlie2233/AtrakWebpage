@@ -20,6 +20,7 @@ A modern, minimal tech team website + project hub (atrak.dev) featuring a clean 
 - 👥 **Leadership Team**: Team member profiles with social links
 - 📘 **Team Handbook**: Public handbook covering roles, values, cadence, and quality bar
 - 🗓️ **Release Notes**: Monthly updates on what shipped, what broke, and what’s next
+- 🧾 **Press Kit**: Logos, screenshots, one-pager, and sponsor contact funnel
 - 📬 **Anonymous Suggestion Box**: Visitors can send feedback without sharing identity
 - 🔗 **Footer**: Comprehensive navigation and information
 
@@ -78,10 +79,12 @@ Atrak/
 ├── handbook.html   # Team handbook (how we work)
 ├── join.html       # Join/Contact page
 ├── releases.html   # Monthly release notes
+├── press-kit.html  # Press kit + partnerships
 ├── styles.css      # All styles with CSS variables
 ├── script.js       # Interactive functionality
 ├── data/           # JSON content (posts, analytics, GitHub cache)
 │   └── impact-analytics.json # Impact metrics + wins
+├── assets/press-kit # Logo pack + screenshot assets
 ├── projects/       # Project detail pages
 │   ├── guidepup.html
 │   ├── hoops-clips.html
