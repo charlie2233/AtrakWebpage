@@ -1569,6 +1569,78 @@ async function renderLiveActivity() {
 }
 
 // ============================================
+// PROJECT ANALYTICS (UPDATES SECTION)
+// ============================================
+
+async function renderProjectAnalytics() {
+    const gridEl = document.getElementById('project-analytics-grid');
+    const metaEl = document.getElementById('project-analytics-meta');
+    if (!gridEl) return;
+
+    try {
+        const [repos, meta, weekly] = await Promise.all([
+            loadCachedData(),
+            loadCachedMeta(),
+            loadCachedWeeklyStats()
+        ]);
+
+        const repoList = Array.isArray(repos) ? repos : [];
+        const repoCount = meta && typeof meta.repoCount === 'number' ? meta.repoCount : repoList.length;
+        const totalStars = meta && typeof meta.totalStars === 'number'
+            ? meta.totalStars
+            : repoList.reduce((sum, r) => sum + (Number(r.stargazers_count) || 0), 0);
+        const totalForks = meta && typeof meta.totalForks === 'number'
+            ? meta.totalForks
+            : repoList.reduce((sum, r) => sum + (Number(r.forks_count) || 0), 0);
+
+        const mostRecentPush = (meta && meta.mostRecentPush)
+            ? new Date(meta.mostRecentPush)
+            : repoList.reduce((latest, r) => {
+                if (!r.pushed_at) return latest;
+                const date = new Date(r.pushed_at);
+                if (!latest || date > latest) return date;
+                return latest;
+            }, null);
+
+        const languageCounts = repoList.reduce((acc, r) => {
+            if (r.language) acc[r.language] = (acc[r.language] || 0) + 1;
+            return acc;
+        }, {});
+        const topLang = Object.entries(languageCounts).sort((a, b) => b[1] - a[1])[0];
+
+        const weeklyCommits = weekly && typeof weekly.totalCommitContributions === 'number'
+            ? weekly.totalCommitContributions
+            : null;
+
+        const cards = [
+            { label: 'Repos tracked', value: repoCount },
+            { label: 'Total stars', value: totalStars },
+            { label: 'Total forks', value: totalForks },
+            { label: 'Commits (7d)', value: weeklyCommits != null ? weeklyCommits : '—' },
+            { label: 'Top language', value: topLang ? topLang[0] : '—' },
+            { label: 'Last push', value: mostRecentPush ? getTimeAgo(mostRecentPush) : '—' }
+        ];
+
+        gridEl.innerHTML = cards.map(card => `
+            <div class="project-analytics-card">
+                <div class="project-analytics-value">${escapeHtml(card.value)}</div>
+                <div class="project-analytics-label">${escapeHtml(card.label)}</div>
+            </div>
+        `).join('');
+
+        if (metaEl) {
+            metaEl.textContent = meta && meta.updatedAt
+                ? `Synced ${getTimeAgo(new Date(meta.updatedAt))} • ${repoCount} repos`
+                : 'Tracking GitHub activity and repos.';
+        }
+    } catch (error) {
+        console.error('Failed to render project analytics:', error);
+        gridEl.innerHTML = '<div class="project-analytics-loading">Unable to load analytics right now.</div>';
+        if (metaEl) metaEl.textContent = 'Analytics unavailable.';
+    }
+}
+
+// ============================================
 // RELEASES FEED (CACHED FROM GITHUB ACTIONS)
 // ============================================
 
@@ -1814,6 +1886,7 @@ async function renderReleasesFeed() {
 window.GitHubProjects = {
     renderMoreProjects,
     renderLiveActivity,
+    renderProjectAnalytics,
     renderWeeklyHighlights,
     renderReleasesFeed,
     getProjectDetails,
@@ -1854,6 +1927,7 @@ function initGitHubFeatures() {
     schedule(renderLiveActivity);
     schedule(renderWeeklyHighlights);
     schedule(renderReleasesFeed);
+    schedule(renderProjectAnalytics);
     
     // Only auto-load More Projects if the tab is active (visible) on page load
     const moreProjectsGrid = document.getElementById('more-projects-grid');

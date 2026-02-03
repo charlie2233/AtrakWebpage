@@ -1640,6 +1640,11 @@ const initContactTabs = () => {
         const desiredTab = (link.dataset.openContactTab || '').trim();
         if (!desiredTab) return;
         
+        // Prevent form submission if it's a button inside a form
+        if (link.tagName === 'BUTTON' && link.closest('form')) {
+            e.preventDefault();
+        }
+        
         // If link has href with #contact, scroll to contact section first
         const href = link.getAttribute('href');
         if (href && href.includes('#contact')) {
@@ -1658,7 +1663,20 @@ const initContactTabs = () => {
                 setActiveTab(desiredTab);
             }
         } else {
-            setActiveTab(desiredTab);
+            // For buttons without href, scroll to contact section first
+            const contactSection = document.getElementById('contact');
+            if (contactSection) {
+                const navHeight = document.querySelector('.navbar')?.getBoundingClientRect().height || 0;
+                const offsetTop = contactSection.getBoundingClientRect().top + window.pageYOffset - navHeight - 16;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+                // Wait for scroll, then open tab
+                setTimeout(() => setActiveTab(desiredTab), 300);
+            } else {
+                setActiveTab(desiredTab);
+            }
         }
     });
 

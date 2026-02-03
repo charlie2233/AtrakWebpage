@@ -3474,79 +3474,14 @@ section {
 
 .leadership-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 32px;
+    margin-bottom: 60px;
 }
 
-.leader-card {
-    background-color: var(--bg-tertiary);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    padding: 32px;
-    text-align: center;
-    transition: all var(--transition-base);
-}
+/* Duplicate styles removed - using responsive styles below */
 
-.leader-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
-}
-
-.leader-avatar {
-    width: 120px;
-    height: 120px;
-    margin: 0 auto 24px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
-    border: 2px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.avatar-placeholder {
-    font-size: 36px;
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-.leader-name {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: var(--text-primary);
-}
-
-.leader-role {
-    font-size: 14px;
-    color: var(--accent-primary);
-    margin-bottom: 16px;
-    font-weight: 500;
-}
-
-.leader-bio {
-    font-size: 14px;
-    color: var(--text-secondary);
-    line-height: 1.6;
-    margin-bottom: 24px;
-}
-
-.leader-social {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-}
-
-.leader-social a {
-    color: var(--text-secondary);
-    transition: color var(--transition-fast);
-}
-
-.leader-social a:hover {
-    color: var(--accent-primary);
-}
+/* Duplicate styles removed - using responsive styles below */
 
 /* Team Member Cards */
 .team-members-grid {
@@ -5102,6 +5037,11 @@ a.leader-card:hover {
         transform: scale(2);
         opacity: 0;
     }
+}
+
+.leader-info {
+    width: 100%;
+    text-align: center;
 }
 
 .leader-info h3 {
@@ -6988,6 +6928,74 @@ a.leader-card:hover {
     margin-left: auto;
     margin-right: auto;
     position: relative;
+}
+
+.project-analytics {
+    margin: 0 auto 40px;
+    max-width: 900px;
+    padding: 24px;
+}
+
+.project-analytics-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.project-analytics-title {
+    font-size: 22px;
+    margin-bottom: 6px;
+    color: var(--text-primary);
+}
+
+.project-analytics-subtitle {
+    font-size: 14px;
+    color: var(--text-tertiary);
+}
+
+.project-analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+}
+
+.project-analytics-card {
+    padding: 16px;
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.project-analytics-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.project-analytics-label {
+    font-size: 13px;
+    color: var(--text-tertiary);
+}
+
+.project-analytics-loading {
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    color: var(--text-tertiary);
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .project-analytics {
+        padding: 20px;
+    }
+    .project-analytics-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
 
 .weekly-card {

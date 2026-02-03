@@ -485,6 +485,20 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Project Analytics -->
+            <div class="project-analytics glass-card reveal" id="project-analytics">
+                <div class="project-analytics-header">
+                    <div>
+                        <h3 class="project-analytics-title">Project Analytics</h3>
+                        <p class="project-analytics-subtitle" id="project-analytics-meta">Tracking GitHub activity and repos.</p>
+                    </div>
+                    <a class="btn btn-secondary btn-sm" href="https://github.com/charlie2233" target="_blank" rel="noopener noreferrer">GitHub</a>
+                </div>
+                <div class="project-analytics-grid" id="project-analytics-grid">
+                    <div class="project-analytics-loading">Loading analytics…</div>
+                </div>
+            </div>
             
             <div class="timeline-scroll" role="region" aria-label="Updates timeline (scroll horizontally)">
                 <div class="timeline-hint" aria-hidden="true">Swipe to scroll →</div>
@@ -1044,7 +1058,7 @@
 
                 <div class="contact-tab-content active" id="contact-suggestion-panel" role="tabpanel" aria-labelledby="contact-suggestion-tab" data-tab="suggestion">
                     <div class="suggestion-box glass-card reveal">
-                    <form id="suggestion-form" class="suggestion-form" action="https://formspree.io/f/mvzqdnov" method="POST" data-endpoint-key="suggestion" data-endpoint="https://formspree.io/f/mvzqdnov" novalidate>
+                    <form id="suggestion-form" class="suggestion-form" action="https://formspree.io/f/mvzqdnov" method="POST" data-endpoint-key="join" novalidate>
                         <label for="suggestion-message" class="suggestion-label">Your message</label>
                         <textarea id="suggestion-message" name="message" rows="6" maxlength="1200" required placeholder="Write your suggestion..." aria-describedby="suggestion-message-error suggestion-message-count"></textarea>
                         <div class="form-meta">
@@ -1055,6 +1069,13 @@
                         <button type="submit" class="btn btn-primary">Send anonymously</button>
                         <p id="suggestion-status" class="form-status" role="status" aria-live="polite"></p>
                         <p class="form-disclaimer">No contact info collected.</p>
+                        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color);">
+                            <p style="margin: 0 0 12px 0; font-size: 14px; color: var(--text-secondary);">Want to apply or contact us directly?</p>
+                            <button type="button" class="btn btn-secondary btn-sm" data-open-contact-tab="apply" style="width: 100%;">Switch to Apply / Contact</button>
+                        </div>
+                        <p class="form-powered-by" style="margin-top: 16px; text-align: center; font-size: 12px; color: var(--text-tertiary);">
+                            Powered by <a href="https://formspree.io" target="_blank" rel="noopener noreferrer" style="color: var(--accent-primary); text-decoration: none;">Formspree</a>
+                        </p>
                     </form>
                     </div>
                 </div>
@@ -1116,7 +1137,10 @@
                             <input type="text" name="_gotcha" class="suggestion-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
                             <button type="submit" class="btn btn-primary">Send</button>
                             <p id="join-status" class="form-status" role="status" aria-live="polite"></p>
-                            <p class="form-disclaimer">We’ll only use your email to reply.</p>
+                            <p class="form-disclaimer">We'll only use your email to reply.</p>
+                            <p class="form-powered-by" style="margin-top: 16px; text-align: center; font-size: 12px; color: var(--text-tertiary);">
+                                Powered by <a href="https://formspree.io" target="_blank" rel="noopener noreferrer" style="color: var(--accent-primary); text-decoration: none;">Formspree</a>
+                            </p>
                         </form>
                     </div>
                 </div>
