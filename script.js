@@ -578,8 +578,12 @@ async function loadImpactAnalytics() {
     const trendChart = document.getElementById('impact-trend-chart');
     const trendSummary = document.getElementById('impact-trend-summary');
     const milestonesList = document.getElementById('impact-milestones');
+    
+    // New simplified elements
+    const summaryStats = document.getElementById('impact-summary-stats');
+    const quickView = document.getElementById('analytics-quick-view');
 
-    if (!metricsGrid && !winsGrid && !trendChart && !milestonesList) return;
+    if (!metricsGrid && !winsGrid && !trendChart && !milestonesList && !summaryStats && !quickView) return;
 
     try {
         const [
@@ -633,6 +637,42 @@ async function loadImpactAnalytics() {
         const fallbackMetrics = manualData && Array.isArray(manualData.metrics) ? manualData.metrics : [];
         const finalMetrics = metrics.length ? metrics : fallbackMetrics;
 
+        // Populate simplified summary stats (new layout)
+        if (summaryStats && finalMetrics.length) {
+            summaryStats.innerHTML = finalMetrics
+                .slice(0, 4)
+                .filter(metric => metric && metric.value !== undefined && metric.label)
+                .map(metric => {
+                    const value = metric.value === null || metric.value === undefined ? '' : String(metric.value);
+                    const label = String(metric.label);
+                    return `
+                        <div class="impact-stat-item">
+                            <div class="impact-stat-value">${escapeHtml(value)}</div>
+                            <div class="impact-stat-label">${escapeHtml(label)}</div>
+                        </div>
+                    `;
+                })
+                .join('');
+        }
+
+        // Populate analytics quick view (new layout)
+        if (quickView && finalMetrics.length) {
+            quickView.innerHTML = finalMetrics
+                .slice(0, 3)
+                .filter(metric => metric && metric.value !== undefined && metric.label)
+                .map(metric => {
+                    const value = metric.value === null || metric.value === undefined ? '' : String(metric.value);
+                    const label = String(metric.label);
+                    return `
+                        <div class="analytics-item">
+                            <div class="analytics-value">${escapeHtml(value)}</div>
+                            <div class="analytics-label">${escapeHtml(label)}</div>
+                        </div>
+                    `;
+                })
+                .join('');
+        }
+
         if (metricsGrid) {
             if (finalMetrics.length) {
                 metricsGrid.innerHTML = finalMetrics
@@ -648,6 +688,79 @@ async function loadImpactAnalytics() {
                                 ${description ? `<div class="impact-metric-description">${escapeHtml(description)}</div>` : ''}
                             </div>
                         `;
+                    })
+                    .join('');
+                renderImpactReveals(metricsGrid);
+            } else {
+                metricsGrid.innerHTML = '<p class="empty-message">No impact metrics yet.</p>';
+            }
+        }
+
+        if (winsGrid) {
+            if (wins.length) {
+                winsGrid.innerHTML = wins
+                    .filter(win => win && win.title)
+                    .map(win => {
+                        const title = String(win.title);
+                        const project = win.project ? String(win.project) : '';
+                        const description = win.description ? String(win.description) : '';
+                        const dateLabel = win.date ? formatImpactDate(String(win.date)) : '';
+                        const link = win.link ? String(win.link) : '';
+                        const linkLabel = win.linkLabel ? String(win.linkLabel) : 'View details';
+
+                        const isExternal = link ? /^https?:\/\//i.test(link) : false;
+                        const linkAttrs = link
+                            ? `${isExternal ? ' target=\"_blank\" rel=\"noopener noreferrer\"' : ''}`
+                            : '';
+
+                        return `
+                            <div class="impact-win-card glass-card reveal">
+                                <div class="impact-win-meta">
+                                    ${project ? `<span class="tag impact-win-tag">${escapeHtml(project)}</span>` : '<span></span>'}
+                                    ${dateLabel ? `<span class="impact-win-date">${escapeHtml(dateLabel)}</span>` : ''}
+                                </div>
+                                <h3 class="impact-win-title">${escapeHtml(title)}</h3>
+                                ${description ? `<p class="impact-win-description">${escapeHtml(description)}</p>` : ''}
+                                ${link ? `<a class="impact-win-link" href="${escapeHtml(link)}"${linkAttrs}>${escapeHtml(linkLabel)} &rarr;</a>` : ''}
+                            </div>
+                        `;
+                    })
+                    .join('');
+                renderImpactReveals(winsGrid);
+            } else {
+                winsGrid.innerHTML = '<p class="empty-message">No wins logged yet.</p>';
+            }
+        }
+
+        renderTrendChart(trendChart, trendSummary, weeklyTrend);
+        renderMilestones(milestonesList, milestones);
+
+        if (updatedEl) {
+            const parts = [];
+            if (githubMeta && githubMeta.updatedAt) {
+                const formatted = formatImpactDate(String(githubMeta.updatedAt));
+                if (formatted) parts.push(`Updated ${formatted}`);
+            } else if (manualData && manualData.updated) {
+                const formatted = formatImpactDate(String(manualData.updated));
+                if (formatted) parts.push(`Updated ${formatted}`);
+            }
+            if (githubMeta && githubMeta.source) {
+                parts.push(`Source: ${String(githubMeta.source)}`);
+            } else if (manualData && manualData.source) {
+                parts.push(`Source: ${String(manualData.source)}`);
+            }
+            updatedEl.textContent = parts.join(' | ');
+        }
+    } catch (error) {
+        console.error('Failed to load impact analytics:', error);
+        if (metricsGrid) metricsGrid.innerHTML = '<p class="error-message">Unable to load impact metrics.</p>';
+        if (winsGrid) winsGrid.innerHTML = '<p class="error-message">Unable to load wins.</p>';
+        if (trendChart) trendChart.innerHTML = '<p class="error-message">Unable to load trend data.</p>';
+        if (milestonesList) milestonesList.innerHTML = '<li class="error-message">Unable to load milestones.</li>';
+        if (summaryStats) summaryStats.innerHTML = '<p class="error-message">Unable to load stats.</p>';
+        if (quickView) quickView.innerHTML = '<p class="error-message">Unable to load analytics.</p>';
+    }
+}
                     })
                     .join('');
                 renderImpactReveals(metricsGrid);
