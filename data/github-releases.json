@@ -1,1 +1,21 @@
-[]
+[
+  {
+    "repo": "charlie2233/Basketball_action_recoginition_sever",
+    "name": "Checkpoint 13",
+    "tag": "checkpoint-13",
+    "url": "https://github.com/charlie2233/Basketball_action_recoginition_sever/releases/tag/checkpoint-13",
+    "published_at": "2026-02-05T08:43:11Z",
+    "draft": false,
+    "prerelease": false,
+    "zipball_url": "https://api.github.com/repos/charlie2233/Basketball_action_recoginition_sever/zipball/checkpoint-13",
+    "tarball_url": "https://api.github.com/repos/charlie2233/Basketball_action_recoginition_sever/tarball/checkpoint-13",
+    "assets": [
+      {
+        "name": "r2plus1d_multiclass_13_0.0001.pt",
+        "download_url": "https://github.com/charlie2233/Basketball_action_recoginition_sever/releases/download/checkpoint-13/r2plus1d_multiclass_13_0.0001.pt",
+        "size": 360459107,
+        "download_count": 0
+      }
+    ]
+  }
+]
