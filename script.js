@@ -1534,10 +1534,7 @@ window.addEventListener('load', () => {
     document.body.classList.add('loaded');
 });
 
-// Performance: Reduce animations on low-end devices
-if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
-    document.body.classList.add('reduce-motion');
-}
+// Performance: Honor user motion preferences only (avoid disabling effects unexpectedly).
 
 
 // ================================
