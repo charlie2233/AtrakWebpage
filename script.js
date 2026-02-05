@@ -1093,7 +1093,7 @@ wireAsyncForm(document.querySelector('#suggestion-form'), {
 
 wireAsyncForm(document.querySelector('#join-form'), {
     minMessageLength: 20,
-    successMessage: 'Thanks — your message was sent. We'll reply soon.'
+    successMessage: "Thanks — your message was sent. We'll reply soon."
 });
 
 // ================================
@@ -1860,6 +1860,9 @@ const initMediaCarousels = () => {
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initMediaCarousels);
+} else {
+    initMediaCarousels();
+}
 
 // ============================================
 // KEYBOARD NAVIGATION ENHANCEMENTS
