@@ -812,6 +812,35 @@ leaderCards.forEach(card => {
     });
 });
 
+// Make leader cards clickable without nesting anchors
+leaderCards.forEach(card => {
+    const href = card.getAttribute('data-profile-href');
+    if (!href) return;
+
+    card.setAttribute('role', 'link');
+    if (!card.hasAttribute('tabindex')) {
+        card.setAttribute('tabindex', '0');
+    }
+
+    const navigate = () => {
+        window.location.href = href;
+    };
+
+    card.addEventListener('click', (e) => {
+        if (e.target && e.target.closest && e.target.closest('a, button, input, textarea, select, label')) {
+            return;
+        }
+        navigate();
+    });
+
+    card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            navigate();
+        }
+    });
+});
+
 
 // ================================
 // Forms (Suggestion Box + Join/Contact)
