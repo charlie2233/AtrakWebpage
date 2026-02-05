@@ -1,5 +1,134 @@
 [
   {
+    "id": "6332574998",
+    "type": "ReleaseEvent",
+    "actor": {
+      "id": 117957000,
+      "login": "charlie2233",
+      "display_login": "charlie2233",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/charlie2233",
+      "avatar_url": "https://avatars.githubusercontent.com/u/117957000?"
+    },
+    "repo": {
+      "id": 1132028291,
+      "name": "charlie2233/Basketball_action_recoginition_sever",
+      "url": "https://api.github.com/repos/charlie2233/Basketball_action_recoginition_sever"
+    },
+    "payload": {
+      "action": "published",
+      "release": {
+        "url": "https://api.github.com/repos/charlie2233/Basketball_action_recoginition_sever/releases/283262188",
+        "assets_url": "https://api.github.com/repos/charlie2233/Basketball_action_recoginition_sever/releases/283262188/assets",
+        "upload_url": "https://uploads.github.com/repos/charlie2233/Basketball_action_recoginition_sever/releases/283262188/assets{?name,label}",
+        "html_url": "https://github.com/charlie2233/Basketball_action_recoginition_sever/releases/tag/checkpoint-13",
+        "id": 283262188,
+        "author": {
+          "login": "charlie2233",
+          "id": 117957000,
+          "node_id": "U_kgDOBwfhiA",
+          "avatar_url": "https://avatars.githubusercontent.com/u/117957000?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/charlie2233",
+          "html_url": "https://github.com/charlie2233",
+          "followers_url": "https://api.github.com/users/charlie2233/followers",
+          "following_url": "https://api.github.com/users/charlie2233/following{/other_user}",
+          "gists_url": "https://api.github.com/users/charlie2233/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/charlie2233/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/charlie2233/subscriptions",
+          "organizations_url": "https://api.github.com/users/charlie2233/orgs",
+          "repos_url": "https://api.github.com/users/charlie2233/repos",
+          "events_url": "https://api.github.com/users/charlie2233/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/charlie2233/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "node_id": "RE_kwDOQ3lhg84Q4jzs",
+        "tag_name": "checkpoint-13",
+        "target_commitish": "main",
+        "name": "Checkpoint 13",
+        "draft": false,
+        "immutable": false,
+        "prerelease": false,
+        "created_at": "2026-02-05T08:22:15Z",
+        "updated_at": "2026-02-05T08:51:45Z",
+        "published_at": "2026-02-05T08:43:11Z",
+        "assets": [
+          {
+            "url": "https://api.github.com/repos/charlie2233/Basketball_action_recoginition_sever/releases/assets/351044344",
+            "id": 351044344,
+            "node_id": "RA_kwDOQ3lhg84U7IL4",
+            "name": "r2plus1d_multiclass_13_0.0001.pt",
+            "label": "",
+            "uploader": {
+              "login": "charlie2233",
+              "id": 117957000,
+              "node_id": "U_kgDOBwfhiA",
+              "avatar_url": "https://avatars.githubusercontent.com/u/117957000?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/charlie2233",
+              "html_url": "https://github.com/charlie2233",
+              "followers_url": "https://api.github.com/users/charlie2233/followers",
+              "following_url": "https://api.github.com/users/charlie2233/following{/other_user}",
+              "gists_url": "https://api.github.com/users/charlie2233/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/charlie2233/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/charlie2233/subscriptions",
+              "organizations_url": "https://api.github.com/users/charlie2233/orgs",
+              "repos_url": "https://api.github.com/users/charlie2233/repos",
+              "events_url": "https://api.github.com/users/charlie2233/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/charlie2233/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "content_type": "application/octet-stream",
+            "state": "uploaded",
+            "size": 360459107,
+            "digest": "sha256:eb77b43e2ee4f85a648a565a5b2ba1223d16e8763a5bb4d9699d6e91d8bfef72",
+            "download_count": 0,
+            "created_at": "2026-02-05T08:48:49Z",
+            "updated_at": "2026-02-05T08:51:45Z",
+            "browser_download_url": "https://github.com/charlie2233/Basketball_action_recoginition_sever/releases/download/checkpoint-13/r2plus1d_multiclass_13_0.0001.pt"
+          }
+        ],
+        "tarball_url": "https://api.github.com/repos/charlie2233/Basketball_action_recoginition_sever/tarball/checkpoint-13",
+        "zipball_url": "https://api.github.com/repos/charlie2233/Basketball_action_recoginition_sever/zipball/checkpoint-13",
+        "body": "R2Plus1D checkpoint 13 (lr 0.0001).\nFile: r2plus1d_multiclass_13_0.0001.pt",
+        "short_description_html": "<p>R2Plus1D checkpoint 13 (lr 0.0001).<br>\nFile: r2plus1d_multiclass_13_0.0001.pt</p>",
+        "is_short_description_html_truncated": false
+      }
+    },
+    "public": true,
+    "created_at": "2026-02-05T08:43:11Z"
+  },
+  {
+    "id": "8154567270",
+    "type": "PushEvent",
+    "actor": {
+      "id": 117957000,
+      "login": "charlie2233",
+      "display_login": "charlie2233",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/charlie2233",
+      "avatar_url": "https://avatars.githubusercontent.com/u/117957000?"
+    },
+    "repo": {
+      "id": 1132028291,
+      "name": "charlie2233/Basketball_action_recoginition_sever",
+      "url": "https://api.github.com/repos/charlie2233/Basketball_action_recoginition_sever"
+    },
+    "payload": {
+      "repository_id": 1132028291,
+      "push_id": 30449452585,
+      "ref": "refs/heads/main",
+      "head": "b50f60bcf083c728187d0c33aa03028339196689",
+      "before": "b78745621fd134e8c5f72f1314633ba1a16c6740"
+    },
+    "public": true,
+    "created_at": "2026-02-05T08:22:18Z"
+  },
+  {
     "id": "6265188609",
     "type": "PublicEvent",
     "actor": {
