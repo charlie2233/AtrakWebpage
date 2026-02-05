@@ -761,77 +761,6 @@ async function loadImpactAnalytics() {
         if (quickView) quickView.innerHTML = '<p class="error-message">Unable to load analytics.</p>';
     }
 }
-                    })
-                    .join('');
-                renderImpactReveals(metricsGrid);
-            } else {
-                metricsGrid.innerHTML = '<p class="empty-message">No impact metrics yet.</p>';
-            }
-        }
-
-        if (winsGrid) {
-            if (wins.length) {
-                winsGrid.innerHTML = wins
-                    .filter(win => win && win.title)
-                    .map(win => {
-                        const title = String(win.title);
-                        const project = win.project ? String(win.project) : '';
-                        const description = win.description ? String(win.description) : '';
-                        const dateLabel = win.date ? formatImpactDate(String(win.date)) : '';
-                        const link = win.link ? String(win.link) : '';
-                        const linkLabel = win.linkLabel ? String(win.linkLabel) : 'View details';
-
-                        const isExternal = link ? /^https?:\/\//i.test(link) : false;
-                        const linkAttrs = link
-                            ? `${isExternal ? ' target=\"_blank\" rel=\"noopener noreferrer\"' : ''}`
-                            : '';
-
-                        return `
-                            <div class="impact-win-card glass-card reveal">
-                                <div class="impact-win-meta">
-                                    ${project ? `<span class="tag impact-win-tag">${escapeHtml(project)}</span>` : '<span></span>'}
-                                    ${dateLabel ? `<span class="impact-win-date">${escapeHtml(dateLabel)}</span>` : ''}
-                                </div>
-                                <h3 class="impact-win-title">${escapeHtml(title)}</h3>
-                                ${description ? `<p class="impact-win-description">${escapeHtml(description)}</p>` : ''}
-                                ${link ? `<a class="impact-win-link" href="${escapeHtml(link)}"${linkAttrs}>${escapeHtml(linkLabel)} &rarr;</a>` : ''}
-                            </div>
-                        `;
-                    })
-                    .join('');
-                renderImpactReveals(winsGrid);
-            } else {
-                winsGrid.innerHTML = '<p class="empty-message">No wins logged yet.</p>';
-            }
-        }
-
-        renderTrendChart(trendChart, trendSummary, weeklyTrend);
-        renderMilestones(milestonesList, milestones);
-
-        if (updatedEl) {
-            const parts = [];
-            if (githubMeta && githubMeta.updatedAt) {
-                const formatted = formatImpactDate(String(githubMeta.updatedAt));
-                if (formatted) parts.push(`Updated ${formatted}`);
-            } else if (manualData && manualData.updated) {
-                const formatted = formatImpactDate(String(manualData.updated));
-                if (formatted) parts.push(`Updated ${formatted}`);
-            }
-            if (githubMeta && githubMeta.source) {
-                parts.push(`Source: ${String(githubMeta.source)}`);
-            } else if (manualData && manualData.source) {
-                parts.push(`Source: ${String(manualData.source)}`);
-            }
-            updatedEl.textContent = parts.join(' | ');
-        }
-    } catch (error) {
-        console.error('Failed to load impact analytics:', error);
-        if (metricsGrid) metricsGrid.innerHTML = '<p class="error-message">Unable to load impact metrics.</p>';
-        if (winsGrid) winsGrid.innerHTML = '<p class="error-message">Unable to load wins.</p>';
-        if (trendChart) trendChart.innerHTML = '<p class="error-message">Unable to load trend data.</p>';
-        if (milestonesList) milestonesList.innerHTML = '<li class="error-message">Unable to load milestones.</li>';
-    }
-}
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', loadImpactAnalytics);
@@ -1990,14 +1919,6 @@ liveRegion.setAttribute('aria-atomic', 'true');
 liveRegion.className = 'live-region';
 document.body.appendChild(liveRegion);
 
-function announceToScreenReader(message) {
-    liveRegion.textContent = message;
-    // Clear after announcement
-    setTimeout(() => {
-        liveRegion.textContent = '';
-    }, 1000);
-}
-
 // Esc key to close modals, menus, and overlays
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' || e.key === 'Esc') {
@@ -2609,21 +2530,3 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-function announceToScreenReader(message) {
-    const announcement = document.createElement('div');
-    announcement.setAttribute('role', 'status');
-    announcement.setAttribute('aria-live', 'polite');
-    announcement.setAttribute('aria-atomic', 'true');
-    announcement.className = 'sr-only';
-    announcement.textContent = message;
-    announcement.style.position = 'absolute';
-    announcement.style.left = '-10000px';
-    announcement.style.width = '1px';
-    announcement.style.height = '1px';
-    announcement.style.overflow = 'hidden';
-    document.body.appendChild(announcement);
-    setTimeout(() => announcement.remove(), 1000);
-}
-} else {
-    initMediaCarousels();
-}
