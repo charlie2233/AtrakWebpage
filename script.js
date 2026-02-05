@@ -578,8 +578,12 @@ async function loadImpactAnalytics() {
     const trendChart = document.getElementById('impact-trend-chart');
     const trendSummary = document.getElementById('impact-trend-summary');
     const milestonesList = document.getElementById('impact-milestones');
+    
+    // New simplified elements
+    const summaryStats = document.getElementById('impact-summary-stats');
+    const quickView = document.getElementById('analytics-quick-view');
 
-    if (!metricsGrid && !winsGrid && !trendChart && !milestonesList) return;
+    if (!metricsGrid && !winsGrid && !trendChart && !milestonesList && !summaryStats && !quickView) return;
 
     try {
         const [
@@ -632,6 +636,42 @@ async function loadImpactAnalytics() {
 
         const fallbackMetrics = manualData && Array.isArray(manualData.metrics) ? manualData.metrics : [];
         const finalMetrics = metrics.length ? metrics : fallbackMetrics;
+
+        // Populate simplified summary stats (new layout)
+        if (summaryStats && finalMetrics.length) {
+            summaryStats.innerHTML = finalMetrics
+                .slice(0, 4)
+                .filter(metric => metric && metric.value !== undefined && metric.label)
+                .map(metric => {
+                    const value = metric.value === null || metric.value === undefined ? '' : String(metric.value);
+                    const label = String(metric.label);
+                    return `
+                        <div class="impact-stat-item">
+                            <div class="impact-stat-value">${escapeHtml(value)}</div>
+                            <div class="impact-stat-label">${escapeHtml(label)}</div>
+                        </div>
+                    `;
+                })
+                .join('');
+        }
+
+        // Populate analytics quick view (new layout)
+        if (quickView && finalMetrics.length) {
+            quickView.innerHTML = finalMetrics
+                .slice(0, 3)
+                .filter(metric => metric && metric.value !== undefined && metric.label)
+                .map(metric => {
+                    const value = metric.value === null || metric.value === undefined ? '' : String(metric.value);
+                    const label = String(metric.label);
+                    return `
+                        <div class="analytics-item">
+                            <div class="analytics-value">${escapeHtml(value)}</div>
+                            <div class="analytics-label">${escapeHtml(label)}</div>
+                        </div>
+                    `;
+                })
+                .join('');
+        }
 
         if (metricsGrid) {
             if (finalMetrics.length) {
@@ -717,6 +757,8 @@ async function loadImpactAnalytics() {
         if (winsGrid) winsGrid.innerHTML = '<p class="error-message">Unable to load wins.</p>';
         if (trendChart) trendChart.innerHTML = '<p class="error-message">Unable to load trend data.</p>';
         if (milestonesList) milestonesList.innerHTML = '<li class="error-message">Unable to load milestones.</li>';
+        if (summaryStats) summaryStats.innerHTML = '<p class="error-message">Unable to load stats.</p>';
+        if (quickView) quickView.innerHTML = '<p class="error-message">Unable to load analytics.</p>';
     }
 }
 
@@ -1877,14 +1919,6 @@ liveRegion.setAttribute('aria-atomic', 'true');
 liveRegion.className = 'live-region';
 document.body.appendChild(liveRegion);
 
-function announceToScreenReader(message) {
-    liveRegion.textContent = message;
-    // Clear after announcement
-    setTimeout(() => {
-        liveRegion.textContent = '';
-    }, 1000);
-}
-
 // Esc key to close modals, menus, and overlays
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' || e.key === 'Esc') {
@@ -2496,21 +2530,3 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-function announceToScreenReader(message) {
-    const announcement = document.createElement('div');
-    announcement.setAttribute('role', 'status');
-    announcement.setAttribute('aria-live', 'polite');
-    announcement.setAttribute('aria-atomic', 'true');
-    announcement.className = 'sr-only';
-    announcement.textContent = message;
-    announcement.style.position = 'absolute';
-    announcement.style.left = '-10000px';
-    announcement.style.width = '1px';
-    announcement.style.height = '1px';
-    announcement.style.overflow = 'hidden';
-    document.body.appendChild(announcement);
-    setTimeout(() => announcement.remove(), 1000);
-}
-} else {
-    initMediaCarousels();
-}
