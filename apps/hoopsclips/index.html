@@ -72,6 +72,17 @@
                                 <source id="videoSource" src="" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
+                            <div class="video-loading hidden" id="videoLoading" aria-live="polite">
+                                <div class="loading-spinner"></div>
+                                <div class="loading-text">
+                                    <strong>Loading video...</strong>
+                                    <span id="videoLoadingDetail">Preparing file</span>
+                                </div>
+                            </div>
+                            <div class="video-overlay" id="videoOverlay" aria-hidden="true">
+                                <div class="overlay-message" id="videoOverlayMessage">CUT</div>
+                            </div>
+                            <div class="drop-hint" id="videoDropHint">Drop video to load</div>
                             <div class="video-placeholder" id="videoPlaceholder">
                                 <div class="placeholder-content">
                                     <span class="placeholder-icon">🏀</span>
@@ -105,10 +116,29 @@
                             </div>
                         </div>
 
+                        <div class="video-meta" id="videoMeta">
+                            <div class="meta-item">
+                                <span>File</span>
+                                <strong id="videoFileName">—</strong>
+                            </div>
+                            <div class="meta-item">
+                                <span>Duration</span>
+                                <strong id="videoDuration">—</strong>
+                            </div>
+                            <div class="meta-item">
+                                <span>Resolution</span>
+                                <strong id="videoResolution">—</strong>
+                            </div>
+                        </div>
+
                         <!-- Clips Timeline -->
                         <div class="clips-list" id="clipsList">
                             <div class="clips-header">
                                 <h3>Clips (<span id="clipsCount">0</span>)</h3>
+                                <div class="clips-actions">
+                                    <button class="btn-secondary btn-sm" id="reviewClipsBtn">Review Clips</button>
+                                    <button class="btn-secondary btn-sm" id="previewReelBtn">Preview Reel</button>
+                                </div>
                             </div>
                             <div class="clips-items" id="clipsItems">
                                 <div class="empty-state">
@@ -256,6 +286,35 @@
                                     <p>No clips in export queue. Mark clips as "Keep" in the Review tab.</p>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="export-section">
+                            <h3>Highlight Reel</h3>
+                            <p class="section-description">Stitch keep clips into a single sequence preview.</p>
+                            <div class="reel-summary">
+                                <div class="reel-metric">
+                                    <span>Total runtime</span>
+                                    <strong id="reelTotal">0:00</strong>
+                                </div>
+                                <div class="reel-metric">
+                                    <span>Clips queued</span>
+                                    <strong id="reelCount">0</strong>
+                                </div>
+                            </div>
+                            <div class="reel-timeline" id="reelTimeline">
+                                <div class="empty-state">
+                                    <p>No keep clips yet. Mark clips as "Keep" to build a reel.</p>
+                                </div>
+                            </div>
+                            <div class="reel-actions">
+                                <button class="btn-primary" id="reelPreview">
+                                    <span>▶️</span> Preview Reel
+                                </button>
+                                <button class="btn-secondary" id="reelShuffle">
+                                    <span>🔀</span> Shuffle Order
+                                </button>
+                            </div>
+                            <p class="reel-note">Preview uses the clip padding set in Settings.</p>
                         </div>
                     </div>
                 </div>

@@ -4,6 +4,9 @@ class PlayerTab {
         this.video = null;
         this.markInTime = null;
         this.markOutTime = null;
+        this.currentObjectUrl = null;
+        this.sequenceListener = null;
+        this.sequenceTimer = null;
         this.init();
     }
 
@@ -21,33 +24,83 @@ class PlayerTab {
         const videoPlayer = document.getElementById('videoPlayer');
         const videoSource = document.getElementById('videoSource');
         const placeholder = document.getElementById('videoPlaceholder');
+        const wrapper = document.querySelector('.video-wrapper');
+
+        const handleFile = (file) => {
+            if (!file) return;
+            if (!file.type.startsWith('video/')) {
+                alert('Please choose a video file.');
+                return;
+            }
+            this.loadVideoFile(file, { videoPlayer, videoSource, placeholder });
+        };
 
         uploadInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const url = URL.createObjectURL(file);
-                videoSource.src = url;
-                videoPlayer.load();
-                placeholder.classList.add('hidden');
-                
-                // Enable controls
-                this.enableControls();
-                
-                // Store video info
-                Store.setCurrentVideo({
-                    name: file.name,
-                    size: file.size,
-                    type: file.type,
-                    url: url
-                });
-            }
+            handleFile(e.target.files[0]);
         });
 
+        if (wrapper) {
+            wrapper.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                wrapper.classList.add('is-dragging');
+            });
+
+            wrapper.addEventListener('dragleave', () => {
+                wrapper.classList.remove('is-dragging');
+            });
+
+            wrapper.addEventListener('drop', (e) => {
+                e.preventDefault();
+                wrapper.classList.remove('is-dragging');
+                handleFile(e.dataTransfer.files[0]);
+            });
+        }
+
         // Enable controls when video is loaded
+        videoPlayer.addEventListener('loadstart', () => {
+            this.setLoading(true, 'Loading video stream...');
+        });
+
         videoPlayer.addEventListener('loadedmetadata', () => {
             this.video = videoPlayer;
             this.enableControls();
+            this.setLoading(false);
+            this.updateVideoMeta();
         });
+
+        videoPlayer.addEventListener('canplay', () => {
+            this.setLoading(false);
+        });
+
+        videoPlayer.addEventListener('error', () => {
+            this.setLoading(false, 'Failed to load video.');
+            placeholder.classList.remove('hidden');
+        });
+    }
+
+    loadVideoFile(file, { videoPlayer, videoSource, placeholder }) {
+        if (this.currentObjectUrl) {
+            URL.revokeObjectURL(this.currentObjectUrl);
+        }
+
+        this.stopReelPreview();
+
+        const url = URL.createObjectURL(file);
+        this.currentObjectUrl = url;
+        videoSource.src = url;
+        videoPlayer.load();
+        placeholder.classList.add('hidden');
+        this.setLoading(true, `Decoding ${file.name}`);
+
+        // Store video info
+        Store.setCurrentVideo({
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            url: url
+        });
+
+        this.updateVideoMeta(file);
     }
 
     setupVideoControls() {
@@ -55,6 +108,8 @@ class PlayerTab {
         const markOutBtn = document.getElementById('markOut');
         const addClipBtn = document.getElementById('addClip');
         const aiAnalyzeBtn = document.getElementById('aiAnalyze');
+        const reviewBtn = document.getElementById('reviewClipsBtn');
+        const previewReelBtn = document.getElementById('previewReelBtn');
 
         markInBtn.addEventListener('click', () => {
             if (this.video) {
@@ -78,6 +133,14 @@ class PlayerTab {
 
         aiAnalyzeBtn.addEventListener('click', () => {
             this.runAIAnalysis();
+        });
+
+        reviewBtn?.addEventListener('click', () => {
+            this.openReview();
+        });
+
+        previewReelBtn?.addEventListener('click', () => {
+            this.previewReel();
         });
     }
 
@@ -128,6 +191,11 @@ class PlayerTab {
     updateClipsList() {
         const clipsItems = document.getElementById('clipsItems');
         const clips = Store.getClips();
+        const reviewBtn = document.getElementById('reviewClipsBtn');
+        const previewReelBtn = document.getElementById('previewReelBtn');
+
+        if (reviewBtn) reviewBtn.disabled = clips.length === 0;
+        if (previewReelBtn) previewReelBtn.disabled = clips.length === 0;
 
         if (clips.length === 0) {
             clipsItems.innerHTML = `
@@ -138,7 +206,10 @@ class PlayerTab {
             return;
         }
 
-        clipsItems.innerHTML = clips.map(clip => `
+        clipsItems.innerHTML = clips.map(clip => {
+            const status = clip.status || 'unreviewed';
+            const type = clip.type || 'manual';
+            return `
             <div class="clip-item" data-clip-id="${clip.id}">
                 <div class="clip-info">
                     <div class="clip-title">${clip.title}</div>
@@ -146,25 +217,34 @@ class PlayerTab {
                         ${this.formatTime(clip.startTime)} - ${this.formatTime(clip.endTime)} 
                         (${this.formatTime(clip.duration)})
                     </div>
+                    <div class="clip-badges">
+                        <span class="clip-badge ${type === 'ai' ? 'ai' : 'manual'}">${type === 'ai' ? 'AI' : 'Manual'}</span>
+                        <span class="clip-badge status-${status}">${status}</span>
+                    </div>
                 </div>
                 <div class="clip-actions">
-                    <button class="btn-icon" onclick="window.playerTab.playClip(${clip.id})" title="Play">
+                    <button class="btn-icon" onclick="window.playerTab.playClip('${clip.id}')" title="Play">
                         ▶️
                     </button>
-                    <button class="btn-icon" onclick="window.playerTab.seekToClip(${clip.id})" title="Jump to">
+                    <button class="btn-icon" onclick="window.playerTab.seekToClip('${clip.id}')" title="Jump to">
                         ⏭️
                     </button>
-                    <button class="btn-icon" onclick="window.playerTab.deleteClip(${clip.id})" title="Delete">
+                    <button class="btn-icon" onclick="window.playerTab.openReview('${clip.id}')" title="Review">
+                        📝
+                    </button>
+                    <button class="btn-icon" onclick="window.playerTab.deleteClip('${clip.id}')" title="Delete">
                         🗑️
                     </button>
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
     }
 
     playClip(clipId) {
         const clip = Store.getClip(clipId);
         if (clip && this.video) {
+            this.stopReelPreview();
             this.video.currentTime = clip.startTime;
             this.video.play();
             
@@ -189,6 +269,7 @@ class PlayerTab {
     seekToClip(clipId) {
         const clip = Store.getClip(clipId);
         if (clip && this.video) {
+            this.stopReelPreview();
             this.video.currentTime = clip.startTime;
         }
     }
@@ -197,6 +278,90 @@ class PlayerTab {
         if (confirm('Are you sure you want to delete this clip?')) {
             Store.deleteClip(clipId);
         }
+    }
+
+    openReview(clipId = null) {
+        if (window.app?.switchTab) {
+            window.app.switchTab('review');
+        }
+        if (clipId && window.reviewTab?.focusClip) {
+            window.reviewTab.focusClip(clipId);
+        }
+    }
+
+    previewReel() {
+        const keepClips = Store.getClipsByStatus('keep');
+        const clips = keepClips.length ? keepClips : Store.getClips();
+        this.playReelPreview(clips);
+    }
+
+    playReelPreview(clips) {
+        if (!this.video) {
+            alert('Load a video first to preview the reel.');
+            return;
+        }
+        if (!clips || clips.length === 0) {
+            alert('No clips to preview yet.');
+            return;
+        }
+
+        this.stopReelPreview();
+
+        const padding = Store.getSettings()?.clipPadding || 0;
+        const maxDuration = Number.isFinite(this.video.duration) ? this.video.duration : Infinity;
+        const ordered = clips.map(clip => ({
+            ...clip,
+            startTime: Math.max(0, (clip.startTime || 0) - padding),
+            endTime: Math.min(maxDuration, (clip.endTime || 0) + padding)
+        }));
+        let index = 0;
+
+        const playClipAtIndex = () => {
+            const current = ordered[index];
+            if (!current) {
+                this.stopReelPreview();
+                return;
+            }
+            this.flashOverlay(`CLIP ${index + 1}/${ordered.length}`);
+            this.video.currentTime = current.startTime;
+            this.video.play();
+        };
+
+        this.sequenceListener = () => {
+            const current = ordered[index];
+            if (!current) return;
+            if (this.video.currentTime >= current.endTime) {
+                index += 1;
+                if (index >= ordered.length) {
+                    this.stopReelPreview();
+                    return;
+                }
+                playClipAtIndex();
+            }
+        };
+
+        this.video.addEventListener('timeupdate', this.sequenceListener);
+        playClipAtIndex();
+    }
+
+    stopReelPreview() {
+        if (this.video && this.sequenceListener) {
+            this.video.removeEventListener('timeupdate', this.sequenceListener);
+            this.sequenceListener = null;
+        }
+    }
+
+    flashOverlay(message) {
+        const overlay = document.getElementById('videoOverlay');
+        const overlayMessage = document.getElementById('videoOverlayMessage');
+        if (!overlay || !overlayMessage) return;
+
+        overlayMessage.textContent = message;
+        overlay.classList.add('show');
+        clearTimeout(this.sequenceTimer);
+        this.sequenceTimer = setTimeout(() => {
+            overlay.classList.remove('show');
+        }, 500);
     }
 
     async runAIAnalysis() {
@@ -288,9 +453,43 @@ class PlayerTab {
     }
 
     formatTime(seconds) {
+        if (!Number.isFinite(seconds)) {
+            return '0:00';
+        }
         const m = Math.floor(seconds / 60);
         const s = Math.floor(seconds % 60);
         return `${m}:${String(s).padStart(2, '0')}`;
+    }
+
+    setLoading(isLoading, detail = '') {
+        const loadingEl = document.getElementById('videoLoading');
+        const detailEl = document.getElementById('videoLoadingDetail');
+        if (!loadingEl) return;
+        if (detailEl && detail) detailEl.textContent = detail;
+        loadingEl.classList.toggle('hidden', !isLoading);
+    }
+
+    updateVideoMeta(file = null) {
+        const nameEl = document.getElementById('videoFileName');
+        const durationEl = document.getElementById('videoDuration');
+        const resolutionEl = document.getElementById('videoResolution');
+
+        if (file && nameEl) {
+            nameEl.textContent = file.name;
+        } else if (nameEl && Store.getCurrentVideo()?.name) {
+            nameEl.textContent = Store.getCurrentVideo().name;
+        }
+
+        if (this.video && durationEl) {
+            const duration = this.video.duration || 0;
+            durationEl.textContent = this.formatTime(duration);
+        }
+
+        if (this.video && resolutionEl) {
+            const width = this.video.videoWidth || 0;
+            const height = this.video.videoHeight || 0;
+            resolutionEl.textContent = width && height ? `${width}×${height}` : '—';
+        }
     }
 }
 

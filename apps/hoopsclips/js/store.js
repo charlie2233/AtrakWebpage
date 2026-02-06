@@ -21,6 +21,15 @@ const Store = {
             try {
                 const parsed = JSON.parse(saved);
                 this.data = { ...this.data, ...parsed };
+                if (Array.isArray(this.data.clips)) {
+                    this.data.clips = this.data.clips.map(clip => ({
+                        status: clip.status || 'unreviewed',
+                        team: clip.team ?? null,
+                        style: clip.style || 'classic',
+                        type: clip.type || 'manual',
+                        ...clip
+                    }));
+                }
             } catch (e) {
                 console.error('Failed to load data:', e);
             }

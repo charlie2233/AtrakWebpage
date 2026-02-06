@@ -1,11 +1,13 @@
 // Export Tab - Export clips in various formats
 class ExportTab {
     constructor() {
+        this.reelOrder = [];
         this.init();
     }
 
     init() {
         this.setupExportButtons();
+        this.setupReelControls();
         this.updateExportQueue();
         
         // Subscribe to store updates
@@ -22,6 +24,19 @@ class ExportTab {
 
         exportQueueBtn?.addEventListener('click', () => {
             this.showExportQueue();
+        });
+    }
+
+    setupReelControls() {
+        const previewBtn = document.getElementById('reelPreview');
+        const shuffleBtn = document.getElementById('reelShuffle');
+
+        previewBtn?.addEventListener('click', () => {
+            this.previewReel();
+        });
+
+        shuffleBtn?.addEventListener('click', () => {
+            this.shuffleReel();
         });
     }
 
@@ -138,6 +153,7 @@ class ExportTab {
                     <p>No clips in export queue. Mark clips as "Keep" in the Review tab.</p>
                 </div>
             `;
+            this.updateReel([]);
             return;
         }
 
@@ -157,6 +173,90 @@ class ExportTab {
                 `).join('')}
             </div>
         `;
+
+        this.updateReel(keepClips);
+    }
+
+    updateReel(keepClips) {
+        const timeline = document.getElementById('reelTimeline');
+        const totalEl = document.getElementById('reelTotal');
+        const countEl = document.getElementById('reelCount');
+
+        if (!timeline || !totalEl || !countEl) return;
+
+        this.syncReelOrder(keepClips);
+        const ordered = this.getReelClips(keepClips);
+
+        if (ordered.length === 0) {
+            timeline.innerHTML = `
+                <div class="empty-state">
+                    <p>No keep clips yet. Mark clips as "Keep" to build a reel.</p>
+                </div>
+            `;
+            totalEl.textContent = '0:00';
+            countEl.textContent = '0';
+            return;
+        }
+
+        const padding = Store.getSettings()?.clipPadding || 0;
+        const totalDuration = ordered.reduce((sum, clip) => sum + (clip.duration || 0) + (padding * 2), 0);
+        totalEl.textContent = this.formatTime(totalDuration);
+        countEl.textContent = ordered.length;
+
+        timeline.innerHTML = ordered.map((clip, index) => `
+            <div class="reel-segment ${clip.type === 'ai' ? 'ai' : 'manual'}" style="flex: ${Math.max((clip.duration || 1) + (padding * 2), 1)}"
+                 title="${clip.title} • ${this.formatTime((clip.duration || 0) + (padding * 2))}">
+                <span>${index + 1}</span>
+            </div>
+        `).join('');
+    }
+
+    syncReelOrder(clips) {
+        const ids = clips.map(clip => clip.id);
+
+        if (this.reelOrder.length === 0) {
+            this.reelOrder = ids.slice();
+            return;
+        }
+
+        this.reelOrder = this.reelOrder.filter(id => ids.includes(id));
+        ids.forEach(id => {
+            if (!this.reelOrder.includes(id)) {
+                this.reelOrder.push(id);
+            }
+        });
+    }
+
+    getReelClips(clips) {
+        if (!clips || clips.length === 0) return [];
+        const map = new Map(clips.map(clip => [clip.id, clip]));
+        return this.reelOrder.map(id => map.get(id)).filter(Boolean);
+    }
+
+    previewReel() {
+        const keepClips = Store.getClipsByStatus('keep');
+        if (keepClips.length === 0) {
+            alert('No keep clips to preview yet.');
+            return;
+        }
+
+        if (window.app?.switchTab) {
+            window.app.switchTab('player');
+        }
+
+        setTimeout(() => {
+            const ordered = this.getReelClips(keepClips);
+            window.playerTab?.playReelPreview(ordered);
+        }, 200);
+    }
+
+    shuffleReel() {
+        if (this.reelOrder.length <= 1) return;
+        for (let i = this.reelOrder.length - 1; i > 0; i -= 1) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [this.reelOrder[i], this.reelOrder[j]] = [this.reelOrder[j], this.reelOrder[i]];
+        }
+        this.updateReel(Store.getClipsByStatus('keep'));
     }
 
     showExportQueue() {
@@ -170,6 +270,9 @@ class ExportTab {
     }
 
     formatTime(seconds) {
+        if (!Number.isFinite(seconds)) {
+            return '0:00';
+        }
         const m = Math.floor(seconds / 60);
         const s = Math.floor(seconds % 60);
         return `${m}:${String(s).padStart(2, '0')}`;

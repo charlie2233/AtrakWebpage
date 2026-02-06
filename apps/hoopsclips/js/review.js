@@ -28,9 +28,10 @@ class ReviewTab {
     }
 
     renderReviewCard(clip) {
-        const statusClass = `status-${clip.status}`;
-        const statusLabel = clip.status === 'keep' ? 'Keep' : 
-                           clip.status === 'discard' ? 'Discard' : 'Unreviewed';
+        const status = clip.status || 'unreviewed';
+        const statusClass = `status-${status}`;
+        const statusLabel = status === 'keep' ? 'Keep' :
+                           status === 'discard' ? 'Discard' : 'Unreviewed';
 
         return `
             <div class="review-card" data-clip-id="${clip.id}">
@@ -45,22 +46,26 @@ class ReviewTab {
                     ${clip.team ? `<p><small>Team: ${clip.team}</small></p>` : ''}
                 </div>
                 <div class="review-card-actions">
-                    <button class="btn-control ${clip.status === 'keep' ? 'active' : ''}" 
-                            onclick="window.reviewTab.setStatus(${clip.id}, 'keep')">
+                    <button class="btn-control"
+                            onclick="window.reviewTab.previewClip('${clip.id}')">
+                        ▶ Preview
+                    </button>
+                    <button class="btn-control ${status === 'keep' ? 'active' : ''}" 
+                            onclick="window.reviewTab.setStatus('${clip.id}', 'keep')">
                         ✓ Keep
                     </button>
-                    <button class="btn-control ${clip.status === 'discard' ? 'active' : ''}"
-                            onclick="window.reviewTab.setStatus(${clip.id}, 'discard')">
+                    <button class="btn-control ${status === 'discard' ? 'active' : ''}"
+                            onclick="window.reviewTab.setStatus('${clip.id}', 'discard')">
                         ✗ Discard
                     </button>
                 </div>
                 <div class="team-buttons">
                     <button class="btn-team ${clip.team === 'A' ? 'active' : ''}"
-                            onclick="window.reviewTab.setTeam(${clip.id}, 'A')">
+                            onclick="window.reviewTab.setTeam('${clip.id}', 'A')">
                         Team A
                     </button>
                     <button class="btn-team ${clip.team === 'B' ? 'active' : ''}"
-                            onclick="window.reviewTab.setTeam(${clip.id}, 'B')">
+                            onclick="window.reviewTab.setTeam('${clip.id}', 'B')">
                         Team B
                     </button>
                 </div>
@@ -79,7 +84,28 @@ class ReviewTab {
         Store.updateClip(clipId, { team: newTeam });
     }
 
+    previewClip(clipId) {
+        if (window.app?.switchTab) {
+            window.app.switchTab('player');
+        }
+        if (window.playerTab?.playClip) {
+            window.playerTab.playClip(clipId);
+        }
+    }
+
+    focusClip(clipId) {
+        const card = document.querySelector(`.review-card[data-clip-id="${clipId}"]`);
+        if (!card) return;
+        document.querySelectorAll('.review-card.is-focused').forEach(el => el.classList.remove('is-focused'));
+        card.classList.add('is-focused');
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => card.classList.remove('is-focused'), 2000);
+    }
+
     formatTime(seconds) {
+        if (!Number.isFinite(seconds)) {
+            return '0:00';
+        }
         const m = Math.floor(seconds / 60);
         const s = Math.floor(seconds % 60);
         return `${m}:${String(s).padStart(2, '0')}`;
