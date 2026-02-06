@@ -10,8 +10,17 @@ def parse_weekly_log(file_path):
     Parses a weekly log text file and returns a list of week data as dicts.
     Each week is separated by '---'.
     Sections are parsed into lists, and the title/theme is extracted.
+    
+    Args:
+        file_path: Path to the weekly log file (str or Path object)
+    
+    Returns:
+        list: List of dictionaries containing weekly data
     """
-    content = Path(file_path).read_text(encoding='utf-8')
+    # Convert to Path object if string is provided
+    if not isinstance(file_path, Path):
+        file_path = Path(file_path)
+    content = file_path.read_text(encoding='utf-8')
     
     # Split the log into weeks using '---' as a separator
     raw_weeks = re.split(r'\n---\n', content)
@@ -61,11 +70,16 @@ def parse_weekly_log(file_path):
 
 
 # Run parser and write output JSON
-try:
-    data = parse_weekly_log('/Users/hanfei/LunarWeb/WeeklyLog.txt')
-    output_path = '/Users/hanfei/LunarWeb/data/weekly-history.json'
-    Path(output_path).write_text(json.dumps(data, indent=2), encoding='utf-8')
-    print(f"Successfully parsed {len(data)} weeks to {output_path}")
-except Exception as e:
-    print(f"Error: {e}")
+if __name__ == '__main__':
+    try:
+        # Get the script's directory to find relative paths
+        script_dir = Path(__file__).parent.absolute()
+        log_path = script_dir / 'WeeklyLog.txt'
+        output_path = script_dir / 'data' / 'weekly-history.json'
+        
+        data = parse_weekly_log(log_path)
+        output_path.write_text(json.dumps(data, indent=2), encoding='utf-8')
+        print(f"✅ Successfully parsed {len(data)} weeks to {output_path}")
+    except Exception as e:
+        print(f"❌ Error: {e}")
 

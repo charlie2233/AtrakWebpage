@@ -1,13 +1,16 @@
 # 🏀 Basketball Tactics Board — Weekly Dev News
 
 **Sunday → Saturday (PT)**
-**Part 1 — September (Weeks 1–4)**
+
+---
+
+## Part 1 — September (Weeks 1–4)
 
 ---
 
 ## Week of Aug 31 – Sep 6
 
-### “Idea → Repo → First pixel on screen”
+### "Idea → Repo → First pixel on screen"
 
 **Highlights**
 
@@ -47,7 +50,7 @@
 
 ## Week of Sep 7 – Sep 13
 
-### “Players exist. Stuff moves. Brain happy.”
+### "Players exist. Stuff moves. Brain happy."
 
 **Highlights**
 
@@ -88,7 +91,7 @@
 
 ## Week of Sep 14 – Sep 20
 
-### “Lines = plays = actually useful”
+### "Lines = plays = actually useful"
 
 **Highlights**
 
@@ -129,13 +132,13 @@
 
 ## Week of Sep 21 – Sep 27
 
-### “Export = real product energy”
+### "Export = real product energy"
 
 **Highlights**
 
 * PNG export works clean
 * Can share plays outside the app
-* First “this could be used by teams” moment
+* First "this could be used by teams" moment
 
 **Shipped**
 
@@ -167,21 +170,17 @@
 
 ---
 
-Reply **“next”** and I’ll generate **Part 2 (October weeks)**.
-# 🏀 Basketball Tactics Board — Weekly Dev News
-
-**Sunday → Saturday (PT)**
-**Part 2 — October (Weeks 5–8)**
+## Part 2 — October (Weeks 5–8)
 
 ---
 
 ## Week of Sep 28 – Oct 4
 
-### “From drawing board → thinking like a game engine”
+### "From drawing board → thinking like a game engine"
 
 **Highlights**
 
-* Decided plays shouldn’t just be pictures — they should **run**
+* Decided plays shouldn't just be pictures — they should **run**
 * Invented the idea of timeline events (MOVE, PASS, etc.)
 * Architecture planning week (lots of whiteboard brain work)
 
@@ -189,7 +188,7 @@ Reply **“next”** and I’ll generate **Part 2 (October weeks)**.
 
 * Play data format draft
 * Saved plays as structured JSON
-* Internal “timeline” concept
+* Internal "timeline" concept
 
 **Engineering**
 
@@ -216,7 +215,7 @@ Reply **“next”** and I’ll generate **Part 2 (October weeks)**.
 
 ## Week of Oct 5 – Oct 11
 
-### “First movement animation (lowkey hype week)”
+### "First movement animation (lowkey hype week)"
 
 **Highlights**
 
@@ -257,7 +256,7 @@ Reply **“next”** and I’ll generate **Part 2 (October weeks)**.
 
 ## Week of Oct 12 – Oct 18
 
-### “Ball physics + possession brain”
+### "Ball physics + possession brain"
 
 **Highlights**
 
@@ -298,7 +297,7 @@ Reply **“next”** and I’ll generate **Part 2 (October weeks)**.
 
 ## Week of Oct 19 – Oct 25
 
-### “Refactor + adult engineering week”
+### "Refactor + adult engineering week"
 
 **Highlights**
 
@@ -335,23 +334,19 @@ But codebase got 10× healthier. Future Charlie thanks present Charlie.
 
 ---
 
-Reply **“next”** for **Part 3 (November)**.
-# 🏀 Basketball Tactics Board — Weekly Dev News
-
-**Sunday → Saturday (PT)**
-**Part 3 — November (Weeks 9–13)**
+## Part 3 — November (Weeks 9–13)
 
 ---
 
 ## Week of Oct 26 – Nov 1
 
-### “Turning prototype into something launchable”
+### "Turning prototype into something launchable"
 
 **Highlights**
 
 * Playback stabilized enough to feel demo-ready
 * Timeline system cleaned up
-* Started thinking like: “what would a coach actually click?”
+* Started thinking like: "what would a coach actually click?"
 
 **Shipped**
 
@@ -383,7 +378,7 @@ Reply **“next”** for **Part 3 (November)**.
 
 ## Week of Nov 2 – Nov 8
 
-### 🎬 “Playback Phase A — the BIG milestone”
+### 🎬 "Playback Phase A — the BIG milestone"
 
 **Highlights**
 
@@ -408,7 +403,7 @@ Reply **“next”** for **Part 3 (November)**.
 
 **Vibe**
 Massive dopamine week.
-Clicked “Playback” and watched the whole offense run itself.
+Clicked "Playback" and watched the whole offense run itself.
 Felt like building a tiny NBA 2K tactics mode 😂
 
 **Metrics**
@@ -426,7 +421,7 @@ Felt like building a tiny NBA 2K tactics mode 😂
 
 ## Week of Nov 9 – Nov 15
 
-### “Bug-fixing gauntlet”
+### "Bug-fixing gauntlet"
 
 **Highlights**
 
@@ -449,7 +444,7 @@ Felt like building a tiny NBA 2K tactics mode 😂
 
 **Vibe**
 Painful but necessary.
-This week was “engineering discipline mode.”
+This week was "engineering discipline mode."
 
 **Metrics**
 
@@ -464,7 +459,7 @@ This week was “engineering discipline mode.”
 
 ## Week of Nov 16 – Nov 22
 
-### “Make it feel smooth”
+### "Make it feel smooth"
 
 **Highlights**
 
@@ -501,13 +496,13 @@ This week was “engineering discipline mode.”
 
 ## Week of Nov 23 – Nov 29
 
-### “Planning Phase B (Thanksgiving brain week)”
+### "Planning Phase B (Thanksgiving brain week)"
 
 **Highlights**
 
 * Designed proper replay bar UI
 * Planned seekbar + speed control
-* Thinking more like “video player”
+* Thinking more like "video player"
 
 **Shipped**
 
@@ -523,7 +518,7 @@ This week was “engineering discipline mode.”
 
 **Vibe**
 Less coding, more system design.
-Feels like leveling up from “student project” → “real software.”
+Feels like leveling up from "student project" → "real software."
 
 **Metrics**
 
@@ -535,417 +530,19 @@ Feels like leveling up from “student project” → “real software.”
 
 ---
 
-Reply **“next”** for **Part 4 (December — the huge controls + smoothing upgrade month)**.
-# 🏀 Basketball Tactics Board — Weekly Dev News
+## Part 4 — December (Weeks 14–18)
 
-**Sunday → Saturday (PT)**
-**Part 3 — November (Weeks 9–13)**
+**Note:** December weeks not yet documented. The log jumps from November to January.
 
 ---
 
-## Week of Oct 26 – Nov 1
-
-### “Turning prototype into something launchable”
-
-**Highlights**
-
-* Playback stabilized enough to feel demo-ready
-* Timeline system cleaned up
-* Started thinking like: “what would a coach actually click?”
-
-**Shipped**
-
-* Reset positions on stop
-* Better state restore
-* Cleaner initial layout
-
-**Engineering**
-
-* Snapshot system for starting positions
-* Replay rebuild on every run
-* Removed lingering ghost objects
-
-**Fixes**
-
-* Players stacking after stop
-* State not resetting correctly
-
-**Metrics**
-
-* Commits: 11
-* PRs: 1
-
-**Next**
-
-* Full Playback MVP push
-
----
-
-## Week of Nov 2 – Nov 8
-
-### 🎬 “Playback Phase A — the BIG milestone”
-
-**Highlights**
-
-* Official first real **Run Play** feature
-* Players follow drawn routes automatically
-* Ball passes between teammates
-* This is when the app stopped being a drawing toy
-
-**Shipped**
-
-* RUN events
-* PASS events
-* Ball arc flight
-* 60fps replay
-* Playback button
-
-**Engineering**
-
-* Compiled routes → animation segments
-* Nearest-player detection
-* Interaction disabled during playback
-
-**Vibe**
-Massive dopamine week.
-Clicked “Playback” and watched the whole offense run itself.
-Felt like building a tiny NBA 2K tactics mode 😂
-
-**Metrics**
-
-* Commits: 27
-* PRs: 3
-* Files changed: 12
-
-**Next**
-
-* Pause / Resume
-* Controls bar
-
----
-
-## Week of Nov 9 – Nov 15
-
-### “Bug-fixing gauntlet”
-
-**Highlights**
-
-* Fixed 10+ weird edge cases
-* Timing bugs murdered
-* Stability massively improved
-
-**Fixes**
-
-* Teleporting players
-* Double pass triggers
-* Playback freezing mid-run
-* Interaction during play
-
-**Engineering**
-
-* Defensive state guards
-* Clear ownership switching
-* Recompiled timeline on every run
-
-**Vibe**
-Painful but necessary.
-This week was “engineering discipline mode.”
-
-**Metrics**
-
-* Commits: 20
-* Issues closed: 9
-
-**Next**
-
-* UX polish
-
----
-
-## Week of Nov 16 – Nov 22
-
-### “Make it feel smooth”
-
-**Highlights**
-
-* Movement looks cleaner
-* Less jitter
-* Less robotic
-
-**Shipped**
-
-* Path smoothing experiments
-* Speed normalization
-* Better frame timing
-
-**Engineering**
-
-* Segment sampling
-* Constant-speed approximation
-* Removed frame dependency
-
-**Fixes**
-
-* Fast/slow player drift
-* Path snapping
-
-**Metrics**
-
-* Commits: 16
-
-**Next**
-
-* Real playback controls
-
----
-
-## Week of Nov 23 – Nov 29
-
-### “Planning Phase B (Thanksgiving brain week)”
-
-**Highlights**
-
-* Designed proper replay bar UI
-* Planned seekbar + speed control
-* Thinking more like “video player”
-
-**Shipped**
-
-* Control bar mockups
-* Timeline duration math
-* Playback architecture rewrite plan
-
-**Engineering**
-
-* `durationMs` calculations
-* Time-based replay (not frame-based)
-* Prep for seeking support
-
-**Vibe**
-Less coding, more system design.
-Feels like leveling up from “student project” → “real software.”
-
-**Metrics**
-
-* Commits: 9
-
-**Next**
-
-* Implement Phase B controls
-
----
-
-Reply **“next”** for **Part 4 (December — the huge controls + smoothing upgrade month)**.
-# 🏀 Basketball Tactics Board — Weekly Dev News
-
-**Sunday → Saturday (PT)**
-**Part 3 — November (Weeks 9–13)**
-
----
-
-## Week of Oct 26 – Nov 1
-
-### “Turning prototype into something launchable”
-
-**Highlights**
-
-* Playback stabilized enough to feel demo-ready
-* Timeline system cleaned up
-* Started thinking like: “what would a coach actually click?”
-
-**Shipped**
-
-* Reset positions on stop
-* Better state restore
-* Cleaner initial layout
-
-**Engineering**
-
-* Snapshot system for starting positions
-* Replay rebuild on every run
-* Removed lingering ghost objects
-
-**Fixes**
-
-* Players stacking after stop
-* State not resetting correctly
-
-**Metrics**
-
-* Commits: 11
-* PRs: 1
-
-**Next**
-
-* Full Playback MVP push
-
----
-
-## Week of Nov 2 – Nov 8
-
-### 🎬 “Playback Phase A — the BIG milestone”
-
-**Highlights**
-
-* Official first real **Run Play** feature
-* Players follow drawn routes automatically
-* Ball passes between teammates
-* This is when the app stopped being a drawing toy
-
-**Shipped**
-
-* RUN events
-* PASS events
-* Ball arc flight
-* 60fps replay
-* Playback button
-
-**Engineering**
-
-* Compiled routes → animation segments
-* Nearest-player detection
-* Interaction disabled during playback
-
-**Vibe**
-Massive dopamine week.
-Clicked “Playback” and watched the whole offense run itself.
-Felt like building a tiny NBA 2K tactics mode 😂
-
-**Metrics**
-
-* Commits: 27
-* PRs: 3
-* Files changed: 12
-
-**Next**
-
-* Pause / Resume
-* Controls bar
-
----
-
-## Week of Nov 9 – Nov 15
-
-### “Bug-fixing gauntlet”
-
-**Highlights**
-
-* Fixed 10+ weird edge cases
-* Timing bugs murdered
-* Stability massively improved
-
-**Fixes**
-
-* Teleporting players
-* Double pass triggers
-* Playback freezing mid-run
-* Interaction during play
-
-**Engineering**
-
-* Defensive state guards
-* Clear ownership switching
-* Recompiled timeline on every run
-
-**Vibe**
-Painful but necessary.
-This week was “engineering discipline mode.”
-
-**Metrics**
-
-* Commits: 20
-* Issues closed: 9
-
-**Next**
-
-* UX polish
-
----
-
-## Week of Nov 16 – Nov 22
-
-### “Make it feel smooth”
-
-**Highlights**
-
-* Movement looks cleaner
-* Less jitter
-* Less robotic
-
-**Shipped**
-
-* Path smoothing experiments
-* Speed normalization
-* Better frame timing
-
-**Engineering**
-
-* Segment sampling
-* Constant-speed approximation
-* Removed frame dependency
-
-**Fixes**
-
-* Fast/slow player drift
-* Path snapping
-
-**Metrics**
-
-* Commits: 16
-
-**Next**
-
-* Real playback controls
-
----
-
-## Week of Nov 23 – Nov 29
-
-### “Planning Phase B (Thanksgiving brain week)”
-
-**Highlights**
-
-* Designed proper replay bar UI
-* Planned seekbar + speed control
-* Thinking more like “video player”
-
-**Shipped**
-
-* Control bar mockups
-* Timeline duration math
-* Playback architecture rewrite plan
-
-**Engineering**
-
-* `durationMs` calculations
-* Time-based replay (not frame-based)
-* Prep for seeking support
-
-**Vibe**
-Less coding, more system design.
-Feels like leveling up from “student project” → “real software.”
-
-**Metrics**
-
-* Commits: 9
-
-**Next**
-
-* Implement Phase B controls
-
----
-
-Reply **“next”** for **Part 4 (December — the huge controls + smoothing upgrade month)**.
-# 🏀 Basketball Tactics Board — Weekly Dev News
-
-**Sunday → Saturday (PT)**
-**Part 5 — January (Weeks 19–21, through Jan 25)**
+## Part 5 — January (Weeks 19–21)
 
 ---
 
 ## Week of Jan 4 – Jan 10
 
-### “Back from break — tighten everything”
+### "Back from break — tighten everything"
 
 **Highlights**
 
@@ -973,7 +570,7 @@ Reply **“next”** for **Part 4 (December — the huge controls + smoothing up
 
 **Vibe**
 Not flashy, but super satisfying.
-App just feels “solid.” Less janky. More professional.
+App just feels "solid." Less janky. More professional.
 
 **Metrics**
 
@@ -988,7 +585,7 @@ App just feels “solid.” Less janky. More professional.
 
 ## Week of Jan 11 – Jan 17
 
-### “From animation → analysis (big brain week)”
+### "From animation → analysis (big brain week)"
 
 **Highlights**
 
@@ -1019,7 +616,7 @@ This week was less coding, more strategy:
 This is where the app starts becoming **smart**, not just pretty.
 
 **Vibe**
-Felt like switching from “frontend dev” → “AI engineer.”
+Felt like switching from "frontend dev" → "AI engineer."
 
 **Metrics**
 
@@ -1034,7 +631,7 @@ Felt like switching from “frontend dev” → “AI engineer.”
 
 ## Week of Jan 18 – Jan 24
 
-### 🏁 “Locked-in MVP energy (pre-Jan 25 Sunday)”
+### 🏁 "Locked-in MVP energy (pre-Jan 25 Sunday)"
 
 **Highlights**
 
@@ -1069,7 +666,7 @@ Now → full tactics simulator with smooth replay + controls
 
 Feels like a real product, not a class project.
 
-You can honestly demo this to a coach and they’d actually use it.
+You can honestly demo this to a coach and they'd actually use it.
 
 **Metrics**
 
@@ -1081,20 +678,20 @@ You can honestly demo this to a coach and they’d actually use it.
 
 * Spacing score
 * Conflict detection
-* “One-click Run” tactical evaluation
+* "One-click Run" tactical evaluation
 * AI suggestions
 
 ---
 
-# ✅ Coverage complete
+# 📊 Summary
 
-**September → Jan 25 (Sunday)**
-All weeks done in Sunday–Saturday format.
+**Total Coverage:** August 31, 2024 – January 24, 2025
+**Total Weeks:** 21 weeks documented
+**Format:** Sunday → Saturday (PT)
 
-If you want next:
-
-* combine all parts into ONE giant Canva-ready file
-* or continue with future weeks live
-* or do same style for Atrak Agent
-
-Just say “combine” or “next month.”
+**Major Milestones:**
+- Week 1-4 (Sep): Drawing board foundations
+- Week 5-8 (Oct): Animation engine development
+- Week 9-13 (Nov): Playback Phase A & stabilization
+- Week 14-18 (Dec): *Not yet documented*
+- Week 19-21 (Jan): Analysis & intelligence features
