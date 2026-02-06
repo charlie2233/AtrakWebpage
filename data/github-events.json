@@ -1,5 +1,31 @@
 [
   {
+    "id": "8184632966",
+    "type": "PushEvent",
+    "actor": {
+      "id": 117957000,
+      "login": "charlie2233",
+      "display_login": "charlie2233",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/charlie2233",
+      "avatar_url": "https://avatars.githubusercontent.com/u/117957000?"
+    },
+    "repo": {
+      "id": 1131525028,
+      "name": "charlie2233/Easy_command_prompt",
+      "url": "https://api.github.com/repos/charlie2233/Easy_command_prompt"
+    },
+    "payload": {
+      "repository_id": 1131525028,
+      "push_id": 30479521514,
+      "ref": "refs/heads/main",
+      "head": "f25cccc8e3e62a7cca905a8b81f07a1b156777a3",
+      "before": "f725248a2d543af609921cede71635785e7a32b0"
+    },
+    "public": true,
+    "created_at": "2026-02-06T03:02:31Z"
+  },
+  {
     "id": "6332574998",
     "type": "ReleaseEvent",
     "actor": {
