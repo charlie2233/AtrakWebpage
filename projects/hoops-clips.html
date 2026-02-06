@@ -74,7 +74,7 @@
 
     <main>
         <!-- Hero -->
-        <section class="project-hero">
+        <section class="project-hero project-hero--hoops">
             <div class="container">
                 <nav class="breadcrumb" aria-label="Breadcrumb">
                     <ol>
@@ -84,20 +84,57 @@
                     </ol>
                 </nav>
                 <a class="project-back-link" href="../index.html#projects">← Back to Projects</a>
-                <div class="project-header">
-                    <div class="project-icon-large">
-                        <img src="../assets/hoops_ClipsIcon.png" alt="Hoops Clips Icon">
+                <div class="project-hero-grid">
+                    <div class="project-header">
+                        <div class="project-icon-large">
+                            <img src="../assets/hoops_ClipsIcon.png" alt="Hoops Clips Icon">
+                        </div>
+                        <span class="section-tag">Computer Vision • Video • Sports</span>
+                        <h1 class="section-title">Hoops Clips</h1>
+                        <p class="section-description">
+                            End-to-end pipeline that watches basketball game footage, detects exciting plays, and automatically generates highlight clips ready for sharing.
+                        </p>
+                        <div class="project-meta-bar">
+                            <span class="meta-item"><strong>Status:</strong> Beta</span>
+                            <span class="meta-item"><strong>Completed:</strong> Nov 2025</span>
+                            <span class="meta-item"><strong>Lead:</strong> Charlie Han</span>
+                        </div>
+                        <div class="project-hero-badges">
+                            <span class="hero-badge">FastAPI</span>
+                            <span class="hero-badge">R2Plus1D-18</span>
+                            <span class="hero-badge">Docker</span>
+                            <span class="hero-badge">GPU optional</span>
+                        </div>
                     </div>
-                    <span class="section-tag">Computer Vision • Video • Sports</span>
-                    <h1 class="section-title">Hoops Clips</h1>
-                    <p class="section-description">
-                        End-to-end pipeline that watches basketball game footage, detects exciting plays, and automatically generates highlight clips ready for sharing.
-                    </p>
-                    <div class="project-meta-bar">
-                        <span class="meta-item"><strong>Status:</strong> Beta</span>
-                        <span class="meta-item"><strong>Completed:</strong> Nov 2025</span>
-                        <span class="meta-item"><strong>Lead:</strong> Charlie Han</span>
-                    </div>
+                    <aside class="project-hero-panel glass-card">
+                        <div class="hero-panel-header">
+                            <span class="panel-tag">Pipeline Snapshot</span>
+                            <h3>Processing Stack</h3>
+                            <p>Real-time action detection optimized for game film workflows.</p>
+                        </div>
+                        <div class="hero-panel-metrics">
+                            <div class="panel-metric">
+                                <span class="metric-value">FastAPI</span>
+                                <span class="metric-label">Inference API</span>
+                            </div>
+                            <div class="panel-metric">
+                                <span class="metric-value">R2Plus1D-18</span>
+                                <span class="metric-label">Video model</span>
+                            </div>
+                            <div class="panel-metric">
+                                <span class="metric-value">~30s</span>
+                                <span class="metric-label">Per min (GPU)</span>
+                            </div>
+                            <div class="panel-metric">
+                                <span class="metric-value">6</span>
+                                <span class="metric-label">Action classes</span>
+                            </div>
+                        </div>
+                        <div class="hero-panel-footer">
+                            <span class="panel-pill">Docker-ready</span>
+                            <span class="panel-pill">GPU optional</span>
+                        </div>
+                    </aside>
                 </div>
             </div>
         </section>
@@ -105,7 +142,7 @@
         <!-- Quick Links Bar -->
         <section class="project-links-bar">
             <div class="container">
-	                <div class="links-bar-inner">
+	                <div class="links-bar-inner hoops-links">
 	                    <a href="../apps/hoopsclips/" class="link-btn" style="background: linear-gradient(135deg, #7C5CFF 0%, #3b82f6 100%); color: white; border: none;">
 	                        <span class="link-icon">🏀</span> Try Web App
 	                    </a>
@@ -118,6 +155,9 @@
 	                    <a href="https://github.com/charlie2233/Basketball_action_recoginition_sever/releases" class="link-btn" target="_blank" rel="noopener noreferrer">
 	                        <span class="link-icon">📦</span> Releases
 	                    </a>
+	                    <a href="#backend" class="link-btn">
+	                        <span class="link-icon">🛰</span> API & Backend
+	                    </a>
 	                    <a href="#demo" class="link-btn">
 	                        <span class="link-icon">🎬</span> Demo
 	                    </a>
@@ -127,6 +167,55 @@
 
         <div class="project-content">
             <div class="container">
+                <!-- Overview -->
+                <section class="project-section overview-section">
+                    <h2 class="project-section-title">⚡ What It Delivers</h2>
+                    <div class="overview-grid">
+                        <div class="glass-card overview-card">
+                            <span class="overview-icon">🏀</span>
+                            <h3>Auto Highlight Detection</h3>
+                            <p>Detects dunks, threes, blocks, steals, and fast breaks without manual review.</p>
+                        </div>
+                        <div class="glass-card overview-card">
+                            <span class="overview-icon">✂️</span>
+                            <h3>Clip Generation</h3>
+                            <p>Generates short clips with smart padding and exports ready-to-share MP4s.</p>
+                        </div>
+                        <div class="glass-card overview-card">
+                            <span class="overview-icon">🧠</span>
+                            <h3>Coach Workflow</h3>
+                            <p>Designed for teams: batch input, ranked output, and quick review cycles.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- How It Works -->
+                <section class="project-section steps-section">
+                    <h2 class="project-section-title">🧭 How It Works</h2>
+                    <div class="steps-grid">
+                        <div class="glass-card step-card">
+                            <div class="step-index">01</div>
+                            <h3>Ingest</h3>
+                            <p>Upload full-game footage or point to a hosted video URL.</p>
+                        </div>
+                        <div class="glass-card step-card">
+                            <div class="step-index">02</div>
+                            <h3>Detect</h3>
+                            <p>Sample frames and run the action model to score candidate plays.</p>
+                        </div>
+                        <div class="glass-card step-card">
+                            <div class="step-index">03</div>
+                            <h3>Rank</h3>
+                            <p>Sort plays by confidence and excitement score.</p>
+                        </div>
+                        <div class="glass-card step-card">
+                            <div class="step-index">04</div>
+                            <h3>Export</h3>
+                            <p>Generate clipped MP4s with timestamps and metadata.</p>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- Problem -->
                 <section id="problem" class="project-section">
                     <h2 class="project-section-title">🎯 The Problem</h2>
@@ -261,10 +350,12 @@
 docker pull charlie2233/hoops-clips:latest
 
 # Run the server
-docker run -p 8000:8000 -v ./videos:/app/input charlie2233/hoops-clips
+docker run -p 8787:8787 -v ./videos:/app/input charlie2233/hoops-clips
 
 # Send a video for processing
-curl -X POST -F "video=@game.mp4" http://localhost:8000/process</code></pre>
+curl -X POST http://localhost:8787/api/ai/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"videoUrl":"https://example.com/game.mp4"}'</code></pre>
                             <p class="note">Requires Docker and ~8GB disk space for model weights.</p>
                         </div>
                         <div class="run-content hidden" id="source-content">
@@ -283,8 +374,52 @@ pip install -r requirements.txt
 python scripts/download_weights.py
 
 # Run the server
-python server.py</code></pre>
+uvicorn ai_server:app --host 0.0.0.0 --port 8787</code></pre>
                             <p class="note">Requires Python 3.9+, CUDA 11.8+ for GPU acceleration.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Backend -->
+                <section id="backend" class="project-section">
+                    <h2 class="project-section-title">🛰 Backend & API</h2>
+                    <div class="backend-grid">
+                        <div class="glass-card backend-card">
+                            <div class="backend-status">
+                                <span class="status-dot status-off"></span>
+                                <div>
+                                    <h3>Live API</h3>
+                                    <p>Not connected yet. Add your Google Cloud URL to enable.</p>
+                                </div>
+                            </div>
+                            <div class="backend-meta">
+                                <div class="backend-row">
+                                    <span class="backend-label">Base URL</span>
+                                    <span class="backend-value">Not configured</span>
+                                </div>
+                                <div class="backend-row">
+                                    <span class="backend-label">Default port</span>
+                                    <span class="backend-value">8787</span>
+                                </div>
+                            </div>
+                            <div class="backend-actions">
+                                <a class="btn btn-secondary btn-sm" href="https://github.com/charlie2233/Basketball_action_recoginition_sever" target="_blank" rel="noopener noreferrer">View Server Repo</a>
+                            </div>
+                        </div>
+                        <div class="glass-card backend-card">
+                            <h3>API Endpoints</h3>
+                            <div class="api-endpoint">
+                                <code>POST /api/ai/analyze</code>
+                                <p>Submit a video URL for analysis. Returns a job ID.</p>
+                            </div>
+                            <div class="api-endpoint">
+                                <code>GET /api/ai/result/{jobId}</code>
+                                <p>Fetch the result payload with detected events and confidence scores.</p>
+                            </div>
+                            <div class="api-example">
+                                <span class="api-example-title">Sample Request</span>
+                                <pre class="code-block"><code>{ "videoUrl": "https://example.com/game.mp4" }</code></pre>
+                            </div>
                         </div>
                     </div>
                 </section>
