@@ -894,6 +894,57 @@ const formConfig = (window.ATRAK_CONFIG && typeof window.ATRAK_CONFIG === 'objec
         ? window.LUNARWEB_CONFIG
         : {};
 const configuredFormEndpoints = formConfig.forms && typeof formConfig.forms === 'object' ? formConfig.forms : {};
+const configuredBackends = formConfig.backends && typeof formConfig.backends === 'object' ? formConfig.backends : {};
+
+const initHoopsBackendStatus = () => {
+    const url = (typeof configuredBackends.hoopsClips === 'string' && configuredBackends.hoopsClips.trim())
+        ? configuredBackends.hoopsClips.trim()
+        : (typeof formConfig.hoopsclipsBackend === 'string' && formConfig.hoopsclipsBackend.trim())
+            ? formConfig.hoopsclipsBackend.trim()
+            : (typeof formConfig.hoopsClipsBackend === 'string' && formConfig.hoopsClipsBackend.trim())
+                ? formConfig.hoopsClipsBackend.trim()
+                : '';
+
+    if (!url) return;
+
+    const statusDot = document.getElementById('hoops-backend-status');
+    const statusText = document.getElementById('hoops-backend-status-text');
+    const urlEl = document.getElementById('hoops-backend-url');
+    const linkEl = document.getElementById('hoops-backend-link');
+    const healthLinkEl = document.getElementById('hoops-health-link');
+
+    if (!statusDot && !statusText && !urlEl && !linkEl) return;
+
+    if (statusDot) {
+        statusDot.classList.remove('status-off');
+        statusDot.classList.add('status-on');
+    }
+
+    if (statusText) {
+        statusText.textContent = 'Connected. Live on Google Cloud Run with /health checks.';
+    }
+
+    if (urlEl) {
+        urlEl.textContent = url.replace(/^https?:\/\//, '');
+    }
+
+    if (linkEl) {
+        linkEl.href = url;
+        linkEl.style.display = 'inline-flex';
+    }
+
+    if (healthLinkEl) {
+        const normalized = url.replace(/\/$/, '');
+        healthLinkEl.href = `${normalized}/health`;
+        healthLinkEl.style.display = 'inline-flex';
+    }
+};
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHoopsBackendStatus);
+} else {
+    initHoopsBackendStatus();
+}
 
 // Determines the endpoint for a given form
 const getFormEndpoint = (form) => {
@@ -2529,4 +2580,3 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
-

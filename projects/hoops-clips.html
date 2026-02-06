@@ -386,23 +386,29 @@ uvicorn ai_server:app --host 0.0.0.0 --port 8787</code></pre>
                     <div class="backend-grid">
                         <div class="glass-card backend-card">
                             <div class="backend-status">
-                                <span class="status-dot status-off"></span>
+                                <span class="status-dot status-off" id="hoops-backend-status"></span>
                                 <div>
                                     <h3>Live API</h3>
-                                    <p>Not connected yet. Add your Google Cloud URL to enable.</p>
+                                    <p id="hoops-backend-status-text">Not connected yet. Add your Google Cloud URL to enable.</p>
                                 </div>
                             </div>
                             <div class="backend-meta">
                                 <div class="backend-row">
                                     <span class="backend-label">Base URL</span>
-                                    <span class="backend-value">Not configured</span>
+                                    <span class="backend-value" id="hoops-backend-url">Not configured</span>
                                 </div>
                                 <div class="backend-row">
-                                    <span class="backend-label">Default port</span>
+                                    <span class="backend-label">Cloud Run port</span>
+                                    <span class="backend-value">8080 (internal)</span>
+                                </div>
+                                <div class="backend-row">
+                                    <span class="backend-label">Local dev port</span>
                                     <span class="backend-value">8787</span>
                                 </div>
                             </div>
                             <div class="backend-actions">
+                                <a class="btn btn-secondary btn-sm" id="hoops-backend-link" href="#" target="_blank" rel="noopener noreferrer">Open API</a>
+                                <a class="btn btn-secondary btn-sm" id="hoops-health-link" href="#" target="_blank" rel="noopener noreferrer">Health Check</a>
                                 <a class="btn btn-secondary btn-sm" href="https://github.com/charlie2233/Basketball_action_recoginition_sever" target="_blank" rel="noopener noreferrer">View Server Repo</a>
                             </div>
                         </div>
@@ -415,6 +421,10 @@ uvicorn ai_server:app --host 0.0.0.0 --port 8787</code></pre>
                             <div class="api-endpoint">
                                 <code>GET /api/ai/result/{jobId}</code>
                                 <p>Fetch the result payload with detected events and confidence scores.</p>
+                            </div>
+                            <div class="api-endpoint">
+                                <code>GET /health</code>
+                                <p>Health check endpoint used by Cloud Run.</p>
                             </div>
                             <div class="api-example">
                                 <span class="api-example-title">Sample Request</span>
