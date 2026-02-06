@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hoops Clips — Basketball video editor for capturing, reviewing, styling, and exporting game clips.">
+    <meta name="robots" content="index,follow">
+    <title>Hoops Clips — Basketball Video Editor | Atrak</title>
+    <link rel="canonical" href="https://atrak.dev/apps/hoopsclips/">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Hoops Clips — Basketball Video Editor">
+    <meta property="og:description" content="Basketball video editor for capturing, reviewing, styling, and exporting game clips with optional AI highlight detection.">
+    <meta property="og:url" content="https://atrak.dev/apps/hoopsclips/">
+    <meta property="og:image" content="https://atrak.dev/assets/hoops_ClipsIcon.png">
+    <meta property="og:type" content="website">
+    
+    <link rel="icon" type="image/png" href="../../assets/logo.png?v=20260202">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a class="logo" href="../../index.html">
+                <img src="../../assets/logo.png?v=20260202" alt="Atrak Logo" class="logo-icon">
+                <span class="logo-text">Atrak</span>
+            </a>
+            <div class="nav-title">
+                <img src="../../assets/hoops_ClipsIcon.png" alt="Hoops Clips" class="app-icon">
+                <span>Hoops Clips</span>
+            </div>
+            <a href="../../projects/hoops-clips.html" class="nav-link">About</a>
+        </div>
+    </nav>
+
+    <!-- Main App Container -->
+    <div class="app-container">
+        <!-- Tabs Navigation -->
+        <div class="tabs">
+            <button class="tab active" data-tab="player">
+                <span class="tab-icon">▶️</span>
+                <span class="tab-label">Player</span>
+            </button>
+            <button class="tab" data-tab="review">
+                <span class="tab-icon">📋</span>
+                <span class="tab-label">Review</span>
+            </button>
+            <button class="tab" data-tab="styles">
+                <span class="tab-icon">🎨</span>
+                <span class="tab-label">Styles</span>
+            </button>
+            <button class="tab" data-tab="export">
+                <span class="tab-icon">📤</span>
+                <span class="tab-label">Export</span>
+            </button>
+            <button class="tab" data-tab="settings">
+                <span class="tab-icon">⚙️</span>
+                <span class="tab-label">Settings</span>
+            </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- Player Tab -->
+            <div id="player" class="tab-panel active">
+                <div class="player-container">
+                    <!-- Video Player -->
+                    <div class="video-section">
+                        <div class="video-wrapper">
+                            <video id="videoPlayer" controls crossorigin="anonymous">
+                                <source id="videoSource" src="" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-placeholder" id="videoPlaceholder">
+                                <div class="placeholder-content">
+                                    <span class="placeholder-icon">🏀</span>
+                                    <h3>Load a video to get started</h3>
+                                    <p>Upload a basketball game video to mark clips and detect highlights</p>
+                                    <button class="btn-primary" onclick="document.getElementById('videoUpload').click()">
+                                        Load Video
+                                    </button>
+                                    <input type="file" id="videoUpload" accept="video/*" style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Video Controls -->
+                        <div class="video-controls">
+                            <div class="control-group">
+                                <button class="btn-control" id="markIn" disabled>
+                                    <span>⏵</span> Mark In
+                                </button>
+                                <button class="btn-control" id="markOut" disabled>
+                                    <span>⏴</span> Mark Out
+                                </button>
+                                <button class="btn-control" id="addClip" disabled>
+                                    <span>➕</span> Add Clip
+                                </button>
+                            </div>
+                            <div class="control-group">
+                                <button class="btn-control ai-button" id="aiAnalyze" disabled>
+                                    <span class="ai-icon">✨</span> AI Detect
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Clips Timeline -->
+                        <div class="clips-list" id="clipsList">
+                            <div class="clips-header">
+                                <h3>Clips (<span id="clipsCount">0</span>)</h3>
+                            </div>
+                            <div class="clips-items" id="clipsItems">
+                                <div class="empty-state">
+                                    <p>No clips yet. Mark in/out points and add clips, or use AI detection.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Tab -->
+            <div id="review" class="tab-panel">
+                <div class="review-container">
+                    <div class="review-header">
+                        <h2>Review Clips</h2>
+                        <div class="review-stats">
+                            <span class="stat">Total: <strong id="totalClips">0</strong></span>
+                            <span class="stat stat-keep">Keep: <strong id="keepClips">0</strong></span>
+                            <span class="stat stat-discard">Discard: <strong id="discardClips">0</strong></span>
+                            <span class="stat">Unreviewed: <strong id="unreviewedClips">0</strong></span>
+                        </div>
+                    </div>
+                    
+                    <div class="review-clips" id="reviewClips">
+                        <div class="empty-state">
+                            <p>No clips to review. Add clips in the Player tab.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Styles Tab -->
+            <div id="styles" class="tab-panel">
+                <div class="styles-container">
+                    <h2>Clip Styles</h2>
+                    <p class="section-description">Apply visual styles and effects to your clips</p>
+                    
+                    <div class="styles-grid">
+                        <div class="style-card">
+                            <div class="style-preview">
+                                <div class="preview-box" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                    <span>Classic</span>
+                                </div>
+                            </div>
+                            <h3>Classic</h3>
+                            <p>Standard video with timestamp overlay</p>
+                            <button class="btn-style" data-style="classic">Select</button>
+                        </div>
+
+                        <div class="style-card">
+                            <div class="style-preview">
+                                <div class="preview-box" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                    <span>Vibrant</span>
+                                </div>
+                            </div>
+                            <h3>Vibrant</h3>
+                            <p>Enhanced colors and contrast</p>
+                            <button class="btn-style" data-style="vibrant">Select</button>
+                        </div>
+
+                        <div class="style-card">
+                            <div class="style-preview">
+                                <div class="preview-box" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                                    <span>Neon</span>
+                                </div>
+                            </div>
+                            <h3>Neon</h3>
+                            <p>Glowing effects and modern look</p>
+                            <button class="btn-style" data-style="neon">Select</button>
+                        </div>
+
+                        <div class="style-card">
+                            <div class="style-preview">
+                                <div class="preview-box" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                                    <span>Highlight</span>
+                                </div>
+                            </div>
+                            <h3>Highlight</h3>
+                            <p>Slow-motion with title cards</p>
+                            <button class="btn-style" data-style="highlight">Select</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Export Tab -->
+            <div id="export" class="tab-panel">
+                <div class="export-container">
+                    <h2>Export Clips</h2>
+                    <p class="section-description">Export your clips in various formats</p>
+                    
+                    <div class="export-options">
+                        <div class="export-section">
+                            <h3>Export Format</h3>
+                            <div class="format-options">
+                                <label class="radio-option">
+                                    <input type="radio" name="exportFormat" value="json" checked>
+                                    <span class="radio-label">
+                                        <strong>JSON</strong>
+                                        <small>Clip metadata with timestamps</small>
+                                    </span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="exportFormat" value="csv">
+                                    <span class="radio-label">
+                                        <strong>CSV</strong>
+                                        <small>Spreadsheet format</small>
+                                    </span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="exportFormat" value="edl">
+                                    <span class="radio-label">
+                                        <strong>EDL</strong>
+                                        <small>Edit Decision List for video editors</small>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="export-section">
+                            <h3>Filter Clips</h3>
+                            <label class="checkbox-option">
+                                <input type="checkbox" id="exportKeepOnly" checked>
+                                <span>Export only "Keep" clips</span>
+                            </label>
+                        </div>
+
+                        <div class="export-section">
+                            <h3>Export Actions</h3>
+                            <div class="export-actions">
+                                <button class="btn-primary" id="exportMetadata">
+                                    <span>📥</span> Download Metadata
+                                </button>
+                                <button class="btn-secondary" id="exportQueue">
+                                    <span>📋</span> View Export Queue
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="export-section">
+                            <h3>Export Queue</h3>
+                            <div class="queue-list" id="exportQueueList">
+                                <div class="empty-state">
+                                    <p>No clips in export queue. Mark clips as "Keep" in the Review tab.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-panel">
+                <div class="settings-container">
+                    <h2>Settings</h2>
+                    
+                    <div class="settings-section">
+                        <h3>AI Worker</h3>
+                        <div class="setting-item">
+                            <label for="aiWorkerUrl">AI Worker URL</label>
+                            <input type="text" id="aiWorkerUrl" placeholder="http://localhost:9000" value="">
+                            <small>Leave empty to use stub worker (demo mode)</small>
+                        </div>
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="enableAI" checked>
+                                Enable AI Highlight Detection
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Clip Defaults</h3>
+                        <div class="setting-item">
+                            <label for="clipPadding">Clip Padding (seconds)</label>
+                            <input type="number" id="clipPadding" min="0" max="10" value="2">
+                            <small>Extra time before and after marked clips</small>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Theme</h3>
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="darkMode" checked>
+                                Dark Mode
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Storage</h3>
+                        <button class="btn-secondary" id="clearStorage">
+                            <span>🗑️</span> Clear All Data
+                        </button>
+                        <small>Warning: This will delete all clips and settings</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Progress Modal -->
+    <div id="aiModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>AI Highlight Detection</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="ai-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="aiProgress"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span id="aiProgressPercent">0%</span>
+                        <span id="aiProgressETA">Estimating...</span>
+                    </div>
+                </div>
+                <div class="ai-status" id="aiStatus">
+                    Analyzing video for highlights...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/review.js"></script>
+    <script src="js/export.js"></script>
+</body>
+</html>
