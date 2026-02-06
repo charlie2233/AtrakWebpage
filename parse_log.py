@@ -61,11 +61,16 @@ def parse_weekly_log(file_path):
 
 
 # Run parser and write output JSON
-try:
-    data = parse_weekly_log('/Users/hanfei/LunarWeb/WeeklyLog.txt')
-    output_path = '/Users/hanfei/LunarWeb/data/weekly-history.json'
-    Path(output_path).write_text(json.dumps(data, indent=2), encoding='utf-8')
-    print(f"Successfully parsed {len(data)} weeks to {output_path}")
-except Exception as e:
-    print(f"Error: {e}")
+if __name__ == '__main__':
+    try:
+        # Get the script's directory to find relative paths
+        script_dir = Path(__file__).parent.absolute()
+        log_path = script_dir / 'WeeklyLog.txt'
+        output_path = script_dir / 'data' / 'weekly-history.json'
+        
+        data = parse_weekly_log(log_path)
+        output_path.write_text(json.dumps(data, indent=2), encoding='utf-8')
+        print(f"✅ Successfully parsed {len(data)} weeks to {output_path}")
+    except Exception as e:
+        print(f"❌ Error: {e}")
 

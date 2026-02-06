@@ -100,7 +100,7 @@
     "highlights": [
       "PNG export works clean",
       "Can share plays outside the app",
-      "First \u201cthis could be used by teams\u201d moment"
+      "First \"this could be used by teams\" moment"
     ],
     "shipped": [
       "High-res export button",
@@ -130,14 +130,14 @@
     "dateRange": "Sep 28 \u2013 Oct 4",
     "title": "From drawing board \u2192 thinking like a game engine",
     "highlights": [
-      "Decided plays shouldn\u2019t just be pictures \u2014 they should **run**",
+      "Decided plays shouldn't just be pictures \u2014 they should **run**",
       "Invented the idea of timeline events (MOVE, PASS, etc.)",
       "Architecture planning week (lots of whiteboard brain work)"
     ],
     "shipped": [
       "Play data format draft",
       "Saved plays as structured JSON",
-      "Internal \u201ctimeline\u201d concept"
+      "Internal \"timeline\" concept"
     ],
     "engineering": [
       "Designed early `events[]` array",
@@ -255,7 +255,7 @@
     "highlights": [
       "Playback stabilized enough to feel demo-ready",
       "Timeline system cleaned up",
-      "Started thinking like: \u201cwhat would a coach actually click?\u201d"
+      "Started thinking like: \"what would a coach actually click?\""
     ],
     "shipped": [
       "Reset positions on stop",
@@ -374,297 +374,7 @@
     "highlights": [
       "Designed proper replay bar UI",
       "Planned seekbar + speed control",
-      "Thinking more like \u201cvideo player\u201d"
-    ],
-    "shipped": [
-      "Control bar mockups",
-      "Timeline duration math",
-      "Playback architecture rewrite plan"
-    ],
-    "engineering": [
-      "`durationMs` calculations",
-      "Time-based replay (not frame-based)",
-      "Prep for seeking support"
-    ],
-    "fixes": [],
-    "metrics": [
-      "Commits: 9"
-    ],
-    "next": [
-      "Implement Phase B controls"
-    ]
-  },
-  {
-    "dateRange": "Oct 26 \u2013 Nov 1",
-    "title": "Turning prototype into something launchable",
-    "highlights": [
-      "Playback stabilized enough to feel demo-ready",
-      "Timeline system cleaned up",
-      "Started thinking like: \u201cwhat would a coach actually click?\u201d"
-    ],
-    "shipped": [
-      "Reset positions on stop",
-      "Better state restore",
-      "Cleaner initial layout"
-    ],
-    "engineering": [
-      "Snapshot system for starting positions",
-      "Replay rebuild on every run",
-      "Removed lingering ghost objects"
-    ],
-    "fixes": [
-      "Players stacking after stop",
-      "State not resetting correctly"
-    ],
-    "metrics": [
-      "Commits: 11",
-      "PRs: 1"
-    ],
-    "next": [
-      "Full Playback MVP push"
-    ]
-  },
-  {
-    "dateRange": "Nov 2 \u2013 Nov 8",
-    "title": "Weekly Update",
-    "highlights": [
-      "Official first real **Run Play** feature",
-      "Players follow drawn routes automatically",
-      "Ball passes between teammates",
-      "This is when the app stopped being a drawing toy"
-    ],
-    "shipped": [
-      "RUN events",
-      "PASS events",
-      "Ball arc flight",
-      "60fps replay",
-      "Playback button"
-    ],
-    "engineering": [
-      "Compiled routes \u2192 animation segments",
-      "Nearest-player detection",
-      "Interaction disabled during playback"
-    ],
-    "fixes": [],
-    "metrics": [
-      "Commits: 27",
-      "PRs: 3",
-      "Files changed: 12"
-    ],
-    "next": [
-      "Pause / Resume",
-      "Controls bar"
-    ]
-  },
-  {
-    "dateRange": "Nov 9 \u2013 Nov 15",
-    "title": "Bug-fixing gauntlet",
-    "highlights": [
-      "Fixed 10+ weird edge cases",
-      "Timing bugs murdered",
-      "Stability massively improved"
-    ],
-    "shipped": [],
-    "engineering": [
-      "Defensive state guards",
-      "Clear ownership switching",
-      "Recompiled timeline on every run"
-    ],
-    "fixes": [
-      "Teleporting players",
-      "Double pass triggers",
-      "Playback freezing mid-run",
-      "Interaction during play"
-    ],
-    "metrics": [
-      "Commits: 20",
-      "Issues closed: 9"
-    ],
-    "next": [
-      "UX polish"
-    ]
-  },
-  {
-    "dateRange": "Nov 16 \u2013 Nov 22",
-    "title": "Make it feel smooth",
-    "highlights": [
-      "Movement looks cleaner",
-      "Less jitter",
-      "Less robotic"
-    ],
-    "shipped": [
-      "Path smoothing experiments",
-      "Speed normalization",
-      "Better frame timing"
-    ],
-    "engineering": [
-      "Segment sampling",
-      "Constant-speed approximation",
-      "Removed frame dependency"
-    ],
-    "fixes": [
-      "Fast/slow player drift",
-      "Path snapping"
-    ],
-    "metrics": [
-      "Commits: 16"
-    ],
-    "next": [
-      "Real playback controls"
-    ]
-  },
-  {
-    "dateRange": "Nov 23 \u2013 Nov 29",
-    "title": "Planning Phase B (Thanksgiving brain week)",
-    "highlights": [
-      "Designed proper replay bar UI",
-      "Planned seekbar + speed control",
-      "Thinking more like \u201cvideo player\u201d"
-    ],
-    "shipped": [
-      "Control bar mockups",
-      "Timeline duration math",
-      "Playback architecture rewrite plan"
-    ],
-    "engineering": [
-      "`durationMs` calculations",
-      "Time-based replay (not frame-based)",
-      "Prep for seeking support"
-    ],
-    "fixes": [],
-    "metrics": [
-      "Commits: 9"
-    ],
-    "next": [
-      "Implement Phase B controls"
-    ]
-  },
-  {
-    "dateRange": "Oct 26 \u2013 Nov 1",
-    "title": "Turning prototype into something launchable",
-    "highlights": [
-      "Playback stabilized enough to feel demo-ready",
-      "Timeline system cleaned up",
-      "Started thinking like: \u201cwhat would a coach actually click?\u201d"
-    ],
-    "shipped": [
-      "Reset positions on stop",
-      "Better state restore",
-      "Cleaner initial layout"
-    ],
-    "engineering": [
-      "Snapshot system for starting positions",
-      "Replay rebuild on every run",
-      "Removed lingering ghost objects"
-    ],
-    "fixes": [
-      "Players stacking after stop",
-      "State not resetting correctly"
-    ],
-    "metrics": [
-      "Commits: 11",
-      "PRs: 1"
-    ],
-    "next": [
-      "Full Playback MVP push"
-    ]
-  },
-  {
-    "dateRange": "Nov 2 \u2013 Nov 8",
-    "title": "Weekly Update",
-    "highlights": [
-      "Official first real **Run Play** feature",
-      "Players follow drawn routes automatically",
-      "Ball passes between teammates",
-      "This is when the app stopped being a drawing toy"
-    ],
-    "shipped": [
-      "RUN events",
-      "PASS events",
-      "Ball arc flight",
-      "60fps replay",
-      "Playback button"
-    ],
-    "engineering": [
-      "Compiled routes \u2192 animation segments",
-      "Nearest-player detection",
-      "Interaction disabled during playback"
-    ],
-    "fixes": [],
-    "metrics": [
-      "Commits: 27",
-      "PRs: 3",
-      "Files changed: 12"
-    ],
-    "next": [
-      "Pause / Resume",
-      "Controls bar"
-    ]
-  },
-  {
-    "dateRange": "Nov 9 \u2013 Nov 15",
-    "title": "Bug-fixing gauntlet",
-    "highlights": [
-      "Fixed 10+ weird edge cases",
-      "Timing bugs murdered",
-      "Stability massively improved"
-    ],
-    "shipped": [],
-    "engineering": [
-      "Defensive state guards",
-      "Clear ownership switching",
-      "Recompiled timeline on every run"
-    ],
-    "fixes": [
-      "Teleporting players",
-      "Double pass triggers",
-      "Playback freezing mid-run",
-      "Interaction during play"
-    ],
-    "metrics": [
-      "Commits: 20",
-      "Issues closed: 9"
-    ],
-    "next": [
-      "UX polish"
-    ]
-  },
-  {
-    "dateRange": "Nov 16 \u2013 Nov 22",
-    "title": "Make it feel smooth",
-    "highlights": [
-      "Movement looks cleaner",
-      "Less jitter",
-      "Less robotic"
-    ],
-    "shipped": [
-      "Path smoothing experiments",
-      "Speed normalization",
-      "Better frame timing"
-    ],
-    "engineering": [
-      "Segment sampling",
-      "Constant-speed approximation",
-      "Removed frame dependency"
-    ],
-    "fixes": [
-      "Fast/slow player drift",
-      "Path snapping"
-    ],
-    "metrics": [
-      "Commits: 16"
-    ],
-    "next": [
-      "Real playback controls"
-    ]
-  },
-  {
-    "dateRange": "Nov 23 \u2013 Nov 29",
-    "title": "Planning Phase B (Thanksgiving brain week)",
-    "highlights": [
-      "Designed proper replay bar UI",
-      "Planned seekbar + speed control",
-      "Thinking more like \u201cvideo player\u201d"
+      "Thinking more like \"video player\""
     ],
     "shipped": [
       "Control bar mockups",
