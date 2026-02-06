@@ -10,8 +10,17 @@ def parse_weekly_log(file_path):
     Parses a weekly log text file and returns a list of week data as dicts.
     Each week is separated by '---'.
     Sections are parsed into lists, and the title/theme is extracted.
+    
+    Args:
+        file_path: Path to the weekly log file (str or Path object)
+    
+    Returns:
+        list: List of dictionaries containing weekly data
     """
-    content = Path(file_path).read_text(encoding='utf-8')
+    # Convert to Path object if string is provided
+    if not isinstance(file_path, Path):
+        file_path = Path(file_path)
+    content = file_path.read_text(encoding='utf-8')
     
     # Split the log into weeks using '---' as a separator
     raw_weeks = re.split(r'\n---\n', content)
