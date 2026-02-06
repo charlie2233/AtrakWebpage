@@ -89,6 +89,12 @@
     <script src="../config.js?v=21"></script>
     <script src="../blog.js?v=1"></script>
     <script src="../script.js?v=22"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js" crossorigin="anonymous"></script>
     <script>
         // Load and render blog post
         (async function() {
@@ -132,48 +138,63 @@
 
                 const authorRole = authorInfo ? authorInfo.role : 'Team Member';
 
-                // Convert markdown-like content to HTML
+                // Convert markdown-like content to HTML (code blocks use placeholders so split doesn't break them)
                 function markdownToHtml(text) {
                     if (!text) return '';
-                    let html = text;
+                    const codeBlocks = [];
+                    const placeholder = '___BLOG_CODE_PLACEHOLDER___';
                     
-                    // Handle code blocks first (before other replacements)
-                    html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
+                    // 1. Extract code blocks and replace with single-line placeholders
+                    let html = text.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
+                        const idx = codeBlocks.length;
                         const escaped = escapeHtml(code.trim());
-                        return `<pre><code>${escaped}</code></pre>`;
+                        const langClass = (lang && lang.trim()) ? ` class="language-${lang.trim()}"` : '';
+                        codeBlocks.push(`<pre><code${langClass}>${escaped}</code></pre>`);
+                        return placeholder + idx + placeholder;
                     });
                     
-                    // Split into paragraphs (double newlines)
+                    // 2. Split into paragraphs (double newlines)
                     const paragraphs = html.split(/\n\n+/);
                     
                     html = paragraphs.map(para => {
-                        if (!para.trim()) return '';
+                        const trimmed = para.trim();
+                        if (!trimmed) return '';
                         
-                        // Headers
-                        para = para.replace(/^### (.*)$/gm, '<h3>$1</h3>');
-                        para = para.replace(/^## (.*)$/gm, '<h2>$1</h2>');
-                        para = para.replace(/^# (.*)$/gm, '<h1>$1</h1>');
+                        // 3. Restore code block placeholders
+                        const placeholderMatch = trimmed.match(/^___BLOG_CODE_PLACEHOLDER___(\d+)___BLOG_CODE_PLACEHOLDER___$/);
+                        if (placeholderMatch) {
+                            return codeBlocks[parseInt(placeholderMatch[1], 10)];
+                        }
                         
-                        // Lists
-                        if (para.trim().startsWith('- ') || para.trim().startsWith('* ')) {
-                            const items = para.split(/\n(?=[-*])/).map(item => {
+                        // 4. Headers: convert and return raw HTML (do not wrap in <p> or escape)
+                        let out = trimmed
+                            .replace(/^### (.*)$/gm, '<h3>$1</h3>')
+                            .replace(/^## (.*)$/gm, '<h2>$1</h2>')
+                            .replace(/^# (.*)$/gm, '<h1>$1</h1>');
+                        if (out.startsWith('<h1>') || out.startsWith('<h2>') || out.startsWith('<h3>')) {
+                            return out;
+                        }
+                        
+                        // 5. Unordered lists
+                        if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+                            const items = trimmed.split(/\n(?=[-*])/).map(item => {
                                 const content = item.replace(/^[-*]\s+/, '').trim();
                                 return `<li>${formatInlineMarkdown(content)}</li>`;
                             }).join('');
                             return `<ul>${items}</ul>`;
                         }
                         
-                        // Numbered lists
-                        if (/^\d+\.\s/.test(para.trim())) {
-                            const items = para.split(/\n(?=\d+\.\s)/).map(item => {
+                        // 6. Numbered lists
+                        if (/^\d+\.\s/.test(trimmed)) {
+                            const items = trimmed.split(/\n(?=\d+\.\s)/).map(item => {
                                 const content = item.replace(/^\d+\.\s+/, '').trim();
                                 return `<li>${formatInlineMarkdown(content)}</li>`;
                             }).join('');
                             return `<ol>${items}</ol>`;
                         }
                         
-                        // Regular paragraph
-                        return `<p>${formatInlineMarkdown(para)}</p>`;
+                        // 7. Regular paragraph
+                        return `<p>${formatInlineMarkdown(trimmed)}</p>`;
                     }).join('');
                     
                     return html;
@@ -267,6 +288,13 @@
                 const metaDesc = document.querySelector('meta[name="description"]');
                 if (metaDesc) {
                     metaDesc.content = escapeHtml(post.excerpt);
+                }
+
+                // Syntax highlighting for code blocks (after content is in DOM)
+                if (window.hljs) {
+                    contentEl.querySelectorAll('pre code').forEach(function(block) {
+                        hljs.highlightElement(block);
+                    });
                 }
 
                 // Increment view count
