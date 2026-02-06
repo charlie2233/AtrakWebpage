@@ -37,7 +37,8 @@ const Store = {
 
     // Clips
     addClip(clip) {
-        clip.id = Date.now() + Math.random();
+        // Generate unique ID using timestamp and counter
+        clip.id = `${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
         clip.status = 'unreviewed';
         clip.team = null;
         clip.style = 'classic';

@@ -168,15 +168,21 @@ class PlayerTab {
             this.video.currentTime = clip.startTime;
             this.video.play();
             
+            // Clean up any existing listener before adding new one
+            if (this._clipPlayListener) {
+                this.video.removeEventListener('timeupdate', this._clipPlayListener);
+            }
+            
             // Stop at end time
-            const checkTime = () => {
+            this._clipPlayListener = () => {
                 if (this.video.currentTime >= clip.endTime) {
                     this.video.pause();
-                    this.video.removeEventListener('timeupdate', checkTime);
+                    this.video.removeEventListener('timeupdate', this._clipPlayListener);
+                    this._clipPlayListener = null;
                 }
             };
             
-            this.video.addEventListener('timeupdate', checkTime);
+            this.video.addEventListener('timeupdate', this._clipPlayListener);
         }
     }
 
@@ -217,17 +223,17 @@ class PlayerTab {
         const aiButton = document.getElementById('aiAnalyze');
         aiButton.classList.add('glowing');
 
+        const PROGRESS_ANIMATION_STEP_MS = 50; // Animation step duration in milliseconds
         let progress = 0;
         const duration = this.video.duration;
         const totalSteps = 100;
-        const stepDuration = 50; // ms per step
 
         const interval = setInterval(() => {
             progress += 1;
             progressBar.style.width = `${progress}%`;
             progressPercent.textContent = `${progress}%`;
             
-            const remaining = ((totalSteps - progress) * stepDuration) / 1000;
+            const remaining = ((totalSteps - progress) * PROGRESS_ANIMATION_STEP_MS) / 1000;
             progressETA.textContent = `~${Math.ceil(remaining)}s remaining`;
 
             if (progress >= 100) {
@@ -235,25 +241,26 @@ class PlayerTab {
                 this.completeAIAnalysis();
                 aiButton.classList.remove('glowing');
             }
-        }, stepDuration);
+        }, PROGRESS_ANIMATION_STEP_MS);
     }
 
     completeAIAnalysis() {
-        // Simulate detected highlights
-        const videoDuration = this.video.duration;
-        const highlights = [
-            { type: 'Three-Pointer', start: videoDuration * 0.15, duration: 8 },
-            { type: 'Dunk', start: videoDuration * 0.35, duration: 6 },
-            { type: 'Block', start: videoDuration * 0.58, duration: 5 },
-            { type: 'Steal', start: videoDuration * 0.72, duration: 7 },
-            { type: 'Fast Break', start: videoDuration * 0.88, duration: 9 }
+        // Simulated highlight positions in video (percentage of total duration)
+        const HIGHLIGHT_POSITIONS = [
+            { type: 'Three-Pointer', position: 0.15, duration: 8 },
+            { type: 'Dunk', position: 0.35, duration: 6 },
+            { type: 'Block', position: 0.58, duration: 5 },
+            { type: 'Steal', position: 0.72, duration: 7 },
+            { type: 'Fast Break', position: 0.88, duration: 9 }
         ];
 
-        highlights.forEach(highlight => {
+        const videoDuration = this.video.duration;
+        
+        HIGHLIGHT_POSITIONS.forEach(highlight => {
             const clip = {
                 title: `${highlight.type} (AI)`,
-                startTime: highlight.start,
-                endTime: highlight.start + highlight.duration,
+                startTime: videoDuration * highlight.position,
+                endTime: videoDuration * highlight.position + highlight.duration,
                 duration: highlight.duration,
                 type: 'ai',
                 action: highlight.type
@@ -264,7 +271,7 @@ class PlayerTab {
         // Update status
         document.getElementById('aiStatus').innerHTML = `
             <strong>✅ Analysis Complete!</strong><br>
-            Found ${highlights.length} highlight moments
+            Found ${HIGHLIGHT_POSITIONS.length} highlight moments
         `;
 
         // Close modal after delay

@@ -69,7 +69,7 @@ class ExportTab {
         const headers = ['ID', 'Title', 'Start Time', 'End Time', 'Duration', 'Status', 'Team', 'Style', 'Type', 'Action'];
         const rows = clips.map(clip => [
             clip.id,
-            `"${clip.title}"`,
+            `"${(clip.title || '').replace(/"/g, '""')}"`, // Escape quotes properly
             this.formatTime(clip.startTime),
             this.formatTime(clip.endTime),
             this.formatTime(clip.duration),
