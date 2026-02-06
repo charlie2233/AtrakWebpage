@@ -86,7 +86,7 @@
             "state": "uploaded",
             "size": 360459107,
             "digest": "sha256:eb77b43e2ee4f85a648a565a5b2ba1223d16e8763a5bb4d9699d6e91d8bfef72",
-            "download_count": 0,
+            "download_count": 2,
             "created_at": "2026-02-05T08:48:49Z",
             "updated_at": "2026-02-05T08:51:45Z",
             "browser_download_url": "https://github.com/charlie2233/Basketball_action_recoginition_sever/releases/download/checkpoint-13/r2plus1d_multiclass_13_0.0001.pt"
