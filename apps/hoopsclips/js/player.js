@@ -9,12 +9,14 @@ class PlayerTab {
         this.sequenceTimer = null;
         this.aiInterval = null;
         this.aiButton = null;
+        this.audioPeaks = null;
         this.init();
     }
 
     init() {
         this.setupVideoUpload();
         this.setupVideoControls();
+        this.setupVideoUrlInput();
         this.updateClipsList();
         
         // Subscribe to store updates
@@ -81,6 +83,29 @@ class PlayerTab {
         });
     }
 
+    setupVideoUrlInput() {
+        const urlInput = document.getElementById('videoUrlInput');
+        const loadBtn = document.getElementById('loadVideoUrl');
+        if (!urlInput || !loadBtn) return;
+
+        const load = () => {
+            const url = urlInput.value.trim();
+            if (!url) {
+                alert('Paste a video URL first.');
+                return;
+            }
+            this.loadVideoUrl(url);
+        };
+
+        loadBtn.addEventListener('click', load);
+        urlInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                load();
+            }
+        });
+    }
+
     loadVideoFile(file, { videoPlayer, videoSource, placeholder }) {
         if (this.currentObjectUrl) {
             URL.revokeObjectURL(this.currentObjectUrl);
@@ -89,6 +114,7 @@ class PlayerTab {
         this.stopReelPreview();
         this.markInTime = null;
         this.markOutTime = null;
+        this.audioPeaks = null;
         this.updateMarkButtons();
 
         const url = URL.createObjectURL(file);
@@ -103,10 +129,41 @@ class PlayerTab {
             name: file.name,
             size: file.size,
             type: file.type,
-            url: url
+            url: url,
+            remoteUrl: null
         });
 
         this.updateVideoMeta(file);
+        this.computeAudioPeaks(file);
+    }
+
+    loadVideoUrl(url) {
+        const videoPlayer = document.getElementById('videoPlayer');
+        const videoSource = document.getElementById('videoSource');
+        const placeholder = document.getElementById('videoPlaceholder');
+
+        this.stopReelPreview();
+        this.markInTime = null;
+        this.markOutTime = null;
+        this.audioPeaks = null;
+        this.updateMarkButtons();
+
+        videoSource.src = url;
+        videoPlayer.load();
+        placeholder.classList.add('hidden');
+        this.setLoading(true, 'Loading remote video...');
+
+        Store.setCurrentVideo({
+            name: this.formatUrlName(url),
+            size: null,
+            type: 'remote',
+            url: url,
+            remoteUrl: url
+        });
+
+        this.updateVideoMeta();
+        const urlInput = document.getElementById('videoUrlInput');
+        if (urlInput) urlInput.value = url;
     }
 
     setupVideoControls() {
@@ -229,6 +286,7 @@ class PlayerTab {
         clipsItems.innerHTML = clips.map(clip => {
             const status = clip.status || 'unreviewed';
             const type = clip.type || 'manual';
+            const score = Number.isFinite(clip.score) ? clip.score.toFixed(2) : null;
             return `
             <div class="clip-item" data-clip-id="${clip.id}">
                 <div class="clip-info">
@@ -240,6 +298,7 @@ class PlayerTab {
                     <div class="clip-badges">
                         <span class="clip-badge ${type === 'ai' ? 'ai' : 'manual'}">${type === 'ai' ? 'AI' : 'Manual'}</span>
                         <span class="clip-badge status-${status}">${status}</span>
+                        ${score ? `<span class="clip-badge ai">score ${score}</span>` : ''}
                     </div>
                 </div>
                 <div class="clip-actions">
@@ -396,13 +455,34 @@ class PlayerTab {
             return;
         }
 
+        const backendUrl = this.getBackendUrl();
+        const videoUrl = this.getVideoUrlForAI();
+
         // Show AI modal
         app.showModal();
-        
+
+        if (!backendUrl || !videoUrl) {
+            this.runStubAIAnalysis();
+            return;
+        }
+
+        try {
+            await this.runBackendAIAnalysis(backendUrl, videoUrl);
+        } catch (err) {
+            console.error(err);
+            this.runStubAIAnalysis('Backend unreachable. Running demo mode.');
+        }
+    }
+
+    runStubAIAnalysis(message = '') {
+        const statusText = document.getElementById('aiStatus');
+        if (statusText && message) {
+            statusText.textContent = message;
+        }
+
         const progressBar = document.getElementById('aiProgress');
         const progressPercent = document.getElementById('aiProgressPercent');
         const progressETA = document.getElementById('aiProgressETA');
-        const statusText = document.getElementById('aiStatus');
 
         // Simulate AI analysis (stub worker)
         const aiButton = document.getElementById('aiAnalyze');
@@ -415,11 +495,11 @@ class PlayerTab {
 
         this.aiInterval = setInterval(() => {
             progress += 1;
-            progressBar.style.width = `${progress}%`;
-            progressPercent.textContent = `${progress}%`;
+            if (progressBar) progressBar.style.width = `${progress}%`;
+            if (progressPercent) progressPercent.textContent = `${progress}%`;
             
             const remaining = ((totalSteps - progress) * PROGRESS_ANIMATION_STEP_MS) / 1000;
-            progressETA.textContent = `~${Math.ceil(remaining)}s remaining`;
+            if (progressETA) progressETA.textContent = `~${Math.ceil(remaining)}s remaining`;
 
             if (progress >= 100) {
                 clearInterval(this.aiInterval);
@@ -428,6 +508,110 @@ class PlayerTab {
                 aiButton.classList.remove('glowing');
             }
         }, PROGRESS_ANIMATION_STEP_MS);
+    }
+
+    async runBackendAIAnalysis(backendUrl, videoUrl) {
+        const progressBar = document.getElementById('aiProgress');
+        const progressPercent = document.getElementById('aiProgressPercent');
+        const progressETA = document.getElementById('aiProgressETA');
+        const statusText = document.getElementById('aiStatus');
+        const aiButton = document.getElementById('aiAnalyze');
+        aiButton.classList.add('glowing');
+        this.aiButton = aiButton;
+
+        if (statusText) {
+            statusText.textContent = 'Sending video to AI backend...';
+        }
+
+        const analyzeRes = await fetch(`${backendUrl}/api/ai/analyze`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ videoUrl })
+        });
+
+        if (!analyzeRes.ok) {
+            throw new Error(`AI backend error: ${analyzeRes.status}`);
+        }
+
+        const analyzeData = await analyzeRes.json();
+        const jobId = analyzeData.jobId;
+        if (!jobId) {
+            throw new Error('AI backend did not return a jobId.');
+        }
+
+        let progress = 10;
+        if (progressBar) progressBar.style.width = `${progress}%`;
+        if (progressPercent) progressPercent.textContent = `${progress}%`;
+        if (progressETA) progressETA.textContent = 'Processing...';
+
+        this.aiInterval = setInterval(async () => {
+            try {
+                const res = await fetch(`${backendUrl}/api/ai/result/${jobId}`);
+                if (!res.ok) {
+                    throw new Error(`AI backend error: ${res.status}`);
+                }
+                const data = await res.json();
+                progress = Math.min(100, data.progress || progress + 10);
+                if (progressBar) progressBar.style.width = `${progress}%`;
+                if (progressPercent) progressPercent.textContent = `${progress}%`;
+                if (statusText) statusText.textContent = data.message || 'Processing...';
+
+                if (data.status === 'done') {
+                    clearInterval(this.aiInterval);
+                    this.aiInterval = null;
+                    this.aiButton?.classList.remove('glowing');
+                    this.handleBackendEvents(data.events || []);
+                    this.finishAIFlow(`✅ Analysis Complete! Found ${data.events?.length || 0} events`);
+                } else if (data.status === 'error') {
+                    clearInterval(this.aiInterval);
+                    this.aiInterval = null;
+                    this.aiButton?.classList.remove('glowing');
+                    this.finishAIFlow(data.message || 'AI backend error');
+                }
+            } catch (err) {
+                clearInterval(this.aiInterval);
+                this.aiInterval = null;
+                this.aiButton?.classList.remove('glowing');
+                this.finishAIFlow('AI backend unreachable');
+            }
+        }, 1500);
+    }
+
+    handleBackendEvents(events) {
+        if (!Array.isArray(events) || events.length === 0) return;
+        events.forEach((event, index) => {
+            const start = Number(event.start) || 0;
+            const end = Number(event.end) || Math.max(start + 1, start);
+            const duration = Math.max(0, end - start);
+            const aiConfidence = Number(event.confidence) || 0;
+            const audioPeak = this.getAudioPeakScore(start, end) || 0;
+            const score = (0.9 * aiConfidence) + (0.1 * audioPeak);
+
+            const clip = {
+                title: `${this.formatEventType(event.type)} (AI)`,
+                startTime: start,
+                endTime: end,
+                duration: duration,
+                type: 'ai',
+                action: event.type,
+                aiConfidence,
+                audioPeak,
+                score
+            };
+            Store.addClip(clip);
+        });
+    }
+
+    finishAIFlow(message) {
+        const statusText = document.getElementById('aiStatus');
+        if (statusText) {
+            statusText.innerHTML = `<strong>${message}</strong>`;
+        }
+
+        setTimeout(() => {
+            app.closeModal();
+            this.resetAIModal();
+        }, 1600);
     }
 
     completeAIAnalysis() {
@@ -443,13 +627,19 @@ class PlayerTab {
         const videoDuration = this.video.duration;
         
         HIGHLIGHT_POSITIONS.forEach(highlight => {
+            const audioPeak = this.getAudioPeakScore(videoDuration * highlight.position, videoDuration * highlight.position + highlight.duration) || 0;
+            const aiConfidence = 0.78;
+            const score = (0.9 * aiConfidence) + (0.1 * audioPeak);
             const clip = {
                 title: `${highlight.type} (AI)`,
                 startTime: videoDuration * highlight.position,
                 endTime: videoDuration * highlight.position + highlight.duration,
                 duration: highlight.duration,
                 type: 'ai',
-                action: highlight.type
+                action: highlight.type,
+                aiConfidence,
+                audioPeak,
+                score
             };
             Store.addClip(clip);
         });
@@ -513,11 +703,12 @@ class PlayerTab {
         const nameEl = document.getElementById('videoFileName');
         const durationEl = document.getElementById('videoDuration');
         const resolutionEl = document.getElementById('videoResolution');
+        const currentVideo = Store.getCurrentVideo();
 
         if (file && nameEl) {
             nameEl.textContent = file.name;
-        } else if (nameEl && Store.getCurrentVideo()?.name) {
-            nameEl.textContent = Store.getCurrentVideo().name;
+        } else if (nameEl && currentVideo?.name) {
+            nameEl.textContent = currentVideo.name;
         }
 
         if (this.video && durationEl) {
@@ -529,6 +720,91 @@ class PlayerTab {
             const width = this.video.videoWidth || 0;
             const height = this.video.videoHeight || 0;
             resolutionEl.textContent = width && height ? `${width}×${height}` : '—';
+        }
+    }
+
+    getBackendUrl() {
+        const settings = Store.getSettings();
+        if (settings.aiWorkerUrl) return settings.aiWorkerUrl.replace(/\/$/, '');
+        return window.ATRAK_CONFIG?.backends?.hoopsClips?.replace(/\/$/, '') || '';
+    }
+
+    getVideoUrlForAI() {
+        const currentVideo = Store.getCurrentVideo();
+        if (currentVideo?.remoteUrl) return currentVideo.remoteUrl;
+
+        const input = document.getElementById('videoUrlInput');
+        const url = input?.value?.trim();
+        if (url) return url;
+
+        return '';
+    }
+
+    formatEventType(type) {
+        if (!type) return 'Highlight';
+        return String(type)
+            .replace(/_/g, ' ')
+            .replace(/\b\w/g, (char) => char.toUpperCase());
+    }
+
+    async computeAudioPeaks(file) {
+        if (!file || !window.AudioContext) return;
+        try {
+            const arrayBuffer = await file.arrayBuffer();
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer.slice(0));
+
+            const channelData = audioBuffer.getChannelData(0);
+            const sampleRate = audioBuffer.sampleRate;
+            const bucketSize = 0.5; // seconds
+            const bucketSamples = Math.max(1, Math.floor(sampleRate * bucketSize));
+            const peaks = [];
+
+            for (let i = 0; i < channelData.length; i += bucketSamples) {
+                let sum = 0;
+                const end = Math.min(channelData.length, i + bucketSamples);
+                for (let j = i; j < end; j += 1) {
+                    const value = channelData[j];
+                    sum += value * value;
+                }
+                const rms = Math.sqrt(sum / Math.max(1, end - i));
+                peaks.push(rms);
+            }
+
+            const max = Math.max(...peaks, 0.00001);
+            this.audioPeaks = {
+                bucketSize,
+                peaks: peaks.map(value => value / max),
+                duration: audioBuffer.duration
+            };
+        } catch (err) {
+            console.warn('Audio analysis failed', err);
+            this.audioPeaks = null;
+        }
+    }
+
+    getAudioPeakScore(start, end) {
+        if (!this.audioPeaks || !Number.isFinite(start) || !Number.isFinite(end)) return 0;
+        const { bucketSize, peaks } = this.audioPeaks;
+        const startIndex = Math.max(0, Math.floor(start / bucketSize));
+        const endIndex = Math.min(peaks.length - 1, Math.ceil(end / bucketSize));
+        if (endIndex < startIndex) return 0;
+        let sum = 0;
+        let count = 0;
+        for (let i = startIndex; i <= endIndex; i += 1) {
+            sum += peaks[i];
+            count += 1;
+        }
+        return count ? sum / count : 0;
+    }
+
+    formatUrlName(url) {
+        try {
+            const parsed = new URL(url);
+            const name = parsed.pathname.split('/').pop();
+            return name || parsed.hostname;
+        } catch (err) {
+            return url.slice(0, 32);
         }
     }
 }

@@ -34,6 +34,12 @@
         </div>
     </nav>
 
+    <!-- Web demo notice (this page only) -->
+    <div class="web-demo-notice" role="note">
+        <span class="web-demo-notice-icon">ℹ️</span>
+        <span>Hoops Clips is a full app; this is a <strong>web demo</strong> using the same backend.</span>
+    </div>
+
     <!-- Main App Container -->
     <div class="app-container">
         <!-- Tabs Navigation -->
@@ -122,6 +128,15 @@
                                     <span class="mark-chip" id="markInChip">IN —</span>
                                     <span class="mark-chip" id="markOutChip">OUT —</span>
                                     <span class="mark-hint">Set both marks to add a clip.</span>
+                                </div>
+
+                                <div class="video-url">
+                                    <label for="videoUrlInput">Video URL (public, for AI)</label>
+                                    <div class="url-input">
+                                        <input type="url" id="videoUrlInput" placeholder="https://example.com/game.mp4">
+                                        <button class="btn-secondary btn-sm" id="loadVideoUrl" type="button">Load URL</button>
+                                    </div>
+                                    <small>AI backend reads the URL directly. Use a publicly accessible link.</small>
                                 </div>
 
                                 <div class="video-meta" id="videoMeta">
@@ -407,6 +422,7 @@
         </div>
     </div>
 
+    <script src="../../config.js"></script>
     <script src="js/app.js"></script>
     <script src="js/store.js"></script>
     <script src="js/player.js"></script>

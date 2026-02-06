@@ -1,0 +1,11 @@
+{
+  "slug": "cpp-getchar-fast-input",
+  "title": "C++ getchar() 快速输入方式 - Fast Input Method in C++",
+  "excerpt": "详细介绍 getchar() 函数的基本用法及如何高效地利用它读取字符和整数。getchar() 函数能够从标准输入中读取一个字符并能接受空格，是一种比 scanf 和 cin 更快的输入方式。",
+  "date": "2022-12-05",
+  "author": "Charlie Han",
+  "tags": ["C++", "Input/Output", "Competitive Programming", "Beginner"],
+  "readingTime": 5,
+  "featuredImage": null,
+  "content": "# C++ getchar() 输入方式 - 较快的输入方式\n\n本文详细介绍了 getchar() 函数的基本用法及如何高效地利用它读取字符和整数。getchar() 能够从标准输入中读取一个字符并能接受空格，是一种比 scanf 和 cin 更快的输入方式，在算法竞赛中常用于加速读入。\n\n**Fast Input Method in C++** — This post covers basic usage of `getchar()` and how to use it for fast reading of characters and integers. It is faster than `scanf` and `cin`, and is commonly used in competitive programming.\n\n## 为什么用 getchar()？ / Why getchar()?\n\n- **速度 / Speed**: 比 `cin` 和 `scanf` 更快，适合读入大量数据。\n- **接受空格 / Accepts spaces**: 可以读取空格、换行等字符。\n- **简单 / Simple**: 标准库函数，无需额外头文件（`<cstdio>` 或 `<stdio.h>`）。\n\n## 基本用法 / Basic Usage\n\n### 读取单个字符 / Read a single character\n\n```cpp\n#include <cstdio>\n\nint main() {\n    int c = getchar();  // 读取一个字符，返回 int（EOF 或 unsigned char）\n    putchar(c);         // 输出\n    return 0;\n}\n```\n\n### 读取整数 / Read an integer\n\n通过逐字符读取并拼成数字，可以跳过空格和换行，且比 `scanf(\"%d\")` 更快：\n\n```cpp\n#include <cstdio>\n\nint read() {\n    int x = 0, f = 1;\n    char c = getchar();\n    while (c < '0' || c > '9') {\n        if (c == '-') f = -1;\n        c = getchar();\n    }\n    while (c >= '0' && c <= '9') {\n        x = x * 10 + (c - '0');\n        c = getchar();\n    }\n    return x * f;\n}\n\nint main() {\n    int n = read();\n    printf(\"%d\\n\", n);\n    return 0;\n}\n```\n\n### 读取一行（含空格）/ Read a line (including spaces)\n\n```cpp\nchar s[100];\nint i = 0;\nchar c;\nwhile ((c = getchar()) != '\\n' && c != EOF)\n    s[i++] = c;\ns[i] = '\\0';\n```\n\n## 注意事项 / Notes\n\n1. **返回值 / Return value**: `getchar()` 返回 `int`，以便正确表示 `EOF`（通常是 -1）。\n2. **缓冲 / Buffering**: 标准输入通常是行缓冲或全缓冲，大量读入时 getchar() 仍能保持较高效率。\n3. **竞赛中的快读 / Fast read in contests**: 很多选手会手写 `read()` 如上，用于读入大量整数，避免 TLE。\n\n## 小结 / Summary\n\ngetchar() 是 C/C++ 中实现快速输入的常用手段，适合算法竞赛和需要大量读入的场景。掌握 getchar() 的用法，能帮助你在时间和正确性上都有所提升。\n\n---\n\n*Written 2022-12-05. 一篇关于 C++ 快速输入的旧文。*"
+}

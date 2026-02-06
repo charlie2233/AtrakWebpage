@@ -542,6 +542,18 @@ body.reduce-motion .nav-links {
     transform: translateY(-2px);
 }
 
+.btn-coming-soon {
+    cursor: default;
+    opacity: 0.85;
+    border-style: dashed;
+    pointer-events: none;
+}
+.btn-coming-soon:hover {
+    background-color: var(--bg-tertiary);
+    border-color: var(--border-color);
+    transform: none;
+}
+
 /* Hero Visual */
 .hero-visual {
     position: relative;
@@ -892,6 +904,13 @@ section {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+}
+
+.tag-coming-soon {
+    border-style: dashed;
+    color: var(--text-tertiary);
+    background: rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.25);
 }
 
 .tag {
@@ -6143,6 +6162,22 @@ a.leader-card:hover {
 .link-btn.disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.link-btn-coming-soon {
+    cursor: default;
+    opacity: 0.85;
+    border-style: dashed;
+}
+.link-btn-coming-soon:hover {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.15);
+    color: var(--text-secondary);
+}
+.link-btn-coming-soon em {
+    font-style: italic;
+    font-size: 0.9em;
+    color: var(--text-tertiary);
 }
 
 .link-icon {

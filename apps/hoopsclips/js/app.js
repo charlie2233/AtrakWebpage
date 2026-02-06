@@ -84,7 +84,13 @@ class App {
         const clipPaddingInput = document.getElementById('clipPadding');
         const darkModeInput = document.getElementById('darkMode');
 
-        if (aiWorkerUrlInput) aiWorkerUrlInput.value = settings.aiWorkerUrl;
+        if (aiWorkerUrlInput) {
+            const defaultBackend = window.ATRAK_CONFIG?.backends?.hoopsClips || '';
+            if (!settings.aiWorkerUrl && defaultBackend) {
+                Store.updateSettings({ aiWorkerUrl: defaultBackend });
+            }
+            aiWorkerUrlInput.value = Store.getSettings().aiWorkerUrl || '';
+        }
         if (enableAIInput) enableAIInput.checked = settings.enableAI;
         if (clipPaddingInput) clipPaddingInput.value = settings.clipPadding;
         if (darkModeInput) darkModeInput.checked = settings.darkMode;

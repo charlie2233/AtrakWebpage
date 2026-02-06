@@ -58,6 +58,16 @@
     "tags": ["AI", "Python", "Simulation", "Algorithms"],
     "readingTime": 11,
     "featuredImage": null
+  },
+  {
+    "slug": "cpp-getchar-fast-input",
+    "title": "C++ getchar() 快速输入方式 - Fast Input Method in C++",
+    "excerpt": "详细介绍 getchar() 函数的基本用法及如何高效地利用它读取字符和整数。getchar() 函数能够从标准输入中读取一个字符并能接受空格，是一种比 scanf 和 cin 更快的输入方式。",
+    "date": "2022-12-05",
+    "author": "Charlie Han",
+    "tags": ["C++", "Input/Output", "Competitive Programming", "Beginner"],
+    "readingTime": 5,
+    "featuredImage": null
   }
 ]
 

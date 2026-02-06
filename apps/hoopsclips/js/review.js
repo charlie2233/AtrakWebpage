@@ -42,6 +42,7 @@ class ReviewTab {
                 <div class="review-card-body">
                     <p>${this.formatTime(clip.startTime)} - ${this.formatTime(clip.endTime)}</p>
                     <p class="clip-time">Duration: ${this.formatTime(clip.duration)}</p>
+                    ${Number.isFinite(clip.score) ? `<p class="clip-time">Score: ${clip.score.toFixed(2)}</p>` : ''}
                     ${clip.type === 'ai' ? `<p><small>🤖 AI Detected: ${clip.action}</small></p>` : ''}
                     ${clip.team ? `<p><small>Team: ${clip.team}</small></p>` : ''}
                 </div>
