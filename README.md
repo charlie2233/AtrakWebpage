@@ -26,6 +26,15 @@ A modern, minimal tech team website + project hub (atrak.dev) featuring a clean 
 - 📬 **Anonymous Suggestion Box**: Visitors can send feedback without sharing identity
 - 🔗 **Footer**: Comprehensive navigation and information
 
+### Web Applications
+- 🏀 **Hoops Clips**: Full-featured basketball video editor (accessible at `/apps/hoopsclips/`)
+  - Video player with clip marking
+  - AI highlight detection (stub worker included)
+  - Review system with Keep/Discard status
+  - Team assignment (Team A/B)
+  - Export to JSON, CSV, EDL formats
+  - Dark theme with purple accent
+
 ### Performance
 - ⚡ **Optimized Scrolling**: RequestAnimationFrame-based scroll throttling
 - 🚀 **Cached DOM Queries**: Minimal reflow and repaint
@@ -141,6 +150,12 @@ Atrak/
 │   ├── atrak-agent.html
 │   ├── ten-seconds-vip-manager.html
 │   └── ai-predator-simulation.html
+├── apps/                  # Web applications
+│   └── hoopsclips/        # Hoops Clips basketball video editor
+│       ├── index.html     # Main app page
+│       ├── css/           # Styles
+│       ├── js/            # JavaScript modules
+│       └── README.md      # App documentation
 └── README.md              # This file
 ```
 
