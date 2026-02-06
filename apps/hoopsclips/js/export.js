@@ -27,6 +27,34 @@ class ExportTab {
         });
     }
 
+    quickExport(format, keepOnly = false) {
+        const clips = keepOnly ? Store.getClipsByStatus('keep') : Store.getClips();
+        if (clips.length === 0) {
+            alert('No clips to export');
+            return;
+        }
+
+        let content, filename, mimeType;
+
+        switch (format) {
+            case 'json':
+                content = JSON.stringify(clips, null, 2);
+                filename = keepOnly ? 'hoops-clips-keep.json' : 'hoops-clips-all.json';
+                mimeType = 'application/json';
+                break;
+            case 'csv':
+                content = this.generateCSV(clips);
+                filename = keepOnly ? 'hoops-clips-keep.csv' : 'hoops-clips-all.csv';
+                mimeType = 'text/csv';
+                break;
+            default:
+                alert('Unsupported format');
+                return;
+        }
+
+        this.downloadFile(content, filename, mimeType);
+    }
+
     setupReelControls() {
         const previewBtn = document.getElementById('reelPreview');
         const shuffleBtn = document.getElementById('reelShuffle');

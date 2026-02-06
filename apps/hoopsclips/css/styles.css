@@ -771,6 +771,13 @@ button:disabled {
     flex-wrap: wrap;
 }
 
+.review-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
 .stat {
     padding: 0.5rem 1rem;
     background: var(--bg-card);
@@ -1172,6 +1179,29 @@ button:disabled {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
+}
+
+.setting-readonly {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.75rem;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--border);
+}
+
+.setting-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.setting-value {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-weight: 600;
 }
 
 .setting-item input[type="text"],

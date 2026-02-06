@@ -188,6 +188,10 @@
                             <span class="stat stat-discard">Discard: <strong id="discardClips">0</strong></span>
                             <span class="stat">Unreviewed: <strong id="unreviewedClips">0</strong></span>
                         </div>
+                        <div class="review-actions">
+                            <button class="btn-secondary btn-sm" id="reviewExportKeepJson" type="button">Export Keep (JSON)</button>
+                            <button class="btn-secondary btn-sm" id="reviewExportKeepCsv" type="button">Export Keep (CSV)</button>
+                        </div>
                     </div>
                     
                     <div class="review-clips" id="reviewClips">
@@ -352,17 +356,17 @@
                 <div class="settings-container">
                     <h2>Settings</h2>
                     
-                    <div class="settings-section">
-                        <h3>AI Worker</h3>
-                        <div class="setting-item">
-                            <label for="aiWorkerUrl">AI Worker URL</label>
-                            <input type="text" id="aiWorkerUrl" placeholder="http://localhost:9000" value="">
-                            <small>Leave empty to use stub worker (demo mode)</small>
-                        </div>
-                        <div class="setting-item">
-                            <label>
-                                <input type="checkbox" id="enableAI" checked>
-                                Enable AI Highlight Detection
+                <div class="settings-section">
+                    <h3>AI Worker</h3>
+                    <div class="setting-item setting-readonly">
+                        <div class="setting-label">Backend</div>
+                        <div class="setting-value">Managed by Atrak (Cloud Run)</div>
+                        <small>Hidden from users. Contact the team for access or changes.</small>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="enableAI" checked>
+                            Enable AI Highlight Detection
                             </label>
                         </div>
                     </div>

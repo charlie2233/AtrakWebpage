@@ -76,6 +76,12 @@ const Store = {
         this.notifyUpdate();
     },
 
+    clearClips() {
+        this.data.clips = [];
+        this.save();
+        this.notifyUpdate();
+    },
+
     getClip(id) {
         return this.data.clips.find(c => c.id === id);
     },

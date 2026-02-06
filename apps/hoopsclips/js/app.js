@@ -79,27 +79,19 @@ class App {
         const settings = Store.getSettings();
         
         // Load settings into UI
-        const aiWorkerUrlInput = document.getElementById('aiWorkerUrl');
         const enableAIInput = document.getElementById('enableAI');
         const clipPaddingInput = document.getElementById('clipPadding');
         const darkModeInput = document.getElementById('darkMode');
 
-        if (aiWorkerUrlInput) {
-            const defaultBackend = window.ATRAK_CONFIG?.backends?.hoopsClips || '';
-            if (!settings.aiWorkerUrl && defaultBackend) {
-                Store.updateSettings({ aiWorkerUrl: defaultBackend });
-            }
-            aiWorkerUrlInput.value = Store.getSettings().aiWorkerUrl || '';
+        const defaultBackend = window.ATRAK_CONFIG?.backends?.hoopsClips || '';
+        if (!settings.aiWorkerUrl && defaultBackend) {
+            Store.updateSettings({ aiWorkerUrl: defaultBackend });
         }
         if (enableAIInput) enableAIInput.checked = settings.enableAI;
         if (clipPaddingInput) clipPaddingInput.value = settings.clipPadding;
         if (darkModeInput) darkModeInput.checked = settings.darkMode;
 
         // Setup settings listeners
-        aiWorkerUrlInput?.addEventListener('change', (e) => {
-            Store.updateSettings({ aiWorkerUrl: e.target.value });
-        });
-
         enableAIInput?.addEventListener('change', (e) => {
             Store.updateSettings({ enableAI: e.target.checked });
         });

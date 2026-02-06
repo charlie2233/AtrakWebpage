@@ -9,6 +9,38 @@ class ReviewTab {
         
         // Subscribe to store updates
         Store.subscribe(() => this.updateReviewClips());
+
+        this.setupActions();
+        this.setupCardPreview();
+    }
+
+    setupActions() {
+        const exportJsonBtn = document.getElementById('reviewExportKeepJson');
+        const exportCsvBtn = document.getElementById('reviewExportKeepCsv');
+
+        exportJsonBtn?.addEventListener('click', () => {
+            window.exportTab?.quickExport('json', true);
+        });
+
+        exportCsvBtn?.addEventListener('click', () => {
+            window.exportTab?.quickExport('csv', true);
+        });
+    }
+
+    setupCardPreview() {
+        const reviewClips = document.getElementById('reviewClips');
+        if (!reviewClips) return;
+
+        reviewClips.addEventListener('click', (event) => {
+            const target = event.target;
+            if (target.closest('button')) return;
+            const card = target.closest('.review-card');
+            if (!card) return;
+            const clipId = card.dataset.clipId;
+            if (clipId) {
+                this.previewClip(clipId);
+            }
+        });
     }
 
     updateReviewClips() {

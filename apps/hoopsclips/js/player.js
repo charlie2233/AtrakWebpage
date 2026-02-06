@@ -111,6 +111,11 @@ class PlayerTab {
             URL.revokeObjectURL(this.currentObjectUrl);
         }
 
+        const keepClips = this.confirmClipRetention();
+        if (!keepClips) {
+            Store.clearClips();
+        }
+
         this.stopReelPreview();
         this.markInTime = null;
         this.markOutTime = null;
@@ -141,6 +146,11 @@ class PlayerTab {
         const videoPlayer = document.getElementById('videoPlayer');
         const videoSource = document.getElementById('videoSource');
         const placeholder = document.getElementById('videoPlaceholder');
+
+        const keepClips = this.confirmClipRetention();
+        if (!keepClips) {
+            Store.clearClips();
+        }
 
         this.stopReelPreview();
         this.markInTime = null;
@@ -806,6 +816,14 @@ class PlayerTab {
         } catch (err) {
             return url.slice(0, 32);
         }
+    }
+
+    confirmClipRetention() {
+        const existing = Store.getClips();
+        if (!existing || existing.length === 0) {
+            return true;
+        }
+        return confirm('Keep existing clips from the previous video? Click OK to keep, Cancel to clear.');
     }
 }
 

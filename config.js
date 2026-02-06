@@ -16,7 +16,7 @@ window.ATRAK_CONFIG = {
         sponsor: 'https://formspree.io/f/mvzqdnov'
     },
     backends: {
-        hoopsClips: 'https://basketball-ai-server-419264312268.us-central1.run.app'
+        hoopsClips: 'https://basketball-ai-server-cah2veot6q-uc.a.run.app'
     }
 };
 
