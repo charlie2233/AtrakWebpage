@@ -9,6 +9,7 @@ class App {
         this.setupTabs();
         this.setupModal();
         this.loadSettings();
+        this.setupStyleSelection();
         
         // Subscribe to store updates
         Store.subscribe(() => this.updateUI());
@@ -53,12 +54,12 @@ class App {
         const closeBtn = modal.querySelector('.modal-close');
         
         closeBtn.addEventListener('click', () => {
-            this.closeModal();
+            this.closeModal(true);
         });
 
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
-                this.closeModal();
+                this.closeModal(true);
             }
         });
     }
@@ -67,7 +68,10 @@ class App {
         document.getElementById('aiModal').classList.add('active');
     }
 
-    closeModal() {
+    closeModal(userInitiated = false) {
+        if (userInitiated && window.playerTab?.cancelAIAnalysis) {
+            window.playerTab.cancelAIAnalysis();
+        }
         document.getElementById('aiModal').classList.remove('active');
     }
 
@@ -111,6 +115,31 @@ class App {
                 location.reload();
             }
         });
+    }
+
+    setupStyleSelection() {
+        const styleButtons = Array.from(document.querySelectorAll('.btn-style'));
+        if (!styleButtons.length) return;
+
+        const setSelected = (style) => {
+            styleButtons.forEach(button => {
+                const card = button.closest('.style-card');
+                if (!card) return;
+                const isActive = button.dataset.style === style;
+                card.classList.toggle('is-selected', isActive);
+            });
+        };
+
+        styleButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const style = button.dataset.style;
+                if (!style) return;
+                Store.updateSettings({ defaultStyle: style });
+                setSelected(style);
+            });
+        });
+
+        setSelected(Store.getSettings().defaultStyle || 'classic');
     }
 
     updateUI() {

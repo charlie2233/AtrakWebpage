@@ -7,7 +7,8 @@ const Store = {
             aiWorkerUrl: '',
             enableAI: true,
             clipPadding: 2,
-            darkMode: true
+            darkMode: true,
+            defaultStyle: 'classic'
         }
     },
 
@@ -21,6 +22,9 @@ const Store = {
             try {
                 const parsed = JSON.parse(saved);
                 this.data = { ...this.data, ...parsed };
+                if (parsed.settings && typeof parsed.settings === 'object') {
+                    this.data.settings = { ...this.data.settings, ...parsed.settings };
+                }
                 if (Array.isArray(this.data.clips)) {
                     this.data.clips = this.data.clips.map(clip => ({
                         status: clip.status || 'unreviewed',
@@ -50,7 +54,7 @@ const Store = {
         clip.id = `${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
         clip.status = 'unreviewed';
         clip.team = null;
-        clip.style = 'classic';
+        clip.style = this.data.settings.defaultStyle || 'classic';
         clip.createdAt = new Date().toISOString();
         this.data.clips.push(clip);
         this.save();
@@ -114,7 +118,8 @@ const Store = {
                 aiWorkerUrl: '',
                 enableAI: true,
                 clipPadding: 2,
-                darkMode: true
+                darkMode: true,
+                defaultStyle: 'classic'
             }
         };
         this.save();

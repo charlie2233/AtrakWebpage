@@ -7,6 +7,8 @@ class PlayerTab {
         this.currentObjectUrl = null;
         this.sequenceListener = null;
         this.sequenceTimer = null;
+        this.aiInterval = null;
+        this.aiButton = null;
         this.init();
     }
 
@@ -66,6 +68,7 @@ class PlayerTab {
             this.enableControls();
             this.setLoading(false);
             this.updateVideoMeta();
+            this.updateMarkButtons();
         });
 
         videoPlayer.addEventListener('canplay', () => {
@@ -84,6 +87,9 @@ class PlayerTab {
         }
 
         this.stopReelPreview();
+        this.markInTime = null;
+        this.markOutTime = null;
+        this.updateMarkButtons();
 
         const url = URL.createObjectURL(file);
         this.currentObjectUrl = url;
@@ -152,6 +158,20 @@ class PlayerTab {
 
     updateMarkButtons() {
         const addClipBtn = document.getElementById('addClip');
+        const markInChip = document.getElementById('markInChip');
+        const markOutChip = document.getElementById('markOutChip');
+        const markInValue = this.markInTime !== null ? this.formatTime(this.markInTime) : '—';
+        const markOutValue = this.markOutTime !== null ? this.formatTime(this.markOutTime) : '—';
+
+        if (markInChip) {
+            markInChip.textContent = `IN ${markInValue}`;
+            markInChip.classList.toggle('active', this.markInTime !== null);
+        }
+
+        if (markOutChip) {
+            markOutChip.textContent = `OUT ${markOutValue}`;
+            markOutChip.classList.toggle('active', this.markOutTime !== null);
+        }
         
         if (this.markInTime !== null && this.markOutTime !== null && this.markInTime < this.markOutTime) {
             addClipBtn.disabled = false;
@@ -387,13 +407,13 @@ class PlayerTab {
         // Simulate AI analysis (stub worker)
         const aiButton = document.getElementById('aiAnalyze');
         aiButton.classList.add('glowing');
+        this.aiButton = aiButton;
 
         const PROGRESS_ANIMATION_STEP_MS = 50; // Animation step duration in milliseconds
         let progress = 0;
-        const duration = this.video.duration;
         const totalSteps = 100;
 
-        const interval = setInterval(() => {
+        this.aiInterval = setInterval(() => {
             progress += 1;
             progressBar.style.width = `${progress}%`;
             progressPercent.textContent = `${progress}%`;
@@ -402,7 +422,8 @@ class PlayerTab {
             progressETA.textContent = `~${Math.ceil(remaining)}s remaining`;
 
             if (progress >= 100) {
-                clearInterval(interval);
+                clearInterval(this.aiInterval);
+                this.aiInterval = null;
                 this.completeAIAnalysis();
                 aiButton.classList.remove('glowing');
             }
@@ -442,14 +463,33 @@ class PlayerTab {
         // Close modal after delay
         setTimeout(() => {
             app.closeModal();
-            // Reset modal for next use
-            setTimeout(() => {
-                document.getElementById('aiProgress').style.width = '0%';
-                document.getElementById('aiProgressPercent').textContent = '0%';
-                document.getElementById('aiProgressETA').textContent = 'Estimating...';
-                document.getElementById('aiStatus').textContent = 'Analyzing video for highlights...';
-            }, 300);
+            this.resetAIModal();
         }, 2000);
+    }
+
+    cancelAIAnalysis() {
+        if (this.aiInterval) {
+            clearInterval(this.aiInterval);
+            this.aiInterval = null;
+        }
+        if (this.aiButton) {
+            this.aiButton.classList.remove('glowing');
+        }
+        this.resetAIModal();
+    }
+
+    resetAIModal() {
+        setTimeout(() => {
+            const progress = document.getElementById('aiProgress');
+            const percent = document.getElementById('aiProgressPercent');
+            const eta = document.getElementById('aiProgressETA');
+            const status = document.getElementById('aiStatus');
+
+            if (progress) progress.style.width = '0%';
+            if (percent) percent.textContent = '0%';
+            if (eta) eta.textContent = 'Estimating...';
+            if (status) status.textContent = 'Analyzing video for highlights...';
+        }, 150);
     }
 
     formatTime(seconds) {
