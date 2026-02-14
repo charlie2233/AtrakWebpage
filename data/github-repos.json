@@ -99,6 +99,8 @@
     "allow_forking": true,
     "is_template": false,
     "web_commit_signoff_required": false,
+    "has_pull_requests": true,
+    "pull_request_creation_policy": "all",
     "topics": [
 
     ],
@@ -209,6 +211,8 @@
     "allow_forking": true,
     "is_template": false,
     "web_commit_signoff_required": false,
+    "has_pull_requests": true,
+    "pull_request_creation_policy": "all",
     "topics": [
 
     ],
@@ -325,6 +329,8 @@
     "allow_forking": true,
     "is_template": false,
     "web_commit_signoff_required": false,
+    "has_pull_requests": true,
+    "pull_request_creation_policy": "all",
     "topics": [
 
     ],
@@ -441,6 +447,8 @@
     "allow_forking": true,
     "is_template": false,
     "web_commit_signoff_required": false,
+    "has_pull_requests": true,
+    "pull_request_creation_policy": "all",
     "topics": [
 
     ],
@@ -551,6 +559,8 @@
     "allow_forking": true,
     "is_template": false,
     "web_commit_signoff_required": false,
+    "has_pull_requests": true,
+    "pull_request_creation_policy": "all",
     "topics": [
 
     ],
@@ -661,6 +671,8 @@
     "allow_forking": true,
     "is_template": false,
     "web_commit_signoff_required": false,
+    "has_pull_requests": true,
+    "pull_request_creation_policy": "all",
     "topics": [
 
     ],
@@ -777,6 +789,8 @@
     "allow_forking": true,
     "is_template": false,
     "web_commit_signoff_required": false,
+    "has_pull_requests": true,
+    "pull_request_creation_policy": "all",
     "topics": [
 
     ],
@@ -893,6 +907,8 @@
     "allow_forking": true,
     "is_template": false,
     "web_commit_signoff_required": false,
+    "has_pull_requests": true,
+    "pull_request_creation_policy": "all",
     "topics": [
 
     ],
@@ -1009,6 +1025,8 @@
     "allow_forking": true,
     "is_template": false,
     "web_commit_signoff_required": false,
+    "has_pull_requests": true,
+    "pull_request_creation_policy": "all",
     "topics": [
 
     ],
@@ -1125,6 +1143,8 @@
     "allow_forking": true,
     "is_template": false,
     "web_commit_signoff_required": false,
+    "has_pull_requests": true,
+    "pull_request_creation_policy": "all",
     "topics": [
 
     ],
@@ -1235,6 +1255,8 @@
     "allow_forking": true,
     "is_template": false,
     "web_commit_signoff_required": false,
+    "has_pull_requests": true,
+    "pull_request_creation_policy": "all",
     "topics": [
 
     ],
@@ -1345,6 +1367,8 @@
     "allow_forking": true,
     "is_template": false,
     "web_commit_signoff_required": false,
+    "has_pull_requests": true,
+    "pull_request_creation_policy": "all",
     "topics": [
 
     ],
@@ -1455,6 +1479,8 @@
     "allow_forking": true,
     "is_template": false,
     "web_commit_signoff_required": false,
+    "has_pull_requests": true,
+    "pull_request_creation_policy": "all",
     "topics": [
 
     ],
