@@ -4,7 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Blog Post — Atrak">
+    <meta name="robots" content="index,follow">
     <title>Blog Post — Atrak</title>
+    <link rel="canonical" href="https://atrak.dev/blog/blog-post.html">
+
+    <meta property="og:title" content="Blog Post — Atrak">
+    <meta property="og:description" content="Read this post on the Atrak blog.">
+    <meta property="og:url" content="https://atrak.dev/blog/blog-post.html">
+    <meta property="og:image" content="https://atrak.dev/assets/logo.png?v=20260202">
+    <meta property="og:type" content="article">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Blog Post — Atrak">
+    <meta name="twitter:description" content="Read this post on the Atrak blog.">
+    <meta name="twitter:image" content="https://atrak.dev/assets/logo.png?v=20260202">
+
+    <script id="blog-post-schema" type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Blog Post",
+      "mainEntityOfPage": "https://atrak.dev/blog/blog-post.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Atrak",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://atrak.dev/assets/logo.png?v=20260202"
+        }
+      }
+    }
+    </script>
     <link rel="icon" type="image/png" href="../assets/logo.png?v=20260202">
     <link rel="apple-touch-icon" sizes="180x180" href="../assets/logo.png?v=20260202">
     <link rel="stylesheet" href="../styles.css?v=24">
@@ -283,11 +313,26 @@
                     </div>
                 `;
 
-                // Update page title and meta
-                document.title = `${escapeHtml(post.title)} — Atrak Blog`;
+                // Update page title and SEO metadata
+                const canonicalUrl = `https://atrak.dev/blog/${encodeURIComponent(post.slug)}.html`;
+                const postTitle = `${post.title} — Atrak Blog`;
+                const postDescription = post.excerpt || 'Read this post on the Atrak blog.';
+
+                document.title = postTitle;
                 const metaDesc = document.querySelector('meta[name="description"]');
                 if (metaDesc) {
-                    metaDesc.content = escapeHtml(post.excerpt);
+                    metaDesc.content = postDescription;
+                }
+
+                applyPostSeoMetadata(post, canonicalUrl, postTitle, postDescription);
+
+                // Normalize query-based URLs to clean slug URLs for shareability.
+                if (
+                    window.location.pathname.endsWith('/blog-post.html') &&
+                    window.history &&
+                    typeof window.history.replaceState === 'function'
+                ) {
+                    window.history.replaceState({}, '', `${encodeURIComponent(post.slug)}.html`);
                 }
 
                 // Syntax highlighting for code blocks (after content is in DOM)
@@ -313,6 +358,59 @@
                 contentEl.innerHTML = '<div class="container"><div class="glass-card"><h1>Error</h1><p>Failed to load blog post. Please try again later.</p><a href="../blog.html" class="btn btn-primary">Back to Blog</a></div></div>';
             }
         })();
+
+        function applyPostSeoMetadata(post, canonicalUrl, postTitle, postDescription) {
+            const defaultImage = 'https://atrak.dev/assets/logo.png?v=20260202';
+            const canonicalTag = document.querySelector('link[rel="canonical"]');
+            if (canonicalTag) {
+                canonicalTag.setAttribute('href', canonicalUrl);
+            }
+
+            setMetaContent('meta[property="og:title"]', postTitle);
+            setMetaContent('meta[property="og:description"]', postDescription);
+            setMetaContent('meta[property="og:url"]', canonicalUrl);
+            setMetaContent('meta[property="og:image"]', defaultImage);
+            setMetaContent('meta[property="og:type"]', 'article');
+
+            setMetaContent('meta[name="twitter:title"]', postTitle);
+            setMetaContent('meta[name="twitter:description"]', postDescription);
+            setMetaContent('meta[name="twitter:image"]', defaultImage);
+
+            const schemaEl = document.getElementById('blog-post-schema');
+            if (schemaEl) {
+                const schema = {
+                    '@context': 'https://schema.org',
+                    '@type': 'BlogPosting',
+                    headline: post.title,
+                    description: postDescription,
+                    datePublished: post.date,
+                    dateModified: post.updatedDate || post.date,
+                    url: canonicalUrl,
+                    mainEntityOfPage: canonicalUrl,
+                    author: {
+                        '@type': 'Person',
+                        name: post.author || 'Atrak Team'
+                    },
+                    publisher: {
+                        '@type': 'Organization',
+                        name: 'Atrak',
+                        logo: {
+                            '@type': 'ImageObject',
+                            url: defaultImage
+                        }
+                    },
+                    image: [defaultImage]
+                };
+                schemaEl.textContent = JSON.stringify(schema);
+            }
+        }
+
+        function setMetaContent(selector, value) {
+            const tag = document.querySelector(selector);
+            if (tag && value) {
+                tag.setAttribute('content', value);
+            }
+        }
 
         // Helper functions from blog.js
         function escapeHtml(text) {
@@ -446,4 +544,3 @@
     </script>
 </body>
 </html>
-

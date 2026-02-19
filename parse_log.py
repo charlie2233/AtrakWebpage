@@ -36,9 +36,13 @@ def parse_weekly_log(file_path):
             continue  # Skip if no week header found
         date_range = title_match.group(1).strip()
         
-        # Parse the quote/theme (e.g., '### “...”')
-        theme_match = re.search(r'### [“"](.+)[”"]', raw)
-        theme = theme_match.group(1) if theme_match else "Weekly Update"
+        # Parse the theme from the markdown heading line (e.g., '### 🎬 "..."')
+        theme = "Weekly Update"
+        theme_line_match = re.search(r'^###\s+(.+)$', raw, re.MULTILINE)
+        if theme_line_match:
+            theme_line = theme_line_match.group(1).strip()
+            quoted_theme_match = re.search(r'[“"](.+?)[”"]', theme_line)
+            theme = quoted_theme_match.group(1).strip() if quoted_theme_match else theme_line
         
         # Parse sections (e.g., **highlights**, **shipped**, etc.)
         sections = {}
@@ -82,4 +86,3 @@ if __name__ == '__main__':
         print(f"✅ Successfully parsed {len(data)} weeks to {output_path}")
     except Exception as e:
         print(f"❌ Error: {e}")
-

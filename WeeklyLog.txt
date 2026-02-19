@@ -686,7 +686,7 @@ You can honestly demo this to a coach and they'd actually use it.
 # 📊 Summary
 
 **Total Coverage:** August 31, 2024 – January 24, 2025
-**Total Weeks:** 21 weeks documented
+**Total Weeks:** 16 documented (21 total in coverage range; Dec Weeks 14-18 missing)
 **Format:** Sunday → Saturday (PT)
 
 **Major Milestones:**
