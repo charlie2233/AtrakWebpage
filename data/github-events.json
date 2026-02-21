@@ -1,5 +1,214 @@
 [
   {
+    "id": "8652563874",
+    "type": "PushEvent",
+    "actor": {
+      "id": 117957000,
+      "login": "charlie2233",
+      "display_login": "charlie2233",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/charlie2233",
+      "avatar_url": "https://avatars.githubusercontent.com/u/117957000?"
+    },
+    "repo": {
+      "id": 1162816802,
+      "name": "charlie2233/Easy_Java_Ide-for-competitions",
+      "url": "https://api.github.com/repos/charlie2233/Easy_Java_Ide-for-competitions"
+    },
+    "payload": {
+      "repository_id": 1162816802,
+      "push_id": 30947449168,
+      "ref": "refs/heads/main",
+      "head": "de9d7baab205aee917addd03cdc6a77118a436da",
+      "before": "99bf4f76c2398c99873a5706497b5c6e386ccc04"
+    },
+    "public": true,
+    "created_at": "2026-02-20T23:44:50Z"
+  },
+  {
+    "id": "8648761471",
+    "type": "PushEvent",
+    "actor": {
+      "id": 117957000,
+      "login": "charlie2233",
+      "display_login": "charlie2233",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/charlie2233",
+      "avatar_url": "https://avatars.githubusercontent.com/u/117957000?"
+    },
+    "repo": {
+      "id": 1162816802,
+      "name": "charlie2233/Easy_Java_Ide-for-competitions",
+      "url": "https://api.github.com/repos/charlie2233/Easy_Java_Ide-for-competitions"
+    },
+    "payload": {
+      "repository_id": 1162816802,
+      "push_id": 30943645434,
+      "ref": "refs/heads/main",
+      "head": "99bf4f76c2398c99873a5706497b5c6e386ccc04",
+      "before": "d39ad1489d7110c233f71966131953c695ea7184"
+    },
+    "public": true,
+    "created_at": "2026-02-20T20:46:54Z"
+  },
+  {
+    "id": "8648434338",
+    "type": "PushEvent",
+    "actor": {
+      "id": 117957000,
+      "login": "charlie2233",
+      "display_login": "charlie2233",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/charlie2233",
+      "avatar_url": "https://avatars.githubusercontent.com/u/117957000?"
+    },
+    "repo": {
+      "id": 1162816802,
+      "name": "charlie2233/Easy_Java_Ide-for-competitions",
+      "url": "https://api.github.com/repos/charlie2233/Easy_Java_Ide-for-competitions"
+    },
+    "payload": {
+      "repository_id": 1162816802,
+      "push_id": 30943317962,
+      "ref": "refs/heads/main",
+      "head": "d39ad1489d7110c233f71966131953c695ea7184",
+      "before": "350f3dd10e77d83ef2f8a1461eab8f7dc68a0a7b"
+    },
+    "public": true,
+    "created_at": "2026-02-20T20:33:16Z"
+  },
+  {
+    "id": "8648024603",
+    "type": "PushEvent",
+    "actor": {
+      "id": 117957000,
+      "login": "charlie2233",
+      "display_login": "charlie2233",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/charlie2233",
+      "avatar_url": "https://avatars.githubusercontent.com/u/117957000?"
+    },
+    "repo": {
+      "id": 1162816802,
+      "name": "charlie2233/Easy_Java_Ide-for-competitions",
+      "url": "https://api.github.com/repos/charlie2233/Easy_Java_Ide-for-competitions"
+    },
+    "payload": {
+      "repository_id": 1162816802,
+      "push_id": 30942908020,
+      "ref": "refs/heads/main",
+      "head": "350f3dd10e77d83ef2f8a1461eab8f7dc68a0a7b",
+      "before": "50c3d88ccd02d91c95dea63209875435c4ccaa7d"
+    },
+    "public": true,
+    "created_at": "2026-02-20T20:16:30Z"
+  },
+  {
+    "id": "8647240300",
+    "type": "PushEvent",
+    "actor": {
+      "id": 117957000,
+      "login": "charlie2233",
+      "display_login": "charlie2233",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/charlie2233",
+      "avatar_url": "https://avatars.githubusercontent.com/u/117957000?"
+    },
+    "repo": {
+      "id": 1162816802,
+      "name": "charlie2233/Easy_Java_Ide-for-competitions",
+      "url": "https://api.github.com/repos/charlie2233/Easy_Java_Ide-for-competitions"
+    },
+    "payload": {
+      "repository_id": 1162816802,
+      "push_id": 30942123355,
+      "ref": "refs/heads/main",
+      "head": "50c3d88ccd02d91c95dea63209875435c4ccaa7d",
+      "before": "554bf426df3e655856fbd03963f110bf59735ce6"
+    },
+    "public": true,
+    "created_at": "2026-02-20T19:45:10Z"
+  },
+  {
+    "id": "8647162621",
+    "type": "PushEvent",
+    "actor": {
+      "id": 117957000,
+      "login": "charlie2233",
+      "display_login": "charlie2233",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/charlie2233",
+      "avatar_url": "https://avatars.githubusercontent.com/u/117957000?"
+    },
+    "repo": {
+      "id": 1162816802,
+      "name": "charlie2233/Easy_Java_Ide-for-competitions",
+      "url": "https://api.github.com/repos/charlie2233/Easy_Java_Ide-for-competitions"
+    },
+    "payload": {
+      "repository_id": 1162816802,
+      "push_id": 30942045646,
+      "ref": "refs/heads/main",
+      "head": "554bf426df3e655856fbd03963f110bf59735ce6",
+      "before": "fef929a00c0344d0b1f82dec3574a6035daed245"
+    },
+    "public": true,
+    "created_at": "2026-02-20T19:42:03Z"
+  },
+  {
+    "id": "8645520718",
+    "type": "PushEvent",
+    "actor": {
+      "id": 117957000,
+      "login": "charlie2233",
+      "display_login": "charlie2233",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/charlie2233",
+      "avatar_url": "https://avatars.githubusercontent.com/u/117957000?"
+    },
+    "repo": {
+      "id": 1162816802,
+      "name": "charlie2233/Easy_Java_Ide-for-competitions",
+      "url": "https://api.github.com/repos/charlie2233/Easy_Java_Ide-for-competitions"
+    },
+    "payload": {
+      "repository_id": 1162816802,
+      "push_id": 30940402931,
+      "ref": "refs/heads/main",
+      "head": "fef929a00c0344d0b1f82dec3574a6035daed245",
+      "before": "65a8b2eb4600b81d1535735a284ca2c45ee15ac4"
+    },
+    "public": true,
+    "created_at": "2026-02-20T18:38:12Z"
+  },
+  {
+    "id": "8645131003",
+    "type": "CreateEvent",
+    "actor": {
+      "id": 117957000,
+      "login": "charlie2233",
+      "display_login": "charlie2233",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/charlie2233",
+      "avatar_url": "https://avatars.githubusercontent.com/u/117957000?"
+    },
+    "repo": {
+      "id": 1162816802,
+      "name": "charlie2233/Easy_Java_Ide-for-competitions",
+      "url": "https://api.github.com/repos/charlie2233/Easy_Java_Ide-for-competitions"
+    },
+    "payload": {
+      "ref": "main",
+      "ref_type": "branch",
+      "full_ref": "refs/heads/main",
+      "master_branch": "main",
+      "description": "Ye, Vs code OR cursor is not kool enuff when usin in small comp problems (maybe or mostlikely its just me)",
+      "pusher_type": "user"
+    },
+    "public": true,
+    "created_at": "2026-02-20T18:23:34Z"
+  },
+  {
     "id": "8458668744",
     "type": "PushEvent",
     "actor": {
