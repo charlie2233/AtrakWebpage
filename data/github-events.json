@@ -1364,51 +1364,5 @@
     },
     "public": true,
     "created_at": "2026-01-22T18:47:35Z"
-  },
-  {
-    "id": "7708747263",
-    "type": "PushEvent",
-    "actor": {
-      "id": 117957000,
-      "login": "charlie2233",
-      "display_login": "charlie2233",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/charlie2233",
-      "avatar_url": "https://avatars.githubusercontent.com/u/117957000?"
-    },
-    "repo": {
-      "id": 1133081515,
-      "name": "charlie2233/rork-ten-seconds-vip-manager",
-      "url": "https://api.github.com/repos/charlie2233/rork-ten-seconds-vip-manager"
-    },
-    "payload": {
-      "repository_id": 1133081515,
-      "push_id": 30004118380,
-      "ref": "refs/heads/main",
-      "head": "89c10d82f88744e0781aa878604365045139ed43",
-      "before": "29543a923b5c18e46ee6ec0e769db71a203c9dc6"
-    },
-    "public": true,
-    "created_at": "2026-01-22T08:55:53Z"
-  },
-  {
-    "id": "5981767374",
-    "type": "PublicEvent",
-    "actor": {
-      "id": 117957000,
-      "login": "charlie2233",
-      "display_login": "charlie2233",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/charlie2233",
-      "avatar_url": "https://avatars.githubusercontent.com/u/117957000?"
-    },
-    "repo": {
-      "id": 1133081515,
-      "name": "charlie2233/rork-ten-seconds-vip-manager",
-      "url": "https://api.github.com/repos/charlie2233/rork-ten-seconds-vip-manager"
-    },
-    "payload": {},
-    "public": true,
-    "created_at": "2026-01-12T21:22:21Z"
   }
 ]
