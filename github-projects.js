@@ -34,7 +34,10 @@ const FEATURED_PROJECT_REPOS = [
     'Basketball_action_recoginition_sever',
     'AI-predator-simulation',
     'LunarWeb',
-    'Easy_Java_Ide-for-competitions'
+    'Easy_Java_Ide-for-competitions',
+    'rork-ten-seconds-vip-manager',
+    'ai-hoops-board',
+    'lunar'
 ];
 
 // Cache for GitHub data
