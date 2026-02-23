@@ -28,12 +28,13 @@ const CACHED_RELEASES_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-releas
 const CACHED_WEEKLY_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-weekly.json` : 'data/github-weekly.json'; // Updated by GitHub Actions
 const WEEKLY_LOG_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}WeeklyLog.txt` : 'WeeklyLog.txt';
 
-// Known featured projects to exclude from "More Projects" section
+// Known featured/pinned projects to exclude from "More Projects" section
 const FEATURED_PROJECT_REPOS = [
     'rork-guide-pup--vision-assistant',
     'Basketball_action_recoginition_sever',
     'AI-predator-simulation',
-    'LunarWeb'
+    'LunarWeb',
+    'Easy_Java_Ide-for-competitions'
 ];
 
 // Cache for GitHub data
@@ -504,12 +505,10 @@ async function renderMoreProjects() {
         return;
     }
 
-    // Check if we already have loaded GitHub projects (not just the pinned MazeRunner)
-    const existingGitHubProjects = container.querySelectorAll('.project-card:not(.skeleton-card)');
-    const hasMazeRunner = Array.from(existingGitHubProjects).some(card => 
-        card.querySelector('a[href*="MazeRunner67ers_APCSA_Java"]')
-    );
-    const hasOtherProjects = existingGitHubProjects.length > (hasMazeRunner ? 1 : 0);
+    // Check if we already have loaded GitHub projects (excluding any pinned static cards)
+    const existingProjectCards = container.querySelectorAll('.project-card:not(.skeleton-card)');
+    const pinnedCards = container.querySelectorAll('.project-card[data-pinned-project="true"]:not(.skeleton-card)');
+    const hasOtherProjects = existingProjectCards.length > pinnedCards.length;
     
     if (hasOtherProjects) {
         return; // Already loaded
@@ -532,7 +531,7 @@ async function renderMoreProjects() {
         container.querySelectorAll('.skeleton-card').forEach(skeleton => skeleton.remove());
 
         if (!combinedHtml.trim()) {
-            // Only show empty message if there are no projects at all (including MazeRunner)
+            // Only show empty message if there are no projects at all (including pinned cards)
             if (container.querySelectorAll('.project-card').length === 0) {
                 container.innerHTML = '<p class="empty-message">No additional projects found.</p>';
             }
@@ -540,7 +539,7 @@ async function renderMoreProjects() {
             return;
         }
 
-        // Append new projects (don't replace existing like MazeRunner)
+        // Append new projects (don't replace existing pinned cards)
         container.insertAdjacentHTML('beforeend', combinedHtml);
 
         // Re-trigger reveal animations for new elements
