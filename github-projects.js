@@ -968,6 +968,24 @@ async function renderWeeklyHighlights() {
 
         applyWeekKeys(diaryEntries);
 
+        const latestDiaryEntry = diaryEntries.length ? diaryEntries[diaryEntries.length - 1] : null;
+        const archiveProjectTitle = (weeklyArchive && typeof weeklyArchive.projectTitle === 'string' && weeklyArchive.projectTitle.trim())
+            ? weeklyArchive.projectTitle.trim()
+            : (latestDiaryEntry && latestDiaryEntry.projectTitle ? String(latestDiaryEntry.projectTitle).trim() : '');
+        const latestDiaryDate = (() => {
+            if (!latestDiaryEntry || !latestDiaryEntry.weekKey) return null;
+            const dt = new Date(`${latestDiaryEntry.weekKey}T00:00:00`);
+            return Number.isNaN(dt.getTime()) ? null : dt;
+        })();
+        const diaryArchiveAgeDays = latestDiaryDate
+            ? Math.max(0, Math.floor((now.getTime() - latestDiaryDate.getTime()) / (1000 * 60 * 60 * 24)))
+            : null;
+        const diaryArchiveIsStale = Number.isFinite(diaryArchiveAgeDays) ? diaryArchiveAgeDays > 21 : false;
+        const diaryArchiveLooksProjectSpecific = archiveProjectTitle
+            ? /basketball|tactics|coach|board/i.test(archiveProjectTitle) && !/atrak|lunar/i.test(archiveProjectTitle)
+            : false;
+        const diaryArchiveShouldBeLegacy = Boolean(diaryEntries.length && (diaryArchiveIsStale || diaryArchiveLooksProjectSpecific));
+
         const renderDiaryArchiveNote = (entry) => {
             if (!entry || !entry.weekKey) return '';
             const entryDate = new Date(`${entry.weekKey}T00:00:00`);
@@ -975,18 +993,34 @@ async function renderWeeklyHighlights() {
 
             const diffMs = Math.max(0, now.getTime() - entryDate.getTime());
             const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-            if (diffDays <= 21) return '';
-
-            const weeksOld = Math.max(1, Math.round(diffDays / 7));
+            const weeksOld = diffDays > 21 ? Math.max(1, Math.round(diffDays / 7)) : 0;
             const syncCutoff = weeklyStatsSyncDate ? formatShortDate(weeklyStatsSyncDate) : formatShortDate(now);
-            return `Archive snapshot (${weeksOld}w old). Live GitHub activity above is current through ${syncCutoff}.`;
+            const parts = [];
+
+            if (diaryArchiveShouldBeLegacy) {
+                parts.push(`Legacy project diary${archiveProjectTitle ? ` (${archiveProjectTitle})` : ''}`);
+            }
+            if (weeksOld > 0) {
+                parts.push(`Archive snapshot (${weeksOld}w old)`);
+            }
+
+            if (!parts.length) return '';
+            return `${parts.join(' • ')}. Live GitHub activity above is current through ${syncCutoff}.`;
         };
 
         if (sourceNoteEl) {
             if (weeklyStatsSyncDate) {
-                sourceNoteEl.textContent = `GitHub cache • ${formatUTCDateTime(weeklyStatsSyncDate.toISOString())} • Weekly notes shown below are archive entries`;
+                if (diaryArchiveShouldBeLegacy) {
+                    sourceNoteEl.textContent = `GitHub cache • ${formatUTCDateTime(weeklyStatsSyncDate.toISOString())} • Real weekly log is GitHub-derived • Legacy project diary archived below`;
+                } else if (diaryEntries.length) {
+                    sourceNoteEl.textContent = `GitHub cache • ${formatUTCDateTime(weeklyStatsSyncDate.toISOString())} • Weekly notes include archive diary entries`;
+                } else {
+                    sourceNoteEl.textContent = `GitHub cache • ${formatUTCDateTime(weeklyStatsSyncDate.toISOString())} • Real weekly log is GitHub-derived`;
+                }
             } else {
-                sourceNoteEl.textContent = 'Live GitHub activity + weekly archive';
+                sourceNoteEl.textContent = diaryArchiveShouldBeLegacy
+                    ? 'Live GitHub activity + legacy project diary archive'
+                    : 'Live GitHub activity + weekly archive';
             }
         }
 
@@ -1213,12 +1247,40 @@ async function renderWeeklyHighlights() {
                 .join('')
             : '';
 
+        const liveLogHighlightsList = (highlights.length ? highlights.slice(0, 4) : ['No public GitHub event highlights this week.']).map(h => li(h)).join('');
+        const liveLogSignalChips = (() => {
+            const chips = [];
+            chips.push(weeklyStatsSyncDate ? `Synced ${getTimeAgo(weeklyStatsSyncDate)}` : 'Cache sync unknown');
+            chips.push(mostRecentEventAt ? `Last activity ${formatShortDate(mostRecentEventAt)}` : 'No recent public activity');
+            chips.push(`${releases.length} release${releases.length === 1 ? '' : 's'} this week`);
+            if (diaryArchiveShouldBeLegacy && diaryEntries.length) {
+                chips.push('Legacy diary archived');
+            }
+            return chips.map(text => `<span class="weekly-live-log-chip">${escapeHtml(text)}</span>`).join('');
+        })();
+        const liveWeeklyLogSection = `
+            <section class="weekly-section weekly-section-wide weekly-live-log" id="weekly-live-log">
+                <div class="weekly-section-header">
+                    <h4 class="weekly-section-title"><span class="weekly-section-icon">🗞️</span>Weekly Log</h4>
+                    <span class="weekly-section-meta">GitHub • Last 7d</span>
+                </div>
+                <p class="weekly-briefing-text weekly-live-log-note">Built from GitHub events/cache (real activity), not hand-written mock notes.</p>
+                <p class="weekly-briefing-text">${escapeHtml(intro)} ${kickoff}</p>
+                <div class="weekly-live-log-chips" aria-label="Weekly log status">
+                    ${liveLogSignalChips}
+                </div>
+                <ul class="weekly-list">
+                    ${liveLogHighlightsList}
+                </ul>
+            </section>
+        `;
+
         const diarySection = `
             <section class="weekly-section weekly-section-wide weekly-diary" id="weekly-diary">
                 <div class="weekly-section-header">
-                    <h4 class="weekly-section-title"><span class="weekly-section-icon">🗞️</span>Weekly Log</h4>
+                    <h4 class="weekly-section-title"><span class="weekly-section-icon">${diaryArchiveShouldBeLegacy ? '🗂️' : '🗞️'}</span>${diaryArchiveShouldBeLegacy ? 'Legacy Weekly Diary' : 'Weekly Log'}</h4>
                     <div class="weekly-section-actions">
-                        <span class="weekly-section-meta" id="weekly-news-meta">${selectedDiaryEntry && selectedDiaryEntry.weekOf ? escapeHtml(selectedDiaryEntry.weekOf) : escapeHtml(currentMonthLabel)}</span>
+                        <span class="weekly-section-meta" id="weekly-news-meta">${selectedDiaryEntry && selectedDiaryEntry.weekOf ? escapeHtml(selectedDiaryEntry.weekOf) : (diaryArchiveShouldBeLegacy ? 'Archive' : escapeHtml(currentMonthLabel))}</span>
                         <button class="weekly-share-btn" type="button" id="weekly-share-btn" aria-label="Copy link to this week">Share</button>
                     </div>
                 </div>
@@ -1238,10 +1300,26 @@ async function renderWeeklyHighlights() {
                 ` : ''}
                 <div class="weekly-diary-footer">
                     <span class="weekly-diary-metrics" id="weekly-diary-metrics">${escapeHtml(selectedDiaryEntry ? (renderDiaryMetrics(selectedDiaryEntry) || '') : '')}</span>
-                    <a class="weekly-link" href="WeeklyLog.txt" target="_blank" rel="noopener">Read full log</a>
+                    <a class="weekly-link" href="WeeklyLog.txt" target="_blank" rel="noopener">${diaryArchiveShouldBeLegacy ? 'Open legacy log file' : 'Read full log'}</a>
                 </div>
             </section>
         `;
+
+        const legacyArchiveShell = (diaryEntries.length && diaryArchiveShouldBeLegacy) ? `
+            <details class="weekly-more weekly-legacy-archive" id="weekly-legacy-archive">
+                <summary>Legacy project diary archive${archiveProjectTitle ? ` • ${escapeHtml(archiveProjectTitle)}` : ''}</summary>
+                <p class="weekly-legacy-archive-note">
+                    Older project-specific dev notes are kept here for reference. The primary weekly log above is generated from current GitHub activity.
+                </p>
+                <div class="weekly-legacy-archive-body">
+                    ${diarySection}
+                </div>
+            </details>
+        ` : '';
+
+        const primaryWeeklyLogSection = (diaryEntries.length && !diaryArchiveShouldBeLegacy)
+            ? diarySection
+            : liveWeeklyLogSection;
 
 	        const topReposThisWeekList = topRepos.length
 	            ? topRepos.slice(0, 4).map(r => {
@@ -1332,7 +1410,7 @@ async function renderWeeklyHighlights() {
                         ${kpi(starsGained, 'Stars')}
                     </div>
 
-                    ${diarySection}
+                    ${primaryWeeklyLogSection}
 
                     <div class="weekly-sections weekly-sections-compact">
                         <section class="weekly-section">
@@ -1358,6 +1436,8 @@ async function renderWeeklyHighlights() {
 
                     ${moreGitHubDetails}
 
+                    ${legacyArchiveShell}
+
                     <div class="weekly-footer">
                         <a class="btn btn-secondary btn-sm" href="releases.html">Read Release Notes</a>
                         <a class="btn btn-secondary btn-sm" href="${safeExternalUrl('https://github.com/' + GITHUB_USERNAME)}" target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -1377,10 +1457,16 @@ async function renderWeeklyHighlights() {
                 const archiveNoteEl = document.getElementById('weekly-diary-archive-note');
                 const shareBtn = document.getElementById('weekly-share-btn');
                 const weekButtons = Array.from(document.querySelectorAll('[data-weekly-week]'));
+                const useHeaderWeekNav = !diaryArchiveShouldBeLegacy;
 
                 let currentIndex = selectedDiaryIndex;
 
                 const setControls = () => {
+                    if (!useHeaderWeekNav) {
+                        if (headerPrevBtn) headerPrevBtn.disabled = true;
+                        if (headerNextBtn) headerNextBtn.disabled = true;
+                        return;
+                    }
                     if (headerPrevBtn) headerPrevBtn.disabled = currentIndex <= 0;
                     if (headerNextBtn) headerNextBtn.disabled = currentIndex >= (diaryEntries.length - 1);
                 };
@@ -1447,11 +1533,11 @@ async function renderWeeklyHighlights() {
                 setControls();
                 setActiveChip();
 
-                if (headerPrevBtn && !headerPrevBtn.dataset.bound) {
+                if (useHeaderWeekNav && headerPrevBtn && !headerPrevBtn.dataset.bound) {
                     headerPrevBtn.dataset.bound = 'true';
                     headerPrevBtn.addEventListener('click', () => updateWeek(currentIndex - 1, 'left'));
                 }
-                if (headerNextBtn && !headerNextBtn.dataset.bound) {
+                if (useHeaderWeekNav && headerNextBtn && !headerNextBtn.dataset.bound) {
                     headerNextBtn.dataset.bound = 'true';
                     headerNextBtn.addEventListener('click', () => updateWeek(currentIndex + 1, 'right'));
                 }
@@ -1503,6 +1589,10 @@ async function renderWeeklyHighlights() {
                 }
 
                 if (requestedWeekKey && requestedDiaryIndex >= 0) {
+                    const legacyArchiveEl = document.getElementById('weekly-legacy-archive');
+                    if (legacyArchiveEl && !legacyArchiveEl.open) {
+                        legacyArchiveEl.open = true;
+                    }
                     const weeklyCard = document.getElementById('weekly-highlights');
                     if (weeklyCard) {
                         window.setTimeout(() => {

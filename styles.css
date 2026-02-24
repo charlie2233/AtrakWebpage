@@ -9229,6 +9229,77 @@ a:not(.btn):not(.nav-cta):hover::after {
     color: rgba(148, 163, 184, 0.75);
 }
 
+.weekly-live-log-note {
+    color: rgba(186, 230, 253, 0.88);
+    margin-bottom: 8px;
+}
+
+.weekly-live-log-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 6px 0 12px;
+}
+
+.weekly-live-log-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+    color: rgba(191, 201, 218, 0.94);
+    font-size: 11px;
+    font-family: var(--font-mono);
+    line-height: 1;
+}
+
+.weekly-live-log-chip::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #38bdf8;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
+}
+
+.weekly-legacy-archive {
+    border-color: rgba(245, 158, 11, 0.18);
+    background:
+        linear-gradient(180deg, rgba(245, 158, 11, 0.04), rgba(245, 158, 11, 0.01)),
+        rgba(8, 10, 15, 0.52);
+}
+
+.weekly-legacy-archive > summary {
+    color: rgba(253, 230, 138, 0.95);
+    font-weight: 800;
+    list-style: none;
+}
+
+.weekly-legacy-archive > summary::-webkit-details-marker {
+    display: none;
+}
+
+.weekly-legacy-archive > summary::after {
+    color: rgba(253, 230, 138, 0.75);
+}
+
+.weekly-legacy-archive-note {
+    margin: 10px 0 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px dashed rgba(245, 158, 11, 0.22);
+    background: rgba(35, 23, 8, 0.2);
+    color: rgba(253, 230, 138, 0.92);
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.weekly-legacy-archive-body .weekly-diary {
+    margin-top: 4px;
+}
+
 .weekly-share-btn {
     border-color: rgba(125, 211, 252, 0.14);
     background:
@@ -9384,6 +9455,16 @@ a:not(.btn):not(.nav-cta):hover::after {
     .weekly-source-note {
         font-size: 10px;
         max-width: none;
+    }
+
+    .weekly-live-log-chips {
+        gap: 6px;
+        margin-bottom: 10px;
+    }
+
+    .weekly-live-log-chip {
+        padding: 5px 8px;
+        font-size: 10px;
     }
 
     .nav-btn {
