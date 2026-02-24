@@ -657,6 +657,8 @@ async function renderWeeklyHighlights() {
     const dateRangeEl = document.getElementById('weekly-date-range');
     const titleEl = document.getElementById('weekly-title');
     const iconEl = document.getElementById('weekly-icon');
+    const syncPillEl = document.getElementById('weekly-sync-pill');
+    const sourceNoteEl = document.getElementById('weekly-source-note');
     
     if (!container) return;
     
@@ -685,7 +687,15 @@ async function renderWeeklyHighlights() {
 
         if (titleEl) titleEl.textContent = 'This Week at Atrak';
         if (iconEl) iconEl.textContent = '📰';
-        if (dateRangeEl) dateRangeEl.textContent = `${formatShortDate(weekAgo)} - ${formatShortDate(now)}`;
+        if (dateRangeEl) dateRangeEl.textContent = `${formatShortDate(weekAgo)} – ${formatShortDate(now)}`;
+        if (syncPillEl) {
+            syncPillEl.textContent = 'Syncing';
+            syncPillEl.dataset.state = 'loading';
+            syncPillEl.removeAttribute('title');
+        }
+        if (sourceNoteEl) {
+            sourceNoteEl.textContent = 'Live GitHub activity + weekly archive';
+        }
 
         const weeklyEvents = events
             .filter(e => e && typeof e === 'object' && typeof e.created_at === 'string')
@@ -867,6 +877,24 @@ async function renderWeeklyHighlights() {
             loadCachedWeeklyStats()
         ]);
 
+        const weeklyStatsSyncDate = (() => {
+            const raw = cachedWeeklyStats && typeof cachedWeeklyStats.updatedAt === 'string'
+                ? new Date(cachedWeeklyStats.updatedAt)
+                : null;
+            return raw && !Number.isNaN(raw.getTime()) ? raw : null;
+        })();
+
+        if (syncPillEl) {
+            if (weeklyStatsSyncDate) {
+                syncPillEl.textContent = `Synced ${getTimeAgo(weeklyStatsSyncDate)}`;
+                syncPillEl.dataset.state = 'fresh';
+                syncPillEl.title = `GitHub cache updated ${formatUTCDateTime(weeklyStatsSyncDate.toISOString())}`;
+            } else {
+                syncPillEl.textContent = 'Live digest';
+                syncPillEl.dataset.state = 'neutral';
+            }
+        }
+
         const weeklyStatsCommits = (() => {
             const stats = cachedWeeklyStats && typeof cachedWeeklyStats === 'object' ? cachedWeeklyStats : null;
             const val = stats ? Number(stats.totalCommitContributions) : Number.NaN;
@@ -939,6 +967,28 @@ async function renderWeeklyHighlights() {
         };
 
         applyWeekKeys(diaryEntries);
+
+        const renderDiaryArchiveNote = (entry) => {
+            if (!entry || !entry.weekKey) return '';
+            const entryDate = new Date(`${entry.weekKey}T00:00:00`);
+            if (Number.isNaN(entryDate.getTime())) return '';
+
+            const diffMs = Math.max(0, now.getTime() - entryDate.getTime());
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            if (diffDays <= 21) return '';
+
+            const weeksOld = Math.max(1, Math.round(diffDays / 7));
+            const syncCutoff = weeklyStatsSyncDate ? formatShortDate(weeklyStatsSyncDate) : formatShortDate(now);
+            return `Archive snapshot (${weeksOld}w old). Live GitHub activity above is current through ${syncCutoff}.`;
+        };
+
+        if (sourceNoteEl) {
+            if (weeklyStatsSyncDate) {
+                sourceNoteEl.textContent = `GitHub cache • ${formatUTCDateTime(weeklyStatsSyncDate.toISOString())} • Weekly notes shown below are archive entries`;
+            } else {
+                sourceNoteEl.textContent = 'Live GitHub activity + weekly archive';
+            }
+        }
 
         const requestedDiaryIndex = requestedWeekKey
             ? diaryEntries.findIndex(entry => entry && entry.weekKey === requestedWeekKey)
@@ -1166,7 +1216,7 @@ async function renderWeeklyHighlights() {
         const diarySection = `
             <section class="weekly-section weekly-section-wide weekly-diary" id="weekly-diary">
                 <div class="weekly-section-header">
-                    <h4 class="weekly-section-title"><span class="weekly-section-icon">🗞️</span>Weekly News</h4>
+                    <h4 class="weekly-section-title"><span class="weekly-section-icon">🗞️</span>Weekly Log</h4>
                     <div class="weekly-section-actions">
                         <span class="weekly-section-meta" id="weekly-news-meta">${selectedDiaryEntry && selectedDiaryEntry.weekOf ? escapeHtml(selectedDiaryEntry.weekOf) : escapeHtml(currentMonthLabel)}</span>
                         <button class="weekly-share-btn" type="button" id="weekly-share-btn" aria-label="Copy link to this week">Share</button>
@@ -1174,6 +1224,7 @@ async function renderWeeklyHighlights() {
                 </div>
                 ${weekChips ? `<div class="weekly-week-strip" role="navigation" aria-label="Browse weekly posts">${weekChips}</div>` : ''}
                 <div class="weekly-diary-meta" id="weekly-diary-meta">${selectedDiaryEntry ? `${escapeHtml(selectedDiaryEntry.projectTitle)} • ${escapeHtml(selectedDiaryEntry.weekOf || '')}${diaryWeekCounter ? ` • ${escapeHtml(diaryWeekCounter)}` : ''}` : 'No weekly posts loaded.'}</div>
+                <div class="weekly-diary-note" id="weekly-diary-archive-note">${escapeHtml(renderDiaryArchiveNote(selectedDiaryEntry))}</div>
                 <div id="weekly-diary-preview">
                     ${renderDiaryPreview(selectedDiaryEntry)}
                 </div>
@@ -1323,6 +1374,7 @@ async function renderWeeklyHighlights() {
                 const metaEl = document.getElementById('weekly-diary-meta');
                 const metricsEl = document.getElementById('weekly-diary-metrics');
                 const newsMetaEl = document.getElementById('weekly-news-meta');
+                const archiveNoteEl = document.getElementById('weekly-diary-archive-note');
                 const shareBtn = document.getElementById('weekly-share-btn');
                 const weekButtons = Array.from(document.querySelectorAll('[data-weekly-week]'));
 
@@ -1373,6 +1425,7 @@ async function renderWeeklyHighlights() {
                         metaParts.push(`${safeIndex + 1}/${diaryEntries.length}`);
                         metaEl.textContent = metaParts.join(' • ');
                     }
+                    if (archiveNoteEl) archiveNoteEl.textContent = renderDiaryArchiveNote(entry) || '';
 
                     if (previewEl) previewEl.innerHTML = renderDiaryPreview(entry);
                     if (bodyEl) bodyEl.innerHTML = renderDiaryBody(entry);
