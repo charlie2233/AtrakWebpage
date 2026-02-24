@@ -1365,6 +1365,15 @@ async function renderWeeklyHighlights() {
                 week.stars ? `+${week.stars} stars` : '0 stars'
             ].map(text => `<span class="weekly-live-log-chip">${escapeHtml(text)}</span>`).join('');
 
+            const topRepoSummary = (() => {
+                const top = week.topRepos[0];
+                if (!top) return 'No repo activity in cache for this week.';
+                const parts = [];
+                if (top.commits) parts.push(`${top.commits} commit${top.commits === 1 ? '' : 's'}`);
+                if (top.pushes) parts.push(`${top.pushes} push${top.pushes === 1 ? '' : 'es'}`);
+                return `<a class="weekly-inline-link" href="${top.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(top.name)}</a> • ${escapeHtml(parts.join(' • ') || 'activity')}`;
+            })();
+
             const topReposHtml = week.topRepos.length
                 ? week.topRepos.slice(0, 2).map(r => {
                     const parts = [];
@@ -1374,6 +1383,9 @@ async function renderWeeklyHighlights() {
                 }).join('')
                 : li('No repo activity in cache for this week.');
 
+            const notableSummary = week.notableMsgs.length
+                ? escapeHtml(week.notableMsgs[0])
+                : 'No notable commit messages.';
             const notableHtml = week.notableMsgs.length
                 ? week.notableMsgs.slice(0, 2).map(msg => li(escapeHtml(msg))).join('')
                 : li('No notable commit messages.');
@@ -1387,16 +1399,29 @@ async function renderWeeklyHighlights() {
                     <div class="weekly-live-log-chips" aria-label="GitHub week metrics">
                         ${metricChips}
                     </div>
-                    <div class="weekly-gh-window-grid">
-                        <div class="weekly-diary-card">
-                            <div class="weekly-diary-card-title">Top Repos</div>
-                            <ul class="weekly-list">${topReposHtml}</ul>
+                    <div class="weekly-gh-window-summary">
+                        <div class="weekly-gh-window-row">
+                            <span class="weekly-gh-window-label">Top</span>
+                            <span class="weekly-gh-window-text">${topRepoSummary}</span>
                         </div>
-                        <div class="weekly-diary-card">
-                            <div class="weekly-diary-card-title">Changes</div>
-                            <ul class="weekly-list">${notableHtml}</ul>
+                        <div class="weekly-gh-window-row">
+                            <span class="weekly-gh-window-label">Note</span>
+                            <span class="weekly-gh-window-text">${notableSummary}</span>
                         </div>
                     </div>
+                    <details class="weekly-more weekly-gh-window-more">
+                        <summary>Details</summary>
+                        <div class="weekly-gh-window-grid">
+                            <div class="weekly-diary-card">
+                                <div class="weekly-diary-card-title">Top Repos</div>
+                                <ul class="weekly-list">${topReposHtml}</ul>
+                            </div>
+                            <div class="weekly-diary-card">
+                                <div class="weekly-diary-card-title">Changes</div>
+                                <ul class="weekly-list">${notableHtml}</ul>
+                            </div>
+                        </div>
+                    </details>
                 </article>
             `;
         };
@@ -1425,7 +1450,7 @@ async function renderWeeklyHighlights() {
             `
             : '';
 
-        const liveLogHighlightsList = (highlights.length ? highlights.slice(0, 4) : ['No public GitHub event highlights this week.']).map(h => li(h)).join('');
+        const liveLogHighlightsList = (highlights.length ? highlights.slice(0, 2) : ['No public GitHub event highlights this week.']).map(h => li(h)).join('');
         const liveLogSignalChips = (() => {
             const chips = [];
             chips.push(weeklyStatsSyncDate ? `Synced ${getTimeAgo(weeklyStatsSyncDate)}` : 'Cache sync unknown');
@@ -1436,6 +1461,12 @@ async function renderWeeklyHighlights() {
             }
             return chips.map(text => `<span class="weekly-live-log-chip">${escapeHtml(text)}</span>`).join('');
         })();
+        const liveLogSummaryLine = [
+            `${commitTotalForKpi} commit${commitTotalForKpi === 1 ? '' : 's'} (7d)`,
+            `${totalPushes} push${totalPushes === 1 ? '' : 'es'}`,
+            `${activeRepos.size} repo${activeRepos.size === 1 ? '' : 's'} active`,
+            `${releases.length} release${releases.length === 1 ? '' : 's'}`
+        ].join(' • ');
         const liveWeeklyLogSection = `
             <section class="weekly-section weekly-section-wide weekly-live-log" id="weekly-live-log">
                 <div class="weekly-section-header">
@@ -1443,7 +1474,7 @@ async function renderWeeklyHighlights() {
                     <span class="weekly-section-meta">GitHub • Last 7d</span>
                 </div>
                 <p class="weekly-briefing-text weekly-live-log-note">Built from GitHub events/cache (real activity), not hand-written mock notes.</p>
-                <p class="weekly-briefing-text">${escapeHtml(intro)} ${kickoff}</p>
+                <p class="weekly-briefing-text weekly-live-log-summary">${escapeHtml(liveLogSummaryLine)}</p>
                 <div class="weekly-live-log-chips" aria-label="Weekly log status">
                     ${liveLogSignalChips}
                 </div>
@@ -1517,6 +1548,33 @@ async function renderWeeklyHighlights() {
                     return li(`<a class="weekly-inline-link" href="${r.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(r.repo)}</a> — <code>${escapeHtml(r.tag)}</code>${nameSuffix}`);
                 }).join('')
                 : li(`No releases cached for ${escapeHtml(currentMonthLabel)} yet.`);
+
+            const thisWeekDetailsSection = `
+                <details class="weekly-more weekly-this-week-details" id="weekly-this-week-details">
+                    <summary>This Week Details (repos + releases)</summary>
+                    <div class="weekly-sections weekly-this-week-details-grid">
+                        <section class="weekly-section">
+                            <div class="weekly-section-header">
+                                <h4 class="weekly-section-title"><span class="weekly-section-icon">🔥</span>Top Repos (This Week)</h4>
+                                <span class="weekly-section-meta">Public</span>
+                            </div>
+                            <ul class="weekly-list">
+                                ${topReposThisWeekList}
+                            </ul>
+                        </section>
+
+                        <section class="weekly-section">
+                            <div class="weekly-section-header">
+                                <h4 class="weekly-section-title"><span class="weekly-section-icon">🚀</span>Latest Releases</h4>
+                                <span class="weekly-section-meta">${escapeHtml(currentMonthLabel)}</span>
+                            </div>
+                            <ul class="weekly-list">
+                                ${monthReleasesList}
+                            </ul>
+                        </section>
+                    </div>
+                </details>
+            `;
 
             const moreGitHubDetails = `
                 <details class="weekly-more" id="weekly-github-more">
@@ -1593,27 +1651,7 @@ async function renderWeeklyHighlights() {
 
                     ${primaryWeeklyLogSection}
 
-                    <div class="weekly-sections weekly-sections-compact">
-                        <section class="weekly-section">
-                            <div class="weekly-section-header">
-                                <h4 class="weekly-section-title"><span class="weekly-section-icon">🔥</span>Top Repos (This Week)</h4>
-                                <span class="weekly-section-meta">Public</span>
-                            </div>
-                            <ul class="weekly-list">
-                                ${topReposThisWeekList}
-                            </ul>
-                        </section>
-
-                        <section class="weekly-section">
-                            <div class="weekly-section-header">
-                                <h4 class="weekly-section-title"><span class="weekly-section-icon">🚀</span>Latest Releases</h4>
-                                <span class="weekly-section-meta">${escapeHtml(currentMonthLabel)}</span>
-                            </div>
-                            <ul class="weekly-list">
-                                ${monthReleasesList}
-                            </ul>
-                        </section>
-                    </div>
+                    ${thisWeekDetailsSection}
 
                     ${githubWeekHistorySection}
 
