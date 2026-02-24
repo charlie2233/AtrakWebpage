@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CompIDE — desktop competitive programming IDE by Atrak and Charlie Han. Monaco editor, Java/C++/Python runners, test cases, templates, diagnostics, and offline workflow.">
+    <meta name="robots" content="index,follow">
+    <meta name="keywords" content="CompIDE, competitive programming IDE, Electron, Monaco Editor, Java C++ Python, Charlie Han, Atrak">
+    <title>CompIDE — Competitive Programming IDE | Atrak</title>
+    <link rel="canonical" href="https://atrak.dev/projects/compide.html">
+
+    <meta property="og:title" content="CompIDE — Competitive Programming IDE | Atrak">
+    <meta property="og:description" content="Desktop IDE for contest practice with Monaco, multi-language run/test flows, templates, sample imports, and better diagnostics.">
+    <meta property="og:url" content="https://atrak.dev/projects/compide.html">
+    <meta property="og:image" content="https://atrak.dev/assets/Demo/Demo_Img_CompIDE/01.png">
+    <meta property="og:type" content="website">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CompIDE — Competitive Programming IDE | Atrak">
+    <meta name="twitter:description" content="Desktop IDE for contest practice with Monaco, multi-language run/test flows, templates, sample imports, and better diagnostics.">
+    <meta name="twitter:image" content="https://atrak.dev/assets/Demo/Demo_Img_CompIDE/01.png">
+
+    <link rel="icon" type="image/png" href="../assets/logo.png?v=20260202">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/logo.png?v=20260202">
+    <link rel="stylesheet" href="../styles.css?v=24">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "CompIDE",
+      "description": "Desktop competitive programming IDE with Monaco editor, Java/C++/Python runners, test case management, templates, and offline workflow support.",
+      "url": "https://atrak.dev/projects/compide.html",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "macOS, Windows",
+      "creator": {
+        "@type": "Organization",
+        "name": "Atrak",
+        "url": "https://atrak.dev"
+      },
+      "codeRepository": "https://github.com/charlie2233/Easy_Java_Ide-for-competitions"
+    }
+    </script>
+
+    <style>
+        .project-icon-custom {
+            width: 84px;
+            height: 84px;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,.18);
+            background: rgba(10, 18, 34, .7);
+        }
+        .project-icon-custom img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .compide-hero-panel .panel-metric .metric-value {
+            font-size: 1rem;
+            line-height: 1.2;
+        }
+        .compide-command-block pre {
+            margin: 0;
+            overflow: auto;
+        }
+        .compide-command-block code {
+            display: block;
+            white-space: pre;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a class="logo" href="../index.html">
+                <span class="logo-icon"><img src="../assets/logo.png?v=20260202" alt="Atrak Logo"></span>
+                <span class="logo-text">Atrak</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="../index.html#projects">Projects</a></li>
+                <li><a href="../index.html#more-projects">More Projects</a></li>
+                <li><a href="../blog.html">Blog</a></li>
+                <li><a href="../releases.html">Releases</a></li>
+                <li><a href="../join.html">Join</a></li>
+            </ul>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <section class="project-hero">
+            <div class="container">
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <ol>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="../index.html#more-projects">More Projects</a></li>
+                        <li>CompIDE</li>
+                    </ol>
+                </nav>
+                <a class="project-back-link" href="../index.html#more-projects">← Back to More Projects</a>
+
+                <div class="project-hero-grid">
+                    <div class="project-header">
+                        <div class="project-icon-custom">
+                            <img src="../assets/compide-logo.png" alt="CompIDE logo">
+                        </div>
+                        <span class="section-tag">Developer Tools • Desktop • Competitive Programming</span>
+                        <h1 class="section-title">CompIDE</h1>
+                        <p class="section-description">
+                            A desktop-first contest practice IDE built around Monaco Editor, local Java/C++/Python execution,
+                            fast template workflows, sample test management, and practical diagnostics for real coding sessions.
+                        </p>
+                        <div class="project-meta-bar">
+                            <span class="meta-item"><strong>Status:</strong> Active build</span>
+                            <span class="meta-item"><strong>Lead:</strong> Charlie Han</span>
+                            <span class="meta-item"><strong>Type:</strong> Electron app</span>
+                        </div>
+                        <div class="project-hero-badges">
+                            <span class="hero-badge">Electron</span>
+                            <span class="hero-badge">Monaco</span>
+                            <span class="hero-badge">Java / C++ / Python</span>
+                            <span class="hero-badge">Offline-friendly</span>
+                        </div>
+                    </div>
+
+                    <aside class="project-hero-panel glass-card compide-hero-panel">
+                        <div class="hero-panel-header">
+                            <span class="panel-tag">Build Snapshot</span>
+                            <h3>What is in the app</h3>
+                            <p>Focused on faster contest loops: edit → test → fix → rerun.</p>
+                        </div>
+                        <div class="hero-panel-metrics">
+                            <div class="panel-metric">
+                                <span class="metric-value">Monaco</span>
+                                <span class="metric-label">Editor engine</span>
+                            </div>
+                            <div class="panel-metric">
+                                <span class="metric-value">3 langs</span>
+                                <span class="metric-label">Java / C++ / Python</span>
+                            </div>
+                            <div class="panel-metric">
+                                <span class="metric-value">Built-in</span>
+                                <span class="metric-label">Test case runner</span>
+                            </div>
+                            <div class="panel-metric">
+                                <span class="metric-value">macOS</span>
+                                <span class="metric-label">DMG builds working</span>
+                            </div>
+                        </div>
+                        <div class="hero-panel-footer">
+                            <span class="panel-pill">Desktop</span>
+                            <span class="panel-pill">Run locally</span>
+                            <span class="panel-pill">Contest prep</span>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <section class="project-links-bar">
+            <div class="container">
+                <div class="links-bar-inner">
+                    <a href="https://github.com/charlie2233/Easy_Java_Ide-for-competitions" class="link-btn" target="_blank" rel="noopener noreferrer">
+                        <span class="link-icon">💻</span> GitHub Repo
+                    </a>
+                    <a href="https://github.com/charlie2233/Easy_Java_Ide-for-competitions/releases" class="link-btn" target="_blank" rel="noopener noreferrer">
+                        <span class="link-icon">📦</span> Releases
+                    </a>
+                    <a href="#demo" class="link-btn">
+                        <span class="link-icon">🎬</span> Demo
+                    </a>
+                    <a href="../blog/building-compide-competitive-programming-ide.html" class="link-btn">
+                        <span class="link-icon">📝</span> Engineering Write-up
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <div class="project-content">
+            <div class="container">
+                <section class="project-section overview-section">
+                    <h2 class="project-section-title">⚡ What It Delivers</h2>
+                    <div class="overview-grid">
+                        <div class="glass-card overview-card">
+                            <span class="overview-icon">🧠</span>
+                            <h3>Contest-Focused Editing</h3>
+                            <p>Monaco-powered editing with tabs, templates, and shortcuts tuned for fast iteration during practice.</p>
+                        </div>
+                        <div class="glass-card overview-card">
+                            <span class="overview-icon">🧪</span>
+                            <h3>Sample Test Workflow</h3>
+                            <p>Manage sample inputs/outputs, import test files, run all, and compare expected vs actual output in one panel.</p>
+                        </div>
+                        <div class="glass-card overview-card">
+                            <span class="overview-icon">🛠️</span>
+                            <h3>Local Toolchain Integration</h3>
+                            <p>Detects Java/C++/Python runtimes locally and runs code offline without web dependencies.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="problem" class="project-section">
+                    <h2 class="project-section-title">🎯 The Problem</h2>
+                    <div class="glass-card">
+                        <p class="lead-text">
+                            Contest practice often means jumping between an editor, terminal, sample files, and browser tabs.
+                            Generic IDEs are powerful, but the workflow overhead is slow when all you want is to solve and test problems quickly.
+                        </p>
+                        <div class="problem-points">
+                            <div class="problem-point">
+                                <span class="point-icon">❌</span>
+                                <div>
+                                    <strong>Too Many Windows</strong>
+                                    <p>Code editor, terminal, sample files, and run output are often split across different tools.</p>
+                                </div>
+                            </div>
+                            <div class="problem-point">
+                                <span class="point-icon">❌</span>
+                                <div>
+                                    <strong>Manual Test Setup</strong>
+                                    <p>Creating and organizing sample input/output files repeatedly is tedious.</p>
+                                </div>
+                            </div>
+                            <div class="problem-point">
+                                <span class="point-icon">❌</span>
+                                <div>
+                                    <strong>Weak Error Feedback</strong>
+                                    <p>Raw compiler output is useful, but beginners and fast practice sessions benefit from clearer guidance.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="demo" class="project-section">
+                    <h2 class="project-section-title">🎬 Demo & Screenshots</h2>
+                    <div class="demo-grid">
+                        <div class="glass-card">
+                            <h3>Desktop Demo</h3>
+                            <div class="video-placeholder" data-video-url="">
+                                <div class="placeholder-content">
+                                    <span class="placeholder-icon">💻</span>
+                                    <p>Desktop app demo (local capture)</p>
+                                    <span class="placeholder-note">This project is a desktop IDE, so screenshots are the primary demo format here.</span>
+                                </div>
+                                <div class="video-play-button" aria-label="Demo placeholder"></div>
+                            </div>
+                            <p class="note" style="margin-top: 12px;">Use the screenshots on the right to inspect the current macOS UI implementation, welcome screen, sidebar, and output/test panels.</p>
+                        </div>
+                        <div class="glass-card">
+                            <h3>Screenshot Gallery</h3>
+                            <div class="media-carousel" data-carousel>
+                                <button class="carousel-btn prev" type="button" data-carousel-prev aria-label="Previous screenshot">‹</button>
+                                <button class="carousel-btn next" type="button" data-carousel-next aria-label="Next screenshot">›</button>
+                                <div class="carousel-track" data-carousel-track aria-label="CompIDE screenshots">
+                                    <figure class="carousel-slide">
+                                        <a href="../assets/Demo/Demo_Img_CompIDE/01.png" target="_blank" rel="noopener noreferrer">
+                                            <div class="carousel-media"><img src="../assets/Demo/Demo_Img_CompIDE/01.png" alt="CompIDE full app window" loading="lazy" decoding="async"></div>
+                                            <figcaption class="carousel-caption">Full app window (macOS build)</figcaption>
+                                        </a>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <a href="../assets/Demo/Demo_Img_CompIDE/02.png" target="_blank" rel="noopener noreferrer">
+                                            <div class="carousel-media"><img src="../assets/Demo/Demo_Img_CompIDE/02.png" alt="CompIDE welcome screen" loading="lazy" decoding="async"></div>
+                                            <figcaption class="carousel-caption">Welcome page inside the editor (first screen)</figcaption>
+                                        </a>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <a href="../assets/Demo/Demo_Img_CompIDE/03.png" target="_blank" rel="noopener noreferrer">
+                                            <div class="carousel-media"><img src="../assets/Demo/Demo_Img_CompIDE/03.png" alt="CompIDE output panel" loading="lazy" decoding="async"></div>
+                                            <figcaption class="carousel-caption">Output / Input / Test Cases panel</figcaption>
+                                        </a>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <a href="../assets/Demo/Demo_Img_CompIDE/04.png" target="_blank" rel="noopener noreferrer">
+                                            <div class="carousel-media"><img src="../assets/Demo/Demo_Img_CompIDE/04.png" alt="CompIDE sidebar and templates" loading="lazy" decoding="async"></div>
+                                            <figcaption class="carousel-caption">Sidebar with language switch, templates, and project context</figcaption>
+                                        </a>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <a href="../assets/Demo/Demo_Img_CompIDE/05.png" target="_blank" rel="noopener noreferrer">
+                                            <div class="carousel-media"><img src="../assets/Demo/Demo_Img_CompIDE/05.png" alt="CompIDE titlebar and run controls" loading="lazy" decoding="async"></div>
+                                            <figcaption class="carousel-caption">Titlebar actions and run/test workflow controls</figcaption>
+                                        </a>
+                                    </figure>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="workflow" class="project-section steps-section">
+                    <h2 class="project-section-title">🧭 Typical Workflow</h2>
+                    <div class="steps-grid">
+                        <div class="glass-card step-card">
+                            <div class="step-index">01</div>
+                            <h3>Open / Create</h3>
+                            <p>Start on the built-in welcome page, create a new file, or open a project folder for local practice.</p>
+                        </div>
+                        <div class="glass-card step-card">
+                            <div class="step-index">02</div>
+                            <h3>Pick Template</h3>
+                            <p>Use language templates (Java/C++/Python, graph/DP/DSU, fast I/O, etc.) to bootstrap faster.</p>
+                        </div>
+                        <div class="glass-card step-card">
+                            <div class="step-index">03</div>
+                            <h3>Run Samples</h3>
+                            <p>Add tests manually or import sample files, run all cases, and compare expected vs actual output.</p>
+                        </div>
+                        <div class="glass-card step-card">
+                            <div class="step-index">04</div>
+                            <h3>Fix + Iterate</h3>
+                            <p>Use improved diagnostics, local terminal access, and fast reruns until the solution is stable.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="features" class="project-section">
+                    <h2 class="project-section-title">✨ Key Features</h2>
+                    <div class="features-grid">
+                        <div class="glass-card feature-card"><span class="feature-icon">🗂️</span><h4>Multi-file Tabs</h4><p>Open and edit multiple local files with Monaco models and tab switching.</p></div>
+                        <div class="glass-card feature-card"><span class="feature-icon">💾</span><h4>Autosave</h4><p>Periodic autosave for existing files to reduce accidental loss during practice sessions.</p></div>
+                        <div class="glass-card feature-card"><span class="feature-icon">🧪</span><h4>Sample Case Import</h4><p>Import <code>.in/.out/.txt/.ans</code> files and build test cases quickly.</p></div>
+                        <div class="glass-card feature-card"><span class="feature-icon">📋</span><h4>Copyable Output</h4><p>Output panel is easy to select/copy with explicit copy action and keyboard support.</p></div>
+                        <div class="glass-card feature-card"><span class="feature-icon">🧰</span><h4>Toolchain Detection</h4><p>Bundle status shows detected Java/C++/Python runtimes and install hints.</p></div>
+                        <div class="glass-card feature-card"><span class="feature-icon">🚨</span><h4>Better Diagnostics</h4><p>Compile/runtime failures include likely location and probable cause to speed debugging.</p></div>
+                        <div class="glass-card feature-card"><span class="feature-icon">🖥️</span><h4>Open Terminal</h4><p>Launch a terminal at the workspace root directly from the app.</p></div>
+                        <div class="glass-card feature-card"><span class="feature-icon">🎨</span><h4>Premium UI Refresh</h4><p>Cursor-inspired visual polish, button states, welcome screen, and cleaner desktop styling.</p></div>
+                    </div>
+                </section>
+
+                <section id="architecture" class="project-section">
+                    <h2 class="project-section-title">🏗️ Architecture</h2>
+                    <div class="glass-card">
+                        <div class="architecture-diagram">
+                            <pre class="ascii-diagram">┌──────────────────────────────────────────────────────────────────┐
+│                           CompIDE (Electron)                    │
+├──────────────────────────────────────────────────────────────────┤
+│ Renderer (Monaco UI)                                            │
+│  - editor tabs / templates / tests / output panel               │
+│  - local state (recent files, tests, preferences)               │
+│  - diagnostics + comparison UI                                  │
+│                 │                                                │
+│                 ▼ IPC (preload bridge)                           │
+│ Main Process                                                     │
+│  - settings store                                                │
+│  - file dialogs / file I/O                                       │
+│  - terminal launcher                                             │
+│  - code runner orchestration                                     │
+│  - bundle detection (Java/C++/Python)                            │
+│                 │                                                │
+│                 ▼                                                │
+│ Local Toolchains / Processes                                     │
+│  - javac/java, g++/clang++, python                               │
+│  - test-case execution / compile / run                           │
+└──────────────────────────────────────────────────────────────────┘</pre>
+                        </div>
+                        <div class="tech-stack" style="margin-top: 16px;">
+                            <h4>Tech Stack</h4>
+                            <div class="stack-tags">
+                                <span class="stack-tag">Electron</span>
+                                <span class="stack-tag">Monaco Editor</span>
+                                <span class="stack-tag">Node.js</span>
+                                <span class="stack-tag">JavaScript</span>
+                                <span class="stack-tag">GitHub Actions</span>
+                                <span class="stack-tag">electron-builder</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="construction" class="project-section">
+                    <h2 class="project-section-title">🧱 How It Was Constructed</h2>
+                    <div class="glass-card">
+                        <p>The project evolved as a practical tool first, not a template. Development focused on real friction points from contest practice and local iteration speed.</p>
+                        <ul class="feature-list">
+                            <li><strong>Core runner first:</strong> local compile/run support for Java, C++, and Python with timeout handling.</li>
+                            <li><strong>Contest workflow next:</strong> templates, custom input, sample tests, and output comparison.</li>
+                            <li><strong>Desktop UX iteration:</strong> welcome-first startup, sidebar controls, multi-file tabs, terminal, and better button hierarchy.</li>
+                            <li><strong>Reliability passes:</strong> guarded UI binding, startup boot-error banners, packaging fixes for Monaco and logo assets.</li>
+                            <li><strong>Toolchain guidance:</strong> improved diagnostics and a helper flow for common C++ setup issues (especially macOS).</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="run" class="project-section">
+                    <h2 class="project-section-title">🚀 Build & Run</h2>
+                    <div class="glass-card compide-command-block">
+                        <h4>Local development</h4>
+                        <pre><code>cd /Users/hanfei/Easy_Java_Ide-for-competitions
+npm ci
+npm start</code></pre>
+                        <h4 style="margin-top: 16px;">Tests</h4>
+                        <pre><code>npm test</code></pre>
+                        <h4 style="margin-top: 16px;">Build macOS installer</h4>
+                        <pre><code>npm run dist:mac</code></pre>
+                        <p class="note" style="margin-top: 12px;">Generated artifacts are placed in the repo <code>dist/</code> folder (DMG and ZIP for macOS).</p>
+                    </div>
+                </section>
+
+                <section id="learnings" class="project-section">
+                    <h2 class="project-section-title">🧠 What We Learned</h2>
+                    <div class="glass-card">
+                        <div class="problem-points">
+                            <div class="problem-point">
+                                <span class="point-icon">✅</span>
+                                <div>
+                                    <strong>Workflow beats feature count</strong>
+                                    <p>Small UX improvements (copy output, persistent input, welcome-first startup) matter more than adding random IDE features.</p>
+                                </div>
+                            </div>
+                            <div class="problem-point">
+                                <span class="point-icon">✅</span>
+                                <div>
+                                    <strong>Packaging bugs are product bugs</strong>
+                                    <p>Pathing issues (Monaco/logo assets) only appeared in the packaged mac app, not dev mode. Build verification must be part of the loop.</p>
+                                </div>
+                            </div>
+                            <div class="problem-point">
+                                <span class="point-icon">✅</span>
+                                <div>
+                                    <strong>Better diagnostics reduce drop-off</strong>
+                                    <p>Users move faster when compile/runtime errors are translated into likely location + cause instead of raw logs only.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="note" style="margin-top: 12px;">A longer engineering write-up is available in the linked blog post.</p>
+                    </div>
+                </section>
+
+                <section id="roadmap" class="project-section">
+                    <h2 class="project-section-title">🗺️ Roadmap</h2>
+                    <div class="glass-card">
+                        <div class="roadmap-timeline">
+                            <div class="roadmap-item completed">
+                                <div class="roadmap-marker">✓</div>
+                                <div class="roadmap-content"><strong>UI + runner foundation</strong><p>Monaco editor, local execution, templates, test cases, diagnostics.</p></div>
+                            </div>
+                            <div class="roadmap-item completed">
+                                <div class="roadmap-marker">✓</div>
+                                <div class="roadmap-content"><strong>Desktop polish pass</strong><p>Welcome page, multi-file tabs, autosave, terminal, sidebar toggle, mac packaging fixes.</p></div>
+                            </div>
+                            <div class="roadmap-item current">
+                                <div class="roadmap-marker">●</div>
+                                <div class="roadmap-content"><strong>Toolchain setup UX</strong><p>More guided compiler/runtime setup and stronger install flows (especially for C++ on macOS).</p></div>
+                            </div>
+                            <div class="roadmap-item">
+                                <div class="roadmap-marker">○</div>
+                                <div class="roadmap-content"><strong>Advanced editing layouts</strong><p>Split panes, drag-reorder tabs, and deeper diff views for test output.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="credits" class="project-section">
+                    <h2 class="project-section-title">🙏 Credits</h2>
+                    <div class="glass-card">
+                        <div class="credits-grid">
+                            <div class="credit-item"><strong>Project Lead</strong><p>Charlie Han</p></div>
+                            <div class="credit-item"><strong>Design / UX Iteration</strong><p>Atrak.dev (ongoing refinements)</p></div>
+                            <div class="credit-item"><strong>Core Stack</strong><p>Electron + Monaco + Node.js</p></div>
+                            <div class="credit-item"><strong>Target Users</strong><p>Competitive programmers / practice workflows</p></div>
+                        </div>
+                        <p class="credits-note">Built as a practical practice tool first: fast local feedback, fewer context switches, and easier debugging during contest prep.</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a class="logo" href="../index.html">
+                        <span class="logo-icon"><img src="../assets/logo.png?v=20260202" alt="Atrak Logo"></span>
+                        <span class="logo-text">Atrak</span>
+                    </a>
+                    <p class="footer-tagline">Building real products together</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Project</h4>
+                        <a href="#demo">Demo</a>
+                        <a href="#features">Features</a>
+                        <a href="#architecture">Architecture</a>
+                        <a href="#roadmap">Roadmap</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Links</h4>
+                        <a href="https://github.com/charlie2233/Easy_Java_Ide-for-competitions" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a href="https://github.com/charlie2233/Easy_Java_Ide-for-competitions/releases" target="_blank" rel="noopener noreferrer">Releases</a>
+                        <a href="../blog/building-compide-competitive-programming-ide.html">Blog Post</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Atrak. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../script.js?v=22"></script>
+</body>
+</html>

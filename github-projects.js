@@ -277,6 +277,7 @@ const INTERNAL_PROJECT_PAGES = {
     'Basketball_action_recoginition_sever': 'projects/hoops-clips.html',
     'AI-predator-simulation': 'projects/ai-predator-simulation.html',
     'rork-ten-seconds-vip-manager': 'projects/ten-seconds-vip-manager.html',
+    'Easy_Java_Ide-for-competitions': 'projects/compide.html',
     'LunarWeb': 'index.html',
 };
 
@@ -397,6 +398,7 @@ function createProjectCard(project) {
     const displayName = project.displayName || formatDisplayName(project.name);
     const icon = project.icon || '📦';
     const repoAttr = project.fullName ? ` data-repo="${project.fullName}"` : '';
+    const internalPage = INTERNAL_PROJECT_PAGES[project.name] || '';
     
     const tagsHTML = techStack.length > 0
         ? techStack.map(tech => `<span class="tag">${tech}</span>`).join('')
@@ -419,7 +421,7 @@ function createProjectCard(project) {
 	                    ${tagsHTML}
 	                </div>
 	                <div class="project-actions">
-	                    <a href="projects/github-project.html?repo=${encodeURIComponent(project.fullName)}" class="btn btn-secondary btn-sm">Details</a>
+                            <a href="${internalPage || `projects/github-project.html?repo=${encodeURIComponent(project.fullName)}`}" class="btn btn-secondary btn-sm">Details</a>
 	                    <a href="${project.url}" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Repo</a>
 	                    <a href="${project.url}#readme" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Docs</a>
 	                    <a href="${project.url}/releases" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Releases</a>

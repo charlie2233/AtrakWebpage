@@ -1,11 +1,32 @@
 [
   {
+    "slug": "building-compide-competitive-programming-ide",
+    "title": "Building CompIDE: A Competitive Programming IDE for Real Practice",
+    "excerpt": "How CompIDE was constructed with Electron + Monaco, what broke in packaged builds, and what we learned building a workflow-first contest practice tool.",
+    "date": "2026-02-24",
+    "author": "Charlie Han",
+    "tags": [
+      "Electron",
+      "Monaco Editor",
+      "Competitive Programming",
+      "Desktop App",
+      "JavaScript"
+    ],
+    "readingTime": 13,
+    "featuredImage": null
+  },
+  {
     "slug": "c-plus-plus-performance-optimization",
     "title": "C++ Performance Optimization: From Theory to Practice",
     "excerpt": "Deep dive into C++ optimization techniques we use in production systems. Memory management, cache efficiency, and modern C++20 features that actually matter.",
     "date": "2026-01-20",
     "author": "Yannon Chang",
-    "tags": ["C++", "Performance", "Systems Programming", "Optimization"],
+    "tags": [
+      "C++",
+      "Performance",
+      "Systems Programming",
+      "Optimization"
+    ],
     "readingTime": 15,
     "featuredImage": null
   },
@@ -15,7 +36,13 @@
     "excerpt": "How we built Hoops Clips: a complete guide to production-ready computer vision with PyTorch, OpenCV, and proper error handling.",
     "date": "2026-01-18",
     "author": "Charlie Han",
-    "tags": ["Python", "Computer Vision", "PyTorch", "OpenCV", "Production"],
+    "tags": [
+      "Python",
+      "Computer Vision",
+      "PyTorch",
+      "OpenCV",
+      "Production"
+    ],
     "readingTime": 18,
     "featuredImage": null
   },
@@ -25,7 +52,13 @@
     "excerpt": "A comprehensive guide to accessibility in React Native, covering VoiceOver, semantic HTML, and building apps that work for everyone.",
     "date": "2026-01-16",
     "author": "Charlie Han",
-    "tags": ["React Native", "Accessibility", "iOS", "Mobile", "Inclusive Design"],
+    "tags": [
+      "React Native",
+      "Accessibility",
+      "iOS",
+      "Mobile",
+      "Inclusive Design"
+    ],
     "readingTime": 12,
     "featuredImage": null
   },
@@ -35,7 +68,12 @@
     "excerpt": "How we built an iOS app for blind users using GPT-4 Vision and React Native, prioritizing accessibility from day one.",
     "date": "2026-01-15",
     "author": "Charlie Han",
-    "tags": ["iOS", "Accessibility", "Swift", "React Native"],
+    "tags": [
+      "iOS",
+      "Accessibility",
+      "Swift",
+      "React Native"
+    ],
     "readingTime": 10,
     "featuredImage": null
   },
@@ -45,7 +83,12 @@
     "excerpt": "What we learned building and deploying a real-world restaurant management system used daily in production.",
     "date": "2026-01-10",
     "author": "Charlie Han",
-    "tags": ["Full-Stack", "React", "Node.js", "Production"],
+    "tags": [
+      "Full-Stack",
+      "React",
+      "Node.js",
+      "Production"
+    ],
     "readingTime": 14,
     "featuredImage": null
   },
@@ -55,7 +98,12 @@
     "excerpt": "Exploring how simple rules can create complex, realistic hunting behaviors in our Python-based ecosystem simulation.",
     "date": "2026-01-05",
     "author": "Charlie Han",
-    "tags": ["AI", "Python", "Simulation", "Algorithms"],
+    "tags": [
+      "AI",
+      "Python",
+      "Simulation",
+      "Algorithms"
+    ],
     "readingTime": 11,
     "featuredImage": null
   },
@@ -65,9 +113,13 @@
     "excerpt": "详细介绍 getchar() 函数的基本用法及如何高效地利用它读取字符和整数。getchar() 函数能够从标准输入中读取一个字符并能接受空格，是一种比 scanf 和 cin 更快的输入方式。",
     "date": "2022-12-05",
     "author": "Charlie Han",
-    "tags": ["C++", "Input/Output", "Competitive Programming", "Beginner"],
+    "tags": [
+      "C++",
+      "Input/Output",
+      "Competitive Programming",
+      "Beginner"
+    ],
     "readingTime": 5,
     "featuredImage": null
   }
 ]
-
