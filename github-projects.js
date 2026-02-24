@@ -1356,60 +1356,71 @@ async function renderWeeklyHighlights() {
                 .join('')
             : '';
 
-        const renderGitHubWeekHistoryPanel = (week) => {
-            if (!week) return '<div class="weekly-empty">No GitHub week history available in cache yet.</div>';
-            const topReposHtml = week.topRepos.length
-                ? week.topRepos.map(r => {
-                    const parts = [];
-                    if (r.commits) parts.push(`${r.commits} commit${r.commits === 1 ? '' : 's'}`);
-                    if (r.pushes) parts.push(`${r.pushes} push${r.pushes === 1 ? '' : 'es'}`);
-                    return li(`<a class="weekly-inline-link" href="${r.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(r.name)}</a> — ${escapeHtml(parts.join(' • ') || 'activity')}`);
-                }).join('')
-                : li('No repo activity recorded in this cached week.');
-            const notableHtml = week.notableMsgs.length
-                ? week.notableMsgs.map(msg => li(escapeHtml(msg))).join('')
-                : li('No notable commit messages available for this week.');
-            const chips = [
+        const renderGitHubWeekWindowCard = (week, idx) => {
+            const metricChips = [
                 `${week.commits} commits`,
                 `${week.pushes} pushes`,
                 `${week.activeRepos} repos`,
-                `${week.releases} releases`,
+                `${week.releases} rel`,
                 week.stars ? `+${week.stars} stars` : '0 stars'
             ].map(text => `<span class="weekly-live-log-chip">${escapeHtml(text)}</span>`).join('');
 
+            const topReposHtml = week.topRepos.length
+                ? week.topRepos.slice(0, 2).map(r => {
+                    const parts = [];
+                    if (r.commits) parts.push(`${r.commits}c`);
+                    if (r.pushes) parts.push(`${r.pushes}p`);
+                    return li(`<a class="weekly-inline-link" href="${r.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(r.name)}</a> — ${escapeHtml(parts.join(' • ') || 'activity')}`);
+                }).join('')
+                : li('No repo activity in cache for this week.');
+
+            const notableHtml = week.notableMsgs.length
+                ? week.notableMsgs.slice(0, 2).map(msg => li(escapeHtml(msg))).join('')
+                : li('No notable commit messages.');
+
             return `
-                <div class="weekly-github-history-panel" id="weekly-github-history-panel-inner">
-                    <div class="weekly-live-log-chips" aria-label="GitHub week metrics">${chips}</div>
-                    <div class="weekly-diary-grid weekly-diary-grid-compact">
+                <article class="weekly-gh-window-card" data-gh-window-card="${idx}" aria-label="GitHub week ${escapeHtml(week.label)}">
+                    <div class="weekly-section-header weekly-gh-window-header">
+                        <h5 class="weekly-section-title"><span class="weekly-section-icon">📦</span>${escapeHtml(week.label)}</h5>
+                        <span class="weekly-section-meta">${week.lastEventAt ? `Last event ${escapeHtml(formatShortDate(week.lastEventAt))}` : 'No events'}</span>
+                    </div>
+                    <div class="weekly-live-log-chips" aria-label="GitHub week metrics">
+                        ${metricChips}
+                    </div>
+                    <div class="weekly-gh-window-grid">
                         <div class="weekly-diary-card">
                             <div class="weekly-diary-card-title">Top Repos</div>
                             <ul class="weekly-list">${topReposHtml}</ul>
                         </div>
                         <div class="weekly-diary-card">
-                            <div class="weekly-diary-card-title">Notable Changes</div>
+                            <div class="weekly-diary-card-title">Changes</div>
                             <ul class="weekly-list">${notableHtml}</ul>
                         </div>
                     </div>
-                </div>
+                </article>
             `;
         };
 
-        const selectedGitHubWeekIndex = githubWeekSummaries.length ? 0 : -1;
-        const selectedGitHubWeek = selectedGitHubWeekIndex >= 0 ? githubWeekSummaries[selectedGitHubWeekIndex] : null;
-        const githubWeekHistoryChips = githubWeekSummaries.length > 1
-            ? githubWeekSummaries.map((week, idx) => `<button class="weekly-week-chip" type="button" data-weekly-gh-week="${idx}" ${idx === selectedGitHubWeekIndex ? 'aria-current="true"' : ''} aria-label="GitHub week ${escapeHtml(week.label)}">${escapeHtml(week.label)}</button>`).join('')
+        const githubWeekWindowCards = githubWeekSummaries.length
+            ? githubWeekSummaries.map((week, idx) => renderGitHubWeekWindowCard(week, idx)).join('')
             : '';
         const githubWeekHistorySection = githubWeekSummaries.length
             ? `
                 <section class="weekly-section weekly-section-wide weekly-github-week-history" id="weekly-github-week-history">
                     <div class="weekly-section-header">
                         <h4 class="weekly-section-title"><span class="weekly-section-icon">🧭</span>Past Week Logs (GitHub)</h4>
-                        <span class="weekly-section-meta">Real history • cache-backed</span>
+                        <div class="weekly-section-actions">
+                            <span class="weekly-section-meta">Real history • cache-backed</span>
+                            <button class="weekly-diary-nav" type="button" id="weekly-gh-prev-btn" aria-label="Previous GitHub week window">‹</button>
+                            <button class="weekly-diary-nav" type="button" id="weekly-gh-next-btn" aria-label="Next GitHub week window">›</button>
+                        </div>
                     </div>
-                    <p class="weekly-briefing-text weekly-live-log-note">Browse cached GitHub activity by week. This replaces the fake/static weekly timeline feel.</p>
-                    ${githubWeekHistoryChips ? `<div class="weekly-week-strip" role="navigation" aria-label="Browse GitHub week logs">${githubWeekHistoryChips}</div>` : ''}
-                    <div class="weekly-diary-meta" id="weekly-gh-history-meta">${selectedGitHubWeek ? `${escapeHtml(selectedGitHubWeek.label)}${selectedGitHubWeek.lastEventAt ? ` • Last event ${escapeHtml(formatShortDate(selectedGitHubWeek.lastEventAt))}` : ''}` : 'No GitHub week history available.'}</div>
-                    <div id="weekly-gh-history-panel">${renderGitHubWeekHistoryPanel(selectedGitHubWeek)}</div>
+                    <p class="weekly-briefing-text weekly-live-log-note">Swipe or use arrows to slide through cached GitHub week windows.</p>
+                    <div class="weekly-gh-window-shell">
+                        <div class="weekly-gh-window-track" id="weekly-gh-window-track" role="region" aria-label="Past GitHub week windows">
+                            ${githubWeekWindowCards}
+                        </div>
+                    </div>
                 </section>
             `
             : '';
@@ -1457,13 +1468,16 @@ async function renderWeeklyHighlights() {
                 <div id="weekly-diary-preview">
                     ${renderDiaryPreview(selectedDiaryEntry)}
                 </div>
-                ${selectedDiaryEntry ? `
+                ${selectedDiaryEntry && !diaryArchiveShouldBeLegacy ? `
                     <details class="weekly-more weekly-post-more" id="weekly-post-more">
                         <summary>Open full week</summary>
                         <div id="weekly-diary-body" class="weekly-diary-body" role="region" aria-label="Weekly post" aria-live="polite">
                             ${renderDiaryBody(selectedDiaryEntry)}
                         </div>
                     </details>
+                ` : ''}
+                ${selectedDiaryEntry && diaryArchiveShouldBeLegacy ? `
+                    <div class="weekly-diary-compact-note">Homepage shows a legacy preview only. Open the log file for the full week write-up.</div>
                 ` : ''}
                 <div class="weekly-diary-footer">
                     <span class="weekly-diary-metrics" id="weekly-diary-metrics">${escapeHtml(selectedDiaryEntry ? (renderDiaryMetrics(selectedDiaryEntry) || '') : '')}</span>
@@ -1472,7 +1486,17 @@ async function renderWeeklyHighlights() {
             </section>
         `;
 
-        const legacyArchiveSection = (diaryEntries.length && diaryArchiveShouldBeLegacy) ? diarySection : '';
+        const legacyArchiveSection = (diaryEntries.length && diaryArchiveShouldBeLegacy) ? `
+            <details class="weekly-more weekly-legacy-archive-shell" id="weekly-legacy-archive-shell">
+                <summary>Legacy Weekly Diary (Project Archive)</summary>
+                <div class="weekly-legacy-archive-note">
+                    Older project-specific write-ups are kept here as reference. Current weekly updates above come from live GitHub activity.
+                </div>
+                <div class="weekly-legacy-archive-body">
+                    ${diarySection}
+                </div>
+            </details>
+        ` : '';
 
         const primaryWeeklyLogSection = (diaryEntries.length && !diaryArchiveShouldBeLegacy)
             ? diarySection
@@ -1605,7 +1629,7 @@ async function renderWeeklyHighlights() {
 	            </div>
 	        `;
 
-            if (diaryEntries.length) {
+            if (diaryEntries.length || githubWeekSummaries.length) {
                 const headerPrevBtn = document.getElementById('prev-week-btn');
                 const headerNextBtn = document.getElementById('next-week-btn');
                 const previewEl = document.getElementById('weekly-diary-preview');
@@ -1616,10 +1640,10 @@ async function renderWeeklyHighlights() {
                 const archiveNoteEl = document.getElementById('weekly-diary-archive-note');
                 const shareBtn = document.getElementById('weekly-share-btn');
                 const weekButtons = Array.from(document.querySelectorAll('[data-weekly-week]'));
-                const ghHistoryMetaEl = document.getElementById('weekly-gh-history-meta');
-                const ghHistoryPanelEl = document.getElementById('weekly-gh-history-panel');
-                const ghWeekButtons = Array.from(document.querySelectorAll('[data-weekly-gh-week]'));
-                const useHeaderWeekNav = !diaryArchiveShouldBeLegacy;
+                const ghWindowTrackEl = document.getElementById('weekly-gh-window-track');
+                const ghWindowPrevBtn = document.getElementById('weekly-gh-prev-btn');
+                const ghWindowNextBtn = document.getElementById('weekly-gh-next-btn');
+                const useHeaderWeekNav = diaryEntries.length > 0 && !diaryArchiveShouldBeLegacy;
 
                 let currentIndex = selectedDiaryIndex;
 
@@ -1714,43 +1738,70 @@ async function renderWeeklyHighlights() {
                     });
                 });
 
-                if (ghWeekButtons.length && ghHistoryPanelEl) {
-                    let currentGhWeekIndex = selectedGitHubWeekIndex;
+                if (ghWindowTrackEl) {
+                    const ghCards = Array.from(ghWindowTrackEl.querySelectorAll('[data-gh-window-card]'));
+                    let currentGhWindow = 0;
 
-                    const setActiveGhChip = () => {
-                        ghWeekButtons.forEach(btn => {
-                            const idx = Number.parseInt(String(btn.dataset.weeklyGhWeek || ''), 10);
-                            if (idx === currentGhWeekIndex) {
-                                btn.setAttribute('aria-current', 'true');
+                    const getCardStep = () => {
+                        if (!ghCards.length) return ghWindowTrackEl.clientWidth || 320;
+                        const first = ghCards[0];
+                        const cardRect = first.getBoundingClientRect();
+                        const trackRect = ghWindowTrackEl.getBoundingClientRect();
+                        const firstLeft = cardRect.left - trackRect.left + ghWindowTrackEl.scrollLeft;
+                        if (ghCards.length > 1) {
+                            const second = ghCards[1];
+                            const secondRect = second.getBoundingClientRect();
+                            const secondLeft = secondRect.left - trackRect.left + ghWindowTrackEl.scrollLeft;
+                            return Math.max(220, Math.round(secondLeft - firstLeft));
+                        }
+                        return Math.max(220, Math.round(cardRect.width) + 12);
+                    };
+
+                    const setActiveGhWindow = (index) => {
+                        currentGhWindow = Math.max(0, Math.min(index, ghCards.length - 1));
+                        ghCards.forEach((card, idx) => {
+                            if (idx === currentGhWindow) {
+                                card.setAttribute('aria-current', 'true');
                             } else {
-                                btn.removeAttribute('aria-current');
+                                card.removeAttribute('aria-current');
                             }
                         });
+                        if (ghWindowPrevBtn) ghWindowPrevBtn.disabled = currentGhWindow <= 0;
+                        if (ghWindowNextBtn) ghWindowNextBtn.disabled = currentGhWindow >= ghCards.length - 1;
                     };
 
-                    const updateGhWeek = (idx) => {
-                        const safeIndex = Number.parseInt(String(idx), 10);
-                        if (!Number.isFinite(safeIndex) || safeIndex < 0 || safeIndex >= githubWeekSummaries.length) return;
-                        currentGhWeekIndex = safeIndex;
-                        const week = githubWeekSummaries[safeIndex];
-                        if (!week) return;
-                        if (ghHistoryMetaEl) {
-                            ghHistoryMetaEl.textContent = `${week.label}${week.lastEventAt ? ` • Last event ${formatShortDate(week.lastEventAt)}` : ''}`;
-                        }
-                        ghHistoryPanelEl.innerHTML = renderGitHubWeekHistoryPanel(week);
-                        setActiveGhChip();
+                    const scrollToGhWindow = (index) => {
+                        if (!ghCards.length) return;
+                        const safeIndex = Math.max(0, Math.min(index, ghCards.length - 1));
+                        const step = getCardStep();
+                        ghWindowTrackEl.scrollTo({ left: safeIndex * step, behavior: 'smooth' });
+                        setActiveGhWindow(safeIndex);
                     };
 
-                    ghWeekButtons.forEach(btn => {
-                        if (btn.dataset.bound) return;
+                    const bindBtn = (btn, direction) => {
+                        if (!btn || btn.dataset.bound) return;
                         btn.dataset.bound = 'true';
-                        btn.addEventListener('click', () => {
-                            const idx = Number.parseInt(String(btn.dataset.weeklyGhWeek || ''), 10);
-                            updateGhWeek(idx);
-                        });
-                    });
+                        btn.addEventListener('click', () => scrollToGhWindow(currentGhWindow + direction));
+                    };
 
-                    setActiveGhChip();
+                    bindBtn(ghWindowPrevBtn, -1);
+                    bindBtn(ghWindowNextBtn, 1);
+
+                    if (!ghWindowTrackEl.dataset.bound) {
+                        ghWindowTrackEl.dataset.bound = 'true';
+                        let syncTimer = 0;
+                        ghWindowTrackEl.addEventListener('scroll', () => {
+                            window.clearTimeout(syncTimer);
+                            syncTimer = window.setTimeout(() => {
+                                const step = getCardStep();
+                                if (!step) return;
+                                const idx = Math.round(ghWindowTrackEl.scrollLeft / step);
+                                setActiveGhWindow(idx);
+                            }, 90);
+                        }, { passive: true });
+                    }
+
+                    setActiveGhWindow(0);
                 }
 
                 if (shareBtn && !shareBtn.dataset.bound) {
@@ -1790,6 +1841,10 @@ async function renderWeeklyHighlights() {
                 }
 
                 if (requestedWeekKey && requestedDiaryIndex >= 0) {
+                    const legacyArchiveShellEl = document.getElementById('weekly-legacy-archive-shell');
+                    if (legacyArchiveShellEl && !legacyArchiveShellEl.open) {
+                        legacyArchiveShellEl.open = true;
+                    }
                     const weeklyCard = document.getElementById('weekly-highlights');
                     if (weeklyCard) {
                         window.setTimeout(() => {
