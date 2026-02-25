@@ -90,4 +90,26 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <!-- GENERATED: TEAM PROFILES START -->
+  <url>
+    <loc>https://atrak.dev/team/charlie-han.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://atrak.dev/team/yannon-chang.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://atrak.dev/team/larry-ling.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://atrak.dev/team/caleb-zeng.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <!-- GENERATED: TEAM PROFILES END -->
 </urlset>
