@@ -4,7 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Team Member Profile — Atrak">
+    <meta name="robots" content="index,follow">
+    <meta name="keywords" content="Atrak team profile, student tech team, Charlie Han, Atrak Team Leader, Orange County California, Fullerton CA, Irvine CA">
     <title>Team Member Profile — Atrak</title>
+    <link rel="canonical" id="profile-canonical" href="https://atrak.dev/team/profile.html">
+    <meta property="og:title" content="Team Member Profile — Atrak">
+    <meta property="og:description" content="Team Member Profile — Atrak">
+    <meta property="og:url" content="https://atrak.dev/team/profile.html">
+    <meta property="og:type" content="profile">
+    <meta property="og:image" content="https://atrak.dev/assets/logo.png?v=20260202">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Team Member Profile — Atrak">
+    <meta name="twitter:description" content="Team Member Profile — Atrak">
+    <meta name="twitter:image" content="https://atrak.dev/assets/logo.png?v=20260202">
+    <script type="application/ld+json" id="profile-jsonld">{"@context":"https://schema.org","@type":"ProfilePage","name":"Atrak Team Member Profile","url":"https://atrak.dev/team/profile.html"}</script>
     <link rel="icon" type="image/png" href="../../assets/logo.png?v=20260202">
     <link rel="apple-touch-icon" sizes="180x180" href="../../assets/logo.png?v=20260202">
     <link rel="stylesheet" href="../../styles.css?v=24">
@@ -224,6 +237,7 @@
     <main>
         <section class="profile-page">
             <div class="container">
+                <div id="profile-search-helper" class="sr-only" aria-hidden="true"></div>
                 <div id="profile-content" class="profile-content">
                     <div class="profile-loading glass-card" style="text-align: center; padding: 60px 20px;">
                         <p>Loading profile...</p>
@@ -282,7 +296,27 @@
         // Load and render team member profile
         (async function() {
             const contentEl = document.getElementById('profile-content');
+            const searchHelperEl = document.getElementById('profile-search-helper');
             if (!contentEl) return;
+
+            const setOrCreateMeta = (selector, attrs, content) => {
+                let el = document.querySelector(selector);
+                if (!el) {
+                    el = document.createElement('meta');
+                    Object.entries(attrs || {}).forEach(([k, v]) => el.setAttribute(k, v));
+                    document.head.appendChild(el);
+                }
+                el.setAttribute('content', content || '');
+                return el;
+            };
+
+            const memberSeoOverrides = {
+                'charlie han': {
+                    profileUrl: 'https://atrak.dev/team/profile.html?name=Charlie%20Han',
+                    locations: ['Fullerton, CA', 'Irvine, CA', 'Orange County, California'],
+                    searchHelperText: 'Charlie Han Atrak team profile. Charlie Han is in Fullerton, CA and Irvine, CA. Atrak student tech team in Orange County, California. Profile URL: https://atrak.dev/team/profile.html?name=Charlie%20Han'
+                }
+            };
 
             // Get member name from URL
             const urlParams = new URLSearchParams(window.location.search);
@@ -411,11 +445,82 @@
                     </div>
                 `;
 
-                // Update page title and meta
-                document.title = `${escapeHtml(member.name)} — ${escapeHtml(member.role)} | Atrak Team`;
+                // Update page title and meta / search helper
+                const memberNameRaw = String(member.name || '').trim();
+                const memberRoleRaw = String(member.role || 'Team Member').trim();
+                const memberBioRaw = String(member.bio || '').trim();
+                const seoKey = memberNameRaw.toLowerCase();
+                const seoOverride = memberSeoOverrides[seoKey] || null;
+                const profileUrl = seoOverride?.profileUrl || `https://atrak.dev/team/profile.html?name=${encodeURIComponent(memberNameRaw)}`;
+                const locationBits = Array.isArray(seoOverride?.locations) ? seoOverride.locations.filter(Boolean) : [];
+                const locationSentence = locationBits.length ? ` Based in ${locationBits.join(' / ')}.` : '';
+
+                document.title = `${memberNameRaw} — ${memberRoleRaw} | Atrak Team`;
                 const metaDesc = document.querySelector('meta[name="description"]');
                 if (metaDesc) {
-                    metaDesc.content = `${escapeHtml(member.name)} - ${escapeHtml(member.role)} at Atrak. ${escapeHtml(member.bio || '')}`;
+                    metaDesc.content = `${memberNameRaw} — ${memberRoleRaw} at Atrak.${memberBioRaw ? ` ${memberBioRaw}` : ''}${locationSentence}`;
+                }
+                const canonicalEl = document.getElementById('profile-canonical');
+                if (canonicalEl) canonicalEl.setAttribute('href', profileUrl);
+
+                setOrCreateMeta('meta[property="og:title"]', { property: 'og:title' }, `${memberNameRaw} — ${memberRoleRaw} | Atrak Team`);
+                setOrCreateMeta('meta[property="og:description"]', { property: 'og:description' }, `${memberNameRaw} is ${memberRoleRaw} at Atrak.${locationSentence}`);
+                setOrCreateMeta('meta[property="og:url"]', { property: 'og:url' }, profileUrl);
+                setOrCreateMeta('meta[name="twitter:title"]', { name: 'twitter:title' }, `${memberNameRaw} — ${memberRoleRaw} | Atrak Team`);
+                setOrCreateMeta('meta[name="twitter:description"]', { name: 'twitter:description' }, `${memberNameRaw} is ${memberRoleRaw} at Atrak.${locationSentence}`);
+
+                const keywords = [
+                    `${memberNameRaw} Atrak`,
+                    `${memberNameRaw} profile`,
+                    `${memberRoleRaw} Atrak`,
+                    'Atrak team profile',
+                    'student tech team'
+                ].concat(locationBits).join(', ');
+                setOrCreateMeta('meta[name="keywords"]', { name: 'keywords' }, keywords);
+
+                if (searchHelperEl) {
+                    const helperLines = [
+                        seoOverride?.searchHelperText || `${memberNameRaw} Atrak team profile. Profile URL: ${profileUrl}`,
+                        `${memberNameRaw} is an ${memberRoleRaw} at Atrak.`,
+                        memberBioRaw || '',
+                        locationBits.length ? `${memberNameRaw} location: ${locationBits.join(', ')}.` : '',
+                        `Atrak team member profile page: ${profileUrl}`
+                    ].filter(Boolean);
+                    searchHelperEl.textContent = helperLines.join(' ');
+                }
+
+                const jsonLdEl = document.getElementById('profile-jsonld');
+                if (jsonLdEl) {
+                    const personJsonLd = {
+                        '@context': 'https://schema.org',
+                        '@type': 'ProfilePage',
+                        name: `${memberNameRaw} — Atrak Team Profile`,
+                        url: profileUrl,
+                        mainEntity: {
+                            '@type': 'Person',
+                            name: memberNameRaw,
+                            jobTitle: memberRoleRaw,
+                            description: memberBioRaw || undefined,
+                            url: profileUrl,
+                            worksFor: {
+                                '@type': 'Organization',
+                                name: 'Atrak',
+                                url: 'https://atrak.dev/'
+                            },
+                            homeLocation: locationBits.length
+                                ? locationBits.map(loc => ({
+                                    '@type': 'Place',
+                                    name: loc
+                                }))
+                                : undefined,
+                            sameAs: [
+                                member.social?.github,
+                                member.social?.linkedin,
+                                member.social?.twitter
+                            ].filter(Boolean)
+                        }
+                    };
+                    jsonLdEl.textContent = JSON.stringify(personJsonLd);
                 }
 
             } catch (error) {
@@ -433,4 +538,3 @@
     </script>
 </body>
 </html>
-
