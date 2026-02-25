@@ -98,6 +98,9 @@
             max-width: 800px;
             margin: 0 auto;
         }
+        .profile-shell {
+            padding: 48px;
+        }
         .profile-section {
             margin-bottom: 40px;
         }
@@ -142,27 +145,66 @@
             color: var(--text-tertiary);
         }
         .profile-social {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
         }
         .profile-social-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+            padding: 14px 16px;
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 12px;
             color: var(--text-primary);
             text-decoration: none;
             transition: all 0.2s ease;
+        }
+        .profile-social-label {
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+        }
+        .profile-social-detail {
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 500;
+            word-break: break-word;
         }
         .profile-social-link:hover {
             background: var(--hover-bg);
             border-color: var(--accent-primary);
             transform: translateY(-2px);
+        }
+        .profile-meta-strip {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+            margin: 24px auto 0;
+            max-width: 720px;
+        }
+        .profile-meta-item {
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            padding: 12px 14px;
+            text-align: left;
+        }
+        .profile-meta-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-tertiary);
+            margin-bottom: 6px;
+        }
+        .profile-meta-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.3;
         }
         .profile-tags-list {
             display: flex;
@@ -187,14 +229,91 @@
             transform: translateY(-2px);
         }
         .profile-tag.food-tag {
-            background: rgba(59, 130, 246, 0.1);
-            border-color: rgba(59, 130, 246, 0.3);
+            background: rgba(59, 130, 246, 0.06);
+            border-color: rgba(59, 130, 246, 0.2);
         }
         .profile-tag.food-tag:hover {
-            background: rgba(59, 130, 246, 0.15);
+            background: rgba(59, 130, 246, 0.12);
             border-color: var(--accent-primary);
         }
+        .profile-location-block,
+        .profile-preview-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+        }
+        .profile-location-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-tertiary);
+            margin-bottom: 10px;
+        }
+        .profile-location-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .profile-location-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            background: rgba(59, 130, 246, 0.08);
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+        .profile-preview-card {
+            display: grid;
+            gap: 14px;
+        }
+        .profile-preview-row {
+            display: grid;
+            gap: 6px;
+        }
+        .profile-preview-row-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-tertiary);
+        }
+        .profile-preview-url {
+            color: var(--text-primary);
+            text-decoration: none;
+            word-break: break-all;
+            font-weight: 500;
+        }
+        .profile-preview-url:hover {
+            color: var(--accent-primary);
+        }
+        .profile-preview-search {
+            border-top: 1px solid var(--border-color);
+            padding-top: 14px;
+        }
+        .profile-preview-search-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .profile-preview-search-url {
+            font-size: 13px;
+            color: var(--accent-primary);
+            margin-bottom: 8px;
+            word-break: break-all;
+        }
+        .profile-preview-search-desc {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
         @media (max-width: 768px) {
+            .profile-shell {
+                padding: 28px 20px;
+            }
             .profile-avatar-large {
                 width: 120px;
                 height: 120px;
@@ -208,6 +327,12 @@
             }
             .profile-bio {
                 font-size: 16px;
+            }
+            .profile-meta-strip {
+                grid-template-columns: 1fr;
+            }
+            .profile-social {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -292,7 +417,7 @@
     </footer>
 
     <script src="../../config.js?v=21"></script>
-    <script src="../../script.js?v=22"></script>
+    <script src="../../script.js?v=23"></script>
     <script>
         // Load and render team member profile
         (async function() {
@@ -352,19 +477,51 @@
                     return;
                 }
 
+                const memberNameRaw = String(member.name || '').trim();
+                const memberRoleRaw = String(member.role || 'Team Member').trim();
+                const memberBioRaw = String(member.bio || '').trim();
+                const seoKey = memberNameRaw.toLowerCase();
+                const seoOverride = memberSeoOverrides[seoKey] || null;
+                const memberSlug = slugifyName(memberNameRaw);
+                const canonicalProfileUrl = memberSlug
+                    ? `https://atrak.dev/team/${memberSlug}.html`
+                    : 'https://atrak.dev/team/profile.html';
+                const queryProfileUrl = `https://atrak.dev/team/profile.html?name=${encodeURIComponent(memberNameRaw)}`;
+                const profileUrl = canonicalProfileUrl;
+                const helperPrimaryUrl = seoOverride?.profileUrl || queryProfileUrl;
+                const locationBits = Array.isArray(seoOverride?.locations) ? seoOverride.locations.filter(Boolean) : [];
+                const locationSentence = locationBits.length ? ` Based in ${locationBits.join(' / ')}.` : '';
+                const searchPreviewTitle = `${memberNameRaw} — ${memberRoleRaw} | Atrak Team`;
+                const searchPreviewDescription = `${memberNameRaw} is ${memberRoleRaw} at Atrak.${memberBioRaw ? ` ${memberBioRaw}` : ''}${locationSentence}`.trim();
+                const statusLabel = member.status
+                    ? String(member.status).replace(/[-_]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+                    : 'Team Member';
+                const primaryRegionLabel = locationBits[0] || 'Orange County, CA';
+
+                const formatLinkDetail = (raw) => {
+                    if (!raw) return '';
+                    if (String(raw).startsWith('mailto:')) return raw.replace(/^mailto:/i, '');
+                    try {
+                        const u = new URL(raw);
+                        return `${u.hostname.replace(/^www\./, '')}${u.pathname}`.replace(/\/$/, '');
+                    } catch (_) {
+                        return String(raw);
+                    }
+                };
+
                 // Build social links
                 const socialLinks = [];
                 if (member.social?.github) {
-                    socialLinks.push(`<a href="${escapeHtml(member.social.github)}" target="_blank" rel="noopener noreferrer" class="profile-social-link"><span>🔗</span> GitHub</a>`);
+                    socialLinks.push(`<a href="${escapeHtml(member.social.github)}" target="_blank" rel="noopener noreferrer" class="profile-social-link"><span class="profile-social-label">GitHub</span><span class="profile-social-detail">${escapeHtml(formatLinkDetail(member.social.github))}</span></a>`);
                 }
                 if (member.social?.linkedin) {
-                    socialLinks.push(`<a href="${escapeHtml(member.social.linkedin)}" target="_blank" rel="noopener noreferrer" class="profile-social-link"><span>💼</span> LinkedIn</a>`);
+                    socialLinks.push(`<a href="${escapeHtml(member.social.linkedin)}" target="_blank" rel="noopener noreferrer" class="profile-social-link"><span class="profile-social-label">LinkedIn</span><span class="profile-social-detail">${escapeHtml(formatLinkDetail(member.social.linkedin))}</span></a>`);
                 }
                 if (member.social?.twitter) {
-                    socialLinks.push(`<a href="${escapeHtml(member.social.twitter)}" target="_blank" rel="noopener noreferrer" class="profile-social-link"><span>🐦</span> Twitter</a>`);
+                    socialLinks.push(`<a href="${escapeHtml(member.social.twitter)}" target="_blank" rel="noopener noreferrer" class="profile-social-link"><span class="profile-social-label">Twitter</span><span class="profile-social-detail">${escapeHtml(formatLinkDetail(member.social.twitter))}</span></a>`);
                 }
                 if (member.social?.email) {
-                    socialLinks.push(`<a href="mailto:${escapeHtml(member.social.email)}" class="profile-social-link"><span>✉️</span> Email</a>`);
+                    socialLinks.push(`<a href="mailto:${escapeHtml(member.social.email)}" class="profile-social-link"><span class="profile-social-label">Email</span><span class="profile-social-detail">${escapeHtml(member.social.email)}</span></a>`);
                 }
 
                 // Build stats
@@ -379,6 +536,61 @@
                     </div>`
                     : '';
 
+                const profileMetaItems = [
+                    { label: 'Role', value: memberRoleRaw },
+                    { label: 'Status', value: statusLabel },
+                    { label: 'Region', value: primaryRegionLabel },
+                    { label: 'Links', value: `${socialLinks.length} available` }
+                ];
+
+                const profileMetaStripHtml = `
+                    <div class="profile-meta-strip" aria-label="Profile metadata">
+                        ${profileMetaItems.map(item => `
+                            <div class="profile-meta-item">
+                                <div class="profile-meta-label">${escapeHtml(item.label)}</div>
+                                <div class="profile-meta-value">${escapeHtml(item.value)}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+
+                const profileLocationHtml = locationBits.length ? `
+                    <div class="profile-section">
+                        <h2 class="profile-section-title">Location</h2>
+                        <div class="profile-location-block">
+                            <div class="profile-location-label">Searchable location signals</div>
+                            <div class="profile-location-list">
+                                ${locationBits.map(location => `<span class="profile-location-chip">${escapeHtml(location)}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                ` : '';
+
+                const searchPreviewUrlDisplay = profileUrl.replace(/^https?:\/\//i, '');
+                const helperUrlDisplay = helperPrimaryUrl.replace(/^https?:\/\//i, '');
+                const profilePreviewHtml = `
+                    <div class="profile-section">
+                        <h2 class="profile-section-title">Share & Search Preview</h2>
+                        <div class="profile-preview-card">
+                            <div class="profile-preview-row">
+                                <div class="profile-preview-row-label">Canonical URL</div>
+                                <a class="profile-preview-url" href="${escapeHtml(profileUrl)}">${escapeHtml(searchPreviewUrlDisplay)}</a>
+                            </div>
+                            ${helperPrimaryUrl !== profileUrl ? `
+                                <div class="profile-preview-row">
+                                    <div class="profile-preview-row-label">Search Helper URL</div>
+                                    <a class="profile-preview-url" href="${escapeHtml(helperPrimaryUrl)}">${escapeHtml(helperUrlDisplay)}</a>
+                                </div>
+                            ` : ''}
+                            <div class="profile-preview-search" aria-label="Search preview">
+                                <div class="profile-preview-search-title">${escapeHtml(searchPreviewTitle)}</div>
+                                <div class="profile-preview-search-url">${escapeHtml(searchPreviewUrlDisplay)}</div>
+                                <p class="profile-preview-search-desc">${escapeHtml(searchPreviewDescription)}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
                 contentEl.innerHTML = `
                     <nav class="breadcrumb" aria-label="Breadcrumb" style="margin-bottom: 32px;">
                         <ol>
@@ -388,7 +600,7 @@
                         </ol>
                     </nav>
 
-                    <div class="glass-card" style="padding: 48px;">
+                    <div class="glass-card profile-shell">
                         <div class="profile-header">
                             <div class="profile-avatar-large" style="background: ${member.avatar?.gradient || 'linear-gradient(135deg, rgba(59, 130, 246, 0.35), rgba(139, 92, 246, 0.25))'};">
                                 ${escapeHtml(member.avatar?.initials || '?')}
@@ -401,9 +613,12 @@
                                     Active
                                 </div>
                             ` : ''}
+                            ${profileMetaStripHtml}
                         </div>
 
                         <div class="profile-content">
+                            ${profileLocationHtml}
+                            ${profilePreviewHtml}
                             ${member.bio ? `
                                 <div class="profile-section">
                                     <h2 class="profile-section-title">About</h2>
@@ -428,7 +643,7 @@
                                     <h2 class="profile-section-title">Favorite Foods</h2>
                                     <div class="profile-tags-list">
                                         ${member.favoriteFoods.map(food => `
-                                            <span class="profile-tag food-tag">🍽️ ${escapeHtml(food)}</span>
+                                            <span class="profile-tag food-tag">${escapeHtml(food)}</span>
                                         `).join('')}
                                     </div>
                                 </div>
@@ -454,21 +669,6 @@
                 `;
 
                 // Update page title and meta / search helper
-                const memberNameRaw = String(member.name || '').trim();
-                const memberRoleRaw = String(member.role || 'Team Member').trim();
-                const memberBioRaw = String(member.bio || '').trim();
-                const seoKey = memberNameRaw.toLowerCase();
-                const seoOverride = memberSeoOverrides[seoKey] || null;
-                const memberSlug = slugifyName(memberNameRaw);
-                const canonicalProfileUrl = memberSlug
-                    ? `https://atrak.dev/team/${memberSlug}.html`
-                    : 'https://atrak.dev/team/profile.html';
-                const queryProfileUrl = `https://atrak.dev/team/profile.html?name=${encodeURIComponent(memberNameRaw)}`;
-                const profileUrl = canonicalProfileUrl;
-                const helperPrimaryUrl = seoOverride?.profileUrl || queryProfileUrl;
-                const locationBits = Array.isArray(seoOverride?.locations) ? seoOverride.locations.filter(Boolean) : [];
-                const locationSentence = locationBits.length ? ` Based in ${locationBits.join(' / ')}.` : '';
-
                 document.title = `${memberNameRaw} — ${memberRoleRaw} | Atrak Team`;
                 const metaDesc = document.querySelector('meta[name="description"]');
                 if (metaDesc) {

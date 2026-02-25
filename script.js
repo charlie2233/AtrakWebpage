@@ -1658,6 +1658,78 @@ window.addEventListener('load', () => {
 
 // Performance: Honor user motion preferences only (avoid disabling effects unexpectedly).
 
+// Lazy-load heavy GitHub homepage features so first paint is not blocked by github-projects.js
+const GITHUB_PROJECTS_SCRIPT_URL = 'github-projects.js?v=26';
+let githubProjectsLoadPromise = null;
+
+const hasGitHubHomepageTargets = () => {
+    return Boolean(
+        document.getElementById('weekly-content') ||
+        document.getElementById('live-activity-feed') ||
+        document.getElementById('project-analytics-grid') ||
+        document.getElementById('releases-live-list') ||
+        document.getElementById('more-projects-grid')
+    );
+};
+
+const ensureGitHubProjectsLoaded = () => {
+    if (window.GitHubProjects) {
+        return Promise.resolve(window.GitHubProjects);
+    }
+    if (githubProjectsLoadPromise) {
+        return githubProjectsLoadPromise;
+    }
+
+    const existing = document.querySelector(`script[src="${GITHUB_PROJECTS_SCRIPT_URL}"]`);
+    if (existing) {
+        githubProjectsLoadPromise = new Promise((resolve, reject) => {
+            if (window.GitHubProjects) {
+                resolve(window.GitHubProjects);
+                return;
+            }
+            existing.addEventListener('load', () => resolve(window.GitHubProjects), { once: true });
+            existing.addEventListener('error', reject, { once: true });
+        });
+        return githubProjectsLoadPromise;
+    }
+
+    githubProjectsLoadPromise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = GITHUB_PROJECTS_SCRIPT_URL;
+        script.async = true;
+        script.onload = () => resolve(window.GitHubProjects);
+        script.onerror = () => reject(new Error('Failed to load github-projects.js'));
+        document.body.appendChild(script);
+    });
+
+    return githubProjectsLoadPromise;
+};
+
+const scheduleGitHubProjectsIdleLoad = () => {
+    if (!hasGitHubHomepageTargets()) return;
+    const trigger = () => {
+        ensureGitHubProjectsLoaded().catch((error) => {
+            console.warn('GitHub projects module lazy-load failed:', error);
+        });
+    };
+
+    const schedule = () => {
+        if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(trigger, { timeout: 1500 });
+        } else {
+            setTimeout(trigger, 200);
+        }
+    };
+
+    if (document.readyState === 'complete') {
+        schedule();
+    } else {
+        window.addEventListener('load', schedule, { once: true });
+    }
+};
+
+scheduleGitHubProjectsIdleLoad();
+
 
 // ================================
 // Project Tabs Functionality
@@ -1686,8 +1758,20 @@ projectTabs.forEach(tab => {
             });
             
             // Load GitHub projects when switching to More Projects tab
-            if (targetTab === 'more' && window.GitHubProjects && typeof window.GitHubProjects.renderMoreProjects === 'function') {
-                window.GitHubProjects.renderMoreProjects();
+            if (targetTab === 'more') {
+                ensureGitHubProjectsLoaded()
+                    .then(() => {
+                        if (
+                            tab.classList.contains('active') &&
+                            window.GitHubProjects &&
+                            typeof window.GitHubProjects.renderMoreProjects === 'function'
+                        ) {
+                            window.GitHubProjects.renderMoreProjects();
+                        }
+                    })
+                    .catch((error) => {
+                        console.warn('Failed to render More Projects:', error);
+                    });
             }
         }
     });
