@@ -1152,6 +1152,68 @@ async function renderWeeklyHighlights() {
         const selectedDiaryEntry = selectedDiaryIndex >= 0 ? diaryEntries[selectedDiaryIndex] : null;
         const diaryWeekCounter = selectedDiaryEntry && diaryEntries.length ? `${selectedDiaryIndex + 1}/${diaryEntries.length}` : '';
 
+        const githubWeeksByKey = new Map(
+            githubWeekSummaries
+                .filter(week => week && typeof week.weekKey === 'string')
+                .map(week => [week.weekKey, week])
+        );
+        const diaryEntriesByKey = new Map(
+            diaryEntries
+                .filter(entry => entry && typeof entry.weekKey === 'string')
+                .map(entry => [entry.weekKey, entry])
+        );
+        const parseWeekKeyDate = (weekKey) => {
+            if (!weekKey || typeof weekKey !== 'string') return null;
+            const dt = new Date(`${weekKey}T00:00:00`);
+            return Number.isNaN(dt.getTime()) ? null : dt;
+        };
+        const currentGitHubWeekKey = githubWeekSummaries[0] && githubWeekSummaries[0].weekKey
+            ? String(githubWeekSummaries[0].weekKey)
+            : '';
+        const unifiedWeeklyHistory = (() => {
+            const keys = new Set([
+                ...Array.from(githubWeeksByKey.keys()),
+                ...Array.from(diaryEntriesByKey.keys())
+            ]);
+
+            return Array.from(keys)
+                .map(weekKey => {
+                    const github = githubWeeksByKey.get(weekKey) || null;
+                    const diary = diaryEntriesByKey.get(weekKey) || null;
+                    const weekDate = github && github.weekStart
+                        ? new Date(github.weekStart)
+                        : parseWeekKeyDate(weekKey);
+                    return {
+                        weekKey,
+                        github,
+                        diary,
+                        weekDate: weekDate && !Number.isNaN(weekDate.getTime()) ? weekDate : null
+                    };
+                })
+                .sort((a, b) => {
+                    const aTime = a.weekDate ? a.weekDate.getTime() : 0;
+                    const bTime = b.weekDate ? b.weekDate.getTime() : 0;
+                    return bTime - aTime;
+                });
+        })();
+        const requestedHistoryIndex = requestedWeekKey
+            ? unifiedWeeklyHistory.findIndex(item => item && item.weekKey === requestedWeekKey)
+            : -1;
+        const savedHistoryKey = (() => {
+            try {
+                const raw = window.localStorage.getItem('atrak_weekly_history_key') || '';
+                return typeof raw === 'string' ? raw : '';
+            } catch (_) {
+                return '';
+            }
+        })();
+        const savedHistoryIndex = savedHistoryKey
+            ? unifiedWeeklyHistory.findIndex(item => item && item.weekKey === savedHistoryKey)
+            : -1;
+        const selectedUnifiedHistoryIndex = requestedHistoryIndex >= 0
+            ? requestedHistoryIndex
+            : (savedHistoryIndex >= 0 ? savedHistoryIndex : 0);
+
         const currentMonthLabel = (() => {
             try {
                 return now.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
@@ -1658,20 +1720,7 @@ async function renderWeeklyHighlights() {
 
 	        container.innerHTML = `
 	            <div class="weekly-digest weekly-digest-v2">
-                    ${useCondensedLiveWeeklyLayout ? '' : `
-                        <div class="weekly-kpis">
-                            ${kpi(commitTotalForKpi, 'Commits (7d)')}
-                            ${kpi(totalPushes, 'Pushes')}
-                            ${kpi(activeRepos.size, 'Repos Active')}
-                            ${kpi(starsGained, 'Stars')}
-                        </div>
-                    `}
-
-                    ${primaryWeeklyLogSection}
-
-                    ${thisWeekDetailsSection}
-
-                    ${historyAndArchiveSection}
+                    <div id="weekly-unified-history-shell"></div>
 
                     <div class="weekly-footer">
                         <a class="btn btn-secondary btn-sm" href="releases.html">Read Release Notes</a>
@@ -1680,6 +1729,381 @@ async function renderWeeklyHighlights() {
                     </div>
 	            </div>
 	        `;
+
+            const renderUnifiedChipList = (texts) => (Array.isArray(texts) ? texts : [])
+                .filter(Boolean)
+                .map(text => `<span class="weekly-live-log-chip">${escapeHtml(String(text))}</span>`)
+                .join('');
+
+            const renderLegacyDiaryIntegratedBlock = (entry) => {
+                if (!entry) return '';
+                const metaParts = [];
+                if (entry.projectTitle) metaParts.push(String(entry.projectTitle));
+                if (entry.weekOf) metaParts.push(String(entry.weekOf));
+                const metaText = metaParts.join(' • ');
+                const archiveNote = renderDiaryArchiveNote(entry);
+                const metrics = renderDiaryMetrics(entry);
+
+                return `
+                    <details class="weekly-more weekly-legacy-archive-shell">
+                        <summary>Legacy Diary Notes (Integrated)</summary>
+                        ${metaText ? `<div class="weekly-diary-meta">${escapeHtml(metaText)}</div>` : ''}
+                        ${archiveNote ? `<div class="weekly-diary-note">${escapeHtml(archiveNote)}</div>` : ''}
+                        <div class="weekly-legacy-archive-note">Legacy project notes are merged here for the same week. This is archive content.</div>
+                        <div class="weekly-legacy-archive-body">
+                            ${renderDiaryPreview(entry)}
+                            <details class="weekly-more weekly-post-more">
+                                <summary>Open full legacy diary week</summary>
+                                <div class="weekly-diary-body" role="region" aria-label="Legacy weekly diary post">
+                                    ${renderDiaryBody(entry)}
+                                </div>
+                            </details>
+                            <div class="weekly-diary-footer">
+                                <span class="weekly-diary-metrics">${escapeHtml(metrics || '')}</span>
+                                <a class="weekly-link" href="WeeklyLog.txt" target="_blank" rel="noopener">Open legacy log file</a>
+                            </div>
+                        </div>
+                    </details>
+                `;
+            };
+
+            const buildUnifiedWeekViewModel = (item, index, total) => {
+                const githubWeek = item && item.github ? item.github : null;
+                const diaryWeek = item && item.diary ? item.diary : null;
+                const hasGitHub = Boolean(githubWeek);
+                const hasDiary = Boolean(diaryWeek);
+                const isCurrentGitHubWeek = Boolean(hasGitHub && currentGitHubWeekKey && item.weekKey === currentGitHubWeekKey);
+                const weekLabel = hasGitHub
+                    ? githubWeek.label
+                    : (diaryWeek && diaryWeek.weekOf ? String(diaryWeek.weekOf) : String(item.weekKey || 'Weekly Log'));
+
+                const topHeaderTitle = isCurrentGitHubWeek ? 'This Week at Atrak' : 'Weekly Log';
+                const topHeaderIcon = isCurrentGitHubWeek ? '📰' : (hasDiary ? '🗂️' : '🧭');
+                const topHeaderDateRange = weekLabel;
+
+                const cacheStamp = weeklyStatsSyncDate
+                    ? `GitHub cache • ${formatUTCDateTime(weeklyStatsSyncDate.toISOString())}`
+                    : 'GitHub cache';
+                let topHeaderSourceNote = `${cacheStamp} • Use arrows to browse week history`;
+                if (diaryEntries.length && diaryArchiveShouldBeLegacy) {
+                    topHeaderSourceNote += ' • legacy diary merged into week history';
+                }
+                if (hasGitHub && hasDiary) {
+                    topHeaderSourceNote += ' • this week includes GitHub + diary notes';
+                } else if (hasDiary && !hasGitHub) {
+                    topHeaderSourceNote += ' • diary-only archive week';
+                }
+
+                const panelIcon = isCurrentGitHubWeek ? '🗞️' : (hasDiary ? '🗂️' : '📦');
+                const panelTitle = isCurrentGitHubWeek
+                    ? 'Weekly Log'
+                    : (hasGitHub ? 'Week Log (Archive)' : 'Legacy Week Diary');
+
+                const panelMetaParts = [];
+                if (hasGitHub) panelMetaParts.push(isCurrentGitHubWeek ? 'GitHub • Last 7d' : 'GitHub • Archived Week');
+                if (hasDiary) panelMetaParts.push(hasGitHub ? 'Legacy diary attached' : 'Legacy diary archive');
+                panelMetaParts.push(`${index + 1}/${total}`);
+                const panelMeta = panelMetaParts.join(' • ');
+
+                let panelNote = '';
+                let panelMainHtml = '';
+                let detailsSummary = 'Week Details';
+                let detailsBodyHtml = '';
+
+                if (hasGitHub) {
+                    const commitCount = isCurrentGitHubWeek ? commitTotalForKpi : Math.max(0, Number(githubWeek.commits) || 0);
+                    const pushCount = Math.max(0, Number(githubWeek.pushes) || 0);
+                    const activeRepoCount = Math.max(0, Number(githubWeek.activeRepos) || 0);
+                    const releaseCount = Math.max(0, Number(githubWeek.releases) || 0);
+                    const starCount = Math.max(0, Number(githubWeek.stars) || 0);
+
+                    const summaryLine = isCurrentGitHubWeek
+                        ? `${commitCount} commits (7d) • ${pushCount} pushes • ${activeRepoCount} repo${activeRepoCount === 1 ? '' : 's'} active • ${releaseCount} release${releaseCount === 1 ? '' : 's'}`
+                        : `${commitCount} commits • ${pushCount} pushes • ${activeRepoCount} repos • ${releaseCount} releases${starCount ? ` • +${starCount} stars` : ''}`;
+
+                    const chips = [
+                        isCurrentGitHubWeek && weeklyStatsSyncDate ? `Synced ${getTimeAgo(weeklyStatsSyncDate)}` : 'Archived week',
+                        githubWeek.lastEventAt ? `Last activity ${formatShortDate(githubWeek.lastEventAt)}` : 'No public events',
+                        `${releaseCount} release${releaseCount === 1 ? '' : 's'}`
+                    ];
+                    if (hasDiary) chips.push('Legacy diary notes available');
+
+                    const githubMainHighlights = (() => {
+                        if (isCurrentGitHubWeek) {
+                            return liveLogHighlightsList;
+                        }
+
+                        const rows = [];
+                        if (githubWeek.topRepos && githubWeek.topRepos[0]) {
+                            const top = githubWeek.topRepos[0];
+                            const parts = [];
+                            if (top.commits) parts.push(`${top.commits} commit${top.commits === 1 ? '' : 's'}`);
+                            if (top.pushes) parts.push(`${top.pushes} push${top.pushes === 1 ? '' : 'es'}`);
+                            rows.push(li(`Top repo: <a class="weekly-inline-link" href="${top.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(top.name)}</a>${parts.length ? ` — ${escapeHtml(parts.join(' • '))}` : ''}`));
+                        }
+                        if (githubWeek.notableMsgs && githubWeek.notableMsgs[0]) {
+                            rows.push(li(`Notable change: ${escapeHtml(githubWeek.notableMsgs[0])}`));
+                        }
+                        if ((githubWeek.releases || 0) > 0) {
+                            rows.push(li(`${escapeHtml(githubWeek.releases)} release event${githubWeek.releases === 1 ? '' : 's'} in this week snapshot`));
+                        }
+                        if ((githubWeek.stars || 0) > 0) {
+                            rows.push(li(`Stars gained: +${escapeHtml(githubWeek.stars)}`));
+                        }
+                        if (!rows.length) {
+                            rows.push(li('No notable public GitHub activity captured for this week.'));
+                        }
+                        return rows.join('');
+                    })();
+
+                    panelNote = isCurrentGitHubWeek
+                        ? 'Built from GitHub events/cache (real activity). Use the top arrows to move through older GitHub and legacy weeks.'
+                        : 'Archived GitHub week snapshot from cache. Use the top arrows to move across all weeks.';
+
+                    panelMainHtml = `
+                        <p class="weekly-briefing-text weekly-live-log-note">${escapeHtml(panelNote)}</p>
+                        <p class="weekly-briefing-text weekly-live-log-summary">${escapeHtml(summaryLine)}</p>
+                        <div class="weekly-live-log-chips" aria-label="Weekly log status">
+                            ${renderUnifiedChipList(chips)}
+                        </div>
+                        <ul class="weekly-list">
+                            ${githubMainHighlights}
+                        </ul>
+                        ${hasDiary ? '<div class="weekly-diary-compact-note">Legacy diary notes exist for this week. Open Week Details to view them inline.</div>' : ''}
+                    `;
+
+                    if (isCurrentGitHubWeek) {
+                        detailsSummary = 'Week Details (repos, releases, deep dive)';
+                        detailsBodyHtml = `
+                            <div class="weekly-sections weekly-this-week-details-grid">
+                                <section class="weekly-section">
+                                    <div class="weekly-section-header">
+                                        <h4 class="weekly-section-title"><span class="weekly-section-icon">🔥</span>Top Repos (This Week)</h4>
+                                        <span class="weekly-section-meta">Public</span>
+                                    </div>
+                                    <ul class="weekly-list">
+                                        ${topReposThisWeekList}
+                                    </ul>
+                                </section>
+                                <section class="weekly-section">
+                                    <div class="weekly-section-header">
+                                        <h4 class="weekly-section-title"><span class="weekly-section-icon">🚀</span>Latest Releases</h4>
+                                        <span class="weekly-section-meta">${escapeHtml(currentMonthLabel)}</span>
+                                    </div>
+                                    <ul class="weekly-list">
+                                        ${monthReleasesList}
+                                    </ul>
+                                </section>
+                            </div>
+                            <div class="weekly-this-week-details-extra">
+                                ${moreGitHubDetails}
+                            </div>
+                            ${hasDiary ? `<div class="weekly-history-inline-legacy">${renderLegacyDiaryIntegratedBlock(diaryWeek)}</div>` : ''}
+                        `;
+                    } else {
+                        const weekTopReposList = githubWeek.topRepos && githubWeek.topRepos.length
+                            ? githubWeek.topRepos.slice(0, 3).map(repo => {
+                                const parts = [];
+                                if (repo.commits) parts.push(`${repo.commits} commit${repo.commits === 1 ? '' : 's'}`);
+                                if (repo.pushes) parts.push(`${repo.pushes} push${repo.pushes === 1 ? '' : 'es'}`);
+                                return li(`<a class="weekly-inline-link" href="${repo.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(repo.name)}</a> — ${escapeHtml(parts.join(' • ') || 'activity')}`);
+                            }).join('')
+                            : li('No repo activity in cache for this week.');
+                        const weekNotablesList = githubWeek.notableMsgs && githubWeek.notableMsgs.length
+                            ? githubWeek.notableMsgs.slice(0, 4).map(msg => li(escapeHtml(msg))).join('')
+                            : li('No notable commit messages captured for this week.');
+
+                        detailsSummary = 'Week Details (archive snapshot)';
+                        detailsBodyHtml = `
+                            <div class="weekly-sections weekly-this-week-details-grid">
+                                <section class="weekly-section">
+                                    <div class="weekly-section-header">
+                                        <h4 class="weekly-section-title"><span class="weekly-section-icon">🔥</span>Top Repos</h4>
+                                        <span class="weekly-section-meta">Cache snapshot</span>
+                                    </div>
+                                    <ul class="weekly-list">
+                                        ${weekTopReposList}
+                                    </ul>
+                                </section>
+                                <section class="weekly-section">
+                                    <div class="weekly-section-header">
+                                        <h4 class="weekly-section-title"><span class="weekly-section-icon">📝</span>Changes</h4>
+                                        <span class="weekly-section-meta">Commits</span>
+                                    </div>
+                                    <ul class="weekly-list">
+                                        ${weekNotablesList}
+                                    </ul>
+                                </section>
+                            </div>
+                            ${hasDiary ? `<div class="weekly-history-inline-legacy">${renderLegacyDiaryIntegratedBlock(diaryWeek)}</div>` : ''}
+                        `;
+                    }
+                } else if (hasDiary) {
+                    const diaryMetaParts = [];
+                    if (diaryWeek.projectTitle) diaryMetaParts.push(String(diaryWeek.projectTitle));
+                    if (diaryWeek.weekOf) diaryMetaParts.push(String(diaryWeek.weekOf));
+                    const diaryMetaText = diaryMetaParts.join(' • ');
+                    const diaryArchiveNote = renderDiaryArchiveNote(diaryWeek);
+
+                    panelNote = 'Legacy weekly diary archive week. No matching GitHub week snapshot is available in the current cache.';
+                    panelMainHtml = `
+                        <p class="weekly-briefing-text weekly-live-log-note">${escapeHtml(panelNote)}</p>
+                        <div class="weekly-live-log-chips" aria-label="Weekly log status">
+                            ${renderUnifiedChipList(['Legacy diary archive', 'Diary-only week', diaryWeek.weekKey || ''])}
+                        </div>
+                        ${diaryMetaText ? `<div class="weekly-diary-meta">${escapeHtml(diaryMetaText)}</div>` : ''}
+                        ${diaryArchiveNote ? `<div class="weekly-diary-note">${escapeHtml(diaryArchiveNote)}</div>` : ''}
+                        ${renderDiaryPreview(diaryWeek)}
+                    `;
+
+                    detailsSummary = 'Week Details (legacy diary)';
+                    detailsBodyHtml = renderLegacyDiaryIntegratedBlock(diaryWeek);
+                } else {
+                    panelNote = 'No data available for this week.';
+                    panelMainHtml = `<div class="weekly-empty">No weekly data available.</div>`;
+                    detailsSummary = 'Week Details';
+                    detailsBodyHtml = '<div class="weekly-empty">No details available.</div>';
+                }
+
+                const panelHtml = `
+                    <section class="weekly-section weekly-section-wide weekly-live-log" id="weekly-unified-log">
+                        <div class="weekly-section-header">
+                            <h4 class="weekly-section-title"><span class="weekly-section-icon">${panelIcon}</span>${escapeHtml(panelTitle)}</h4>
+                            <div class="weekly-section-actions">
+                                <span class="weekly-section-meta" id="weekly-unified-panel-meta">${escapeHtml(panelMeta)}</span>
+                                <button class="weekly-share-btn" type="button" id="weekly-share-btn" aria-label="Copy link to this week">Share</button>
+                            </div>
+                        </div>
+                        ${panelMainHtml}
+                    </section>
+                    <details class="weekly-more weekly-this-week-details" id="weekly-unified-week-details">
+                        <summary>${escapeHtml(detailsSummary)}</summary>
+                        <div class="weekly-this-week-details-extra">
+                            ${detailsBodyHtml}
+                        </div>
+                    </details>
+                `;
+
+                return {
+                    topHeaderTitle,
+                    topHeaderIcon,
+                    topHeaderDateRange,
+                    topHeaderSourceNote,
+                    panelHtml,
+                    weekKey: item && item.weekKey ? String(item.weekKey) : ''
+                };
+            };
+
+            const headerPrevBtnUnified = document.getElementById('prev-week-btn');
+            const headerNextBtnUnified = document.getElementById('next-week-btn');
+            const unifiedHistoryShellEl = document.getElementById('weekly-unified-history-shell');
+
+            const animateContentUnified = (direction) => {
+                container.classList.remove('slide-left', 'slide-right');
+                void container.offsetWidth;
+                container.classList.add(direction === 'left' ? 'slide-left' : 'slide-right');
+                window.setTimeout(() => container.classList.remove('slide-left', 'slide-right'), 420);
+            };
+
+            if (unifiedWeeklyHistory.length && unifiedHistoryShellEl) {
+                let currentHistoryIndex = Math.max(0, Math.min(selectedUnifiedHistoryIndex, unifiedWeeklyHistory.length - 1));
+
+                const setHeaderNavControls = () => {
+                    if (headerPrevBtnUnified) headerPrevBtnUnified.disabled = currentHistoryIndex >= (unifiedWeeklyHistory.length - 1);
+                    if (headerNextBtnUnified) headerNextBtnUnified.disabled = currentHistoryIndex <= 0;
+                };
+
+                const bindShareButtonForHistory = (weekKey) => {
+                    const shareBtn = document.getElementById('weekly-share-btn');
+                    if (!shareBtn || shareBtn.dataset.bound) return;
+                    shareBtn.dataset.bound = 'true';
+                    const originalLabel = shareBtn.textContent || 'Share';
+
+                    shareBtn.addEventListener('click', async () => {
+                        const url = new URL(window.location.href);
+                        url.hash = weekKey ? `week=${weekKey}` : 'updates';
+                        const shareUrl = url.toString();
+                        let copied = false;
+
+                        try {
+                            if (navigator.clipboard && navigator.clipboard.writeText) {
+                                await navigator.clipboard.writeText(shareUrl);
+                                copied = true;
+                            }
+                        } catch (_) {
+                            copied = false;
+                        }
+
+                        if (!copied) {
+                            window.prompt('Copy this link:', shareUrl);
+                        }
+
+                        shareBtn.textContent = copied ? 'Copied!' : 'Copy link';
+                        window.setTimeout(() => {
+                            shareBtn.textContent = originalLabel;
+                        }, 1200);
+                    });
+                };
+
+                const renderUnifiedHistoryAt = (index, direction) => {
+                    const safeIndex = Math.max(0, Math.min(Number(index) || 0, unifiedWeeklyHistory.length - 1));
+                    currentHistoryIndex = safeIndex;
+                    const item = unifiedWeeklyHistory[safeIndex];
+                    const view = buildUnifiedWeekViewModel(item, safeIndex, unifiedWeeklyHistory.length);
+
+                    if (titleEl) titleEl.textContent = view.topHeaderTitle;
+                    if (iconEl) iconEl.textContent = view.topHeaderIcon;
+                    if (dateRangeEl) dateRangeEl.textContent = view.topHeaderDateRange;
+                    if (sourceNoteEl) sourceNoteEl.textContent = view.topHeaderSourceNote;
+
+                    unifiedHistoryShellEl.innerHTML = view.panelHtml;
+
+                    try {
+                        if (view.weekKey) {
+                            window.localStorage.setItem('atrak_weekly_history_key', view.weekKey);
+                            window.history.replaceState(null, '', `#week=${view.weekKey}`);
+                        }
+                    } catch (_) {
+                        // ignore storage / history errors
+                    }
+
+                    bindShareButtonForHistory(view.weekKey);
+                    setHeaderNavControls();
+                    if (direction) animateContentUnified(direction);
+                };
+
+                if (headerPrevBtnUnified && !headerPrevBtnUnified.dataset.weeklyHistoryBound) {
+                    headerPrevBtnUnified.dataset.weeklyHistoryBound = 'true';
+                    headerPrevBtnUnified.addEventListener('click', () => {
+                        renderUnifiedHistoryAt(currentHistoryIndex + 1, 'left');
+                    });
+                }
+                if (headerNextBtnUnified && !headerNextBtnUnified.dataset.weeklyHistoryBound) {
+                    headerNextBtnUnified.dataset.weeklyHistoryBound = 'true';
+                    headerNextBtnUnified.addEventListener('click', () => {
+                        renderUnifiedHistoryAt(currentHistoryIndex - 1, 'right');
+                    });
+                }
+
+                renderUnifiedHistoryAt(currentHistoryIndex, '');
+
+                if (requestedWeekKey && requestedHistoryIndex >= 0) {
+                    const weeklyCard = document.getElementById('weekly-highlights');
+                    if (weeklyCard) {
+                        window.setTimeout(() => {
+                            weeklyCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 120);
+                    }
+                }
+            } else {
+                if (headerPrevBtnUnified) headerPrevBtnUnified.disabled = true;
+                if (headerNextBtnUnified) headerNextBtnUnified.disabled = true;
+                if (unifiedHistoryShellEl) {
+                    unifiedHistoryShellEl.innerHTML = '<div class="weekly-empty">No weekly history available yet.</div>';
+                }
+            }
+
+            return;
 
             if (diaryEntries.length || githubWeekSummaries.length) {
                 const headerPrevBtn = document.getElementById('prev-week-btn');
