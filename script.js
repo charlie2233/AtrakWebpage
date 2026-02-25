@@ -19,6 +19,20 @@ let enableHoverEffects = (hasAnyFinePointer || hasAnyHover) && !prefersReducedMo
 let enableHeroParallax = enableHoverEffects;
 const supportsPointerEvents = typeof window !== 'undefined' && 'PointerEvent' in window;
 const supportsIntersectionObserver = typeof window !== 'undefined' && 'IntersectionObserver' in window;
+const motionSafeScrollBehavior = prefersReducedMotion ? 'auto' : 'smooth';
+
+// Inject a skip link on pages that have a main landmark but no explicit skip link.
+const mainLandmark = document.querySelector('main');
+if (mainLandmark && !document.querySelector('.skip-link')) {
+    if (!mainLandmark.id) {
+        mainLandmark.id = 'main-content';
+    }
+    const skipLink = document.createElement('a');
+    skipLink.className = 'skip-link';
+    skipLink.href = `#${mainLandmark.id}`;
+    skipLink.textContent = 'Skip to main content';
+    document.body.insertAdjacentElement('afterbegin', skipLink);
+}
 
 
 // ================================
@@ -215,11 +229,87 @@ if (cardStack) {
 const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
 const navLinks = document.querySelector('.nav-links');
 const navbar = document.querySelector('.navbar');
+let lastMobileMenuTrigger = null;
+
+const getMobileMenuFocusableElements = () => {
+    if (!navLinks) return [];
+    return Array.from(navLinks.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'))
+        .filter(el => !el.hasAttribute('disabled') && el.tabIndex !== -1);
+};
+
+const setMobileMenuState = (isOpen, options = {}) => {
+    if (!mobileMenuBtn || !navLinks) return;
+    const open = Boolean(isOpen);
+
+    navLinks.classList.toggle('active', open);
+    mobileMenuBtn.classList.toggle('active', open);
+    mobileMenuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    mobileMenuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+
+    if (open) {
+        lastMobileMenuTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : mobileMenuBtn;
+        if (options.focusMenu) {
+            const firstLink = getMobileMenuFocusableElements()[0];
+            if (firstLink) firstLink.focus();
+        }
+    } else if (options.restoreFocus) {
+        const focusTarget = lastMobileMenuTrigger && typeof lastMobileMenuTrigger.focus === 'function'
+            ? lastMobileMenuTrigger
+            : mobileMenuBtn;
+        focusTarget.focus();
+    }
+};
 
 if (mobileMenuBtn && navLinks) {
+    if (!navLinks.id) {
+        navLinks.id = 'site-primary-nav';
+    }
+    mobileMenuBtn.setAttribute('aria-controls', navLinks.id);
+    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+    mobileMenuBtn.setAttribute('aria-haspopup', 'true');
+    mobileMenuBtn.setAttribute('aria-label', 'Open menu');
+
     mobileMenuBtn.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        mobileMenuBtn.classList.toggle('active');
+        setMobileMenuState(!navLinks.classList.contains('active'), { focusMenu: navLinks.classList.contains('active') === false });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!navLinks.classList.contains('active')) return;
+        const target = e.target;
+        if (!(target instanceof Element)) return;
+        if (target.closest('.nav-container')) return;
+        setMobileMenuState(false);
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Tab' || !navLinks.classList.contains('active')) return;
+
+        const focusables = getMobileMenuFocusableElements();
+        if (!focusables.length) return;
+
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        const active = document.activeElement;
+
+        if (e.shiftKey && active === first) {
+            e.preventDefault();
+            mobileMenuBtn.focus();
+            return;
+        }
+        if (!e.shiftKey && active === mobileMenuBtn) {
+            e.preventDefault();
+            first.focus();
+            return;
+        }
+        if (!e.shiftKey && active === last) {
+            e.preventDefault();
+            mobileMenuBtn.focus();
+            return;
+        }
+        if (e.shiftKey && active === mobileMenuBtn) {
+            e.preventDefault();
+            last.focus();
+        }
     });
 }
 
@@ -240,13 +330,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             const offsetTop = target.getBoundingClientRect().top + window.pageYOffset - navHeight - 16;
             window.scrollTo({
                 top: offsetTop,
-                behavior: 'smooth'
+                behavior: motionSafeScrollBehavior
             });
             
             // Close mobile menu if open
             if (navLinks && mobileMenuBtn && navLinks.classList.contains('active')) {
-                navLinks.classList.remove('active');
-                mobileMenuBtn.classList.remove('active');
+                setMobileMenuState(false);
             }
         }
     });
@@ -784,9 +873,14 @@ projectCards.forEach(card => {
     const href = detailsLink.getAttribute('href');
     if (!href) return;
 
+    const projectTitleEl = card.querySelector('.project-title, h3, h4');
+    const projectLabel = projectTitleEl ? projectTitleEl.textContent.trim() : '';
     card.setAttribute('role', 'link');
     if (!card.hasAttribute('tabindex')) {
         card.setAttribute('tabindex', '0');
+    }
+    if (!card.hasAttribute('aria-label')) {
+        card.setAttribute('aria-label', projectLabel ? `Open project: ${projectLabel}` : 'Open project details');
     }
 
     const navigate = () => {
@@ -859,9 +953,14 @@ leaderCards.forEach(card => {
     const href = card.getAttribute('data-profile-href');
     if (!href) return;
 
+    const nameEl = card.querySelector('.leader-name, h3, h4');
+    const leaderName = nameEl ? nameEl.textContent.trim() : '';
     card.setAttribute('role', 'link');
     if (!card.hasAttribute('tabindex')) {
         card.setAttribute('tabindex', '0');
+    }
+    if (!card.hasAttribute('aria-label')) {
+        card.setAttribute('aria-label', leaderName ? `Open team profile: ${leaderName}` : 'Open team profile');
     }
 
     const navigate = () => {
@@ -1858,7 +1957,7 @@ const initContactTabs = () => {
                 const offsetTop = contactSection.getBoundingClientRect().top + window.pageYOffset - navHeight - 16;
                 window.scrollTo({
                     top: offsetTop,
-                    behavior: 'smooth'
+                    behavior: motionSafeScrollBehavior
                 });
                 // Wait for scroll, then open tab
                 setTimeout(() => setActiveTab(desiredTab), 300);
@@ -1873,7 +1972,7 @@ const initContactTabs = () => {
                 const offsetTop = contactSection.getBoundingClientRect().top + window.pageYOffset - navHeight - 16;
                 window.scrollTo({
                     top: offsetTop,
-                    behavior: 'smooth'
+                    behavior: motionSafeScrollBehavior
                 });
                 // Wait for scroll, then open tab
                 setTimeout(() => setActiveTab(desiredTab), 300);
@@ -1896,7 +1995,7 @@ const initContactTabs = () => {
                 const offsetTop = contactSection.getBoundingClientRect().top + window.pageYOffset - navHeight - 16;
                 window.scrollTo({
                     top: offsetTop,
-                    behavior: 'smooth'
+                    behavior: motionSafeScrollBehavior
                 });
             }
             
@@ -1997,7 +2096,7 @@ const initMediaCarousels = () => {
             const clamped = Math.max(0, Math.min(slides.length - 1, Number(index) || 0));
             const target = slides[clamped];
             if (!target) return;
-            target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            target.scrollIntoView({ behavior: motionSafeScrollBehavior, block: 'nearest', inline: 'center' });
         };
 
         const updateControls = () => {
@@ -2061,7 +2160,7 @@ document.addEventListener('keydown', (e) => {
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         const navLinks = document.querySelector('.nav-links');
         if (mobileMenuBtn && navLinks && navLinks.classList.contains('active')) {
-            mobileMenuBtn.click();
+            setMobileMenuState(false, { restoreFocus: true });
             announceToScreenReader('Mobile menu closed');
         }
         
@@ -2141,10 +2240,10 @@ document.addEventListener('keydown', (e) => {
     if (timelineScroll && document.activeElement.closest('.timeline-item')) {
         if (e.key === 'ArrowLeft') {
             e.preventDefault();
-            timelineScroll.scrollBy({ left: -320, behavior: 'smooth' });
+            timelineScroll.scrollBy({ left: -320, behavior: motionSafeScrollBehavior });
         } else if (e.key === 'ArrowRight') {
             e.preventDefault();
-            timelineScroll.scrollBy({ left: 320, behavior: 'smooth' });
+            timelineScroll.scrollBy({ left: 320, behavior: motionSafeScrollBehavior });
         }
     }
 });
@@ -2247,7 +2346,7 @@ function initScrollToTop() {
     }
     
     scrollToTopBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: motionSafeScrollBehavior });
         announceToScreenReader('Scrolled to top');
     });
     
@@ -2282,7 +2381,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 window.scrollTo({
                     top: targetPosition,
-                    behavior: 'smooth'
+                    behavior: motionSafeScrollBehavior
                 });
                 
                 // Update URL without jumping
@@ -2367,10 +2466,10 @@ function initSwipeGestures() {
             if (Math.abs(diffX) > swipeThreshold && diffY < 50) {
                 if (diffX > 0) {
                     // Swipe left - scroll right
-                    timelineScroll.scrollBy({ left: 320, behavior: 'smooth' });
+                    timelineScroll.scrollBy({ left: 320, behavior: motionSafeScrollBehavior });
                 } else {
                     // Swipe right - scroll left
-                    timelineScroll.scrollBy({ left: -320, behavior: 'smooth' });
+                    timelineScroll.scrollBy({ left: -320, behavior: motionSafeScrollBehavior });
                 }
             }
         }, { passive: true });

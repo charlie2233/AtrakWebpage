@@ -8203,6 +8203,17 @@ select:focus-visible {
     border-radius: 4px;
 }
 
+.nav-btn:focus-visible,
+.project-card:focus-visible,
+.leader-card:focus-visible,
+.timeline-summary-card:focus-visible,
+.member-link:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.14);
+    border-radius: 10px;
+}
+
 /* Screen reader only content */
 .sr-only {
     position: absolute;
@@ -9780,7 +9791,15 @@ a:not(.btn):not(.nav-cta):hover::after {
 @media (prefers-reduced-motion: reduce) {
     .weekly-section:hover,
     .nav-btn:hover:not(:disabled),
-    .weekly-gh-window-card:hover {
+    .weekly-gh-window-card:hover,
+    .timeline-summary-card:hover,
+    .purpose-section:hover,
+    .build-item:hover,
+    .value-card:hover,
+    .work-step:hover,
+    .vision-item:hover,
+    .member-card:hover,
+    .member-link:hover {
         transform: none;
     }
 }

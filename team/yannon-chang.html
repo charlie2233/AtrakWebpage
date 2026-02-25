@@ -21,7 +21,7 @@
     <script type="application/ld+json" id="profile-jsonld">{"@context":"https://schema.org","@type":"ProfilePage","name":"Yannon Chang — Atrak Team Profile","url":"https://atrak.dev/team/yannon-chang.html"}</script>
     <link rel="icon" type="image/png" href="../../assets/logo.png?v=20260202">
     <link rel="apple-touch-icon" sizes="180x180" href="../../assets/logo.png?v=20260202">
-    <link rel="stylesheet" href="../../styles.css?v=24">
+    <link rel="stylesheet" href="../../styles.css?v=25">
     <style>
         .profile-page {
             padding: 120px 0 80px;
@@ -179,6 +179,11 @@
             border-color: var(--accent-primary);
             transform: translateY(-2px);
         }
+        .profile-social-link:focus-visible {
+            outline: 2px solid var(--accent-primary);
+            outline-offset: 3px;
+            border-color: var(--accent-primary);
+        }
         .profile-meta-strip {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -227,6 +232,11 @@
             background: var(--hover-bg);
             border-color: var(--accent-primary);
             transform: translateY(-2px);
+        }
+        .profile-tag:focus-visible {
+            outline: 2px solid var(--accent-primary);
+            outline-offset: 3px;
+            border-color: var(--accent-primary);
         }
         .profile-tag.food-tag {
             background: rgba(59, 130, 246, 0.06);
@@ -288,6 +298,11 @@
         .profile-preview-url:hover {
             color: var(--accent-primary);
         }
+        .profile-preview-url:focus-visible {
+            outline: 2px solid var(--accent-primary);
+            outline-offset: 3px;
+            border-radius: 6px;
+        }
         .profile-preview-search {
             border-top: 1px solid var(--border-color);
             padding-top: 14px;
@@ -309,6 +324,21 @@
             font-size: 14px;
             line-height: 1.6;
             color: var(--text-secondary);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .profile-avatar-large::before,
+            .profile-status-indicator {
+                animation: none !important;
+            }
+            .profile-social-link,
+            .profile-tag,
+            .profile-preview-url {
+                transition: none !important;
+            }
+            .profile-social-link:hover,
+            .profile-tag:hover {
+                transform: none;
+            }
         }
         @media (max-width: 768px) {
             .profile-shell {
@@ -417,7 +447,7 @@
     </footer>
 
     <script src="../../config.js?v=21"></script>
-    <script src="../../script.js?v=23"></script>
+    <script src="../../script.js?v=24"></script>
     <script>
         // Load and render team member profile
         (async function() {
@@ -711,6 +741,29 @@
                         '@type': 'ProfilePage',
                         name: `${memberNameRaw} — Atrak Team Profile`,
                         url: profileUrl,
+                        breadcrumb: {
+                            '@type': 'BreadcrumbList',
+                            itemListElement: [
+                                {
+                                    '@type': 'ListItem',
+                                    position: 1,
+                                    name: 'Home',
+                                    item: 'https://atrak.dev/'
+                                },
+                                {
+                                    '@type': 'ListItem',
+                                    position: 2,
+                                    name: 'Team',
+                                    item: 'https://atrak.dev/#leadership'
+                                },
+                                {
+                                    '@type': 'ListItem',
+                                    position: 3,
+                                    name: memberNameRaw,
+                                    item: profileUrl
+                                }
+                            ]
+                        },
                         mainEntity: {
                             '@type': 'Person',
                             name: memberNameRaw,

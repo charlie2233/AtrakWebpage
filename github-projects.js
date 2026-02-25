@@ -1720,7 +1720,7 @@ async function renderWeeklyHighlights() {
 
 	        container.innerHTML = `
 	            <div class="weekly-digest weekly-digest-v2">
-                    <div id="weekly-unified-history-shell"></div>
+                    <div id="weekly-unified-history-shell" role="region" aria-live="polite" aria-atomic="true" aria-label="Weekly log history content"></div>
 
                     <div class="weekly-footer">
                         <a class="btn btn-secondary btn-sm" href="releases.html">Read Release Notes</a>
@@ -2051,6 +2051,8 @@ async function renderWeeklyHighlights() {
                     const item = unifiedWeeklyHistory[safeIndex];
                     const view = buildUnifiedWeekViewModel(item, safeIndex, unifiedWeeklyHistory.length);
 
+                    if (unifiedHistoryShellEl) unifiedHistoryShellEl.setAttribute('aria-busy', 'true');
+
                     if (titleEl) titleEl.textContent = view.topHeaderTitle;
                     if (iconEl) iconEl.textContent = view.topHeaderIcon;
                     if (dateRangeEl) dateRangeEl.textContent = view.topHeaderDateRange;
@@ -2070,6 +2072,10 @@ async function renderWeeklyHighlights() {
                     bindShareButtonForHistory(view.weekKey);
                     setHeaderNavControls();
                     if (direction) animateContentUnified(direction);
+                    if (unifiedHistoryShellEl) {
+                        unifiedHistoryShellEl.setAttribute('aria-busy', 'false');
+                        unifiedHistoryShellEl.setAttribute('aria-label', `Weekly log history content: ${view.topHeaderTitle} (${view.topHeaderDateRange})`);
+                    }
                 };
 
                 if (headerPrevBtnUnified && !headerPrevBtnUnified.dataset.weeklyHistoryBound) {
@@ -2091,7 +2097,12 @@ async function renderWeeklyHighlights() {
                     const weeklyCard = document.getElementById('weekly-highlights');
                     if (weeklyCard) {
                         window.setTimeout(() => {
-                            weeklyCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            weeklyCard.scrollIntoView({
+                                behavior: (typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+                                    ? 'auto'
+                                    : 'smooth',
+                                block: 'start'
+                            });
                         }, 120);
                     }
                 }
