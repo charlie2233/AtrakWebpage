@@ -36,7 +36,9 @@
       "url": "https://atrak.dev/projects/hoops-clips.html",
       "applicationCategory": "VideoApplication",
       "operatingSystem": "Linux, macOS, Windows",
+      "softwareVersion": "1.0",
       "keywords": "Hoops Clips, basketball highlights, AI video analysis, student tech team, Atrak, computer vision, sports automation",
+      "downloadUrl": "https://atrak.dev/downloads/hoops-clips/hoops-clips-mac-installer-v1.0.zip",
       "offers": {
         "@type": "Offer",
         "price": "0",
@@ -98,12 +100,14 @@
                             <span class="meta-item"><strong>Status:</strong> Beta</span>
                             <span class="meta-item"><strong>Completed:</strong> Nov 2025</span>
                             <span class="meta-item"><strong>Lead:</strong> Charlie Han</span>
+                            <span class="meta-item"><strong>Mac Installer:</strong> v1.0 (build 1)</span>
                         </div>
                         <div class="project-hero-badges">
                             <span class="hero-badge">FastAPI</span>
                             <span class="hero-badge">R2Plus1D-18</span>
                             <span class="hero-badge">Docker</span>
                             <span class="hero-badge">GPU optional</span>
+                            <span class="hero-badge">macOS 11.5+</span>
                         </div>
                     </div>
                     <aside class="project-hero-panel glass-card">
@@ -145,6 +149,9 @@
                 <div class="links-bar-inner hoops-links">
                     <a href="../apps/hoopsclips/" class="link-btn" style="background: linear-gradient(135deg, #7C5CFF 0%, #3b82f6 100%); color: white; border: none;">
                         <span class="link-icon">🏀</span> Try Web App
+                    </a>
+                    <a href="../downloads/hoops-clips/hoops-clips-mac-installer-v1.0.zip" class="link-btn" download>
+                        <span class="link-icon">⬇</span> Mac Installer v1.0
                     </a>
                     <a href="../index.html?tab=apply#contact" class="link-btn">
                         <span class="link-icon">🔒</span> Request Access
@@ -332,10 +339,11 @@
 
                 <!-- How to Run -->
                 <section id="run" class="project-section">
-                    <h2 class="project-section-title">🚀 How to Run</h2>
+                    <h2 class="project-section-title">🚀 Run or Install</h2>
                     <div class="glass-card">
                         <div class="run-tabs">
                             <div class="run-tab active" data-tab="docker"><span class="tab-icon">🐳</span>Docker (Recommended)</div>
+                            <div class="run-tab" data-tab="mac"><span class="tab-icon"></span>Mac Installer</div>
                             <div class="run-tab" data-tab="source"><span class="tab-icon">💻</span>From Source</div>
                         </div>
                         <div class="run-content" id="docker-content">
@@ -351,6 +359,33 @@ curl -X POST http://localhost:8787/api/ai/analyze \
   -H "Content-Type: application/json" \
   -d '{"videoUrl":"https://example.com/game.mp4"}'</code></pre>
                             <p class="note">Requires Docker and ~8GB disk space for model weights.</p>
+                        </div>
+                        <div class="run-content hidden" id="mac-content">
+                            <h4>Install on macOS (Current Desktop Build)</h4>
+                            <p>Download the current Hoops Clips Mac installer package and run the installer app.</p>
+                            <div class="backend-meta" style="margin-top: 1rem;">
+                                <div class="backend-row">
+                                    <span class="backend-label">Version</span>
+                                    <span class="backend-value">v1.0 (Build 1)</span>
+                                </div>
+                                <div class="backend-row">
+                                    <span class="backend-label">Minimum macOS</span>
+                                    <span class="backend-value">11.5+</span>
+                                </div>
+                                <div class="backend-row">
+                                    <span class="backend-label">Installer package</span>
+                                    <span class="backend-value">ToDesktop-based</span>
+                                </div>
+                                <div class="backend-row">
+                                    <span class="backend-label">Installer label</span>
+                                    <span class="backend-value">Install Rork Companion</span>
+                                </div>
+                            </div>
+                            <div class="backend-actions" style="margin-top: 1rem;">
+                                <a class="btn btn-primary btn-sm" href="../downloads/hoops-clips/hoops-clips-mac-installer-v1.0.zip" download>Download Mac Installer v1.0</a>
+                                <a class="btn btn-secondary btn-sm" href="../index.html?tab=apply#contact">Request Access / Support</a>
+                            </div>
+                            <p class="note">Packaging note: the current installer bundle still shows the internal label “Rork Companion” during install. The Hoops Clips branding on the site and project page remains the product name.</p>
                         </div>
                         <div class="run-content hidden" id="source-content">
                             <h4>Build from Source</h4>
