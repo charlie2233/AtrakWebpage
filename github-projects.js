@@ -1532,6 +1532,7 @@ async function renderWeeklyHighlights() {
         const primaryWeeklyLogSection = (diaryEntries.length && !diaryArchiveShouldBeLegacy)
             ? diarySection
             : liveWeeklyLogSection;
+        const useCondensedLiveWeeklyLayout = !(diaryEntries.length && !diaryArchiveShouldBeLegacy);
 
 	        const topReposThisWeekList = topRepos.length
 	            ? topRepos.slice(0, 4).map(r => {
@@ -1549,32 +1550,7 @@ async function renderWeeklyHighlights() {
                 }).join('')
                 : li(`No releases cached for ${escapeHtml(currentMonthLabel)} yet.`);
 
-            const thisWeekDetailsSection = `
-                <details class="weekly-more weekly-this-week-details" id="weekly-this-week-details">
-                    <summary>This Week Details (repos + releases)</summary>
-                    <div class="weekly-sections weekly-this-week-details-grid">
-                        <section class="weekly-section">
-                            <div class="weekly-section-header">
-                                <h4 class="weekly-section-title"><span class="weekly-section-icon">🔥</span>Top Repos (This Week)</h4>
-                                <span class="weekly-section-meta">Public</span>
-                            </div>
-                            <ul class="weekly-list">
-                                ${topReposThisWeekList}
-                            </ul>
-                        </section>
-
-                        <section class="weekly-section">
-                            <div class="weekly-section-header">
-                                <h4 class="weekly-section-title"><span class="weekly-section-icon">🚀</span>Latest Releases</h4>
-                                <span class="weekly-section-meta">${escapeHtml(currentMonthLabel)}</span>
-                            </div>
-                            <ul class="weekly-list">
-                                ${monthReleasesList}
-                            </ul>
-                        </section>
-                    </div>
-                </details>
-            `;
+            let thisWeekDetailsSection = '';
 
             const moreGitHubDetails = `
                 <details class="weekly-more" id="weekly-github-more">
@@ -1640,24 +1616,62 @@ async function renderWeeklyHighlights() {
                 </details>
             `;
 
+            thisWeekDetailsSection = `
+                <details class="weekly-more weekly-this-week-details" id="weekly-this-week-details">
+                    <summary>This Week Details (repos, releases, deep dive)</summary>
+                    <div class="weekly-sections weekly-this-week-details-grid">
+                        <section class="weekly-section">
+                            <div class="weekly-section-header">
+                                <h4 class="weekly-section-title"><span class="weekly-section-icon">🔥</span>Top Repos (This Week)</h4>
+                                <span class="weekly-section-meta">Public</span>
+                            </div>
+                            <ul class="weekly-list">
+                                ${topReposThisWeekList}
+                            </ul>
+                        </section>
+
+                        <section class="weekly-section">
+                            <div class="weekly-section-header">
+                                <h4 class="weekly-section-title"><span class="weekly-section-icon">🚀</span>Latest Releases</h4>
+                                <span class="weekly-section-meta">${escapeHtml(currentMonthLabel)}</span>
+                            </div>
+                            <ul class="weekly-list">
+                                ${monthReleasesList}
+                            </ul>
+                        </section>
+                    </div>
+                    <div class="weekly-this-week-details-extra">
+                        ${moreGitHubDetails}
+                    </div>
+                </details>
+            `;
+
+            const historyAndArchiveSection = (() => {
+                if (githubWeekHistorySection && legacyArchiveSection) {
+                    return githubWeekHistorySection.replace(
+                        '</section>',
+                        `<div class="weekly-history-inline-legacy">${legacyArchiveSection}</div></section>`
+                    );
+                }
+                return githubWeekHistorySection || legacyArchiveSection || '';
+            })();
+
 	        container.innerHTML = `
 	            <div class="weekly-digest weekly-digest-v2">
-                    <div class="weekly-kpis">
-                        ${kpi(commitTotalForKpi, 'Commits (7d)')}
-                        ${kpi(totalPushes, 'Pushes')}
-                        ${kpi(activeRepos.size, 'Repos Active')}
-                        ${kpi(starsGained, 'Stars')}
-                    </div>
+                    ${useCondensedLiveWeeklyLayout ? '' : `
+                        <div class="weekly-kpis">
+                            ${kpi(commitTotalForKpi, 'Commits (7d)')}
+                            ${kpi(totalPushes, 'Pushes')}
+                            ${kpi(activeRepos.size, 'Repos Active')}
+                            ${kpi(starsGained, 'Stars')}
+                        </div>
+                    `}
 
                     ${primaryWeeklyLogSection}
 
                     ${thisWeekDetailsSection}
 
-                    ${githubWeekHistorySection}
-
-                    ${moreGitHubDetails}
-
-                    ${legacyArchiveSection}
+                    ${historyAndArchiveSection}
 
                     <div class="weekly-footer">
                         <a class="btn btn-secondary btn-sm" href="releases.html">Read Release Notes</a>

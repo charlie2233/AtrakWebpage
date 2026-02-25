@@ -9441,6 +9441,18 @@ a:not(.btn):not(.nav-cta):hover::after {
     margin-top: 10px;
 }
 
+.weekly-this-week-details-extra {
+    margin-top: 12px;
+}
+
+.weekly-this-week-details-extra #weekly-github-more {
+    margin-top: 0;
+}
+
+.weekly-history-inline-legacy {
+    margin-top: 12px;
+}
+
 .weekly-legacy-archive,
 .weekly-legacy-archive-shell {
     border-color: rgba(245, 158, 11, 0.18);
