@@ -291,6 +291,63 @@ function formatUTCDateTime(isoString) {
     }
 }
 
+function toValidDate(value) {
+    if (!value) return null;
+    if (value instanceof Date) {
+        return Number.isNaN(value.getTime()) ? null : value;
+    }
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function getFreshnessStateMeta(dateValue, thresholds = {}) {
+    const date = toValidDate(dateValue);
+    if (!date) {
+        return { state: 'unknown', label: 'Unknown', ageDays: null };
+    }
+
+    const now = new Date();
+    const diffMs = Math.max(0, now.getTime() - date.getTime());
+    const ageDays = diffMs / (1000 * 60 * 60 * 24);
+    const freshDays = Number.isFinite(thresholds.freshDays) ? thresholds.freshDays : 2;
+    const agingDays = Number.isFinite(thresholds.agingDays) ? thresholds.agingDays : 7;
+
+    if (ageDays <= freshDays) return { state: 'fresh', label: 'Fresh', ageDays };
+    if (ageDays <= agingDays) return { state: 'aging', label: 'Aging', ageDays };
+    return { state: 'stale', label: 'Stale', ageDays };
+}
+
+function renderContentFreshnessStrip(targetId, options = {}) {
+    const el = document.getElementById(targetId);
+    if (!el) return;
+
+    const updatedAt = toValidDate(options.updatedAt);
+    const latestAt = toValidDate(options.latestActivityAt || options.latestPublishedAt);
+    const freshness = getFreshnessStateMeta(updatedAt || latestAt, options.thresholds || {});
+    const badgeLabel = options.badgeLabel ? String(options.badgeLabel) : freshness.label;
+    const lastUpdatedLabel = updatedAt
+        ? `Last updated ${formatUTCDateTime(updatedAt.toISOString())} (${getTimeAgo(updatedAt)})`
+        : (latestAt ? `Last activity ${formatUTCDateTime(latestAt.toISOString())}` : 'Freshness timestamp unavailable');
+
+    const metaParts = [];
+    if (options.kind) metaParts.push(String(options.kind));
+    if (typeof options.totalCount === 'number' && Number.isFinite(options.totalCount)) {
+        const label = options.countLabel || 'items';
+        metaParts.push(`${Math.max(0, Math.round(options.totalCount))} ${label}`);
+    }
+    if (latestAt && options.latestLabel) {
+        const latestLabel = String(options.latestLabel);
+        metaParts.push(`${latestLabel} ${formatLongDate(latestAt.toISOString())}`);
+    }
+    if (options.note) metaParts.push(String(options.note));
+
+    el.innerHTML = `
+        <span class="content-freshness-badge" data-state="${escapeHtml(freshness.state)}">${escapeHtml(badgeLabel)}</span>
+        <span class="content-freshness-text">${escapeHtml(lastUpdatedLabel)}</span>
+        ${metaParts.length ? `<span class="content-freshness-meta">• ${escapeHtml(metaParts.join(' • '))}</span>` : ''}
+    `;
+}
+
 /**
  * Fetch repositories from GitHub API
  */
@@ -1132,6 +1189,17 @@ async function renderWeeklyHighlights() {
                     : 'Live GitHub activity + weekly archive';
             }
         }
+
+        renderContentFreshnessStrip('weekly-freshness-strip', {
+            kind: 'Weekly log',
+            updatedAt: weeklyStatsSyncDate || null,
+            latestActivityAt: mostRecentEventAt || null,
+            latestLabel: 'Latest activity',
+            totalCount: activeRepos.size,
+            countLabel: 'active repos',
+            thresholds: { freshDays: 2, agingDays: 7 },
+            note: diaryArchiveShouldBeLegacy ? 'Legacy diary integrated into history' : 'GitHub-derived weekly timeline'
+        });
 
         const requestedDiaryIndex = requestedWeekKey
             ? diaryEntries.findIndex(entry => entry && entry.weekKey === requestedWeekKey)
@@ -2351,11 +2419,18 @@ async function renderReleasesFeed() {
         loadCachedReleases(),
         loadCachedMeta()
     ]);
+    const cacheUpdatedAt = meta && typeof meta.updatedAt === 'string' ? new Date(meta.updatedAt) : null;
 
     const releases = Array.isArray(rawReleases) ? rawReleases : [];
     if (!releases.length) {
         listEl.innerHTML = '<div class="releases-live-empty">No cached releases yet.</div>';
         if (metaEl) metaEl.textContent = 'Set up GitHub Actions caching to populate this feed.';
+        renderContentFreshnessStrip('releases-freshness-strip', {
+            kind: 'Release notes',
+            updatedAt: cacheUpdatedAt,
+            thresholds: { freshDays: 3, agingDays: 10 },
+            note: 'Waiting for cached GitHub releases'
+        });
         return;
     }
 
@@ -2532,6 +2607,17 @@ async function renderReleasesFeed() {
     if (metaEl) {
         metaEl.textContent = meta && meta.updatedAt ? `Cached daily • Updated ${formatUTCDateTime(meta.updatedAt)}` : 'Cached daily via GitHub Actions';
     }
+
+    renderContentFreshnessStrip('releases-freshness-strip', {
+        kind: 'Release feed',
+        updatedAt: cacheUpdatedAt,
+        latestPublishedAt: normalized[0] && normalized[0].publishedAt ? normalized[0].publishedAt : null,
+        latestLabel: 'Latest release',
+        totalCount: normalized.length,
+        countLabel: 'cached releases',
+        thresholds: { freshDays: 3, agingDays: 10 },
+        note: 'GitHub cache-backed'
+    });
 
     renderControls();
     renderList();

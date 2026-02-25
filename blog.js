@@ -8,6 +8,7 @@ const TEAM_MEMBERS_PATH = 'data/team-members.json';
 let allBlogPosts = [];
 let filteredPosts = [];
 let teamMembers = [];
+let blogPreviewLastModified = null;
 
 /**
  * Content moderation - checks for inappropriate content
@@ -109,6 +110,60 @@ function formatDate(dateString) {
         month: 'long', 
         day: 'numeric' 
     });
+}
+
+function toValidDate(value) {
+    if (!value) return null;
+    if (value instanceof Date) {
+        return isNaN(value.getTime()) ? null : value;
+    }
+    const parsed = new Date(value);
+    return isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function getBlogFreshnessMeta(dateValue, thresholds = { freshDays: 14, agingDays: 45 }) {
+    const date = toValidDate(dateValue);
+    if (!date) return { state: 'unknown', label: 'Unknown' };
+    const ageDays = Math.max(0, (Date.now() - date.getTime()) / (1000 * 60 * 60 * 24));
+    if (ageDays <= thresholds.freshDays) return { state: 'fresh', label: 'Fresh' };
+    if (ageDays <= thresholds.agingDays) return { state: 'aging', label: 'Aging' };
+    return { state: 'stale', label: 'Stale' };
+}
+
+function formatUtcStamp(dateValue) {
+    const date = toValidDate(dateValue);
+    if (!date) return '';
+    try {
+        return date.toUTCString().replace('GMT', 'UTC');
+    } catch (e) {
+        return '';
+    }
+}
+
+function renderBlogFreshness(posts) {
+    const el = document.getElementById('blog-freshness-strip');
+    if (!el) return;
+
+    const list = Array.isArray(posts) ? posts : [];
+    const latestPostDate = list
+        .map(post => toValidDate(post && post.date))
+        .filter(Boolean)
+        .sort((a, b) => b - a)[0] || null;
+    const dataFileDate = toValidDate(blogPreviewLastModified);
+    const freshness = getBlogFreshnessMeta(latestPostDate || dataFileDate);
+
+    const primaryText = latestPostDate
+        ? `Latest post published ${formatDate(latestPostDate.toISOString().slice(0, 10))}`
+        : 'No published posts found yet';
+    const metaParts = [];
+    if (list.length) metaParts.push(`${list.length} posts`);
+    if (dataFileDate) metaParts.push(`Preview cache updated ${formatUtcStamp(dataFileDate)}`);
+
+    el.innerHTML = `
+        <span class="content-freshness-badge" data-state="${escapeHtml(freshness.state)}">${escapeHtml(freshness.label)}</span>
+        <span class="content-freshness-text">${escapeHtml(primaryText)}</span>
+        ${metaParts.length ? `<span class="content-freshness-meta">• ${escapeHtml(metaParts.join(' • '))}</span>` : ''}
+    `;
 }
 
 /**
@@ -424,6 +479,9 @@ async function initBlog() {
             fetch(BLOG_POSTS_PREVIEW_PATH),
             fetch(TEAM_MEMBERS_PATH)
         ]);
+        blogPreviewLastModified = postsResponse && typeof postsResponse.headers?.get === 'function'
+            ? postsResponse.headers.get('last-modified')
+            : null;
 
         // Load team members
         if (teamResponse.ok) {
@@ -437,12 +495,14 @@ async function initBlog() {
         if (!postsResponse.ok) {
             console.warn('Blog posts preview data not found');
             document.getElementById('blog-posts-grid').innerHTML = '<p class="empty-message">No blog posts available.</p>';
+            renderBlogFreshness([]);
             return;
         }
 
         allBlogPosts = await postsResponse.json();
         if (!Array.isArray(allBlogPosts) || allBlogPosts.length === 0) {
             document.getElementById('blog-posts-grid').innerHTML = '<p class="empty-message">No blog posts available.</p>';
+            renderBlogFreshness([]);
             return;
         }
 
@@ -463,6 +523,7 @@ async function initBlog() {
         // Initial render
         filteredPosts = [...allBlogPosts];
         renderBlogPosts(filteredPosts);
+        renderBlogFreshness(allBlogPosts);
         
         // Check for moderation flags and show notice if needed
         checkAndShowModerationNotice(allBlogPosts);
@@ -484,6 +545,7 @@ async function initBlog() {
     } catch (error) {
         console.error('Failed to load blog posts:', error);
         document.getElementById('blog-posts-grid').innerHTML = '<p class="empty-message">Unable to load blog posts.</p>';
+        renderBlogFreshness([]);
     }
 }
 
