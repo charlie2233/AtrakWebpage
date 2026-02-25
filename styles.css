@@ -4677,6 +4677,103 @@ section {
     color: var(--text-primary);
 }
 
+/* Purpose FAQ */
+.purpose-faq-list {
+    display: grid;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.purpose-faq-item {
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.02);
+    overflow: hidden;
+    transition: border-color var(--transition-base), background var(--transition-base), transform var(--transition-base);
+}
+
+.purpose-faq-item:hover {
+    border-color: rgba(125, 211, 252, 0.18);
+    background: rgba(255, 255, 255, 0.03);
+    transform: translateY(-1px);
+}
+
+.purpose-faq-item summary {
+    list-style: none;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 18px;
+}
+
+.purpose-faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.purpose-faq-item summary:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: -2px;
+    border-radius: 14px;
+}
+
+.purpose-faq-question {
+    color: var(--text-primary);
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 600;
+}
+
+.purpose-faq-toggle {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    border: 1px solid rgba(125, 211, 252, 0.24);
+    background: rgba(59, 130, 246, 0.08);
+    position: relative;
+    flex-shrink: 0;
+}
+
+.purpose-faq-toggle::before,
+.purpose-faq-toggle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: rgba(186, 230, 253, 0.95);
+    transform: translate(-50%, -50%);
+    transition: opacity var(--transition-base), transform var(--transition-base);
+}
+
+.purpose-faq-toggle::before {
+    width: 10px;
+    height: 1.5px;
+}
+
+.purpose-faq-toggle::after {
+    width: 1.5px;
+    height: 10px;
+}
+
+.purpose-faq-item[open] .purpose-faq-toggle::after {
+    opacity: 0;
+    transform: translate(-50%, -50%) scaleY(0.4);
+}
+
+.purpose-faq-answer {
+    padding: 0 18px 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.purpose-faq-answer p {
+    margin: 14px 0 0;
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--text-secondary);
+    max-width: 72ch;
+}
+
 /* Purpose CTA */
 .purpose-cta {
     text-align: center;
@@ -4787,6 +4884,24 @@ section {
         height: 26px;
         justify-self: start;
         padding: 0 10px;
+    }
+
+    .purpose-faq-item summary {
+        padding: 14px 14px;
+        gap: 12px;
+    }
+
+    .purpose-faq-question {
+        font-size: 15px;
+    }
+
+    .purpose-faq-toggle {
+        width: 24px;
+        height: 24px;
+    }
+
+    .purpose-faq-answer {
+        padding: 0 14px 14px;
     }
 
     .work-step {
