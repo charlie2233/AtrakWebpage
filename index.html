@@ -1102,14 +1102,14 @@
     <section id="contact" class="contact reveal">
         <div class="container">
             <div class="contact-content reveal">
-                <h2 id="contact-apply" class="contact-title">Contact</h2>
+                <h2 id="contact-apply" class="contact-title">Work With Us / Apply</h2>
                 <p class="contact-description">
-                    Send anonymous feedback, or apply / contact the team. Choose an option below.
+                    Need UI/UX design, a website, a web app, or an app build? Send a project inquiry here. You can also use this form to apply to the team, or use the Suggestion Box for anonymous feedback.
                 </p>
 
                 <div class="contact-tabs" role="tablist" aria-label="Contact options">
                     <button class="contact-tab active" type="button" role="tab" aria-selected="true" aria-controls="contact-suggestion-panel" id="contact-suggestion-tab" data-tab="suggestion">Suggestion Box</button>
-                    <button class="contact-tab" type="button" role="tab" aria-selected="false" aria-controls="contact-apply-panel" id="contact-apply-tab" data-tab="apply">Apply / Contact</button>
+                    <button class="contact-tab" type="button" role="tab" aria-selected="false" aria-controls="contact-apply-panel" id="contact-apply-tab" data-tab="apply">Work With Us / Apply</button>
                 </div>
 
                 <div class="contact-tab-content active" id="contact-suggestion-panel" role="tabpanel" aria-labelledby="contact-suggestion-tab" data-tab="suggestion">
@@ -1126,8 +1126,8 @@
                         <p id="suggestion-status" class="form-status" role="status" aria-live="polite"></p>
                         <p class="form-disclaimer">No contact info collected.</p>
                         <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                            <p style="margin: 0 0 12px 0; font-size: 14px; color: var(--text-secondary);">Want to apply or contact us directly?</p>
-                            <button type="button" class="btn btn-secondary btn-sm" data-open-contact-tab="apply" style="width: 100%;">Switch to Apply / Contact</button>
+                            <p style="margin: 0 0 12px 0; font-size: 14px; color: var(--text-secondary);">Need UI/UX, a website, or an app built? Or want to apply to the team?</p>
+                            <button type="button" class="btn btn-secondary btn-sm" data-open-contact-tab="apply" style="width: 100%;">Switch to Work With Us / Apply</button>
                         </div>
                         <p class="form-powered-by" style="margin-top: 16px; text-align: center; font-size: 12px; color: var(--text-tertiary);">
                             Powered by <a href="https://formspree.io" target="_blank" rel="noopener noreferrer" style="color: var(--accent-primary); text-decoration: none;">Formspree</a>
@@ -1155,6 +1155,7 @@
                             <label for="join-interest" class="suggestion-label">Interest</label>
                             <select id="join-interest" name="interest" required aria-describedby="join-interest-error">
                                 <option value="" disabled selected>Select one</option>
+                                <option>Client Project / Build Request</option>
                                 <option>Engineering</option>
                                 <option>Design</option>
                                 <option>Product & Ops</option>
@@ -1163,7 +1164,7 @@
                             <p id="join-interest-error" class="form-error" role="alert" aria-live="assertive"></p>
 
                             <label for="join-message" class="suggestion-label">Message</label>
-                            <textarea id="join-message" name="message" rows="7" maxlength="1600" required placeholder="Tell us what you want to work on and any links you'd like to share." aria-describedby="join-message-error join-message-count"></textarea>
+                            <textarea id="join-message" name="message" rows="7" maxlength="1600" required placeholder="Tell us about your project or what you want to work on. Include scope, goals, timeline, and any links that would help." aria-describedby="join-message-error join-message-count"></textarea>
                             <div class="form-meta">
                                 <span class="form-count" id="join-message-count" data-char-count="join-message" aria-live="polite">0/1600</span>
                             </div>
@@ -1193,7 +1194,7 @@
                             <input type="text" name="_gotcha" class="suggestion-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
                             <button type="submit" class="btn btn-primary">Send</button>
                             <p id="join-status" class="form-status" role="status" aria-live="polite"></p>
-                            <p class="form-disclaimer">We'll only use your email to reply.</p>
+                            <p class="form-disclaimer">We'll only use your email to reply to your inquiry or application.</p>
                             <p class="form-powered-by" style="margin-top: 16px; text-align: center; font-size: 12px; color: var(--text-tertiary);">
                                 Powered by <a href="https://formspree.io" target="_blank" rel="noopener noreferrer" style="color: var(--accent-primary); text-decoration: none;">Formspree</a>
                             </p>
