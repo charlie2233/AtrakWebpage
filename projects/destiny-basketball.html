@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Destiny Basketball Website is a cinematic brand site for Team Destiny, an Orange County AAU basketball club, built for local discovery across Fullerton, Anaheim, and Irvine.">
+    <meta name="robots" content="index,follow">
+    <meta name="keywords" content="Destiny Basketball, Team Destiny, Orange County AAU basketball, Fullerton basketball, Irvine basketball, Anaheim basketball, Atrak">
+    <title>Destiny Basketball Website | Atrak</title>
+    <link rel="canonical" href="https://atrak.dev/projects/destiny-basketball.html">
+
+    <meta property="og:title" content="Destiny Basketball Website | Atrak">
+    <meta property="og:description" content="Cinematic AAU club website for Team Destiny with local discovery for Orange County, Fullerton, Anaheim, and Irvine plus a clean Instagram handoff.">
+    <meta property="og:url" content="https://atrak.dev/projects/destiny-basketball.html">
+    <meta property="og:image" content="https://atrak.dev/assets/Demo/Demo_Img_DestinyBasketball/01-hero.png">
+    <meta property="og:type" content="website">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Destiny Basketball Website | Atrak">
+    <meta name="twitter:description" content="Brand-first website for Team Destiny, an Orange County AAU basketball club serving Fullerton, Anaheim, and Irvine.">
+    <meta name="twitter:image" content="https://atrak.dev/assets/Demo/Demo_Img_DestinyBasketball/01-hero.png">
+
+    <link rel="icon" type="image/png" href="../assets/logo.png?v=20260202">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/logo.png?v=20260202">
+    <link rel="stylesheet" href="../styles.css?v=26">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Destiny Basketball Website",
+      "description": "Cinematic brand site for Team Destiny, an Orange County AAU basketball club serving Fullerton, Anaheim, and Irvine.",
+      "url": "https://atrak.dev/projects/destiny-basketball.html",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Atrak",
+        "url": "https://atrak.dev"
+      },
+      "about": {
+        "@type": "SportsOrganization",
+        "name": "Team Destiny",
+        "url": "https://destinybasketball.us",
+        "sameAs": [
+          "https://www.instagram.com/destinyyouthbasketball/"
+        ],
+        "areaServed": ["Orange County", "Fullerton", "Anaheim", "Irvine"]
+      },
+      "image": "https://atrak.dev/assets/Demo/Demo_Img_DestinyBasketball/01-hero.png"
+    }
+    </script>
+
+    <style>
+        .project-hero--destiny {
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 12% 12%, rgba(255, 250, 239, 0.08), transparent 24%),
+                radial-gradient(circle at 76% 18%, rgba(255, 255, 255, 0.08), transparent 22%),
+                linear-gradient(180deg, rgba(5, 5, 6, 0.98), rgba(12, 10, 8, 1));
+        }
+
+        .project-hero--destiny::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.06), transparent 40%),
+                linear-gradient(90deg, transparent, rgba(255, 245, 225, 0.04), transparent);
+            pointer-events: none;
+        }
+
+        .project-hero--destiny .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .destiny-mark {
+            width: 96px;
+            height: 96px;
+            border-radius: 28px;
+            padding: 12px;
+            margin-bottom: 1rem;
+            background: linear-gradient(180deg, rgba(255, 252, 246, 0.98), rgba(238, 230, 213, 0.94));
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            box-shadow: 0 24px 54px rgba(0, 0, 0, 0.32);
+        }
+
+        .destiny-mark img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 16px;
+        }
+
+        .destiny-panel {
+            border-color: rgba(255, 241, 214, 0.18);
+            background: linear-gradient(135deg, rgba(11, 10, 8, 0.98), rgba(20, 17, 13, 0.98));
+        }
+
+        .destiny-panel .panel-tag {
+            background: rgba(255, 245, 225, 0.08);
+            color: #f1dfc5;
+        }
+
+        .destiny-panel .panel-metric {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a class="logo" href="../index.html">
+                <span class="logo-icon"><img src="../assets/logo.png?v=20260202" alt="Atrak Logo"></span>
+                <span class="logo-text">Atrak</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="../index.html#projects">Projects</a></li>
+                <li><a href="../index.html#more-projects">More Projects</a></li>
+                <li><a href="../blog.html">Blog</a></li>
+                <li><a href="../releases.html">Releases</a></li>
+                <li><a href="../join.html">Join</a></li>
+            </ul>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <section class="project-hero project-hero--destiny">
+            <div class="container">
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <ol>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="../index.html#projects">Featured Projects</a></li>
+                        <li>Destiny Basketball Website</li>
+                    </ol>
+                </nav>
+                <a class="project-back-link" href="../index.html#projects">← Back to Featured Projects</a>
+
+                <div class="project-hero-grid">
+                    <div class="project-header">
+                        <div class="destiny-mark">
+                            <img src="../assets/projects/destiny-logo-black.jpg" alt="Team Destiny logo mark">
+                        </div>
+                        <span class="section-tag">Brand Site • AAU Basketball • Orange County</span>
+                        <h1 class="section-title">Destiny Basketball Website</h1>
+                        <p class="section-description">
+                            A brand-first website for Team Destiny that does one job cleanly: establish the club's identity,
+                            win local search relevance around Orange County, and move families and recruits toward the official Instagram.
+                        </p>
+                        <div class="project-meta-bar">
+                            <span class="meta-item"><strong>Status:</strong> Live</span>
+                            <span class="meta-item"><strong>Region:</strong> Orange County, CA</span>
+                            <span class="meta-item"><strong>Audience:</strong> Families / recruits</span>
+                        </div>
+                        <div class="project-hero-badges">
+                            <span class="hero-badge">Static site</span>
+                            <span class="hero-badge">Local SEO</span>
+                            <span class="hero-badge">Brand system</span>
+                            <span class="hero-badge">Instagram handoff</span>
+                        </div>
+                    </div>
+
+                    <aside class="project-hero-panel glass-card destiny-panel">
+                        <div class="hero-panel-header">
+                            <span class="panel-tag">Live Snapshot</span>
+                            <h3>Public facts on the site</h3>
+                            <p>Everything visible stays tight, factual, and aligned with the club's current public presence.</p>
+                        </div>
+                        <div class="hero-panel-metrics">
+                            <div class="panel-metric">
+                                <span class="metric-value">8 players</span>
+                                <span class="metric-label">Current public roster size</span>
+                            </div>
+                            <div class="panel-metric">
+                                <span class="metric-value">Nov 2025</span>
+                                <span class="metric-label">Club founding date</span>
+                            </div>
+                            <div class="panel-metric">
+                                <span class="metric-value">Orange County</span>
+                                <span class="metric-label">Fullerton, Anaheim, Irvine</span>
+                            </div>
+                            <div class="panel-metric">
+                                <span class="metric-value">@destinyyouthbasketball</span>
+                                <span class="metric-label">Official Instagram destination</span>
+                            </div>
+                        </div>
+                        <div class="hero-panel-footer">
+                            <span class="panel-pill">GitHub Pages</span>
+                            <span class="panel-pill">Custom domain</span>
+                            <span class="panel-pill">JSON-LD</span>
+                            <span class="panel-pill">SEO metadata</span>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <section class="project-links-bar">
+            <div class="container">
+                <div class="links-bar-inner">
+                    <a href="https://destinybasketball.us" class="link-btn" target="_blank" rel="noopener noreferrer">
+                        <span class="link-icon">🌐</span> Live Site
+                    </a>
+                    <a href="https://www.instagram.com/destinyyouthbasketball/" class="link-btn" target="_blank" rel="noopener noreferrer">
+                        <span class="link-icon">📸</span> Instagram
+                    </a>
+                    <a href="https://github.com/charlie2233/DestinnyBasketball" class="link-btn" target="_blank" rel="noopener noreferrer">
+                        <span class="link-icon">💻</span> GitHub Repo
+                    </a>
+                    <a href="#demo" class="link-btn">
+                        <span class="link-icon">🎬</span> Demo
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <div class="project-content">
+            <div class="container">
+                <section class="project-section overview-section">
+                    <h2 class="project-section-title">⚡ What The Site Does</h2>
+                    <div class="overview-grid">
+                        <div class="glass-card overview-card">
+                            <span class="overview-icon">🎬</span>
+                            <h3>Sets the tone fast</h3>
+                            <p>The homepage reads like an entrance sequence, not a template club bio, so the identity lands immediately.</p>
+                        </div>
+                        <div class="glass-card overview-card">
+                            <span class="overview-icon">📍</span>
+                            <h3>Wins local discovery</h3>
+                            <p>Targets Orange County, Fullerton, Anaheim, and Irvine so searches tied to the club and the region can surface the site.</p>
+                        </div>
+                        <div class="glass-card overview-card">
+                            <span class="overview-icon">🏀</span>
+                            <h3>Clarifies the club</h3>
+                            <p>Presents Team Destiny as an AAU basketball club with the current public facts kept simple and easy to verify.</p>
+                        </div>
+                        <div class="glass-card overview-card">
+                            <span class="overview-icon">↗️</span>
+                            <h3>Hands off to Instagram</h3>
+                            <p>The site establishes the identity, then sends visitors into the channel where the live public layer actually moves.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="brand" class="project-section">
+                    <h2 class="project-section-title">🖤 Brand System</h2>
+                    <div class="glass-card">
+                        <p class="lead-text">
+                            The site is intentionally narrow in scope. Instead of trying to be a full program portal, it behaves like a polished first impression:
+                            black tunnel entrance, ivory court reveal, and two logo treatments that frame Team Destiny as a serious club from the first scroll.
+                        </p>
+                        <ul class="feature-list">
+                            <li><strong>Blackout mark:</strong> used as the tunnel-entry visual to create a high-contrast, pre-game feel.</li>
+                            <li><strong>Ivory reveal:</strong> the brighter logo treatment keeps the second half of the page from collapsing into one-note darkness.</li>
+                            <li><strong>Cinematic copy:</strong> language is sparse and visual, which fits the club identity better than long generic paragraphs.</li>
+                            <li><strong>Controlled scope:</strong> the site stays focused on identity, geography, and the club handoff instead of pretending to be a complex app.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="audience" class="project-section">
+                    <h2 class="project-section-title">📍 Audience & Local Discovery</h2>
+                    <div class="glass-card">
+                        <p>
+                            This page is built for the exact people most likely to search the club by region or city: Orange County families,
+                            parents in Fullerton and Anaheim, players near Irvine, and anyone who hears the team name and needs a fast official-looking destination.
+                        </p>
+                        <div class="overview-grid" style="margin-top: 20px;">
+                            <div class="glass-card overview-card">
+                                <span class="overview-icon">👨‍👩‍👧</span>
+                                <h3>Families</h3>
+                                <p>A clean public destination that answers who the club is before anyone has to click around social profiles.</p>
+                            </div>
+                            <div class="glass-card overview-card">
+                                <span class="overview-icon">🧭</span>
+                                <h3>Local searchers</h3>
+                                <p>Metadata and on-page copy explicitly tie Team Destiny to Orange County, Fullerton, Anaheim, and Irvine.</p>
+                            </div>
+                            <div class="glass-card overview-card">
+                                <span class="overview-icon">🎯</span>
+                                <h3>Recruits and community</h3>
+                                <p>The site gives the club a stable branded surface before the conversation continues on Instagram.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="handoff" class="project-section">
+                    <h2 class="project-section-title">📸 Instagram Handoff</h2>
+                    <div class="glass-card">
+                        <p>
+                            The strongest product decision here is restraint. The website does not try to replace the live public layer.
+                            It creates a premium first impression, reinforces the geography and brand, then routes visitors toward
+                            <a href="https://www.instagram.com/destinyyouthbasketball/" target="_blank" rel="noopener noreferrer">@destinyyouthbasketball</a>
+                            where updates, engagement, and ongoing public activity belong.
+                        </p>
+                        <ul class="feature-list">
+                            <li><strong>Homepage CTA:</strong> Instagram is treated as a primary action, not buried in the footer.</li>
+                            <li><strong>Copy consistency:</strong> the site repeatedly tells visitors where the live public layer lives.</li>
+                            <li><strong>Identity first, feed second:</strong> the website handles trust and tone; Instagram handles activity and ongoing visibility.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="demo" class="project-section">
+                    <h2 class="project-section-title">🎬 Demo & Screenshots</h2>
+                    <div class="demo-grid">
+                        <div class="glass-card">
+                            <h3>Captured from the live site</h3>
+                            <p>
+                                These screenshots were captured from <a href="https://destinybasketball.us" target="_blank" rel="noopener noreferrer">destinybasketball.us</a>
+                                on March 12, 2026. They show the three most important states of the site: the cinematic hero,
+                                the club credibility section, and the Instagram destination block with logo treatments.
+                            </p>
+                            <ul class="feature-list">
+                                <li><strong>Hero:</strong> establishes the brand voice and the AAU club identity immediately.</li>
+                                <li><strong>About section:</strong> grounds the page with factual club details and service area.</li>
+                                <li><strong>Instagram destination:</strong> completes the funnel from branded website to live social channel.</li>
+                            </ul>
+                        </div>
+                        <div class="glass-card">
+                            <h3>Screenshot Gallery</h3>
+                            <div class="media-carousel" data-carousel>
+                                <button class="carousel-btn prev" type="button" data-carousel-prev aria-label="Previous screenshot">‹</button>
+                                <button class="carousel-btn next" type="button" data-carousel-next aria-label="Next screenshot">›</button>
+                                <div class="carousel-track" data-carousel-track aria-label="Destiny Basketball screenshots">
+                                    <figure class="carousel-slide">
+                                        <a href="../assets/Demo/Demo_Img_DestinyBasketball/01-hero.png" target="_blank" rel="noopener noreferrer">
+                                            <div class="carousel-media"><img src="../assets/Demo/Demo_Img_DestinyBasketball/01-hero.png" alt="Destiny Basketball hero screenshot" loading="lazy" decoding="async"></div>
+                                            <figcaption class="carousel-caption">Hero reveal with the blackout logo treatment</figcaption>
+                                        </a>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <a href="../assets/Demo/Demo_Img_DestinyBasketball/02-about.png" target="_blank" rel="noopener noreferrer">
+                                            <div class="carousel-media"><img src="../assets/Demo/Demo_Img_DestinyBasketball/02-about.png" alt="Destiny Basketball about section screenshot" loading="lazy" decoding="async"></div>
+                                            <figcaption class="carousel-caption">About section with players, founding date, and Orange County reach</figcaption>
+                                        </a>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <a href="../assets/Demo/Demo_Img_DestinyBasketball/03-instagram.png" target="_blank" rel="noopener noreferrer">
+                                            <div class="carousel-media"><img src="../assets/Demo/Demo_Img_DestinyBasketball/03-instagram.png" alt="Destiny Basketball Instagram destination screenshot" loading="lazy" decoding="async"></div>
+                                            <figcaption class="carousel-caption">Instagram destination block and dual logo treatments</figcaption>
+                                        </a>
+                                    </figure>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tech" class="project-section">
+                    <h2 class="project-section-title">🛠️ Tech / Deployment</h2>
+                    <div class="glass-card">
+                        <p>
+                            This is a static site, but not a throwaway one. The product work is in the brand framing, metadata discipline,
+                            and the decision to keep the site stable while Instagram carries the moving public layer.
+                        </p>
+                        <div class="tech-stack" style="margin-top: 16px;">
+                            <h4>Stack</h4>
+                            <div class="stack-tags">
+                                <span class="stack-tag">HTML</span>
+                                <span class="stack-tag">CSS</span>
+                                <span class="stack-tag">JavaScript</span>
+                                <span class="stack-tag">GitHub Pages</span>
+                                <span class="stack-tag">Custom domain</span>
+                                <span class="stack-tag">JSON-LD</span>
+                                <span class="stack-tag">OG / Twitter tags</span>
+                                <span class="stack-tag">Local SEO</span>
+                            </div>
+                        </div>
+                        <ul class="feature-list">
+                            <li><strong>Hosting:</strong> deployed from GitHub Pages and served from the custom domain <code>destinybasketball.us</code>.</li>
+                            <li><strong>SEO:</strong> metadata and structured data are tuned around Team Destiny, Orange County, Fullerton, Anaheim, and Irvine.</li>
+                            <li><strong>Asset system:</strong> black and ivory logo treatments create visual continuity across the entry and destination sections.</li>
+                            <li><strong>Maintenance model:</strong> no build step, which keeps content updates fast and low-risk for a small club site.</li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a class="logo" href="../index.html">
+                        <span class="logo-icon"><img src="../assets/logo.png?v=20260202" alt="Atrak Logo"></span>
+                        <span class="logo-text">Atrak</span>
+                    </a>
+                    <p class="footer-tagline">Building real products together</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Project</h4>
+                        <a href="#brand">Brand System</a>
+                        <a href="#audience">Local Discovery</a>
+                        <a href="#handoff">Instagram Handoff</a>
+                        <a href="#demo">Demo</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Links</h4>
+                        <a href="https://destinybasketball.us" target="_blank" rel="noopener noreferrer">Live Site</a>
+                        <a href="https://www.instagram.com/destinyyouthbasketball/" target="_blank" rel="noopener noreferrer">Instagram</a>
+                        <a href="https://github.com/charlie2233/DestinnyBasketball" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Atrak. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../script.js?v=24"></script>
+    <script src="../last-updated.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LifePage is an AI personal brand builder that imports proof from URLs, shapes it into a portfolio story and resume, and deploys it to /u/yourname or a custom domain.">
+    <meta name="robots" content="index,follow">
+    <meta name="keywords" content="LifePage, AI portfolio builder, personal brand builder, resume generator, custom domains, Charlie Han, Atrak">
+    <title>LifePage — AI Personal Brand Builder | Atrak</title>
+    <link rel="canonical" href="https://atrak.dev/projects/lifepage.html">
+
+    <meta property="og:title" content="LifePage — AI Personal Brand Builder | Atrak">
+    <meta property="og:description" content="Imports real proof, generates a sharper portfolio story, and deploys a public brand page plus resume from one product flow.">
+    <meta property="og:url" content="https://atrak.dev/projects/lifepage.html">
+    <meta property="og:image" content="https://atrak.dev/assets/Demo/Demo_Img_LifePage/01-hero.png">
+    <meta property="og:type" content="website">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="LifePage — AI Personal Brand Builder | Atrak">
+    <meta name="twitter:description" content="AI personal brand studio for turning scattered proof into a live portfolio, resume, and public story.">
+    <meta name="twitter:image" content="https://atrak.dev/assets/Demo/Demo_Img_LifePage/01-hero.png">
+
+    <link rel="icon" type="image/png" href="../assets/logo.png?v=20260202">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/logo.png?v=20260202">
+    <link rel="stylesheet" href="../styles.css?v=26">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "LifePage",
+      "description": "AI personal brand builder that imports public proof, generates a portfolio story and resume, and deploys to a hosted profile path or custom domain.",
+      "url": "https://atrak.dev/projects/lifepage.html",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "creator": {
+        "@type": "Organization",
+        "name": "Atrak",
+        "url": "https://atrak.dev"
+      },
+      "codeRepository": "https://github.com/charlie2233/My_portforlio",
+      "sameAs": [
+        "https://lifepage.one"
+      ],
+      "image": "https://atrak.dev/assets/Demo/Demo_Img_LifePage/01-hero.png"
+    }
+    </script>
+
+    <style>
+        .project-hero--lifepage {
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 12% 20%, rgba(121, 229, 210, 0.18), transparent 38%),
+                radial-gradient(circle at 82% 10%, rgba(143, 169, 255, 0.18), transparent 32%),
+                linear-gradient(180deg, rgba(4, 12, 20, 0.96), rgba(6, 10, 18, 1));
+        }
+
+        .project-hero--lifepage::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(121, 229, 210, 0.06), transparent 40%, rgba(143, 169, 255, 0.08));
+            pointer-events: none;
+        }
+
+        .project-hero--lifepage .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .lifepage-icon {
+            width: 92px;
+            height: 92px;
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -0.08em;
+            color: #06131d;
+            background: linear-gradient(140deg, rgba(217, 255, 247, 0.98), rgba(121, 229, 210, 0.92) 45%, rgba(143, 169, 255, 0.8));
+            box-shadow: 0 24px 56px rgba(24, 176, 156, 0.22);
+            border: 1px solid rgba(255, 255, 255, 0.38);
+        }
+
+        .lifepage-panel .panel-metric .metric-value {
+            font-size: 1rem;
+            line-height: 1.25;
+        }
+
+        .lifepage-note {
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a class="logo" href="../index.html">
+                <span class="logo-icon"><img src="../assets/logo.png?v=20260202" alt="Atrak Logo"></span>
+                <span class="logo-text">Atrak</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="../index.html#projects">Projects</a></li>
+                <li><a href="../index.html#more-projects">More Projects</a></li>
+                <li><a href="../blog.html">Blog</a></li>
+                <li><a href="../releases.html">Releases</a></li>
+                <li><a href="../join.html">Join</a></li>
+            </ul>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <section class="project-hero project-hero--lifepage">
+            <div class="container">
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <ol>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="../index.html#projects">Featured Projects</a></li>
+                        <li>LifePage</li>
+                    </ol>
+                </nav>
+                <a class="project-back-link" href="../index.html#projects">← Back to Featured Projects</a>
+
+                <div class="project-hero-grid">
+                    <div class="project-header">
+                        <div class="lifepage-icon">LP</div>
+                        <span class="section-tag">AI Product • Personal Branding • Publishing</span>
+                        <h1 class="section-title">LifePage</h1>
+                        <p class="section-description">
+                            A personal brand studio built around one product promise: take scattered public proof,
+                            shape it into a stronger story, and ship a portfolio page plus resume that feels like a real launch,
+                            not a profile form.
+                        </p>
+                        <div class="project-meta-bar">
+                            <span class="meta-item"><strong>Status:</strong> Active build</span>
+                            <span class="meta-item"><strong>Lead:</strong> Charlie Han</span>
+                            <span class="meta-item"><strong>Public URL:</strong> lifepage.one</span>
+                        </div>
+                        <div class="project-hero-badges">
+                            <span class="hero-badge">AI generation</span>
+                            <span class="hero-badge">URL import</span>
+                            <span class="hero-badge">Resume export</span>
+                            <span class="hero-badge">Custom domains</span>
+                        </div>
+                    </div>
+
+                    <aside class="project-hero-panel glass-card lifepage-panel">
+                        <div class="hero-panel-header">
+                            <span class="panel-tag">Build Snapshot</span>
+                            <h3>What is already in the product</h3>
+                            <p>Import proof, generate the narrative, control visibility, and deploy the public page.</p>
+                        </div>
+                        <div class="hero-panel-metrics">
+                            <div class="panel-metric">
+                                <span class="metric-value">Multi-source</span>
+                                <span class="metric-label">Site, GitHub, docs, videos, Google Sites</span>
+                            </div>
+                            <div class="panel-metric">
+                                <span class="metric-value">Portfolio + resume</span>
+                                <span class="metric-label">One narrative system, two deliverables</span>
+                            </div>
+                            <div class="panel-metric">
+                                <span class="metric-value">Public / link-only / private</span>
+                                <span class="metric-label">Visibility controls built in</span>
+                            </div>
+                            <div class="panel-metric">
+                                <span class="metric-value">Cloudflare-ready</span>
+                                <span class="metric-label">Workers + R2 deployment path configured</span>
+                            </div>
+                        </div>
+                        <div class="hero-panel-footer">
+                            <span class="panel-pill">Next.js 16</span>
+                            <span class="panel-pill">Prisma</span>
+                            <span class="panel-pill">OpenAI</span>
+                            <span class="panel-pill">Playwright</span>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <section class="project-links-bar">
+            <div class="container">
+                <div class="links-bar-inner">
+                    <a href="https://lifepage.one" class="link-btn" target="_blank" rel="noopener noreferrer">
+                        <span class="link-icon">🌐</span> Public URL
+                    </a>
+                    <a href="https://github.com/charlie2233/My_portforlio" class="link-btn" target="_blank" rel="noopener noreferrer">
+                        <span class="link-icon">💻</span> GitHub Repo
+                    </a>
+                    <a href="https://github.com/charlie2233/My_portforlio#readme" class="link-btn" target="_blank" rel="noopener noreferrer">
+                        <span class="link-icon">📘</span> Docs
+                    </a>
+                    <a href="#demo" class="link-btn">
+                        <span class="link-icon">🎬</span> Demo
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <div class="project-content">
+            <div class="container">
+                <section class="project-section overview-section">
+                    <h2 class="project-section-title">⚡ What It Delivers</h2>
+                    <div class="overview-grid">
+                        <div class="glass-card overview-card">
+                            <span class="overview-icon">🕸️</span>
+                            <h3>Proof Import</h3>
+                            <p>Starts from real links and evidence instead of asking users to rewrite their life from scratch.</p>
+                        </div>
+                        <div class="glass-card overview-card">
+                            <span class="overview-icon">🧠</span>
+                            <h3>Narrative Generation</h3>
+                            <p>Shapes raw inputs into positioning, project summaries, resume bullets, and a clearer public story.</p>
+                        </div>
+                        <div class="glass-card overview-card">
+                            <span class="overview-icon">📄</span>
+                            <h3>Portfolio + Resume</h3>
+                            <p>Publishes a public-facing brand page and a dedicated resume path from the same structured profile.</p>
+                        </div>
+                        <div class="glass-card overview-card">
+                            <span class="overview-icon">🚀</span>
+                            <h3>Deployment Layer</h3>
+                            <p>Supports hosted profile URLs, custom domains, visibility controls, and a Cloudflare deployment path.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="problem" class="project-section">
+                    <h2 class="project-section-title">🎯 The Problem</h2>
+                    <div class="glass-card">
+                        <p class="lead-text">
+                            Most portfolio builders flatten people into a template and most resumes strip away the proof.
+                            LifePage is aimed at the gap between raw evidence and a public identity that actually feels coherent.
+                        </p>
+                        <div class="problem-points">
+                            <div class="problem-point">
+                                <span class="point-icon">❌</span>
+                                <div>
+                                    <strong>Proof lives in too many places</strong>
+                                    <p>Projects, docs, demos, class work, and public links are scattered across different systems.</p>
+                                </div>
+                            </div>
+                            <div class="problem-point">
+                                <span class="point-icon">❌</span>
+                                <div>
+                                    <strong>Resumes and portfolios drift apart</strong>
+                                    <p>People end up maintaining one story for hiring, another for school, and a third for their personal site.</p>
+                                </div>
+                            </div>
+                            <div class="problem-point">
+                                <span class="point-icon">❌</span>
+                                <div>
+                                    <strong>Typical builders are too shallow</strong>
+                                    <p>They publish layouts, not narrative structure, deployment controls, or evidence-aware story shaping.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="workflow" class="project-section steps-section">
+                    <h2 class="project-section-title">🧭 How It Works</h2>
+                    <div class="steps-grid">
+                        <div class="glass-card step-card">
+                            <div class="step-index">01</div>
+                            <h3>Import real proof</h3>
+                            <p>Paste websites, GitHub repos, docs, videos, Google Sites pages, or other public references into the system.</p>
+                        </div>
+                        <div class="glass-card step-card">
+                            <div class="step-index">02</div>
+                            <h3>Extract the signal</h3>
+                            <p>The product crawls and reads the evidence, then organizes it into structured inputs the AI layer can reason over.</p>
+                        </div>
+                        <div class="glass-card step-card">
+                            <div class="step-index">03</div>
+                            <h3>Shape the narrative</h3>
+                            <p>LifePage generates positioning, project framing, story arcs, resume bullets, and profile content from the same dataset.</p>
+                        </div>
+                        <div class="glass-card step-card">
+                            <div class="step-index">04</div>
+                            <h3>Deploy and share</h3>
+                            <p>Publish to a hosted path or custom domain, choose visibility rules, and export a resume that matches the site.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="audience" class="project-section">
+                    <h2 class="project-section-title">👥 Who It Is For</h2>
+                    <div class="overview-grid">
+                        <div class="glass-card overview-card">
+                            <span class="overview-icon">✨</span>
+                            <h3>Creators and builders</h3>
+                            <p>People who already have proof online but need a cleaner narrative and stronger presentation layer.</p>
+                        </div>
+                        <div class="glass-card overview-card">
+                            <span class="overview-icon">🎓</span>
+                            <h3>Students applying to college</h3>
+                            <p>Applicants who need to show initiative, growth, leadership, and work product in a format admissions teams can scan.</p>
+                        </div>
+                        <div class="glass-card overview-card">
+                            <span class="overview-icon">💼</span>
+                            <h3>People applying for jobs</h3>
+                            <p>Hiring flows that need a recruiter-friendly portfolio, impact framing, and a resume that lines up with the site.</p>
+                        </div>
+                        <div class="glass-card overview-card">
+                            <span class="overview-icon">🗂️</span>
+                            <h3>People documenting a life</h3>
+                            <p>Users who want timelines, milestones, projects, and memories organized into a shareable public record.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="features" class="project-section">
+                    <h2 class="project-section-title">✨ Core Product</h2>
+                    <div class="features-grid">
+                        <div class="glass-card feature-card"><span class="feature-icon">🔎</span><h4>Evidence Import</h4><p>Multiple URLs, screenshots, and public proof items feed the story engine instead of empty forms.</p></div>
+                        <div class="glass-card feature-card"><span class="feature-icon">🌍</span><h4>Deploy Anywhere</h4><p>Hosted profile paths, custom-domain support, and deployment controls are part of the product, not an afterthought.</p></div>
+                        <div class="glass-card feature-card"><span class="feature-icon">🔒</span><h4>Visibility Controls</h4><p>Public, link-only, and private modes let users decide how visible each launch should be.</p></div>
+                        <div class="glass-card feature-card"><span class="feature-icon">🧳</span><h4>Hiring Mode</h4><p>Frames projects and impact for recruiters and hiring managers who need fast, legible signal.</p></div>
+                        <div class="glass-card feature-card"><span class="feature-icon">🏫</span><h4>Admissions Mode</h4><p>Repositions the same evidence toward growth, initiative, leadership, and long-term trajectory.</p></div>
+                        <div class="glass-card feature-card"><span class="feature-icon">📎</span><h4>Resume System</h4><p>Separate resume pages and PDF export keep the formal document aligned with the public site.</p></div>
+                        <div class="glass-card feature-card"><span class="feature-icon">🎨</span><h4>Portfolio Models</h4><p>Supports multiple design directions so the product can move beyond one fixed portfolio template.</p></div>
+                        <div class="glass-card feature-card"><span class="feature-icon">🧱</span><h4>Narrative Outputs</h4><p>Timelines, scripts, trees, and structured brand artifacts come from the same underlying evidence model.</p></div>
+                    </div>
+                </section>
+
+                <section id="demo" class="project-section">
+                    <h2 class="project-section-title">🎬 Demo & Screenshots</h2>
+                    <div class="demo-grid">
+                        <div class="glass-card">
+                            <h3>Verified product capture</h3>
+                            <p>
+                                The screenshots below were captured from a verified local preview of the current app on March 12, 2026.
+                                That was necessary because the public domain <a href="https://lifepage.one" target="_blank" rel="noopener noreferrer">lifepage.one</a>
+                                is currently returning a parked GitHub Pages response instead of the product.
+                            </p>
+                            <ul class="feature-list">
+                                <li><strong>Hero:</strong> positioning plus the live preview panel that explains the product loop immediately.</li>
+                                <li><strong>Example portfolios:</strong> proof that the output is meant to look like a launch, not a directory profile.</li>
+                                <li><strong>Core product:</strong> the feature surface for import, narrative, deployment, and visibility controls.</li>
+                            </ul>
+                            <p class="lifepage-note">The repo README and deployment config point toward Cloudflare Workers as the intended serving path while custom-domain routing is being reattached.</p>
+                        </div>
+                        <div class="glass-card">
+                            <h3>Screenshot Gallery</h3>
+                            <div class="media-carousel" data-carousel>
+                                <button class="carousel-btn prev" type="button" data-carousel-prev aria-label="Previous screenshot">‹</button>
+                                <button class="carousel-btn next" type="button" data-carousel-next aria-label="Next screenshot">›</button>
+                                <div class="carousel-track" data-carousel-track aria-label="LifePage screenshots">
+                                    <figure class="carousel-slide">
+                                        <a href="../assets/Demo/Demo_Img_LifePage/01-hero.png" target="_blank" rel="noopener noreferrer">
+                                            <div class="carousel-media"><img src="../assets/Demo/Demo_Img_LifePage/01-hero.png" alt="LifePage hero with positioning and live preview panel" loading="lazy" decoding="async"></div>
+                                            <figcaption class="carousel-caption">Hero section with the product promise and preview panel</figcaption>
+                                        </a>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <a href="../assets/Demo/Demo_Img_LifePage/02-portfolios.png" target="_blank" rel="noopener noreferrer">
+                                            <div class="carousel-media"><img src="../assets/Demo/Demo_Img_LifePage/02-portfolios.png" alt="LifePage example portfolios section" loading="lazy" decoding="async"></div>
+                                            <figcaption class="carousel-caption">Example portfolio cards and public/private framing</figcaption>
+                                        </a>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <a href="../assets/Demo/Demo_Img_LifePage/03-core-product.png" target="_blank" rel="noopener noreferrer">
+                                            <div class="carousel-media"><img src="../assets/Demo/Demo_Img_LifePage/03-core-product.png" alt="LifePage core product feature grid" loading="lazy" decoding="async"></div>
+                                            <figcaption class="carousel-caption">Core product surface for evidence, deployment, and story outputs</figcaption>
+                                        </a>
+                                    </figure>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tech" class="project-section">
+                    <h2 class="project-section-title">🛠️ Tech Stack / Deployment</h2>
+                    <div class="glass-card">
+                        <p>
+                            The implementation is much closer to an application platform than a marketing page. It combines ingestion,
+                            structured generation, hosted publishing, and deployment concerns in one web product.
+                        </p>
+                        <div class="tech-stack" style="margin-top: 16px;">
+                            <h4>Stack</h4>
+                            <div class="stack-tags">
+                                <span class="stack-tag">Next.js 16</span>
+                                <span class="stack-tag">TypeScript</span>
+                                <span class="stack-tag">Prisma</span>
+                                <span class="stack-tag">PostgreSQL</span>
+                                <span class="stack-tag">Auth.js</span>
+                                <span class="stack-tag">OpenAI</span>
+                                <span class="stack-tag">Cloudflare Workers</span>
+                                <span class="stack-tag">R2</span>
+                                <span class="stack-tag">Playwright</span>
+                            </div>
+                        </div>
+                        <ul class="feature-list">
+                            <li><strong>Ingestion:</strong> axios, cheerio, puppeteer-core, and Chromium-based screenshot capture for evidence collection.</li>
+                            <li><strong>Generation:</strong> OpenAI-backed structured outputs for headlines, stories, case studies, and resume bullets.</li>
+                            <li><strong>Publishing:</strong> public profile pages, resume pages, visibility controls, and custom-domain support.</li>
+                            <li><strong>Deployment path:</strong> OpenNext + Wrangler workflow for Cloudflare Workers, with R2 for asset storage.</li>
+                            <li><strong>Quality bar:</strong> Playwright E2E coverage for auth, billing, crawl import, public pages, and export flows.</li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a class="logo" href="../index.html">
+                        <span class="logo-icon"><img src="../assets/logo.png?v=20260202" alt="Atrak Logo"></span>
+                        <span class="logo-text">Atrak</span>
+                    </a>
+                    <p class="footer-tagline">Building real products together</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Project</h4>
+                        <a href="#workflow">How It Works</a>
+                        <a href="#features">Core Product</a>
+                        <a href="#demo">Demo</a>
+                        <a href="#tech">Tech Stack</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Links</h4>
+                        <a href="https://lifepage.one" target="_blank" rel="noopener noreferrer">Public URL</a>
+                        <a href="https://github.com/charlie2233/My_portforlio" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a href="https://github.com/charlie2233/My_portforlio#readme" target="_blank" rel="noopener noreferrer">Docs</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Atrak. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../script.js?v=24"></script>
+    <script src="../last-updated.js?v=1"></script>
+</body>
+</html>

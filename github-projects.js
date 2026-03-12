@@ -33,7 +33,9 @@ const FEATURED_PROJECT_REPOS = [
     'rork-guide-pup--vision-assistant',
     'Basketball_action_recoginition_sever',
     'AI-predator-simulation',
+    'DestinnyBasketball',
     'LunarWeb',
+    'My_portforlio',
     'Easy_Java_Ide-for-competitions',
     'rork-ten-seconds-vip-manager',
     'ai-hoops-board',
@@ -276,9 +278,11 @@ const INTERNAL_PROJECT_PAGES = {
     'rork-guide-pup--vision-assistant': 'projects/guidepup.html',
     'Basketball_action_recoginition_sever': 'projects/hoops-clips.html',
     'AI-predator-simulation': 'projects/ai-predator-simulation.html',
+    'DestinnyBasketball': 'projects/destiny-basketball.html',
     'rork-ten-seconds-vip-manager': 'projects/ten-seconds-vip-manager.html',
     'Easy_Java_Ide-for-competitions': 'projects/compide.html',
     'LunarWeb': 'index.html',
+    'My_portforlio': 'projects/lifepage.html',
 };
 
 function formatUTCDateTime(isoString) {
