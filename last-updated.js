@@ -1,9 +1,8 @@
 (() => {
     const BADGE_ID = 'repo-last-updated-badge';
     const STYLE_ID = 'repo-last-updated-style';
-    const CACHE_KEY = 'atrak-last-updated-v1';
+    const CACHE_KEY = 'atrak-last-updated-v2';
     const CACHE_MAX_AGE_MS = 6 * 60 * 60 * 1000;
-    const API_URL = 'https://api.github.com/repos/charlie2233/LunarWeb/commits/main';
 
     if (document.getElementById(BADGE_ID)) return;
 
@@ -138,51 +137,25 @@
         }
     }
 
-    async function loadFromGitHub() {
-        const response = await fetch(API_URL, {
-            headers: {
-                'Accept': 'application/vnd.github+json'
-            }
-        });
-        if (!response.ok) throw new Error(`GitHub API ${response.status}`);
-        const data = await response.json();
-        const date = data && data.commit && data.commit.committer && data.commit.committer.date;
-        const sha = data && typeof data.sha === 'string' ? data.sha.slice(0, 7) : null;
-        if (!date) throw new Error('Missing commit date');
-        const payload = {
-            date,
-            source: 'GitHub main branch',
-            title: sha ? `${date} • commit ${sha}` : date,
-        };
-        writeCache(payload);
-        return payload;
-    }
-
     async function loadFromFallbackMeta() {
         const response = await fetch(fallbackMetaUrl);
         if (!response.ok) throw new Error(`Fallback meta ${response.status}`);
         const data = await response.json();
         const date = data && (data.updatedAt || data.mostRecentPush);
         if (!date) throw new Error('Missing fallback date');
-        return {
+        const payload = {
             date,
             source: 'Local cached metadata',
             title: data.updatedAt || data.mostRecentPush,
         };
+        writeCache(payload);
+        return payload;
     }
 
     async function init() {
         const cached = readCache();
         if (cached) {
             setBadge(cached.date, cached.source, cached.title);
-        }
-
-        try {
-            const fresh = await loadFromGitHub();
-            setBadge(fresh.date, fresh.source, fresh.title);
-            return;
-        } catch (_) {
-            // Fall through to local metadata.
         }
 
         try {
