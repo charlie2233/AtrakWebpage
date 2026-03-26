@@ -52,12 +52,46 @@ jobs:
             echo "No GH token configured; using unauthenticated GitHub API requests (lower rate limit)."
           fi
 
-          # Fetch repositories
+          # Fetch repositories. When authenticated, prefer /user/repos so private
+          # repos owned by the account (including this site repo) are included.
+          REPO_URL="${API_BASE}/users/${USERNAME}/repos?sort=updated&per_page=100&type=owner"
+          if [ -n "${GH_TOKEN:-}" ]; then
+            REPO_URL="${API_BASE}/user/repos?affiliation=owner&sort=updated&per_page=100"
+          fi
+
           curl -fsSL "${AUTH_HEADER[@]}" \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            "${API_BASE}/users/${USERNAME}/repos?sort=updated&per_page=100" \
-            > data/github-repos.json
+            "${REPO_URL}" \
+            > data/_repos_raw.json
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          raw = json.loads(Path("data/_repos_raw.json").read_text(encoding="utf-8"))
+          if not isinstance(raw, list):
+              raise SystemExit(f"Expected list response, got: {type(raw).__name__}: {raw}")
+
+          repos = []
+          seen = set()
+          for repo in raw:
+              if not isinstance(repo, dict):
+                  continue
+              owner = (repo.get("owner") or {}).get("login")
+              full_name = repo.get("full_name") or ""
+              if owner and owner.lower() != "charlie2233":
+                  continue
+              key = full_name.lower()
+              if not key or key in seen:
+                  continue
+              seen.add(key)
+              repos.append(repo)
+
+          repos.sort(key=lambda r: r.get("updated_at") or "", reverse=True)
+          Path("data/github-repos.json").write_text(json.dumps(repos, indent=2) + "\n", encoding="utf-8")
+          Path("data/_repos_raw.json").unlink(missing_ok=True)
+          PY
 
           # Fetch recent events (pushes, releases, etc.)
           for page in 1 2 3; do
