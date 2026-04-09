@@ -6068,6 +6068,25 @@ a.leader-card:hover {
     font-weight: 500;
 }
 
+.project-person-link {
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.project-person-link:hover,
+.project-person-link:focus-visible {
+    color: #ffffff;
+    background: rgba(59, 130, 246, 0.16);
+    border-color: rgba(59, 130, 246, 0.36);
+    transform: translateY(-1px);
+}
+
+.project-person-link:focus-visible,
+.meta-person-link:focus-visible {
+    outline: 2px solid rgba(59, 130, 246, 0.6);
+    outline-offset: 2px;
+}
+
 /* Project Date */
 .project-date {
     display: inline-block;
@@ -6281,6 +6300,19 @@ a.leader-card:hover {
 
 .meta-item strong {
     color: var(--text-primary);
+}
+
+.meta-person-link {
+    color: var(--accent-primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.meta-person-link:hover,
+.meta-person-link:focus-visible {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.65);
 }
 
 /* Project Links Bar */
