@@ -98,7 +98,31 @@ function main() {
   const localRepos = collectLocalRepos();
   const localRepoMap = new Map(localRepos.map((repo) => [repo.full_name.toLowerCase(), repo]));
 
-  const trackedRepos = Array.isArray(existingRepos) ? existingRepos : [];
+  const trackedRepos = Array.isArray(existingRepos)
+    ? existingRepos.map((repo) => {
+        const localRepo = localRepoMap.get(String(repo?.full_name || "").toLowerCase());
+        return localRepo
+          ? {
+              ...repo,
+              name: localRepo.name,
+              full_name: localRepo.full_name,
+              updated_at: localRepo.updated_at,
+              pushed_at: localRepo.pushed_at,
+              html_url: localRepo.html_url,
+              recentCommitCount: localRepo.recentCommitCount,
+            }
+          : repo;
+      })
+    : [];
+
+  trackedRepos.sort((a, b) => {
+    const aTime = Date.parse(a?.updated_at || a?.pushed_at || "") || 0;
+    const bTime = Date.parse(b?.updated_at || b?.pushed_at || "") || 0;
+    return bTime - aTime;
+  });
+
+  writeJson(REPOS_PATH, trackedRepos);
+
   const trackedLocalRepos = trackedRepos
     .map((repo) => localRepoMap.get(String(repo?.full_name || "").toLowerCase()))
     .filter(Boolean);
