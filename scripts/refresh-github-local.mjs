@@ -13,6 +13,28 @@ const META_PATH = path.join(DATA_DIR, "github-meta.json");
 const WEEKLY_PATH = path.join(DATA_DIR, "github-weekly.json");
 const LAST_UPDATED_PATH = path.join(DATA_DIR, "last-updated.txt");
 const REPOS_PATH = path.join(DATA_DIR, "github-repos.json");
+const EXTRA_SCAN_ROOTS = [
+  path.join(HOME_DIR, ".codex", "worktrees"),
+  path.join(HOME_DIR, ".tmp"),
+];
+const SKIP_DIRS = new Set([
+  ".git",
+  "node_modules",
+  ".next",
+  ".open-next",
+  ".wrangler",
+  ".turbo",
+  ".cache",
+  "Library",
+  "Applications",
+  "Desktop",
+  "Documents",
+  "Downloads",
+  "Movies",
+  "Music",
+  "Pictures",
+  "Public",
+]);
 
 function readJson(filePath, fallback) {
   try {
@@ -74,46 +96,96 @@ function getLocalRepoInfo(repoPath) {
   }
 }
 
+function isGitRepoDir(repoPath) {
+  const gitPath = path.join(repoPath, ".git");
+  return fs.existsSync(gitPath);
+}
+
+function collectReposFromRoot(rootDir, maxDepth, results, visited) {
+  if (!rootDir || !fs.existsSync(rootDir)) return;
+
+  const walk = (currentDir, depth) => {
+    let realPath;
+    try {
+      realPath = fs.realpathSync(currentDir);
+    } catch {
+      return;
+    }
+
+    if (visited.has(realPath)) return;
+    visited.add(realPath);
+
+    if (isGitRepoDir(currentDir)) {
+      const repoInfo = getLocalRepoInfo(currentDir);
+      if (repoInfo) {
+        results.set(repoInfo.full_name.toLowerCase(), repoInfo);
+      }
+      return;
+    }
+
+    if (depth >= maxDepth) return;
+
+    let entries = [];
+    try {
+      entries = fs.readdirSync(currentDir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      if (SKIP_DIRS.has(entry.name)) continue;
+      if (entry.name.startsWith(".") && entry.name !== ".codex" && entry.name !== ".tmp") continue;
+      walk(path.join(currentDir, entry.name), depth + 1);
+    }
+  };
+
+  walk(rootDir, 0);
+}
+
 function collectLocalRepos() {
-  const entries = fs.readdirSync(HOME_DIR, { withFileTypes: true });
-  const repos = [];
+  const results = new Map();
+  const visited = new Set();
 
-  for (const entry of entries) {
-    if (!entry.isDirectory()) continue;
-    if (entry.name.startsWith(".")) continue;
-
-    const repoPath = path.join(HOME_DIR, entry.name);
-    if (!fs.existsSync(path.join(repoPath, ".git"))) continue;
-
-    const repoInfo = getLocalRepoInfo(repoPath);
-    if (repoInfo) repos.push(repoInfo);
+  collectReposFromRoot(HOME_DIR, 1, results, visited);
+  for (const rootDir of EXTRA_SCAN_ROOTS) {
+    collectReposFromRoot(rootDir, 4, results, visited);
   }
 
-  return repos;
+  return [...results.values()];
 }
 
 function main() {
   const existingRepos = readJson(REPOS_PATH, []);
-  const existingMeta = readJson(META_PATH, {});
   const localRepos = collectLocalRepos();
   const localRepoMap = new Map(localRepos.map((repo) => [repo.full_name.toLowerCase(), repo]));
 
-  const trackedRepos = Array.isArray(existingRepos)
-    ? existingRepos.map((repo) => {
-        const localRepo = localRepoMap.get(String(repo?.full_name || "").toLowerCase());
-        return localRepo
-          ? {
-              ...repo,
-              name: localRepo.name,
-              full_name: localRepo.full_name,
-              updated_at: localRepo.updated_at,
-              pushed_at: localRepo.pushed_at,
-              html_url: localRepo.html_url,
-              recentCommitCount: localRepo.recentCommitCount,
-            }
-          : repo;
-      })
-    : [];
+  const mergedRepoMap = new Map();
+
+  if (Array.isArray(existingRepos)) {
+    for (const repo of existingRepos) {
+      const fullName = String(repo?.full_name || "").trim();
+      if (!fullName) continue;
+      mergedRepoMap.set(fullName.toLowerCase(), repo);
+    }
+  }
+
+  for (const localRepo of localRepos) {
+    const key = localRepo.full_name.toLowerCase();
+    const existingRepo = mergedRepoMap.get(key) || {};
+    mergedRepoMap.set(key, {
+      ...existingRepo,
+      ...localRepo,
+      owner: existingRepo.owner ?? {
+        login: OWNER,
+      },
+      private: existingRepo.private ?? false,
+      fork: existingRepo.fork ?? false,
+      visibility: existingRepo.visibility ?? "public",
+    });
+  }
+
+  const trackedRepos = [...mergedRepoMap.values()];
 
   trackedRepos.sort((a, b) => {
     const aTime = Date.parse(a?.updated_at || a?.pushed_at || "") || 0;

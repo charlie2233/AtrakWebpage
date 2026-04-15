@@ -27,6 +27,7 @@ const CACHED_META_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-meta.json`
 const CACHED_RELEASES_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-releases.json` : 'data/github-releases.json'; // Updated by GitHub Actions
 const CACHED_WEEKLY_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-weekly.json` : 'data/github-weekly.json'; // Updated by GitHub Actions
 const WEEKLY_LOG_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}WeeklyLog.txt` : 'WeeklyLog.txt';
+const IS_LOCAL_PREVIEW = ['localhost', '127.0.0.1'].includes(window.location.hostname);
 
 // Known featured/pinned projects to exclude from "More Projects" section
 const FEATURED_PROJECT_REPOS = [
@@ -365,8 +366,13 @@ async function fetchGitHubRepositories() {
     let repos = await loadCachedData();
     lastGitHubFetchSource = repos ? 'cache' : null;
     
-    // If no cached data, fetch from API
+    // Only fall back to the live API for local preview. Public pages should use
+    // the checked-in snapshot so renamed/private repos do not leak through.
     if (!repos) {
+        if (!IS_LOCAL_PREVIEW) {
+            lastGitHubFetchSource = 'unavailable';
+            return [];
+        }
         try {
             const response = await fetch(`${GITHUB_API_BASE}/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`);
             
@@ -630,6 +636,9 @@ async function renderMoreProjects() {
         } else if (lastGitHubFetchSource === 'api') {
             setMoreProjectsMeta('Live from GitHub API');
             setFooterSyncStatus('Live GitHub data');
+        } else if (lastGitHubFetchSource === 'unavailable') {
+            setMoreProjectsMeta('GitHub snapshot unavailable.');
+            setFooterSyncStatus('GitHub snapshot unavailable');
         } else {
             setMoreProjectsMeta('');
         }
@@ -673,6 +682,10 @@ async function getProjectDetails(fullRepoName) {
                 license: cachedRepo.license ? cachedRepo.license.name : null
             };
         }
+    }
+
+    if (!IS_LOCAL_PREVIEW) {
+        throw new Error('Project details are unavailable because the cached GitHub snapshot is missing this repository.');
     }
 
     try {

@@ -59,19 +59,45 @@ jobs:
             REPO_URL="${API_BASE}/user/repos?affiliation=owner&sort=updated&per_page=100"
           fi
 
-          curl -fsSL "${AUTH_HEADER[@]}" \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "${REPO_URL}" \
-            > data/_repos_raw.json
+          page=1
+          while [ "$page" -le 10 ]; do
+            url="${REPO_URL}&page=${page}"
+            output="data/_repos_page_${page}.json"
+            curl -fsSL "${AUTH_HEADER[@]}" \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "${url}" \
+              > "${output}"
+            count=$(python3 - <<'PY' "${output}"
+import json
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+data = json.loads(path.read_text(encoding="utf-8"))
+print(len(data) if isinstance(data, list) else 0)
+PY
+)
+            if [ "${count}" -lt 100 ]; then
+              break
+            fi
+            page=$((page + 1))
+          done
 
           python3 - <<'PY'
           import json
+          import glob
           from pathlib import Path
 
-          raw = json.loads(Path("data/_repos_raw.json").read_text(encoding="utf-8"))
-          if not isinstance(raw, list):
-              raise SystemExit(f"Expected list response, got: {type(raw).__name__}: {raw}")
+          raw = []
+          for file_name in sorted(glob.glob("data/_repos_page_*.json")):
+              path = Path(file_name)
+              try:
+                  data = json.loads(path.read_text(encoding="utf-8"))
+                  if isinstance(data, list):
+                      raw.extend(data)
+              finally:
+                  path.unlink(missing_ok=True)
 
           repos = []
           seen = set()
@@ -90,25 +116,38 @@ jobs:
 
           repos.sort(key=lambda r: r.get("updated_at") or "", reverse=True)
           Path("data/github-repos.json").write_text(json.dumps(repos, indent=2) + "\n", encoding="utf-8")
-          Path("data/_repos_raw.json").unlink(missing_ok=True)
           PY
 
           # Fetch recent events (pushes, releases, etc.)
-          for page in 1 2 3; do
+          for page in $(seq 1 10); do
             curl -fsSL "${AUTH_HEADER[@]}" \
               -H "Accept: application/vnd.github+json" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
               "${API_BASE}/users/${USERNAME}/events/public?per_page=100&page=${page}" \
               > "data/_events_${page}.json" || echo "[]" > "data/_events_${page}.json"
+            count=$(python3 - <<'PY' "data/_events_${page}.json"
+import json
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+data = json.loads(path.read_text(encoding="utf-8"))
+print(len(data) if isinstance(data, list) else 0)
+PY
+)
+            if [ "${count}" -lt 100 ]; then
+              break
+            fi
           done
 
           python3 - <<'PY'
+          import glob
           import json
           from pathlib import Path
 
           events = []
-          for page in (1, 2, 3):
-              path = Path(f"data/_events_{page}.json")
+          for file_name in sorted(glob.glob("data/_events_*.json")):
+              path = Path(file_name)
               try:
                   data = json.loads(path.read_text(encoding="utf-8"))
                   if isinstance(data, list):
@@ -235,7 +274,6 @@ jobs:
               if isinstance(r, dict) and r.get("full_name") and not r.get("fork")
           ]
           candidates.sort(key=lambda r: r.get("pushed_at") or "", reverse=True)
-          candidates = candidates[:30]
 
           releases = []
           for repo in candidates:
