@@ -6,7 +6,7 @@
     "updated_at": "2026-04-13T18:19:31Z",
     "pushed_at": "2026-04-13T18:19:31Z",
     "default_branch": "codex/phase4h-label-ingestion-and-retrain-gate",
-    "recentCommitCount": 13,
+    "recentCommitCount": 0,
     "owner": {
       "login": "charlie2233"
     },
@@ -123,7 +123,7 @@
       "triage": true,
       "pull": true
     },
-    "recentCommitCount": 2
+    "recentCommitCount": 0
   },
   {
     "name": "RestaurantCommentValidation_Analysis",
