@@ -121,6 +121,18 @@ function setFooterSyncStatus(message) {
     }
 }
 
+function getGitHubCacheSource(meta) {
+    if (!meta || typeof meta !== 'object') return 'unknown';
+    return String(meta.source || '').trim().toLowerCase();
+}
+
+function getGitHubCacheSourceText(meta) {
+    const source = getGitHubCacheSource(meta);
+    if (source === 'local-git-refresh') return 'Local repo snapshot';
+    if (source === 'github-actions-cache') return 'GitHub Actions cache';
+    return 'GitHub cache';
+}
+
 function escapeHtml(value) {
     const str = value == null ? '' : String(value);
     return str
@@ -393,7 +405,7 @@ async function fetchGitHubRepositories() {
     const projects = repos
         .filter(repo => {
             // Exclude featured projects and forks
-            return !repo.fork && !FEATURED_PROJECT_REPOS.includes(repo.name);
+            return !repo.fork && !repo.private && !FEATURED_PROJECT_REPOS.includes(repo.name);
         })
         .map(repo => ({
             name: repo.name,
@@ -626,8 +638,12 @@ async function renderMoreProjects() {
         if (lastGitHubFetchSource === 'cache') {
             const meta = await loadCachedMeta();
             if (meta && meta.updatedAt) {
-                const updateMsg = `Synced via GitHub Actions • ${formatUTCDateTime(meta.updatedAt)}`;
-                setMoreProjectsMeta(`Cached daily • Last updated ${formatUTCDateTime(meta.updatedAt)}`);
+                const sourceText = getGitHubCacheSourceText(meta);
+                const updateMsg = `${sourceText} • ${formatUTCDateTime(meta.updatedAt)}`;
+                const cadenceText = getGitHubCacheSource(meta) === 'github-actions-cache'
+                    ? 'Cached daily'
+                    : 'Local snapshot';
+                setMoreProjectsMeta(`${cadenceText} • Last updated ${formatUTCDateTime(meta.updatedAt)}`);
                 setFooterSyncStatus(updateMsg);
             } else {
                 setMoreProjectsMeta('Cached data loaded.');
@@ -1053,12 +1069,15 @@ async function renderWeeklyHighlights() {
             ? take(categorizedCommits.fix, 6).map(c => li(formatCommit(c))).join('')
             : li('No obvious “fix/bug” commits this week. Either we’re perfect… or it’s hidden in private repos.');
 
-        const [weeklyArchive, cachedRepos, cachedReleases, cachedWeeklyStats] = await Promise.all([
+        const [weeklyArchive, cachedRepos, cachedReleases, cachedWeeklyStats, cachedMeta] = await Promise.all([
             loadWeeklyLogArchive(),
             loadCachedData(),
             loadCachedReleases(),
-            loadCachedWeeklyStats()
+            loadCachedWeeklyStats(),
+            loadCachedMeta()
         ]);
+        const cacheSourceText = getGitHubCacheSourceText(cachedMeta);
+        const isLocalCacheSource = getGitHubCacheSource(cachedMeta) === 'local-git-refresh';
 
         const weeklyStatsSyncDate = (() => {
             const raw = cachedWeeklyStats && typeof cachedWeeklyStats.updatedAt === 'string'
@@ -1071,11 +1090,16 @@ async function renderWeeklyHighlights() {
             if (weeklyStatsSyncDate) {
                 syncPillEl.textContent = `Synced ${getTimeAgo(weeklyStatsSyncDate)}`;
                 syncPillEl.dataset.state = 'fresh';
-                syncPillEl.title = `GitHub cache updated ${formatUTCDateTime(weeklyStatsSyncDate.toISOString())}`;
+                syncPillEl.title = `${cacheSourceText} updated ${formatUTCDateTime(weeklyStatsSyncDate.toISOString())}`;
             } else {
                 syncPillEl.textContent = 'Live digest';
                 syncPillEl.dataset.state = 'neutral';
             }
+        }
+        if (sourceNoteEl) {
+            sourceNoteEl.textContent = isLocalCacheSource
+                ? 'Local repo snapshot + weekly archive'
+                : 'GitHub cache + weekly archive';
         }
 
         const weeklyStatsCommits = (() => {
@@ -1614,13 +1638,16 @@ async function renderWeeklyHighlights() {
             `${activeRepos.size} repo${activeRepos.size === 1 ? '' : 's'} active`,
             `${releases.length} release${releases.length === 1 ? '' : 's'}`
         ].join(' • ');
+        const liveWeeklyLogNote = isLocalCacheSource
+            ? 'Built from the local repo snapshot and weekly archive. Public GitHub events/releases are intentionally cleared to avoid stale mixed data.'
+            : 'Built from GitHub events/cache (real activity), not hand-written mock notes.';
         const liveWeeklyLogSection = `
             <section class="weekly-section weekly-section-wide weekly-live-log" id="weekly-live-log">
                 <div class="weekly-section-header">
                     <h4 class="weekly-section-title"><span class="weekly-section-icon">🗞️</span>Weekly Log</h4>
                     <span class="weekly-section-meta">GitHub • Last 7d</span>
                 </div>
-                <p class="weekly-briefing-text weekly-live-log-note">Built from GitHub events/cache (real activity), not hand-written mock notes.</p>
+                <p class="weekly-briefing-text weekly-live-log-note">${escapeHtml(liveWeeklyLogNote)}</p>
                 <p class="weekly-briefing-text weekly-live-log-summary">${escapeHtml(liveLogSummaryLine)}</p>
                 <div class="weekly-live-log-chips" aria-label="Weekly log status">
                     ${liveLogSignalChips}
@@ -2441,7 +2468,11 @@ async function renderReleasesFeed() {
     const releases = Array.isArray(rawReleases) ? rawReleases : [];
     if (!releases.length) {
         listEl.innerHTML = '<div class="releases-live-empty">No cached releases yet.</div>';
-        if (metaEl) metaEl.textContent = 'Set up GitHub Actions caching to populate this feed.';
+        if (metaEl) {
+            metaEl.textContent = getGitHubCacheSource(meta) === 'local-git-refresh'
+                ? 'Local repo snapshot does not include GitHub release metadata.'
+                : 'Set up GitHub Actions caching to populate this feed.';
+        }
         renderContentFreshnessStrip('releases-freshness-strip', {
             kind: 'Release notes',
             updatedAt: cacheUpdatedAt,

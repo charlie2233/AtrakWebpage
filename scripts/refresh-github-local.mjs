@@ -13,6 +13,8 @@ const META_PATH = path.join(DATA_DIR, "github-meta.json");
 const WEEKLY_PATH = path.join(DATA_DIR, "github-weekly.json");
 const LAST_UPDATED_PATH = path.join(DATA_DIR, "last-updated.txt");
 const REPOS_PATH = path.join(DATA_DIR, "github-repos.json");
+const EVENTS_PATH = path.join(DATA_DIR, "github-events.json");
+const RELEASES_PATH = path.join(DATA_DIR, "github-releases.json");
 const EXTRA_SCAN_ROOTS = [
   path.join(HOME_DIR, ".codex", "worktrees"),
   path.join(HOME_DIR, ".tmp"),
@@ -238,6 +240,11 @@ function main() {
 
   writeJson(META_PATH, meta);
   writeJson(WEEKLY_PATH, weekly);
+  // Local refreshes can only observe checked-out git repos, not GitHub public
+  // events or release metadata. Clear those caches so the site does not
+  // publish mixed freshness states from older API snapshots.
+  writeJson(EVENTS_PATH, []);
+  writeJson(RELEASES_PATH, []);
   fs.writeFileSync(LAST_UPDATED_PATH, `${now}\n`, "utf8");
 }
 
