@@ -683,10 +683,54 @@ You can honestly demo this to a coach and they'd actually use it.
 
 ---
 
+## Part 6 — April 2026 (Live Repo Updates)
+
+---
+
+## Week of Apr 13 – Apr 19
+
+### "Cache freshness hardening + reliability cleanup"
+
+**Highlights**
+
+* Improved weekly GitHub cache freshness handling
+* Tightened fallback behavior for status/copy rendering
+* Focused on reliability and content freshness pipeline
+
+**Shipped**
+
+* Cache refresh workflow updates
+* Lifepage fallback status alignment fixes
+* Freshness window consistency fixes
+
+**Engineering**
+
+* Hardened local refresh logic for weekly windows
+* Reduced stale-state mismatch between cache timestamps and UI labels
+* Kept refresh outputs deterministic for automation runs
+
+**Fixes**
+
+* Fallback status copy mismatch
+* GitHub cache freshness alignment edge cases
+
+**Metrics**
+
+* Commits: 4
+* PRs: 0
+* Files changed: 9
+
+**Next**
+
+* Restore live GitHub API/connector access for non-local contribution counts
+* Continue weekly log + release automation with Sunday → Saturday windows
+
+---
+
 # 📊 Summary
 
-**Total Coverage:** August 31, 2024 – January 24, 2025
-**Total Weeks:** 16 documented (21 total in coverage range; Dec Weeks 14-18 missing)
+**Total Coverage:** August 31, 2024 – April 19, 2026
+**Total Weeks:** 17 documented (22 total in coverage range; Dec Weeks 14-18 missing)
 **Format:** Sunday → Saturday (PT)
 
 **Major Milestones:**

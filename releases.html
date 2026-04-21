@@ -86,11 +86,89 @@
 	                        <h2 class="release-toc-title">Jump to a month</h2>
 	                    </div>
 	                    <div class="release-toc-links">
+	                        <a href="#apr-2026">April 2026</a>
 	                        <a href="#jan-2026">January 2026</a>
 	                        <a href="#dec-2025">December 2025</a>
 	                        <a href="#nov-2025">November 2025</a>
 	                    </div>
 	                </nav>
+	
+	                <!-- April 2026 -->
+	                <article class="release-post glass-card" id="apr-2026">
+	                    <header class="release-header">
+	                        <time class="release-date">April 2026</time>
+	                        <span class="release-version">v2.2</span>
+	                    </header>
+
+	                    <div class="release-body">
+	                        <section class="release-section shipped">
+	                            <h3>🚀 What Shipped</h3>
+	                            <ul class="release-list">
+	                                <li>
+	                                    <strong>GitHub Cache Refresh Reliability</strong> — Hardened the local refresh pipeline to keep weekly activity windows and freshness metadata aligned.
+	                                </li>
+	                                <li>
+	                                    <strong>Lifepage Status Copy Alignment</strong> — Improved fallback status wording to match current source states and prevent mixed stale/fresh signals.
+	                                </li>
+	                                <li>
+	                                    <strong>Automation-Friendly Output Stability</strong> — Refined cache output consistency to support recurring weekly log updates with fewer manual fixes.
+	                                </li>
+	                            </ul>
+	                        </section>
+
+	                        <section class="release-section broke">
+	                            <h3>💥 What Broke</h3>
+	                            <ul class="release-list">
+	                                <li>
+	                                    <strong>Freshness Drift</strong> — Cache timestamps and UI freshness labels could drift out of sync in edge windows. Fixed in refresh logic.
+	                                </li>
+	                                <li>
+	                                    <strong>Fallback Messaging Mismatch</strong> — Some fallback copy did not reflect current data source conditions. Corrected for consistency.
+	                                </li>
+	                            </ul>
+	                        </section>
+
+	                        <section class="release-section next">
+	                            <h3>🔮 What's Next</h3>
+	                            <ul class="release-list">
+	                                <li>Restore live GitHub API/connector access to include non-local PR and issue contribution counts.</li>
+	                                <li>Continue weekly Sunday→Saturday logging with automated release-note rollups.</li>
+	                                <li>Expand release cards with direct links to latest LunarWeb commits once API access is restored.</li>
+	                            </ul>
+	                        </section>
+
+	                        <section class="release-section stats">
+	                            <h3>📊 By the Numbers</h3>
+	                            <div class="release-stats">
+	                                <div class="stat-item">
+	                                    <span class="stat-value">11</span>
+	                                    <span class="stat-label">Commits</span>
+	                                </div>
+	                                <div class="stat-item">
+	                                    <span class="stat-value">42</span>
+	                                    <span class="stat-label">Files Changed</span>
+	                                </div>
+	                                <div class="stat-item">
+	                                    <span class="stat-value">3</span>
+	                                    <span class="stat-label">Fixes</span>
+	                                </div>
+	                                <div class="stat-item">
+	                                    <span class="stat-value">3</span>
+	                                    <span class="stat-label">Pipeline Improvements</span>
+	                                </div>
+	                            </div>
+	                        </section>
+	                    </div>
+
+	                    <footer class="release-footer">
+	                        <div class="release-projects">
+	                            <strong>Related Projects:</strong>
+	                            <a href="index.html">Website</a>
+	                            <a href="releases.html">Release Notes</a>
+	                            <a href="WeeklyLog.txt">Weekly Log</a>
+	                        </div>
+	                    </footer>
+	                </article>
 	
 	                <!-- January 2026 -->
 	                <article class="release-post glass-card" id="jan-2026">
