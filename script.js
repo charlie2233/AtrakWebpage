@@ -1764,7 +1764,7 @@ window.addEventListener('load', () => {
 // Performance: Honor user motion preferences only (avoid disabling effects unexpectedly).
 
 // Lazy-load heavy GitHub homepage features so first paint is not blocked by github-projects.js
-const GITHUB_PROJECTS_SCRIPT_URL = 'github-projects.js?v=27';
+const GITHUB_PROJECTS_SCRIPT_URL = 'github-projects.js?v=28';
 let githubProjectsLoadPromise = null;
 
 const hasGitHubHomepageTargets = () => {
@@ -1773,7 +1773,7 @@ const hasGitHubHomepageTargets = () => {
         document.getElementById('live-activity-feed') ||
         document.getElementById('project-analytics-grid') ||
         document.getElementById('releases-live-list') ||
-        document.getElementById('more-projects-grid')
+        document.getElementById('project-slider-track')
     );
 };
 
@@ -1813,9 +1813,19 @@ const ensureGitHubProjectsLoaded = () => {
 const scheduleGitHubProjectsIdleLoad = () => {
     if (!hasGitHubHomepageTargets()) return;
     const trigger = () => {
-        ensureGitHubProjectsLoaded().catch((error) => {
-            console.warn('GitHub projects module lazy-load failed:', error);
-        });
+        ensureGitHubProjectsLoaded()
+            .then((githubProjects) => {
+                if (
+                    document.getElementById('project-slider-track') &&
+                    githubProjects &&
+                    typeof githubProjects.renderMoreProjects === 'function'
+                ) {
+                    githubProjects.renderMoreProjects();
+                }
+            })
+            .catch((error) => {
+                console.warn('GitHub projects module lazy-load failed:', error);
+            });
     };
 
     const schedule = () => {
@@ -1837,61 +1847,178 @@ scheduleGitHubProjectsIdleLoad();
 
 
 // ================================
-// Project Tabs Functionality
+// Project Slider Functionality
 // ================================
-// Handles switching between project tabs and loading more projects
-const projectTabs = document.querySelectorAll('.project-tab');
-const projectTabContents = document.querySelectorAll('.project-tab-content');
+// Replaces the old Featured/More Projects tabs with a single paged slider.
+const initProjectSlider = () => {
+    const sliders = Array.from(document.querySelectorAll('[data-project-slider]'));
+    if (!sliders.length) return;
 
-projectTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-        const targetTab = tab.getAttribute('data-tab');
-        
-        // Remove active class from all tabs and contents
-        projectTabs.forEach(t => t.classList.remove('active'));
-        projectTabContents.forEach(content => content.classList.remove('active'));
-        
-        // Add active class to clicked tab and corresponding content
-        tab.classList.add('active');
-        const targetContent = document.getElementById(`${targetTab}-tab`);
-        if (targetContent) {
-            targetContent.classList.add('active');
-            
-            // Activate reveal animations for elements in this tab
-            targetContent.querySelectorAll('.reveal:not(.active)').forEach(el => {
-                el.classList.add('active');
-            });
-            
-            // Load GitHub projects when switching to More Projects tab
-            if (targetTab === 'more') {
-                ensureGitHubProjectsLoaded()
-                    .then(() => {
-                        if (
-                            tab.classList.contains('active') &&
-                            window.GitHubProjects &&
-                            typeof window.GitHubProjects.renderMoreProjects === 'function'
-                        ) {
-                            window.GitHubProjects.renderMoreProjects();
-                        }
-                    })
-                    .catch((error) => {
-                        console.warn('Failed to render More Projects:', error);
-                    });
-            }
-        }
-    });
-});
-
-// Deep link: open "More Projects" tab when linked from other pages (e.g. /projects/github-project.html)
-if (projectTabs.length) {
-    const hash = (window.location && typeof window.location.hash === 'string')
+    const getHash = () => (window.location && typeof window.location.hash === 'string')
         ? window.location.hash.toLowerCase()
         : '';
+    const scrollToProjectsSection = (updateHash = false) => {
+        const projectsSection = document.getElementById('projects');
+        if (!projectsSection) return;
 
-    if (hash === '#more-projects') {
-        const moreTab = document.querySelector('.project-tab[data-tab="more"]');
-        if (moreTab) moreTab.click();
+        projectsSection.scrollIntoView({ behavior: motionSafeScrollBehavior, block: 'start' });
+        if (updateHash && window.history && typeof window.history.pushState === 'function') {
+            window.history.pushState(null, '', '#more-projects');
+        }
+    };
+
+    sliders.forEach(slider => {
+        if (slider.dataset.projectSliderBound === 'true') return;
+        slider.dataset.projectSliderBound = 'true';
+
+        const viewport = slider.querySelector('[data-project-slider-viewport]');
+        const track = slider.querySelector('[data-project-slider-track]');
+        const prevBtn = slider.querySelector('[data-project-slider-prev]');
+        const nextBtn = slider.querySelector('[data-project-slider-next]');
+        const status = slider.querySelector('[data-project-slider-status]');
+
+        if (!viewport || !track) return;
+
+        const getPages = () => Array.from(track.querySelectorAll('[data-project-slide-page]'));
+        let userRequestedPageChange = false;
+
+        const getCurrentIndex = () => {
+            const pages = getPages();
+            if (!pages.length) return 0;
+
+            const currentLeft = viewport.scrollLeft;
+            let closestIndex = 0;
+            let closestDistance = Number.POSITIVE_INFINITY;
+
+            pages.forEach((page, index) => {
+                const pageLeft = page.offsetLeft - track.offsetLeft;
+                const distance = Math.abs(pageLeft - currentLeft);
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestIndex = index;
+                }
+            });
+
+            return closestIndex;
+        };
+
+        const updateControls = () => {
+            const pages = getPages();
+            const currentIndex = getCurrentIndex();
+            const totalPages = pages.length;
+
+            if (prevBtn) prevBtn.disabled = currentIndex <= 0;
+            if (nextBtn) nextBtn.disabled = currentIndex >= totalPages - 1;
+            if (status) status.textContent = totalPages > 0
+                ? `Page ${Math.min(currentIndex + 1, totalPages)} of ${totalPages}`
+                : 'No projects';
+
+            slider.dataset.currentPage = String(currentIndex + 1);
+            slider.dataset.totalPages = String(totalPages);
+        };
+
+        const scrollToPage = (targetIndex) => {
+            const pages = getPages();
+            if (!pages.length) return;
+            userRequestedPageChange = true;
+            const safeIndex = Math.max(0, Math.min(targetIndex, pages.length - 1));
+            const targetLeft = pages[safeIndex].offsetLeft - track.offsetLeft;
+
+            viewport.scrollTo({
+                left: targetLeft,
+                behavior: motionSafeScrollBehavior
+            });
+        };
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => scrollToPage(getCurrentIndex() - 1));
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => scrollToPage(getCurrentIndex() + 1));
+        }
+
+        viewport.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                scrollToPage(getCurrentIndex() - 1);
+            } else if (event.key === 'ArrowRight') {
+                event.preventDefault();
+                scrollToPage(getCurrentIndex() + 1);
+            } else if (event.key === 'Home') {
+                event.preventDefault();
+                scrollToPage(0);
+            } else if (event.key === 'End') {
+                event.preventDefault();
+                scrollToPage(getPages().length - 1);
+            }
+        });
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+        const swipeThreshold = 50;
+
+        viewport.addEventListener('touchstart', (event) => {
+            const touch = event.changedTouches[0];
+            touchStartX = touch.screenX;
+            touchStartY = touch.screenY;
+        }, { passive: true });
+
+        viewport.addEventListener('touchend', (event) => {
+            const touch = event.changedTouches[0];
+            const diffX = touchStartX - touch.screenX;
+            const diffY = Math.abs(touchStartY - touch.screenY);
+
+            if (Math.abs(diffX) > swipeThreshold && diffY < 60) {
+                scrollToPage(getCurrentIndex() + (diffX > 0 ? 1 : -1));
+            }
+        }, { passive: true });
+
+        let raf = 0;
+        viewport.addEventListener('scroll', () => {
+            if (raf) return;
+            raf = window.requestAnimationFrame(() => {
+                raf = 0;
+                updateControls();
+            });
+        }, { passive: true });
+
+        window.addEventListener('resize', updateControls, { passive: true });
+        document.addEventListener('atrak:projects-updated', () => {
+            window.requestAnimationFrame(updateControls);
+        });
+
+        const resetInitialPosition = () => {
+            if (userRequestedPageChange) return;
+            viewport.scrollLeft = 0;
+            updateControls();
+        };
+
+        resetInitialPosition();
+        window.requestAnimationFrame(resetInitialPosition);
+        window.addEventListener('load', () => window.requestAnimationFrame(resetInitialPosition), { once: true });
+        setTimeout(resetInitialPosition, 120);
+    });
+
+    document.querySelectorAll('a[href="#more-projects"]').forEach(link => {
+        if (link.dataset.projectSliderLinkBound === 'true') return;
+        link.dataset.projectSliderLinkBound = 'true';
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            scrollToProjectsSection(true);
+        }, { capture: true });
+    });
+
+    if (getHash() === '#more-projects') {
+        window.requestAnimationFrame(() => scrollToProjectsSection(false));
     }
+};
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initProjectSlider);
+} else {
+    initProjectSlider();
 }
 
 // ================================
@@ -2403,7 +2530,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Apply stagger animations to list items
     if (!prefersReducedMotion) {
-        const lists = document.querySelectorAll('.highlight-list, .role-list, .value-grid, .projects-grid');
+        const lists = document.querySelectorAll('.highlight-list, .role-list, .value-grid, .projects-grid, .project-slide-page');
         lists.forEach(list => {
             const items = Array.from(list.children);
             items.forEach((item, index) => {

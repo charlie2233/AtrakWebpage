@@ -28,6 +28,7 @@ const CACHED_RELEASES_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-releas
 const CACHED_WEEKLY_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-weekly.json` : 'data/github-weekly.json'; // Updated by GitHub Actions
 const WEEKLY_LOG_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}WeeklyLog.txt` : 'WeeklyLog.txt';
 const IS_LOCAL_PREVIEW = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+const PROJECTS_PER_SLIDER_PAGE = 6;
 
 // Known featured/pinned projects to exclude from "More Projects" section
 const FEATURED_PROJECT_REPOS = [
@@ -484,7 +485,7 @@ function createProjectCard(project) {
         : '<span class="tag">General</span>';
     
     return `
-        <div class="project-card reveal glass-card"${repoAttr}>
+        <div class="project-card reveal glass-card" data-github-project="true"${repoAttr}>
             <div class="project-image">
                 <div class="project-icon">${icon}</div>
             </div>
@@ -579,59 +580,98 @@ function createWeeklyHighlightsSkeleton() {
     `;
 }
 
+function notifyProjectSliderUpdated() {
+    document.dispatchEvent(new CustomEvent('atrak:projects-updated'));
+}
+
+function getProjectSliderTrack() {
+    return document.getElementById('project-slider-track');
+}
+
+function createProjectSlidePage(label, isDynamic = true) {
+    const page = document.createElement('div');
+    page.className = 'project-slide-page';
+    page.setAttribute('data-project-slide-page', '');
+    if (isDynamic) {
+        page.setAttribute('data-dynamic-project-page', 'true');
+    }
+    if (label) {
+        page.setAttribute('aria-label', label);
+    }
+    return page;
+}
+
+function clearDynamicProjectPages(track) {
+    track.querySelectorAll('[data-dynamic-project-page="true"]').forEach(page => page.remove());
+}
+
+function appendProjectCardsToSlider(track, cardHtmlItems, labelPrefix = 'GitHub projects') {
+    cardHtmlItems.forEach((cardHtml, index) => {
+        const pageNumber = Math.floor(index / PROJECTS_PER_SLIDER_PAGE) + 1;
+        let page = track.querySelector(`[data-dynamic-project-page="true"][data-dynamic-page-index="${pageNumber}"]`);
+
+        if (!page) {
+            page = createProjectSlidePage(`${labelPrefix} page ${pageNumber}`);
+            page.dataset.dynamicPageIndex = String(pageNumber);
+            track.appendChild(page);
+        }
+
+        page.insertAdjacentHTML('beforeend', cardHtml);
+    });
+
+    notifyProjectSliderUpdated();
+}
+
+function appendProjectSliderMessage(track, messageHtml, label) {
+    clearDynamicProjectPages(track);
+    const page = createProjectSlidePage(label);
+    page.classList.add('project-slide-page-message');
+    page.innerHTML = messageHtml;
+    track.appendChild(page);
+    notifyProjectSliderUpdated();
+}
+
 /**
- * Render the More Projects section
+ * Render the More Projects section inside the unified project slider
  */
 async function renderMoreProjects() {
-    const container = document.getElementById('more-projects-grid');
-    if (!container) {
-        console.warn('More projects container not found');
+    const track = getProjectSliderTrack();
+    if (!track) {
+        console.warn('Project slider track not found');
         return;
     }
 
-    // Check if we already have loaded GitHub projects (excluding any pinned static cards)
-    const existingProjectCards = container.querySelectorAll('.project-card:not(.skeleton-card)');
-    const pinnedCards = container.querySelectorAll('.project-card[data-pinned-project="true"]:not(.skeleton-card)');
-    const hasOtherProjects = existingProjectCards.length > pinnedCards.length;
-    
-    if (hasOtherProjects) {
-        return; // Already loaded
+    if (
+        track.querySelector('.project-card[data-github-project="true"]') ||
+        track.querySelector('[data-dynamic-project-page="true"] .skeleton-card')
+    ) {
+        return;
     }
 
-    // Show skeleton loading state (append after existing cards)
-    const skeletonCount = 6;
-    const skeletons = Array(skeletonCount).fill(0).map(() => createProjectSkeleton()).join('');
-    container.insertAdjacentHTML('beforeend', skeletons);
+    const skeletons = Array(PROJECTS_PER_SLIDER_PAGE).fill(0).map(() => createProjectSkeleton());
+    clearDynamicProjectPages(track);
+    appendProjectCardsToSlider(track, skeletons, 'Loading GitHub projects');
     setMoreProjectsMeta('Loading GitHub data…');
 
     try {
         const projects = await fetchGitHubRepositories();
-        
-        // Limit to top 6 most recently updated projects
-        const displayProjects = projects.slice(0, 6);
-        const combinedHtml = displayProjects.map(project => createProjectCard(project)).join('');
+        const displayProjects = projects.slice(0, PROJECTS_PER_SLIDER_PAGE);
+        const projectCards = displayProjects.map(project => createProjectCard(project));
 
-        // Remove skeleton loaders
-        container.querySelectorAll('.skeleton-card').forEach(skeleton => skeleton.remove());
+        clearDynamicProjectPages(track);
 
-        if (!combinedHtml.trim()) {
-            // Only show empty message if there are no projects at all (including pinned cards)
-            if (container.querySelectorAll('.project-card').length === 0) {
-                container.innerHTML = '<p class="empty-message">No additional projects found.</p>';
-            }
-            setMoreProjectsMeta('');
+        if (!projectCards.length) {
+            setMoreProjectsMeta('No additional GitHub projects found.');
+            notifyProjectSliderUpdated();
             return;
         }
 
-        // Append new projects (don't replace existing pinned cards)
-        container.insertAdjacentHTML('beforeend', combinedHtml);
+        appendProjectCardsToSlider(track, projectCards, 'GitHub projects');
 
-        // Re-trigger reveal animations for new elements
-        const newElements = container.querySelectorAll('.reveal:not(.active)');
+        const newElements = track.querySelectorAll('[data-dynamic-project-page="true"] .reveal:not(.active)');
         if (window.revealObserver) {
             newElements.forEach(el => window.revealObserver.observe(el));
         } else {
-            // Fallback: if observer isn't ready yet, just show them
             newElements.forEach(el => el.classList.add('active'));
         }
         
@@ -661,7 +701,11 @@ async function renderMoreProjects() {
         
     } catch (error) {
         console.error('Failed to render projects:', error);
-        container.innerHTML = '<p class="error-message">Failed to load GitHub projects. Please try again later.</p>';
+        appendProjectSliderMessage(
+            track,
+            '<p class="error-message project-slider-message">Failed to load GitHub projects. Please try again later.</p>',
+            'GitHub projects unavailable'
+        );
         setMoreProjectsMeta('');
     }
 }
@@ -2718,10 +2762,9 @@ function initGitHubFeatures() {
     schedule(renderReleasesFeed);
     schedule(renderProjectAnalytics);
     
-    // Only auto-load More Projects if the tab is active (visible) on page load
-    const moreProjectsGrid = document.getElementById('more-projects-grid');
-    const moreTab = document.getElementById('more-tab');
-    if (moreProjectsGrid && moreTab && moreTab.classList.contains('active')) {
+    // Auto-load GitHub projects into the unified project slider when present
+    const projectSliderTrack = document.getElementById('project-slider-track');
+    if (projectSliderTrack) {
         schedule(renderMoreProjects);
     }
 }
