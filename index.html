@@ -31,7 +31,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="assets/logo.png?v=20260202">
     <link rel="apple-touch-icon" sizes="120x120" href="assets/logo.png?v=20260202">
     <link rel="apple-touch-icon" sizes="76x76" href="assets/logo.png?v=20260202">
-	    <link rel="stylesheet" href="styles.css?v=28">
+	    <link rel="stylesheet" href="styles.css?v=29">
     
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -320,12 +320,20 @@
                     <div class="project-slider-copy">
                         <span class="project-slider-kicker">Slide the launch bay</span>
                         <p class="project-slider-hint">Most important projects are first. Swipe or use arrows to browse the full team hub.</p>
+                        <div class="project-slider-pills" aria-label="Project slider highlights">
+                            <span class="project-slider-pill">Priority-first</span>
+                            <span class="project-slider-pill">GitHub synced</span>
+                            <span class="project-slider-pill">Swipe-ready</span>
+                        </div>
                     </div>
                     <div class="project-slider-controls" aria-label="Project slider controls">
                         <button class="project-slider-btn" type="button" data-project-slider-prev aria-label="Previous project page">
                             <span aria-hidden="true">←</span>
                         </button>
-                        <span class="project-slider-status" data-project-slider-status aria-live="polite">Page 1 of 2</span>
+                        <div class="project-slider-progress">
+                            <span class="project-slider-status" data-project-slider-status aria-live="polite">Page 1 of 2</span>
+                            <div class="project-slider-dots" data-project-slider-dots role="group" aria-label="Project pages"></div>
+                        </div>
                         <button class="project-slider-btn" type="button" data-project-slider-next aria-label="Next project page">
                             <span aria-hidden="true">→</span>
                         </button>
@@ -1331,7 +1339,7 @@
     </main>
 
     <script src="config.js?v=21"></script>
-    <script src="script.js?v=27"></script>
+    <script src="script.js?v=28"></script>
     <script src="last-updated.js?v=2"></script>
 </body>
 </html>

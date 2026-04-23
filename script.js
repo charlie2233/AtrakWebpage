@@ -1876,11 +1876,13 @@ const initProjectSlider = () => {
         const prevBtn = slider.querySelector('[data-project-slider-prev]');
         const nextBtn = slider.querySelector('[data-project-slider-next]');
         const status = slider.querySelector('[data-project-slider-status]');
+        const dots = slider.querySelector('[data-project-slider-dots]');
 
         if (!viewport || !track) return;
 
         const getPages = () => Array.from(track.querySelectorAll('[data-project-slide-page]'));
         let userRequestedPageChange = false;
+        let renderedDotCount = -1;
 
         const getCurrentIndex = () => {
             const pages = getPages();
@@ -1902,6 +1904,34 @@ const initProjectSlider = () => {
             return closestIndex;
         };
 
+        const renderDots = (pages, currentIndex) => {
+            if (!dots) return;
+
+            if (renderedDotCount !== pages.length) {
+                dots.innerHTML = '';
+                pages.forEach((_, index) => {
+                    const dot = document.createElement('button');
+                    dot.type = 'button';
+                    dot.className = 'project-slider-dot';
+                    dot.textContent = String(index + 1);
+                    dot.setAttribute('aria-label', `Go to project page ${index + 1}`);
+                    dot.addEventListener('click', () => scrollToPage(index));
+                    dots.appendChild(dot);
+                });
+                renderedDotCount = pages.length;
+            }
+
+            Array.from(dots.querySelectorAll('.project-slider-dot')).forEach((dot, index) => {
+                const isActive = index === currentIndex;
+                dot.classList.toggle('active', isActive);
+                if (isActive) {
+                    dot.setAttribute('aria-current', 'page');
+                } else {
+                    dot.removeAttribute('aria-current');
+                }
+            });
+        };
+
         const updateControls = () => {
             const pages = getPages();
             const currentIndex = getCurrentIndex();
@@ -1912,12 +1942,13 @@ const initProjectSlider = () => {
             if (status) status.textContent = totalPages > 0
                 ? `Page ${Math.min(currentIndex + 1, totalPages)} of ${totalPages}`
                 : 'No projects';
+            renderDots(pages, currentIndex);
 
             slider.dataset.currentPage = String(currentIndex + 1);
             slider.dataset.totalPages = String(totalPages);
         };
 
-        const scrollToPage = (targetIndex) => {
+        function scrollToPage(targetIndex) {
             const pages = getPages();
             if (!pages.length) return;
             userRequestedPageChange = true;
@@ -1928,7 +1959,7 @@ const initProjectSlider = () => {
                 left: targetLeft,
                 behavior: motionSafeScrollBehavior
             });
-        };
+        }
 
         if (prevBtn) {
             prevBtn.addEventListener('click', () => scrollToPage(getCurrentIndex() - 1));
