@@ -31,7 +31,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="assets/logo.png?v=20260202">
     <link rel="apple-touch-icon" sizes="120x120" href="assets/logo.png?v=20260202">
     <link rel="apple-touch-icon" sizes="76x76" href="assets/logo.png?v=20260202">
-	    <link rel="stylesheet" href="styles.css?v=29">
+	    <link rel="stylesheet" href="styles.css?v=30">
     
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -344,15 +344,15 @@
                         <div class="project-slide-page" data-project-slide-page aria-label="Priority projects page 1">
                 <div class="project-card reveal glass-card">
                     <div class="project-image">
-                        <div class="project-icon" style="width: 78px; height: 78px; border-radius: 24px; background: radial-gradient(circle at 30% 20%, rgba(181, 255, 241, 0.95), rgba(121, 229, 210, 0.8) 40%, rgba(16, 24, 39, 0.95) 100%); color: #06121d; font-family: Georgia, 'Times New Roman', serif; font-size: 34px; font-weight: 700; letter-spacing: -0.05em; box-shadow: 0 18px 36px rgba(19, 198, 175, 0.22);">
-                            LP
+                        <div class="project-icon">
+                            <img src="assets/lifepage-icon.svg" alt="LifePage icon" loading="lazy" decoding="async">
                         </div>
                     </div>
                     <div class="project-content">
                         <h3 class="project-title">LifePage — AI Personal Brand Builder</h3>
                         <p class="project-description">
-                            AI product that imports sites, GitHub links, docs, and other proof, turns them into a
-                            portfolio story and resume, then deploys the result at <code>/u/yourname</code> or on a custom domain.
+                            AI personal-brand builder that imports websites, GitHub proof, docs, and project history,
+                            then turns them into a polished portfolio story, resume-ready highlights, and deployable pages.
                         </p>
                         <div class="project-meta">
                             <a class="project-manager project-person-link" href="team/charlie-han.html" aria-label="Open Charlie Han profile">👤 Project Manager: Charlie Han</a>
@@ -386,8 +386,8 @@
                     <div class="project-content">
                         <h3 class="project-title">GuidePup — AI Vision Assistant</h3>
                         <p class="project-description">
-                            AI-powered accessibility app providing guided assistance and navigation support.
-                            Built with real users in mind and submitted for App Store review.
+                            Mobile accessibility assistant that uses camera-based scene understanding, voice-first
+                            guidance, and navigation support to help users interpret surroundings with less friction.
                         </p>
                         <div class="project-meta">
                             <a class="project-manager project-person-link" href="team/charlie-han.html" aria-label="Open Charlie Han profile">👤 Project Manager: Charlie Han</a>
@@ -417,8 +417,8 @@
                     <div class="project-content">
                         <h3 class="project-title">Hoops Clips — AI Highlights System</h3>
                         <p class="project-description">
-                            Full pipeline that detects actions from game footage and automatically generates highlights.
-                            Includes an open-source action-recognition server for video analysis and a Mac installer release (v1.0).
+                            End-to-end video pipeline that ingests game film, detects basketball action windows,
+                            generates highlight clips, and ships with a macOS installer plus a recognition backend.
                         </p>
                         <div class="project-meta">
                             <a class="project-manager project-person-link" href="team/charlie-han.html" aria-label="Open Charlie Han profile">👤 Project Manager: Charlie Han</a>
@@ -450,8 +450,8 @@
                     <div class="project-content">
                         <h3 class="project-title">AI Hoops Board</h3>
                         <p class="project-description">
-                            Basketball tactics board PWA with half/full court canvas, draggable offense and defense pieces,
-                            movement routes, pass arrows, undo/redo, and PNG export for coach-ready diagrams.
+                            Coach-focused tactics board PWA for drawing plays fast: half/full court modes, draggable
+                            players, routes, passes, undo/redo, and PNG exports for sharing clean diagrams.
                         </p>
                         <div class="project-meta">
                             <a class="project-manager project-person-link" href="team/charlie-han.html" aria-label="Open Charlie Han profile">👤 Project Manager: Charlie Han</a>
@@ -481,8 +481,8 @@
                     <div class="project-content">
 	                        <h3 class="project-title">Atrak Agent — Desktop AI Agent</h3>
                         <p class="project-description">
-                            Local-first OS-level assistant integrating multiple LLMs and APIs to automate tasks,
-	                            reasoning, and workflows across the system. Supports macOS and Windows.
+                            Local-first desktop AI agent for macOS and Windows that coordinates LLMs, APIs, and
+                            system workflows so repeated tasks can become guided, inspectable automations.
                         </p>
 	                        <div class="project-meta">
 	                            <a class="project-manager project-person-link" href="team/charlie-han.html" aria-label="Open Charlie Han profile">👤 Project Manager: Charlie Han</a>
@@ -508,8 +508,8 @@
                     <div class="project-content">
                         <h3 class="project-title">Ten Seconds VIP Manager</h3>
                         <p class="project-description">
-                            Internal management app for my parents’ restaurant to handle VIP tracking, balances,
-                            and operational workflows. Deployed for daily business use.
+                            Production restaurant operations app for VIP tracking, balances, customer notes, and
+                            daily workflow management — built for real staff and deployed for everyday business use.
                         </p>
                         <div class="project-meta">
                             <a class="project-manager project-person-link" href="team/charlie-han.html" aria-label="Open Charlie Han profile">👤 Project Manager: Charlie Han</a>
@@ -538,8 +538,8 @@
                     <div class="project-content">
                         <h3 class="project-title">Destiny Basketball Website</h3>
                         <p class="project-description">
-                            Cinematic brand site for Team Destiny, an Orange County AAU basketball club, designed to
-                            rank locally for Fullerton, Anaheim, and Irvine while handing visitors cleanly into the official Instagram.
+                            Cinematic public site for Team Destiny, an Orange County AAU basketball club, built for
+                            local discovery, fast mobile browsing, and clear handoff into the team’s official Instagram.
                         </p>
                         <div class="project-meta">
                             <a class="project-manager project-person-link" href="team/charlie-han.html" aria-label="Open Charlie Han profile">👤 Project Manager: Charlie Han</a>
@@ -561,13 +561,15 @@
 
                 <div class="project-card reveal glass-card">
                     <div class="project-image">
-                        <div class="project-icon">🦊</div>
+                        <div class="project-icon">
+                            <img src="assets/ai-predator-icon.svg" alt="AI Predator Simulation icon" loading="lazy" decoding="async">
+                        </div>
                     </div>
                     <div class="project-content">
                         <h3 class="project-title">AI Predator Simulation</h3>
                         <p class="project-description">
-                            Multi-agent survival simulation featuring complex AI behaviors, hunting mechanics, 
-                            and ecological balancing in a dynamic environment.
+                            Agent-based predator/prey ecosystem simulation exploring emergent hunting, evasion,
+                            genetic-style tuning, and population balance inside a dynamic Python environment.
                         </p>
                         <div class="project-meta">
                             <a class="project-manager project-person-link" href="team/charlie-han.html" aria-label="Open Charlie Han profile">👤 Project Manager: Charlie Han</a>
@@ -596,8 +598,8 @@
                         <div class="project-content">
                             <h3 class="project-title">CompIDE</h3>
                             <p class="project-description">
-                                Competitive Programming IDE with Monaco Editor, one-click run, Java/C++/Python support,
-                                smart test runner, problem fetcher, templates, and offline-capable desktop workflow.
+                                Competitive programming desktop IDE with Monaco, Java/C++/Python runners, templates,
+                                sample-test workflows, diagnostics, and an offline-first practice loop for contests.
                             </p>
                             <div class="project-meta">
                                 <span class="project-date">Updated: 2026</span>
@@ -621,13 +623,13 @@
                     <!-- Pinned Project: Custom Safe MCP -->
                     <div class="project-card glass-card" data-pinned-project="true">
                         <div class="project-image">
-                            <div class="project-icon"><img src="assets/logo.png?v=20260202" alt="Custom Safe MCP icon" loading="lazy" decoding="async"></div>
+                            <div class="project-icon"><img src="assets/safe-mcp-icon.svg" alt="Custom Safe MCP icon" loading="lazy" decoding="async"></div>
                         </div>
                         <div class="project-content">
                             <h3 class="project-title">Custom Safe MCP for GPT: Codex</h3>
                             <p class="project-description">
-                                Hardened local MCP workflow for Codex/GPT with safety-gated desktop and browser actions,
-                                audit-friendly operation logs, and secure-by-default tool execution guardrails.
+                                Safety-first local MCP workflow for Codex/GPT with gated desktop/browser actions,
+                                audit-friendly operation logs, explicit guardrails, and secure-by-default automation paths.
                             </p>
                             <div class="project-meta">
                                 <span class="project-date">Updated: Mar 2026</span>
@@ -1339,7 +1341,7 @@
     </main>
 
     <script src="config.js?v=21"></script>
-    <script src="script.js?v=28"></script>
+    <script src="script.js?v=29"></script>
     <script src="last-updated.js?v=2"></script>
 </body>
 </html>

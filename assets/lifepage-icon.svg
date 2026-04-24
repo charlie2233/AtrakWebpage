@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">LifePage icon</title>
+  <desc id="desc">A glowing profile page card with AI orbit rings.</desc>
+  <defs>
+    <linearGradient id="lp-bg" x1="24" y1="20" x2="224" y2="234" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8ffff0"/>
+      <stop offset=".45" stop-color="#3b82f6"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="lp-card" x1="72" y1="58" x2="181" y2="191" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#9ae6ff"/>
+    </linearGradient>
+    <filter id="lp-glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.25 0 0 0 0 0.75 0 0 0 0 1 0 0 0 .75 0"/>
+      <feBlend in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <rect width="256" height="256" rx="58" fill="#050816"/>
+  <rect x="18" y="18" width="220" height="220" rx="48" fill="url(#lp-bg)" opacity=".92"/>
+  <path d="M52 177c44-77 99-109 164-99" fill="none" stroke="#befeff" stroke-width="9" stroke-linecap="round" opacity=".42"/>
+  <path d="M45 205c46-61 101-86 164-74" fill="none" stroke="#0f172a" stroke-width="12" stroke-linecap="round" opacity=".35"/>
+  <g filter="url(#lp-glow)">
+    <rect x="74" y="55" width="108" height="146" rx="24" fill="url(#lp-card)"/>
+    <rect x="91" y="80" width="74" height="9" rx="4.5" fill="#0f172a" opacity=".58"/>
+    <circle cx="128" cy="122" r="24" fill="#0f172a" opacity=".82"/>
+    <path d="M84 177c10-25 28-38 44-38s34 13 44 38" fill="#0f172a" opacity=".82"/>
+    <circle cx="181" cy="67" r="13" fill="#67e8f9"/>
+    <path d="M181 44v46M158 67h46" stroke="#67e8f9" stroke-width="7" stroke-linecap="round"/>
+  </g>
+</svg>

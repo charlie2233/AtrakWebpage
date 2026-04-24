@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Custom Safe MCP icon</title>
+  <desc id="desc">A shielded terminal node network for safe automation.</desc>
+  <defs>
+    <linearGradient id="mcp-bg" x1="26" y1="23" x2="225" y2="232" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#60a5fa"/>
+      <stop offset=".45" stop-color="#7c3aed"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="mcp-shield" x1="78" y1="58" x2="184" y2="194" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#dbeafe"/>
+      <stop offset=".45" stop-color="#67e8f9"/>
+      <stop offset="1" stop-color="#2563eb"/>
+    </linearGradient>
+    <filter id="mcp-glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.4 0 0 0 0 0.65 0 0 0 0 1 0 0 0 .7 0"/>
+      <feBlend in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <rect width="256" height="256" rx="58" fill="#050816"/>
+  <rect x="18" y="18" width="220" height="220" rx="48" fill="url(#mcp-bg)"/>
+  <g stroke="#bfdbfe" stroke-width="7" stroke-linecap="round" opacity=".45">
+    <path d="M58 82h45M153 82h45M73 177h110"/>
+    <path d="M99 82l29 43 29-43M128 125v52"/>
+  </g>
+  <g fill="#dbeafe" opacity=".85">
+    <circle cx="58" cy="82" r="8"/>
+    <circle cx="198" cy="82" r="8"/>
+    <circle cx="128" cy="177" r="8"/>
+  </g>
+  <g filter="url(#mcp-glow)">
+    <path d="M128 51 184 72v47c0 41-22 70-56 88-34-18-56-47-56-88V72l56-21Z" fill="#07111f" opacity=".88"/>
+    <path d="M128 65 170 80v38c0 30-16 53-42 68-26-15-42-38-42-68V80l42-15Z" fill="url(#mcp-shield)"/>
+    <path d="M105 124h46M105 105l20 19-20 19" fill="none" stroke="#08111f" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M137 144h18" stroke="#08111f" stroke-width="10" stroke-linecap="round"/>
+  </g>
+</svg>

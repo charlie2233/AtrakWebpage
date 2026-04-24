@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">AI Predator Simulation icon</title>
+  <desc id="desc">A neon predator head over simulation nodes.</desc>
+  <defs>
+    <linearGradient id="pred-bg" x1="28" y1="20" x2="224" y2="236" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22d3ee"/>
+      <stop offset=".45" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="pred-fur" x1="68" y1="62" x2="183" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#a7f3d0"/>
+      <stop offset=".34" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <filter id="pred-glow" x="-35%" y="-35%" width="170%" height="170%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.1 0 0 0 0 0.8 0 0 0 0 1 0 0 0 .72 0"/>
+      <feBlend in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <rect width="256" height="256" rx="58" fill="#050816"/>
+  <rect x="18" y="18" width="220" height="220" rx="48" fill="url(#pred-bg)"/>
+  <path d="M45 190c35-22 58-27 83-27 36 0 48 16 83-14" fill="none" stroke="#67e8f9" stroke-width="7" stroke-linecap="round" opacity=".5"/>
+  <g fill="#c7f9ff" opacity=".8">
+    <circle cx="55" cy="190" r="6"/>
+    <circle cx="128" cy="163" r="6"/>
+    <circle cx="211" cy="149" r="6"/>
+  </g>
+  <g filter="url(#pred-glow)">
+    <path d="M68 133c9-38 34-67 65-77 12-4 26-14 38-27 3 22 1 42-7 59 20 10 34 26 43 48-26-8-48-8-66 2 19 7 35 17 48 31-33-10-62-9-88 2-13 6-30-3-33-38Z" fill="#07111f"/>
+    <path d="M72 130c21-8 37-14 57-13 23 1 46 10 70 25-10-23-27-38-53-46 9-15 13-32 10-48-14 14-26 22-38 27-23 9-39 27-46 55Z" fill="url(#pred-fur)"/>
+    <path d="M76 139c15 20 35 29 59 22-27-4-46-12-59-22Z" fill="#7dd3fc"/>
+    <path d="M91 127c25-18 53-24 84-12-30-3-57 2-84 12Z" fill="#0f172a" opacity=".72"/>
+    <ellipse cx="105" cy="112" rx="14" ry="8" fill="#6fffe9"/>
+    <circle cx="108" cy="111" r="4" fill="#051018"/>
+  </g>
+</svg>

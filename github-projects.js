@@ -299,6 +299,126 @@ const INTERNAL_PROJECT_PAGES = {
     'My_portforlio': 'projects/lifepage.html',
 };
 
+const REPO_CARD_ENHANCEMENTS = {
+    'rork-hoopshighlights-ai_Final': {
+        displayName: 'Hoops Highlights AI Final',
+        iconLabel: 'HC',
+        iconVariant: 'hoops',
+        iconSub: 'AI',
+        description: 'Basketball highlights prototype for upload, clip review, and AI-generated highlight flow testing before production hardening.'
+    },
+    'RestaurantCommentValidation_Analysis': {
+        displayName: 'Restaurant Comment Validation Analysis',
+        iconLabel: 'RV',
+        iconVariant: 'analytics',
+        iconSub: 'DATA',
+        description: 'Restaurant review analysis toolkit for comment quality checks, validation signals, sentiment review, and reporting workflows.'
+    },
+    'AP-CSA-Consumer-Review-Lab-Final-Open-Ended-Activity-Presentation': {
+        displayName: 'AP CSA Consumer Review Lab',
+        iconLabel: 'JV',
+        iconVariant: 'java',
+        iconSub: 'AP',
+        description: 'Java/AP CSA text-analysis project that explores consumer-review scoring, class design, data cleanup, and presentation-ready findings.'
+    },
+    'newproyecto': {
+        displayName: 'New Proyecto',
+        iconLabel: 'PY',
+        iconVariant: 'python',
+        iconSub: 'LAB',
+        description: 'Python prototype workspace for testing automation ideas, backend utility patterns, and small experiments before they become larger tools.'
+    },
+    'Easy_command_prompt': {
+        displayName: 'Easy Command Prompt',
+        iconLabel: '>$',
+        iconVariant: 'terminal',
+        iconSub: 'C++',
+        description: 'C++ terminal workflow experiment focused on faster local commands, command-line practice, and lightweight systems tooling.'
+    },
+    'rork-hoops-clips-cloud-clone-clone-clone-132': {
+        displayName: 'Hoops Clips Cloud Prototype',
+        iconLabel: 'HC',
+        iconVariant: 'cloud',
+        iconSub: 'WEB',
+        description: 'Cloud prototype for Hoops Clips that tests upload/review UX and remote processing flows for basketball highlight generation.'
+    },
+    'MazeRunner67ers_APCSA_Java': {
+        displayName: 'AP CSA Maze Runner',
+        iconLabel: 'MR',
+        iconVariant: 'java',
+        iconSub: 'MAZE',
+        description: 'Java maze-runner project focused on grid logic, path decisions, object-oriented design, and AP CSA-style problem solving.'
+    },
+    'CredibleSource_Investigator': {
+        displayName: 'Credible Source Investigator',
+        iconLabel: 'CS',
+        iconVariant: 'analytics',
+        iconSub: 'CHECK',
+        description: 'Research helper that evaluates source credibility signals and turns classroom-style evidence checks into a repeatable workflow.'
+    },
+    'screenLocks_detectsFaceGuard': {
+        displayName: 'FaceGuard Screen Lock',
+        iconLabel: 'FG',
+        iconVariant: 'vision',
+        iconSub: 'CV',
+        description: 'Face-detection security experiment that explores screen-lock behavior, presence detection, and privacy-minded local automation.'
+    },
+    'hoops-clips_2_with-Rorks': {
+        displayName: 'Hoops Clips Rork Prototype',
+        iconLabel: 'HC',
+        iconVariant: 'hoops',
+        iconSub: 'R2',
+        description: 'Second Hoops Clips prototype exploring basketball clip UX, generated flows, and the path toward a cleaner production highlight tool.'
+    },
+    'Ai-Hoops-Clip': {
+        displayName: 'AI Hoops Clip',
+        iconLabel: 'AI',
+        iconVariant: 'hoops',
+        iconSub: 'CLIP',
+        description: 'Early AI basketball clipping experiment for finding useful moments in game footage and shaping the highlights pipeline.'
+    }
+};
+
+function createGeneratedProjectIcon(label, variant = 'repo', subLabel = 'DEV') {
+    const cleanLabel = String(label || 'PR')
+        .replace(/[^A-Za-z0-9>$]/g, '')
+        .slice(0, 3)
+        .toUpperCase() || 'PR';
+    const cleanVariant = slugify(variant || 'repo') || 'repo';
+    const cleanSubLabel = String(subLabel || 'DEV')
+        .replace(/[^A-Za-z0-9+.#-]/g, '')
+        .slice(0, 5)
+        .toUpperCase() || 'DEV';
+
+    return `
+        <span class="project-icon-generated project-icon-${escapeHtml(cleanVariant)}" aria-hidden="true">
+            <span class="project-icon-orbit"></span>
+            <span class="project-icon-main">${escapeHtml(cleanLabel)}</span>
+            <span class="project-icon-sub">${escapeHtml(cleanSubLabel)}</span>
+        </span>
+    `;
+}
+
+function getFallbackRepoDescription(repo) {
+    const language = String(repo.language || '').toLowerCase();
+    if (language.includes('java')) {
+        return 'Java project card from the Atrak build archive, focused on class design, algorithms, and classroom-to-product practice.';
+    }
+    if (language.includes('python')) {
+        return 'Python project card from the Atrak build archive, used for automation experiments, data workflows, and backend prototyping.';
+    }
+    if (language.includes('c++') || language.includes('cpp')) {
+        return 'Systems-oriented project card from the Atrak build archive, focused on command-line tools and lower-level programming practice.';
+    }
+    if (language.includes('typescript') || language.includes('javascript')) {
+        return 'Web/app prototype from the Atrak build archive, exploring product flows, UI experiments, and deployable software patterns.';
+    }
+    if (language.includes('css') || language.includes('html')) {
+        return 'Front-end project from the Atrak build archive, focused on visual polish, content structure, and fast static delivery.';
+    }
+    return 'Atrak build-archive project with repo, docs, release links, and a dedicated details page for deeper technical context.';
+}
+
 function formatUTCDateTime(isoString) {
     try {
         const date = new Date(isoString);
@@ -408,20 +528,29 @@ async function fetchGitHubRepositories() {
             // Exclude featured projects and forks
             return !repo.fork && !repo.private && !FEATURED_PROJECT_REPOS.includes(repo.name);
         })
-        .map(repo => ({
-            name: repo.name,
-            fullName: repo.full_name,
-            description: repo.description || 'No description available.',
-            url: repo.html_url,
-            homepage: repo.homepage,
-            language: repo.language,
-            topics: repo.topics || [],
-            stars: repo.stargazers_count,
-            forks: repo.forks_count,
-            createdAt: new Date(repo.created_at),
-            updatedAt: new Date(repo.updated_at),
-            pushedAt: repo.pushed_at ? new Date(repo.pushed_at) : null
-        }))
+        .map(repo => {
+            const enhancement = REPO_CARD_ENHANCEMENTS[repo.name] || {};
+            return {
+                name: repo.name,
+                fullName: repo.full_name,
+                description: enhancement.description || repo.description || getFallbackRepoDescription(repo),
+                displayName: enhancement.displayName,
+                icon: createGeneratedProjectIcon(
+                    enhancement.iconLabel || repo.language || repo.name,
+                    enhancement.iconVariant || repo.language || 'repo',
+                    enhancement.iconSub || repo.language || 'DEV'
+                ),
+                url: repo.html_url,
+                homepage: repo.homepage,
+                language: repo.language,
+                topics: repo.topics || [],
+                stars: repo.stargazers_count,
+                forks: repo.forks_count,
+                createdAt: new Date(repo.created_at),
+                updatedAt: new Date(repo.updated_at),
+                pushedAt: repo.pushed_at ? new Date(repo.pushed_at) : null
+            };
+        })
         .sort((a, b) => b.updatedAt - a.updatedAt); // Sort by most recently updated
 
     githubProjectsCache = projects;
@@ -475,13 +604,16 @@ function formatDisplayName(name) {
  */
 function createProjectCard(project) {
     const techStack = getTechStack(project);
-    const displayName = project.displayName || formatDisplayName(project.name);
+    const displayName = escapeHtml(project.displayName || formatDisplayName(project.name));
     const icon = project.icon || '📦';
-    const repoAttr = project.fullName ? ` data-repo="${project.fullName}"` : '';
+    const repoAttr = project.fullName ? ` data-repo="${escapeHtml(project.fullName)}"` : '';
     const internalPage = INTERNAL_PROJECT_PAGES[project.name] || '';
+    const description = escapeHtml(project.description);
+    const repoUrl = safeExternalUrl(project.url);
+    const homepageUrl = safeExternalUrl(project.homepage);
     
     const tagsHTML = techStack.length > 0
-        ? techStack.map(tech => `<span class="tag">${tech}</span>`).join('')
+        ? techStack.map(tech => `<span class="tag">${escapeHtml(tech)}</span>`).join('')
         : '<span class="tag">General</span>';
     
     return `
@@ -492,7 +624,7 @@ function createProjectCard(project) {
 	            <div class="project-content">
 	                <h3 class="project-title">${displayName}</h3>
 	                <p class="project-description">
-	                    ${project.description}
+	                    ${description}
 	                </p>
 	                <div class="project-meta">
 	                    <span class="project-date">Updated: ${formatDate(project.updatedAt)}</span>
@@ -502,11 +634,11 @@ function createProjectCard(project) {
 	                </div>
 	                <div class="project-actions">
                             <a href="${internalPage || `projects/github-project.html?repo=${encodeURIComponent(project.fullName)}`}" class="btn btn-secondary btn-sm">Details</a>
-	                    <a href="${project.url}" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Repo</a>
-	                    <a href="${project.url}#readme" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Docs</a>
-	                    <a href="${project.url}/releases" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Releases</a>
-	                    ${project.homepage
-	                        ? `<a href="${project.homepage}" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Demo</a>`
+	                    <a href="${repoUrl}" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Repo</a>
+	                    <a href="${repoUrl}#readme" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Docs</a>
+	                    <a href="${repoUrl}/releases" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Releases</a>
+	                    ${homepageUrl !== '#'
+	                        ? `<a href="${homepageUrl}" class="btn btn-secondary btn-sm" target="_blank" rel="noopener noreferrer">Demo</a>`
 	                        : `<button class="btn btn-secondary btn-sm" type="button" disabled aria-disabled="true">Demo</button>`
 	                    }
 	                </div>
