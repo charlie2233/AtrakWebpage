@@ -618,7 +618,7 @@ function createProjectCard(project) {
     
     return `
         <div class="project-card reveal glass-card" data-github-project="true"${repoAttr}>
-            <div class="project-image">
+            <div class="project-image project-image-iconic project-image-dynamic">
                 <div class="project-icon">${icon}</div>
             </div>
 	            <div class="project-content">
