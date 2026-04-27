@@ -56,6 +56,16 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://atrak.dev/projects/classroom-ai-exporter.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://atrak.dev/projects/formative-ai-exporter.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://atrak.dev/projects/destiny-basketball.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -67,6 +77,26 @@
   </url>
   <url>
     <loc>https://atrak.dev/projects/ai-predator-simulation.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://atrak.dev/projects/compide.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://atrak.dev/blog/github-backed-project-hub-refresh.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://atrak.dev/blog/coursebinder-formative-exporter-project-drop.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://atrak.dev/blog/april-2026-github-ship-report.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

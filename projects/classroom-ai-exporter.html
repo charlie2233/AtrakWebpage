@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Classroom AI Exporter — MIT-licensed Chrome extension and native host for exporting visible Google Classroom pages into local AI-readable archives.">
+    <meta name="description" content="CourseBinder Classroom AI Exporter — MIT-licensed Chrome extension and native host for exporting visible Google Classroom pages into local AI-readable archives.">
     <meta name="robots" content="index,follow">
-    <title>Classroom AI Exporter | Atrak</title>
+    <title>CourseBinder Classroom AI Exporter | Atrak</title>
     <link rel="canonical" href="https://atrak.dev/projects/classroom-ai-exporter.html">
-    <meta property="og:title" content="Classroom AI Exporter | Atrak">
+    <meta property="og:title" content="CourseBinder Classroom AI Exporter | Atrak">
     <meta property="og:description" content="Local-first Google Classroom export workflow with Markdown, JSON, page snapshots, and attachment download support.">
     <meta property="og:image" content="https://atrak.dev/assets/Demo/Demo_Img_ClassroomExporter/01-classroom-exporter.svg">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" type="image/png" href="../assets/projects/classroom-ai-exporter-icon.png">
-    <link rel="stylesheet" href="../styles.css?v=32">
+    <link rel="stylesheet" href="../styles.css?v=33">
 </head>
 <body>
     <nav class="navbar">
@@ -39,7 +39,7 @@
                     <ol>
                         <li><a href="../index.html">Home</a></li>
                         <li><a href="../index.html#projects">Projects</a></li>
-                        <li>Classroom AI Exporter</li>
+                        <li>CourseBinder Classroom AI Exporter</li>
                     </ol>
                 </nav>
                 <a class="project-back-link" href="../index.html#projects">← Back to Projects</a>
@@ -47,10 +47,10 @@
                 <div class="project-hero-grid">
                     <div class="project-header">
                         <div class="project-icon-custom">
-                            <img src="../assets/projects/classroom-ai-exporter-icon.png" alt="Classroom AI Exporter icon">
+                            <img src="../assets/projects/classroom-ai-exporter-icon.png" alt="CourseBinder Classroom AI Exporter icon">
                         </div>
                         <span class="section-tag">Education Tools • Chrome Extension • Local Archive</span>
-                        <h1 class="section-title">Classroom AI Exporter</h1>
+                        <h1 class="section-title">CourseBinder Classroom AI Exporter</h1>
                         <p class="section-description">
                             A local-first Classroom exporter that converts visible Google Classroom pages into
                             Markdown, JSON, HTML snapshots, and downloadable attachment queues for AI study workflows.
@@ -89,8 +89,8 @@
             <div class="container">
                 <div class="links-bar-inner">
                     <a href="../downloads/classroom-ai-exporter/classroom-ai-exporter-extension-0.1.0-chrome.zip" class="link-btn" download><span class="link-icon">⬇️</span> Download Extension ZIP</a>
-                    <a href="https://github.com/charlie2233/ai-hoops-board/tree/codex/build-formative-practice-exporter/ClassroomDownloader" class="link-btn" target="_blank" rel="noopener noreferrer"><span class="link-icon">💻</span> GitHub Source</a>
-                    <a href="https://github.com/charlie2233/ai-hoops-board/blob/codex/build-formative-practice-exporter/LICENSE" class="link-btn" target="_blank" rel="noopener noreferrer"><span class="link-icon">📜</span> MIT License</a>
+                    <a href="https://github.com/charlie2233/coursebinder-ai-ready-google-classroom-exporter" class="link-btn" target="_blank" rel="noopener noreferrer"><span class="link-icon">💻</span> GitHub Source</a>
+                    <a href="https://github.com/charlie2233/coursebinder-ai-ready-google-classroom-exporter/blob/main/LICENSE" class="link-btn" target="_blank" rel="noopener noreferrer"><span class="link-icon">📜</span> MIT License</a>
                     <a href="#code" class="link-btn"><span class="link-icon">⌘</span> Code Snippets</a>
                 </div>
             </div>
@@ -120,7 +120,7 @@
                     <h2 class="project-section-title">Demo Screenshots</h2>
                     <div class="project-media-grid">
                         <figure class="glass-card media-card">
-                            <img src="../assets/Demo/Demo_Img_ClassroomExporter/01-classroom-exporter.svg" alt="Classroom AI Exporter popup mockup">
+                            <img src="../assets/Demo/Demo_Img_ClassroomExporter/01-classroom-exporter.svg" alt="CourseBinder Classroom AI Exporter popup mockup">
                             <figcaption>Google Classroom-style page plus exporter popup for local archive capture.</figcaption>
                         </figure>
                         <figure class="glass-card media-card">
@@ -177,9 +177,10 @@
 
                 <section class="project-section">
                     <h2 class="project-section-title">How to Run</h2>
-                    <pre class="code-block"><code># Download the packed extension from this page
-# or build from source:
-cd ClassroomDownloader/extension
+	                    <pre class="code-block"><code># Download the packed extension from this page
+# or build from the public MIT source:
+git clone https://github.com/charlie2233/coursebinder-ai-ready-google-classroom-exporter.git
+cd coursebinder-ai-ready-google-classroom-exporter/extension
 npm install
 npm run build
 
@@ -195,7 +196,7 @@ npm run build
                     <div class="project-detail-grid">
                         <div class="glass-card project-detail-card"><h3>Output formats</h3><p>Markdown, JSON, raw HTML, attachment metadata, and local folder paths.</p></div>
                         <div class="glass-card project-detail-card"><h3>Supported material types</h3><p>Coursework, materials, announcements, questions, Drive files, Docs, Sheets, Slides, YouTube, and external links.</p></div>
-                        <div class="glass-card project-detail-card"><h3>Release state</h3><p>Version 0.1.0 Chrome zip is available for local developer testing.</p></div>
+                        <div class="glass-card project-detail-card"><h3>Release state</h3><p>Version 0.1.0 Chrome zip is available for local developer testing from the public MIT repo.</p></div>
                     </div>
                 </section>
 
@@ -218,6 +219,6 @@ npm run build
         </div>
     </main>
 
-    <script src="../script.js?v=30"></script>
+    <script src="../script.js?v=33"></script>
 </body>
 </html>

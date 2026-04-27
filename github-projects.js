@@ -21,12 +21,15 @@ const SITE_BASE_URL = (() => {
     return '';
 })();
 
-const CACHED_DATA_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-repos.json` : 'data/github-repos.json'; // Updated by GitHub Actions
-const CACHED_EVENTS_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-events.json` : 'data/github-events.json'; // Updated by GitHub Actions
-const CACHED_META_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-meta.json` : 'data/github-meta.json'; // Updated by GitHub Actions
-const CACHED_RELEASES_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-releases.json` : 'data/github-releases.json'; // Updated by GitHub Actions
-const CACHED_WEEKLY_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-weekly.json` : 'data/github-weekly.json'; // Updated by GitHub Actions
-const WEEKLY_LOG_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}WeeklyLog.txt` : 'WeeklyLog.txt';
+const GITHUB_CACHE_VERSION = '20260427';
+const withCacheVersion = (url) => `${url}${url.includes('?') ? '&' : '?'}v=${GITHUB_CACHE_VERSION}`;
+const CACHED_REPOS_BASE_PATH = SITE_BASE_URL ? `${SITE_BASE_URL}data/github-repos.json` : 'data/github-repos.json'; // Updated by GitHub Actions
+const CACHED_DATA_PATH = withCacheVersion(CACHED_REPOS_BASE_PATH);
+const CACHED_EVENTS_PATH = withCacheVersion(SITE_BASE_URL ? `${SITE_BASE_URL}data/github-events.json` : 'data/github-events.json'); // Updated by GitHub Actions
+const CACHED_META_PATH = withCacheVersion(SITE_BASE_URL ? `${SITE_BASE_URL}data/github-meta.json` : 'data/github-meta.json'); // Updated by GitHub Actions
+const CACHED_RELEASES_PATH = withCacheVersion(SITE_BASE_URL ? `${SITE_BASE_URL}data/github-releases.json` : 'data/github-releases.json'); // Updated by GitHub Actions
+const CACHED_WEEKLY_PATH = withCacheVersion(SITE_BASE_URL ? `${SITE_BASE_URL}data/github-weekly.json` : 'data/github-weekly.json'); // Updated by GitHub Actions
+const WEEKLY_LOG_PATH = withCacheVersion(SITE_BASE_URL ? `${SITE_BASE_URL}WeeklyLog.txt` : 'WeeklyLog.txt');
 const IS_LOCAL_PREVIEW = ['localhost', '127.0.0.1'].includes(window.location.hostname);
 const PROJECTS_PER_SLIDER_PAGE = 6;
 
@@ -36,12 +39,15 @@ const FEATURED_PROJECT_REPOS = [
     'Basketball_action_recoginition_sever',
     'AI-predator-simulation',
     'DestinnyBasketball',
-    'LunarWeb',
+    'DestinnyBasketballPage',
+    'lifepage',
     'My_portforlio',
     'Easy_Java_Ide-for-competitions',
     'rork-ten-seconds-vip-manager',
     'ai-hoops-board',
-    'lunar'
+    'lunar',
+    'formative-ai-exporter',
+    'coursebinder-ai-ready-google-classroom-exporter'
 ];
 
 // Cache for GitHub data
@@ -130,6 +136,7 @@ function getGitHubCacheSource(meta) {
 function getGitHubCacheSourceText(meta) {
     const source = getGitHubCacheSource(meta);
     if (source === 'local-git-refresh') return 'Local repo snapshot';
+    if (source === 'github-live-cache') return 'GitHub live cache';
     if (source === 'github-actions-cache') return 'GitHub Actions cache';
     return 'GitHub cache';
 }
@@ -293,13 +300,46 @@ const INTERNAL_PROJECT_PAGES = {
     'Basketball_action_recoginition_sever': 'projects/hoops-clips.html',
     'AI-predator-simulation': 'projects/ai-predator-simulation.html',
     'DestinnyBasketball': 'projects/destiny-basketball.html',
+    'DestinnyBasketballPage': 'projects/destiny-basketball.html',
     'rork-ten-seconds-vip-manager': 'projects/ten-seconds-vip-manager.html',
     'Easy_Java_Ide-for-competitions': 'projects/compide.html',
+    'AtrakWebpage': 'index.html',
     'LunarWeb': 'index.html',
+    'lifepage': 'projects/lifepage.html',
     'My_portforlio': 'projects/lifepage.html',
+    'coursebinder-ai-ready-google-classroom-exporter': 'projects/classroom-ai-exporter.html',
+    'formative-ai-exporter': 'projects/formative-ai-exporter.html',
 };
 
 const REPO_CARD_ENHANCEMENTS = {
+    'AtrakWebpage': {
+        displayName: 'Atrak Website + Project Hub',
+        iconLabel: 'AW',
+        iconVariant: 'repo',
+        iconSub: 'WEB',
+        description: 'The public Atrak hub powering projects, weekly news, releases, blog posts, downloads, team pages, and GitHub-backed activity snapshots.'
+    },
+    'lifepage': {
+        displayName: 'LifePage',
+        iconLabel: 'LP',
+        iconVariant: 'repo',
+        iconSub: 'AI',
+        description: 'AI personal-brand builder using GitHub proof, crawled evidence, screenshots, portfolio generation, resume exports, and custom-domain publishing.'
+    },
+    'coursebinder-ai-ready-google-classroom-exporter': {
+        displayName: 'CourseBinder Classroom AI Exporter',
+        iconLabel: 'CB',
+        iconVariant: 'analytics',
+        iconSub: 'EDU',
+        description: 'MIT-licensed Classroom visible-content exporter that turns coursework, links, and attachment metadata into local AI-readable archives.'
+    },
+    'formative-ai-exporter': {
+        displayName: 'Practice Snapshot for Formative',
+        iconLabel: 'FS',
+        iconVariant: 'analytics',
+        iconSub: 'ZIP',
+        description: 'Chrome extension-only exporter that captures visible Formative practices into local ZIPs with text, answers, media, screenshots, and AI indexes.'
+    },
     'rork-hoopshighlights-ai_Final': {
         displayName: 'Hoops Highlights AI Final',
         iconLabel: 'HC',
@@ -787,7 +827,7 @@ async function renderMoreProjects() {
 
     try {
         const projects = await fetchGitHubRepositories();
-        const displayProjects = projects.slice(0, PROJECTS_PER_SLIDER_PAGE);
+        const displayProjects = projects;
         const projectCards = displayProjects.map(project => createProjectCard(project));
 
         clearDynamicProjectPages(track);
@@ -812,9 +852,10 @@ async function renderMoreProjects() {
             if (meta && meta.updatedAt) {
                 const sourceText = getGitHubCacheSourceText(meta);
                 const updateMsg = `${sourceText} • ${formatUTCDateTime(meta.updatedAt)}`;
-                const cadenceText = getGitHubCacheSource(meta) === 'github-actions-cache'
+                const cacheSource = getGitHubCacheSource(meta);
+                const cadenceText = cacheSource === 'github-actions-cache'
                     ? 'Cached daily'
-                    : 'Local snapshot';
+                    : (cacheSource === 'github-live-cache' ? 'Live cache' : 'Local snapshot');
                 setMoreProjectsMeta(`${cadenceText} • Last updated ${formatUTCDateTime(meta.updatedAt)}`);
                 setFooterSyncStatus(updateMsg);
             } else {
@@ -1553,7 +1594,7 @@ async function renderWeeklyHighlights() {
                 .filter(r => r && typeof r.pushed_at === 'string')
                 .slice()
                 .sort((a, b) => String(b.pushed_at).localeCompare(String(a.pushed_at)));
-            const nonSite = sorted.find(r => r && r.name && r.name !== 'LunarWeb');
+            const nonSite = sorted.find(r => r && r.name && r.name !== 'AtrakWebpage' && r.name !== 'LunarWeb');
             return nonSite || sorted[0] || null;
         })();
 
@@ -2606,6 +2647,13 @@ function formatLongDate(isoString) {
     }
 }
 
+function getReleaseSourceLabel(source) {
+    const normalized = String(source || '').trim().toLowerCase();
+    if (normalized === 'atrak-download') return 'Atrak download';
+    if (normalized === 'github-release') return 'GitHub release';
+    return 'Release';
+}
+
 function getMonthKey(date) {
     if (!(date instanceof Date) || Number.isNaN(date.getTime())) return '';
     const y = date.getFullYear();
@@ -2692,6 +2740,7 @@ async function renderReleasesFeed() {
                 publishedAt,
                 monthKey,
                 prerelease: Boolean(r.prerelease),
+                source: typeof r.source === 'string' ? r.source : 'github-release',
                 zipballUrl: safeExternalUrl(typeof r.zipball_url === 'string' ? r.zipball_url : ''),
                 tarballUrl: safeExternalUrl(typeof r.tarball_url === 'string' ? r.tarball_url : ''),
                 assets,
@@ -2768,6 +2817,7 @@ async function renderReleasesFeed() {
             const dateLabel = rel.publishedAt ? formatLongDate(rel.publishedAt.toISOString()) : '';
             const title = rel.name || rel.tag || 'Release';
             const badges = [
+                `<span class="releases-live-badge source">${escapeHtml(getReleaseSourceLabel(rel.source))}</span>`,
                 rel.prerelease ? `<span class="releases-live-badge prerelease">Prerelease</span>` : ''
             ].filter(Boolean).join('');
 
@@ -2829,7 +2879,7 @@ async function renderReleasesFeed() {
     };
 
     if (metaEl) {
-        metaEl.textContent = meta && meta.updatedAt ? `Cached daily • Updated ${formatUTCDateTime(meta.updatedAt)}` : 'Cached daily via GitHub Actions';
+        metaEl.textContent = meta && meta.updatedAt ? `${getGitHubCacheSourceText(meta)} • Updated ${formatUTCDateTime(meta.updatedAt)}` : 'GitHub release cache';
     }
 
     renderContentFreshnessStrip('releases-freshness-strip', {
@@ -2840,7 +2890,7 @@ async function renderReleasesFeed() {
         totalCount: normalized.length,
         countLabel: 'cached releases',
         thresholds: { freshDays: 3, agingDays: 10 },
-        note: 'GitHub cache-backed'
+        note: meta ? getGitHubCacheSourceText(meta) : 'GitHub cache-backed'
     });
 
     renderControls();

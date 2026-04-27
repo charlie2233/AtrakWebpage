@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Atrak Release Notes — Monthly updates from student tech team on GuidePup, Hoops Clips, Atrak Agent projects. What shipped, what broke, what's next.">
+    <meta name="description" content="Atrak Release Notes — GitHub-backed project drops, downloads, monthly updates, and what shipped across Atrak projects.">
     <meta name="robots" content="index,follow">
     <meta name="keywords" content="Atrak releases, student tech team updates, GuidePup, Hoops Clips, Atrak Agent">
     <title>Release Notes — Student Tech Team Atrak</title>
@@ -24,7 +24,7 @@
     
     <link rel="icon" type="image/png" href="assets/logo.png?v=20260202">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/logo.png?v=20260202">
-	    <link rel="stylesheet" href="styles.css?v=26">
+	    <link rel="stylesheet" href="styles.css?v=33">
 </head>
 <body>
     <nav class="navbar">
@@ -41,6 +41,7 @@
                 <li><a href="index.html#leadership">Team</a></li>
                 <li><a href="purpose.html">Purpose</a></li>
                 <li><a href="join.html">Join</a></li>
+                <li><a href="blog.html">Blog</a></li>
                 <li><a href="index.html#contact" class="nav-cta" data-open-contact-tab="suggestion">Suggestion Box</a></li>
             </ul>
             <button class="mobile-menu-btn" aria-label="Toggle menu">
@@ -55,7 +56,7 @@
                 <span class="section-tag">Monthly Updates</span>
                 <h1 class="section-title">Release Notes</h1>
                 <p class="section-description">
-                    What we shipped, what broke, and what's coming next. Transparent updates from the Atrak team.
+                    Project drops, GitHub-backed activity, downloadable builds, and monthly notes on what shipped, what broke, and what's next.
                 </p>
                 <div class="content-freshness-strip" id="releases-freshness-strip" role="status" aria-live="polite">
                     <span class="content-freshness-badge" data-state="loading">Loading</span>
@@ -66,12 +67,12 @@
 
 	        <section class="releases-content">
 	            <div class="container">
-                    <section class="releases-live" aria-label="Latest GitHub releases">
+                    <section class="releases-live" aria-label="Latest releases and downloads">
                         <div class="glass-card releases-live-card" id="releases-live">
                             <div class="releases-live-header">
                                 <div class="releases-live-title">
                                     <span class="releases-live-icon">🚀</span>
-                                    <h2 class="releases-live-heading">Latest Releases (GitHub)</h2>
+                                    <h2 class="releases-live-heading">Latest Releases & Downloads</h2>
                                 </div>
                                 <p class="releases-live-meta" id="releases-live-meta" role="status" aria-live="polite">Loading…</p>
                             </div>
@@ -97,7 +98,7 @@
 	                <article class="release-post glass-card" id="apr-2026">
 	                    <header class="release-header">
 	                        <time class="release-date">April 2026</time>
-	                        <span class="release-version">v2.2</span>
+	                        <span class="release-version">v2.3</span>
 	                    </header>
 
 	                    <div class="release-body">
@@ -105,13 +106,13 @@
 	                            <h3>🚀 What Shipped</h3>
 	                            <ul class="release-list">
 	                                <li>
-	                                    <strong>GitHub Cache Refresh Reliability</strong> — Hardened the local refresh pipeline to keep weekly activity windows and freshness metadata aligned.
+	                                    <strong>Live GitHub Cache Refresh</strong> — Rebuilt the project cache from current public GitHub data: 20 repos, 3 stars, 8 languages, and 27 commits captured for the latest 7-day window.
 	                                </li>
 	                                <li>
-	                                    <strong>Lifepage Status Copy Alignment</strong> — Improved fallback status wording to match current source states and prevent mixed stale/fresh signals.
+	                                    <strong>Education Exporter Launch Cards</strong> — Added CourseBinder Classroom AI Exporter and Practice Snapshot for Formative with MIT links, extension ZIP downloads, screenshots, and project pages.
 	                                </li>
 	                                <li>
-	                                    <strong>Automation-Friendly Output Stability</strong> — Refined cache output consistency to support recurring weekly log updates with fewer manual fixes.
+	                                    <strong>Project Hub Cleanup</strong> — Updated renamed repos and product links: LifePage now points to <code>lifepage</code>, Destiny points to <code>DestinnyBasketballPage</code>, and exporter cards point to their standalone public repos.
 	                                </li>
 	                            </ul>
 	                        </section>
@@ -120,10 +121,10 @@
 	                            <h3>💥 What Broke</h3>
 	                            <ul class="release-list">
 	                                <li>
-	                                    <strong>Freshness Drift</strong> — Cache timestamps and UI freshness labels could drift out of sync in edge windows. Fixed in refresh logic.
+	                                    <strong>Empty Release Feed</strong> — The old release feed only knew about GitHub Releases, so fresh downloadable site drops looked invisible. The feed now includes GitHub Releases plus Atrak download drops.
 	                                </li>
 	                                <li>
-	                                    <strong>Fallback Messaging Mismatch</strong> — Some fallback copy did not reflect current data source conditions. Corrected for consistency.
+	                                    <strong>Stale Repo Names</strong> — Several cards still used old repo names from before renames. Updated the public links and dynamic project exclusion list.
 	                                </li>
 	                            </ul>
 	                        </section>
@@ -131,9 +132,9 @@
 	                        <section class="release-section next">
 	                            <h3>🔮 What's Next</h3>
 	                            <ul class="release-list">
-	                                <li>Restore live GitHub API/connector access to include non-local PR and issue contribution counts.</li>
-	                                <li>Continue weekly Sunday→Saturday logging with automated release-note rollups.</li>
-	                                <li>Expand release cards with direct links to latest LunarWeb commits once API access is restored.</li>
+	                                <li>Create real GitHub Releases for CourseBinder, Formative, Hoops Clips, and Atrak Webpage so downloads can move from site drops to canonical release assets.</li>
+	                                <li>Add screenshots/videos to the remaining long-tail GitHub project detail pages.</li>
+	                                <li>Keep weekly news synced from the live cache and roll the best updates into monthly release notes.</li>
 	                            </ul>
 	                        </section>
 
@@ -141,20 +142,20 @@
 	                            <h3>📊 By the Numbers</h3>
 	                            <div class="release-stats">
 	                                <div class="stat-item">
-	                                    <span class="stat-value">11</span>
-	                                    <span class="stat-label">Commits</span>
+	                                    <span class="stat-value">27</span>
+	                                    <span class="stat-label">Commits (7d)</span>
 	                                </div>
 	                                <div class="stat-item">
-	                                    <span class="stat-value">42</span>
-	                                    <span class="stat-label">Files Changed</span>
+	                                    <span class="stat-value">20</span>
+	                                    <span class="stat-label">Repos Tracked</span>
 	                                </div>
 	                                <div class="stat-item">
-	                                    <span class="stat-value">3</span>
-	                                    <span class="stat-label">Fixes</span>
+	                                    <span class="stat-value">6</span>
+	                                    <span class="stat-label">Release Cards</span>
 	                                </div>
 	                                <div class="stat-item">
-	                                    <span class="stat-value">3</span>
-	                                    <span class="stat-label">Pipeline Improvements</span>
+	                                    <span class="stat-value">2</span>
+	                                    <span class="stat-label">Extension ZIPs</span>
 	                                </div>
 	                            </div>
 	                        </section>
@@ -164,6 +165,9 @@
 	                        <div class="release-projects">
 	                            <strong>Related Projects:</strong>
 	                            <a href="index.html">Website</a>
+	                            <a href="projects/classroom-ai-exporter.html">CourseBinder</a>
+	                            <a href="projects/formative-ai-exporter.html">Formative</a>
+	                            <a href="blog.html">Blog</a>
 	                            <a href="releases.html">Release Notes</a>
 	                            <a href="WeeklyLog.txt">Weekly Log</a>
 	                        </div>
@@ -412,8 +416,8 @@
         </div>
     </footer>
 
-    <script src="github-projects.js?v=27"></script>
-    <script src="script.js?v=25"></script>
+    <script src="github-projects.js?v=33"></script>
+    <script src="script.js?v=33"></script>
     <script src="last-updated.js?v=2"></script>
 </body>
 </html>

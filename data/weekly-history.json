@@ -1,7 +1,7 @@
 [
   {
-    "dateRange": "Aug 31 \u2013 Sep 6",
-    "title": "Idea \u2192 Repo \u2192 First pixel on screen",
+    "dateRange": "Aug 31 – Sep 6",
+    "title": "Idea → Repo → First pixel on screen",
     "highlights": [
       "Project officially created",
       "Core vision locked: draw tactics fast + simulate like a game",
@@ -29,7 +29,7 @@
     ]
   },
   {
-    "dateRange": "Sep 7 \u2013 Sep 13",
+    "dateRange": "Sep 7 – Sep 13",
     "title": "Players exist. Stuff moves. Brain happy.",
     "highlights": [
       "First draggable players working",
@@ -62,7 +62,7 @@
     ]
   },
   {
-    "dateRange": "Sep 14 \u2013 Sep 20",
+    "dateRange": "Sep 14 – Sep 20",
     "title": "Lines = plays = actually useful",
     "highlights": [
       "Movement paths added",
@@ -95,7 +95,7 @@
     ]
   },
   {
-    "dateRange": "Sep 21 \u2013 Sep 27",
+    "dateRange": "Sep 21 – Sep 27",
     "title": "Export = real product energy",
     "highlights": [
       "PNG export works clean",
@@ -127,10 +127,10 @@
     ]
   },
   {
-    "dateRange": "Sep 28 \u2013 Oct 4",
-    "title": "From drawing board \u2192 thinking like a game engine",
+    "dateRange": "Sep 28 – Oct 4",
+    "title": "From drawing board → thinking like a game engine",
     "highlights": [
-      "Decided plays shouldn't just be pictures \u2014 they should **run**",
+      "Decided plays shouldn't just be pictures — they should **run**",
       "Invented the idea of timeline events (MOVE, PASS, etc.)",
       "Architecture planning week (lots of whiteboard brain work)"
     ],
@@ -155,7 +155,7 @@
     ]
   },
   {
-    "dateRange": "Oct 5 \u2013 Oct 11",
+    "dateRange": "Oct 5 – Oct 11",
     "title": "First movement animation (lowkey hype week)",
     "highlights": [
       "Players finally move automatically",
@@ -188,7 +188,7 @@
     ]
   },
   {
-    "dateRange": "Oct 12 \u2013 Oct 18",
+    "dateRange": "Oct 12 – Oct 18",
     "title": "Ball physics + possession brain",
     "highlights": [
       "Pass animations added",
@@ -203,7 +203,7 @@
     ],
     "engineering": [
       "Quadratic curve math for arc",
-      "`from \u2192 to` event structure",
+      "`from → to` event structure",
       "Locked user interaction during playback"
     ],
     "fixes": [
@@ -221,7 +221,7 @@
     ]
   },
   {
-    "dateRange": "Oct 19 \u2013 Oct 25",
+    "dateRange": "Oct 19 – Oct 25",
     "title": "Refactor + adult engineering week",
     "highlights": [
       "Cleaned messy prototype code",
@@ -250,7 +250,7 @@
     ]
   },
   {
-    "dateRange": "Oct 26 \u2013 Nov 1",
+    "dateRange": "Oct 26 – Nov 1",
     "title": "Turning prototype into something launchable",
     "highlights": [
       "Playback stabilized enough to feel demo-ready",
@@ -280,8 +280,8 @@
     ]
   },
   {
-    "dateRange": "Nov 2 \u2013 Nov 8",
-    "title": "Playback Phase A \u2014 the BIG milestone",
+    "dateRange": "Nov 2 – Nov 8",
+    "title": "Playback Phase A — the BIG milestone",
     "highlights": [
       "Official first real **Run Play** feature",
       "Players follow drawn routes automatically",
@@ -296,7 +296,7 @@
       "Playback button"
     ],
     "engineering": [
-      "Compiled routes \u2192 animation segments",
+      "Compiled routes → animation segments",
       "Nearest-player detection",
       "Interaction disabled during playback"
     ],
@@ -312,7 +312,7 @@
     ]
   },
   {
-    "dateRange": "Nov 9 \u2013 Nov 15",
+    "dateRange": "Nov 9 – Nov 15",
     "title": "Bug-fixing gauntlet",
     "highlights": [
       "Fixed 10+ weird edge cases",
@@ -340,7 +340,7 @@
     ]
   },
   {
-    "dateRange": "Nov 16 \u2013 Nov 22",
+    "dateRange": "Nov 16 – Nov 22",
     "title": "Make it feel smooth",
     "highlights": [
       "Movement looks cleaner",
@@ -369,7 +369,7 @@
     ]
   },
   {
-    "dateRange": "Nov 23 \u2013 Nov 29",
+    "dateRange": "Nov 23 – Nov 29",
     "title": "Planning Phase B (Thanksgiving brain week)",
     "highlights": [
       "Designed proper replay bar UI",
@@ -395,8 +395,8 @@
     ]
   },
   {
-    "dateRange": "Jan 4 \u2013 Jan 10",
-    "title": "Back from break \u2014 tighten everything",
+    "dateRange": "Jan 4 – Jan 10",
+    "title": "Back from break — tighten everything",
     "highlights": [
       "Stability-first week",
       "Cleaned leftover weirdness from December",
@@ -426,8 +426,8 @@
     ]
   },
   {
-    "dateRange": "Jan 11 \u2013 Jan 17",
-    "title": "From animation \u2192 analysis (big brain week)",
+    "dateRange": "Jan 11 – Jan 17",
+    "title": "From animation → analysis (big brain week)",
     "highlights": [
       "Started designing scoring system",
       "Thinking beyond visuals into **tactical intelligence**",
@@ -454,7 +454,7 @@
     ]
   },
   {
-    "dateRange": "Jan 18 \u2013 Jan 24",
+    "dateRange": "Jan 18 – Jan 24",
     "title": "Locked-in MVP energy (pre-Jan 25 Sunday)",
     "highlights": [
       "Playback fully stable",
@@ -463,7 +463,7 @@
     ],
     "shipped": [
       "Performance tuning",
-      "Smoother playback at 2\u00d7 speed",
+      "Smoother playback at 2× speed",
       "Final bug sweeps",
       "Cleaner presets"
     ],
@@ -476,17 +476,17 @@
     "fixes": [
       "Rare possession glitch mid-seek",
       "Speed switch hiccup",
-      "Stop \u2192 replay timing edge case"
+      "Stop → replay timing edge case"
     ],
     "metrics": [
       "Commits: 22",
       "PRs: 2",
-      "Files touched: a lot \ud83d\ude06"
+      "Files touched: a lot 😆"
     ],
     "next": []
   },
   {
-    "dateRange": "Apr 13 \u2013 Apr 19",
+    "dateRange": "Apr 13 – Apr 19",
     "title": "Cache freshness hardening + reliability cleanup",
     "highlights": [
       "Improved weekly GitHub cache freshness handling",
@@ -514,7 +514,42 @@
     ],
     "next": [
       "Restore live GitHub API/connector access for non-local contribution counts",
-      "Continue weekly log + release automation with Sunday \u2192 Saturday windows"
+      "Continue weekly log + release automation with Sunday → Saturday windows"
+    ]
+  },
+  {
+    "dateRange": "Apr 20 – Apr 27",
+    "title": "Project hub refresh + education exporter drop",
+    "highlights": [
+      "Refreshed the project hub around current public GitHub data",
+      "Added CourseBinder Classroom AI Exporter and Practice Snapshot for Formative as first-class project cards",
+      "Rebuilt release/download cards so installable ZIPs are visible even before formal GitHub Releases exist"
+    ],
+    "shipped": [
+      "Live GitHub cache with 20 public repos, 3 stars, and 8 primary languages",
+      "Project slider ordering and repo links aligned with current renamed repos",
+      "Three new blog posts covering the GitHub refresh, education exporter drop, and April ship report"
+    ],
+    "engineering": [
+      "Added a GitHub live refresh script for repos, events, releases, meta, and weekly stats",
+      "Enriched public push events with commit messages from the commits API",
+      "Expanded dynamic More Projects pages beyond the first six cached repos"
+    ],
+    "fixes": [
+      "Old LifePage repo links pointing to My_portforlio",
+      "Old Destiny repo links pointing to the pre-rename repo",
+      "Release feed empty state when there were downloadable project drops but no formal GitHub Releases"
+    ],
+    "metrics": [
+      "Commits: 27",
+      "Active repos: 6",
+      "Repos tracked: 20",
+      "Release/download cards: 6"
+    ],
+    "next": [
+      "Publish real GitHub Releases for ZIP downloads",
+      "Add screenshots/videos to remaining GitHub archive project detail pages",
+      "Keep weekly news shorter while preserving shareable archive details"
     ]
   }
 ]

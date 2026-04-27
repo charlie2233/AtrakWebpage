@@ -5,8 +5,59 @@
     <link>https://atrak.dev/blog.html</link>
     <description>Insights, tutorials, and stories from building real products</description>
     <language>en-US</language>
-    <lastBuildDate>Mon, 02 Feb 2026 20:06:19 -0000</lastBuildDate>
+    <lastBuildDate>Mon, 27 Apr 2026 23:12:31 -0000</lastBuildDate>
     <atom:link href="https://atrak.dev/blog/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>April 2026 Ship Report: 27 Commits, 6 Active Repos, and a Cleaner Release Feed</title>
+      <link>https://atrak.dev/blog/april-2026-github-ship-report.html</link>
+      <guid isPermaLink="true">https://atrak.dev/blog/april-2026-github-ship-report.html</guid>
+      <description>A short, human-readable snapshot of what GitHub says Atrak shipped this week and how it changed the site content.</description>
+      <pubDate>Mon, 27 Apr 2026 00:00:00 -0000</pubDate>
+      <author>Charlie Han</author>
+      <category>Weekly News</category>
+      <category>GitHub</category>
+      <category>Releases</category>
+      <category>Open Source</category>
+    </item>
+    <item>
+      <title>Project Drop: CourseBinder + Practice Snapshot for Formative</title>
+      <link>https://atrak.dev/blog/coursebinder-formative-exporter-project-drop.html</link>
+      <guid isPermaLink="true">https://atrak.dev/blog/coursebinder-formative-exporter-project-drop.html</guid>
+      <description>Two education-focused exporters landed in the project hub: one for visible Google Classroom pages and one for visible Formative practices.</description>
+      <pubDate>Mon, 27 Apr 2026 00:00:00 -0000</pubDate>
+      <author>Charlie Han</author>
+      <category>Chrome Extension</category>
+      <category>Education</category>
+      <category>Privacy</category>
+      <category>TypeScript</category>
+      <category>Python</category>
+    </item>
+    <item>
+      <title>Rebuilding the Atrak Project Hub Around Real GitHub Signals</title>
+      <link>https://atrak.dev/blog/github-backed-project-hub-refresh.html</link>
+      <guid isPermaLink="true">https://atrak.dev/blog/github-backed-project-hub-refresh.html</guid>
+      <description>How the project section, More Projects slider, weekly news, and releases were refreshed using live public GitHub repo, event, and download data.</description>
+      <pubDate>Mon, 27 Apr 2026 00:00:00 -0000</pubDate>
+      <author>Charlie Han</author>
+      <category>GitHub</category>
+      <category>Project Hub</category>
+      <category>Release Notes</category>
+      <category>Frontend</category>
+      <category>Atrak</category>
+    </item>
+    <item>
+      <title>Building CompIDE: A Competitive Programming IDE for Real Practice</title>
+      <link>https://atrak.dev/blog/building-compide-competitive-programming-ide.html</link>
+      <guid isPermaLink="true">https://atrak.dev/blog/building-compide-competitive-programming-ide.html</guid>
+      <description>How CompIDE was constructed with Electron + Monaco, what broke in packaged builds, and what we learned building a workflow-first contest practice tool.</description>
+      <pubDate>Tue, 24 Feb 2026 00:00:00 -0000</pubDate>
+      <author>Charlie Han</author>
+      <category>Electron</category>
+      <category>Monaco Editor</category>
+      <category>Competitive Programming</category>
+      <category>Desktop App</category>
+      <category>JavaScript</category>
+    </item>
     <item>
       <title>C++ Performance Optimization: From Theory to Practice</title>
       <link>https://atrak.dev/blog/c-plus-plus-performance-optimization.html</link>

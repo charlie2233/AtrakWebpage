@@ -1,5 +1,52 @@
 [
   {
+    "slug": "april-2026-github-ship-report",
+    "title": "April 2026 Ship Report: 27 Commits, 6 Active Repos, and a Cleaner Release Feed",
+    "excerpt": "A short, human-readable snapshot of what GitHub says Atrak shipped this week and how it changed the site content.",
+    "date": "2026-04-27",
+    "author": "Charlie Han",
+    "tags": [
+      "Weekly News",
+      "GitHub",
+      "Releases",
+      "Open Source"
+    ],
+    "readingTime": 5,
+    "featuredImage": "../assets/press-kit/screenshot-releases.svg"
+  },
+  {
+    "slug": "coursebinder-formative-exporter-project-drop",
+    "title": "Project Drop: CourseBinder + Practice Snapshot for Formative",
+    "excerpt": "Two education-focused exporters landed in the project hub: one for visible Google Classroom pages and one for visible Formative practices.",
+    "date": "2026-04-27",
+    "author": "Charlie Han",
+    "tags": [
+      "Chrome Extension",
+      "Education",
+      "Privacy",
+      "TypeScript",
+      "Python"
+    ],
+    "readingTime": 9,
+    "featuredImage": "../assets/Demo/Demo_Img_ClassroomExporter/01-classroom-exporter.svg"
+  },
+  {
+    "slug": "github-backed-project-hub-refresh",
+    "title": "Rebuilding the Atrak Project Hub Around Real GitHub Signals",
+    "excerpt": "How the project section, More Projects slider, weekly news, and releases were refreshed using live public GitHub repo, event, and download data.",
+    "date": "2026-04-27",
+    "author": "Charlie Han",
+    "tags": [
+      "GitHub",
+      "Project Hub",
+      "Release Notes",
+      "Frontend",
+      "Atrak"
+    ],
+    "readingTime": 8,
+    "featuredImage": "../assets/press-kit/screenshot-projects.svg"
+  },
+  {
     "slug": "building-compide-competitive-programming-ide",
     "title": "Building CompIDE: A Competitive Programming IDE for Real Practice",
     "excerpt": "How CompIDE was constructed with Electron + Monaco, what broke in packaged builds, and what we learned building a workflow-first contest practice tool.",
@@ -105,21 +152,6 @@
       "Algorithms"
     ],
     "readingTime": 11,
-    "featuredImage": null
-  },
-  {
-    "slug": "cpp-getchar-fast-input",
-    "title": "C++ getchar() 快速输入方式 - Fast Input Method in C++",
-    "excerpt": "详细介绍 getchar() 函数的基本用法及如何高效地利用它读取字符和整数。getchar() 函数能够从标准输入中读取一个字符并能接受空格，是一种比 scanf 和 cin 更快的输入方式。",
-    "date": "2022-12-05",
-    "author": "Charlie Han",
-    "tags": [
-      "C++",
-      "Input/Output",
-      "Competitive Programming",
-      "Beginner"
-    ],
-    "readingTime": 5,
     "featuredImage": null
   }
 ]

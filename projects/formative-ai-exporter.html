@@ -13,7 +13,7 @@
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" type="image/svg+xml" href="../assets/projects/formative-ai-exporter-icon.svg">
-    <link rel="stylesheet" href="../styles.css?v=32">
+    <link rel="stylesheet" href="../styles.css?v=33">
 </head>
 <body>
     <nav class="navbar">
@@ -90,8 +90,8 @@
             <div class="container">
                 <div class="links-bar-inner">
                     <a href="../downloads/formative-ai-exporter/formative-ai-exporter-extension-0.1.0-chrome.zip" class="link-btn" download><span class="link-icon">⬇️</span> Download Extension ZIP</a>
-                    <a href="https://github.com/charlie2233/ai-hoops-board/tree/codex/build-formative-practice-exporter/ClassroomDownloader/FormativeDownloader/formative-ai-exporter" class="link-btn" target="_blank" rel="noopener noreferrer"><span class="link-icon">💻</span> GitHub Source</a>
-                    <a href="https://github.com/charlie2233/ai-hoops-board/blob/codex/build-formative-practice-exporter/ClassroomDownloader/FormativeDownloader/formative-ai-exporter/LICENSE" class="link-btn" target="_blank" rel="noopener noreferrer"><span class="link-icon">📜</span> MIT License</a>
+                    <a href="https://github.com/charlie2233/formative-ai-exporter" class="link-btn" target="_blank" rel="noopener noreferrer"><span class="link-icon">💻</span> GitHub Source</a>
+                    <a href="https://github.com/charlie2233/formative-ai-exporter/blob/main/LICENSE" class="link-btn" target="_blank" rel="noopener noreferrer"><span class="link-icon">📜</span> MIT License</a>
                     <a href="#code" class="link-btn"><span class="link-icon">⌘</span> Code Snippets</a>
                 </div>
             </div>
@@ -187,7 +187,8 @@ pageFolder.file("screenshot.png", screenshotBase64, { base64: true });</code></p
 
                 <section class="project-section">
                     <h2 class="project-section-title">How to Run</h2>
-                    <pre class="code-block"><code>cd ClassroomDownloader/FormativeDownloader/formative-ai-exporter/extension
+	                    <pre class="code-block"><code>git clone https://github.com/charlie2233/formative-ai-exporter.git
+cd formative-ai-exporter/extension
 npm install
 npm run typecheck
 npm test -- --run
@@ -205,7 +206,7 @@ npm run build
                     <div class="project-detail-grid">
                         <div class="glass-card project-detail-card"><h3>Archive outputs</h3><p><code>practice.md</code>, <code>practice.json</code>, per-page JSON/Markdown/text, answers, image/link JSONL, raw HTML, and screenshots.</p></div>
                         <div class="glass-card project-detail-card"><h3>Safe boundaries</h3><p>No Formative API, no Google API, no OAuth, no cookies permission, no token scraping, and no answer-changing behavior.</p></div>
-                        <div class="glass-card project-detail-card"><h3>Release state</h3><p>Version 0.1.0 Chrome zip is available for local developer testing.</p></div>
+                        <div class="glass-card project-detail-card"><h3>Release state</h3><p>Version 0.1.0 Chrome zip is available for local developer testing from the public MIT repo.</p></div>
                     </div>
                 </section>
 
@@ -228,6 +229,6 @@ npm run build
         </div>
     </main>
 
-    <script src="../script.js?v=30"></script>
+    <script src="../script.js?v=33"></script>
 </body>
 </html>

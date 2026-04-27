@@ -7991,6 +7991,12 @@ a.leader-card:hover {
     color: #fbbf24;
 }
 
+.releases-live-badge.source {
+    border-color: rgba(45, 212, 191, 0.35);
+    background: rgba(45, 212, 191, 0.08);
+    color: #5eead4;
+}
+
 .releases-live-date {
     color: var(--text-tertiary);
     font-size: 12px;

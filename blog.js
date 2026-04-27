@@ -2,7 +2,8 @@
 // BLOG RENDERING & FILTERING
 // ============================================
 
-const BLOG_POSTS_PREVIEW_PATH = 'data/blog-posts-preview.json';
+const BLOG_DATA_VERSION = '20260427';
+const BLOG_POSTS_PREVIEW_PATH = `data/blog-posts-preview.json?v=${BLOG_DATA_VERSION}`;
 const BLOG_POSTS_DIR = 'data/blog-posts/';
 const TEAM_MEMBERS_PATH = 'data/team-members.json';
 let allBlogPosts = [];
@@ -102,7 +103,10 @@ function calculateReadingTime(content) {
  */
 function formatDate(dateString) {
     if (!dateString) return '';
-    const date = new Date(dateString);
+    const dateOnlyMatch = String(dateString).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    const date = dateOnlyMatch
+        ? new Date(Number(dateOnlyMatch[1]), Number(dateOnlyMatch[2]) - 1, Number(dateOnlyMatch[3]))
+        : new Date(dateString);
     if (isNaN(date.getTime())) return dateString; // Return original if invalid
     
     return date.toLocaleDateString('en-US', { 

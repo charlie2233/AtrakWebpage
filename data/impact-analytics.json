@@ -1,11 +1,11 @@
 {
-  "updated": "2026-01-23",
-  "source": "Internal project tracker + release logs",
+  "updated": "2026-04-27",
+  "source": "Internal project tracker + live GitHub cache",
   "metrics": [
     {
-      "value": "4+",
+      "value": "12+",
       "label": "Notable projects shipped",
-      "description": "Accessibility, CV, and ops tooling delivered end-to-end."
+      "description": "Accessibility, CV, education exporters, ops tooling, project hub, and AI productivity builds."
     },
     {
       "value": "1",
@@ -13,17 +13,33 @@
       "description": "GuidePup submitted for review."
     },
     {
-      "value": "1",
-      "label": "Live business deployment",
-      "description": "Ten Seconds VIP Manager running in production."
+      "value": "20",
+      "label": "Public repos tracked",
+      "description": "Live GitHub cache powering the project hub and weekly pulse."
     },
     {
-      "value": "26",
-      "label": "Weekly updates logged",
-      "description": "Continuous shipping cadence tracked in releases."
+      "value": "27",
+      "label": "Commits this week",
+      "description": "Latest 7-day public GitHub activity window."
     }
   ],
   "wins": [
+    {
+      "title": "CourseBinder + Formative exporters published",
+      "project": "Education Exporters",
+      "description": "MIT-licensed Chrome extension projects added with public repos, ZIP downloads, screenshots, and project pages.",
+      "date": "2026-04-27",
+      "link": "projects/classroom-ai-exporter.html",
+      "linkLabel": "Open CourseBinder"
+    },
+    {
+      "title": "Project hub connected to live GitHub cache",
+      "project": "Atrak Website",
+      "description": "Projects, More Projects, weekly news, and releases now use refreshed public GitHub data.",
+      "date": "2026-04-27",
+      "link": "releases.html",
+      "linkLabel": "Release notes"
+    },
     {
       "title": "GuidePup submitted to the App Store",
       "project": "GuidePup",
