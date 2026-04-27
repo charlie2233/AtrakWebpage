@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">Classroom archive output screenshot mockup</title>
+  <desc id="desc">A terminal-style file tree showing Classroom archive markdown, JSON, HTML snapshot, and attachments.</desc>
+  <rect width="1440" height="900" fill="#020617"/>
+  <circle cx="1120" cy="210" r="260" fill="#14b8a6" opacity="0.11"/>
+  <circle cx="260" cy="690" r="300" fill="#38bdf8" opacity="0.08"/>
+  <g transform="translate(150 105)">
+    <rect width="1140" height="660" rx="34" fill="#0f172a" stroke="#334155"/>
+    <rect width="1140" height="68" rx="34" fill="#111827"/>
+    <circle cx="42" cy="34" r="9" fill="#ef4444"/>
+    <circle cx="70" cy="34" r="9" fill="#f59e0b"/>
+    <circle cx="98" cy="34" r="9" fill="#22c55e"/>
+    <text x="132" y="42" fill="#cbd5e1" font-family="SFMono-Regular, Menlo, monospace" font-size="18">ClassroomAIArchive/coursework_2026_04_27</text>
+    <text x="64" y="132" fill="#67e8f9" font-family="SFMono-Regular, Menlo, monospace" font-size="26" font-weight="700">ClassroomAIExport/</text>
+    <text x="92" y="184" fill="#e2e8f0" font-family="SFMono-Regular, Menlo, monospace" font-size="24">├─ item.md</text>
+    <text x="92" y="232" fill="#e2e8f0" font-family="SFMono-Regular, Menlo, monospace" font-size="24">├─ item.json</text>
+    <text x="92" y="280" fill="#e2e8f0" font-family="SFMono-Regular, Menlo, monospace" font-size="24">├─ page.snapshot.html</text>
+    <text x="92" y="328" fill="#e2e8f0" font-family="SFMono-Regular, Menlo, monospace" font-size="24">├─ attachments/</text>
+    <text x="124" y="376" fill="#94a3b8" font-family="SFMono-Regular, Menlo, monospace" font-size="22">│  ├─ worksheet.pdf</text>
+    <text x="124" y="424" fill="#94a3b8" font-family="SFMono-Regular, Menlo, monospace" font-size="22">│  └─ slides.pptx</text>
+    <text x="92" y="472" fill="#e2e8f0" font-family="SFMono-Regular, Menlo, monospace" font-size="24">└─ downloads.json</text>
+    <rect x="650" y="132" width="400" height="390" rx="24" fill="#020617" stroke="#1e293b"/>
+    <text x="690" y="190" fill="#22c55e" font-family="SFMono-Regular, Menlo, monospace" font-size="19">{ "entity_type": "coursework",</text>
+    <text x="690" y="230" fill="#22c55e" font-family="SFMono-Regular, Menlo, monospace" font-size="19">  "method": "chromium_extension_dom",</text>
+    <text x="690" y="270" fill="#22c55e" font-family="SFMono-Regular, Menlo, monospace" font-size="19">  "attachments": 3,</text>
+    <text x="690" y="310" fill="#22c55e" font-family="SFMono-Regular, Menlo, monospace" font-size="19">  "raw_html_truncated": false }</text>
+  </g>
+</svg>

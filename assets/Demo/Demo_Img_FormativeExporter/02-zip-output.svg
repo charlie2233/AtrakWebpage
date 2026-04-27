@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">Formative ZIP archive output screenshot mockup</title>
+  <desc id="desc">A dark file tree showing practice markdown, pages, answers, images, links, screenshots, and JSONL index files.</desc>
+  <rect width="1440" height="900" fill="#020617"/>
+  <circle cx="220" cy="180" r="260" fill="#10b981" opacity="0.12"/>
+  <circle cx="1140" cy="700" r="320" fill="#8b5cf6" opacity="0.13"/>
+  <g transform="translate(145 102)">
+    <rect width="1150" height="670" rx="34" fill="#0f172a" stroke="#334155"/>
+    <rect width="1150" height="68" rx="34" fill="#111827"/>
+    <circle cx="42" cy="34" r="9" fill="#ef4444"/>
+    <circle cx="70" cy="34" r="9" fill="#f59e0b"/>
+    <circle cx="98" cy="34" r="9" fill="#22c55e"/>
+    <text x="132" y="42" fill="#cbd5e1" font-family="SFMono-Regular, Menlo, monospace" font-size="18">FormativeAIExport.zip</text>
+    <text x="64" y="132" fill="#a7f3d0" font-family="SFMono-Regular, Menlo, monospace" font-size="25" font-weight="700">FormativeAIExport/</text>
+    <text x="92" y="180" fill="#e2e8f0" font-family="SFMono-Regular, Menlo, monospace" font-size="23">├─ manifest.json</text>
+    <text x="92" y="226" fill="#e2e8f0" font-family="SFMono-Regular, Menlo, monospace" font-size="23">├─ practice.md</text>
+    <text x="92" y="272" fill="#e2e8f0" font-family="SFMono-Regular, Menlo, monospace" font-size="23">├─ pages/page_001/</text>
+    <text x="124" y="318" fill="#94a3b8" font-family="SFMono-Regular, Menlo, monospace" font-size="21">│  ├─ answers.json</text>
+    <text x="124" y="360" fill="#94a3b8" font-family="SFMono-Regular, Menlo, monospace" font-size="21">│  ├─ screenshot.png</text>
+    <text x="124" y="402" fill="#94a3b8" font-family="SFMono-Regular, Menlo, monospace" font-size="21">│  └─ raw.html</text>
+    <text x="92" y="448" fill="#e2e8f0" font-family="SFMono-Regular, Menlo, monospace" font-size="23">└─ index/chunks.jsonl</text>
+    <rect x="650" y="132" width="408" height="390" rx="24" fill="#020617" stroke="#1e293b"/>
+    <text x="690" y="190" fill="#c4b5fd" font-family="SFMono-Regular, Menlo, monospace" font-size="19">root.file("practice.md",</text>
+    <text x="690" y="230" fill="#c4b5fd" font-family="SFMono-Regular, Menlo, monospace" font-size="19">  buildPracticeMarkdown(practice));</text>
+    <text x="690" y="290" fill="#34d399" font-family="SFMono-Regular, Menlo, monospace" font-size="19">pageFolder.file("answers.json", ...)</text>
+    <text x="690" y="340" fill="#34d399" font-family="SFMono-Regular, Menlo, monospace" font-size="19">pageFolder.file("screenshot.png", ...)</text>
+  </g>
+</svg>

@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">Practice Snapshot for Formative screenshot mockup</title>
+  <desc id="desc">A Formative-style practice capture interface with current page and whole practice export buttons.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1440" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#06121d"/>
+      <stop offset="0.5" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#211044"/>
+    </linearGradient>
+    <linearGradient id="button" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#34d399"/>
+      <stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="28" stdDeviation="28" flood-color="#000000" flood-opacity="0.38"/>
+    </filter>
+  </defs>
+  <rect width="1440" height="900" fill="url(#bg)"/>
+  <circle cx="280" cy="160" r="240" fill="#34d399" opacity="0.12"/>
+  <circle cx="1100" cy="690" r="300" fill="#8b5cf6" opacity="0.14"/>
+  <g transform="translate(130 110)" filter="url(#shadow)">
+    <rect width="780" height="580" rx="34" fill="#ffffff"/>
+    <rect x="46" y="42" width="688" height="88" rx="28" fill="#ecfdf5"/>
+    <text x="76" y="94" fill="#064e3b" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="850">Formative Algebra Practice</text>
+    <rect x="46" y="170" width="688" height="84" rx="24" fill="#f8fafc" stroke="#d1d5db"/>
+    <rect x="46" y="284" width="688" height="84" rx="24" fill="#f8fafc" stroke="#d1d5db"/>
+    <rect x="46" y="398" width="320" height="112" rx="24" fill="#f3e8ff"/>
+    <rect x="414" y="398" width="320" height="112" rx="24" fill="#ecfdf5"/>
+    <circle cx="94" cy="212" r="18" fill="#10b981"/>
+    <rect x="132" y="198" width="460" height="16" rx="8" fill="#334155"/>
+    <rect x="132" y="228" width="330" height="12" rx="6" fill="#94a3b8"/>
+    <circle cx="94" cy="326" r="18" fill="#8b5cf6"/>
+    <rect x="132" y="312" width="530" height="16" rx="8" fill="#334155"/>
+    <rect x="132" y="342" width="280" height="12" rx="6" fill="#94a3b8"/>
+  </g>
+  <g transform="translate(815 220)" filter="url(#shadow)">
+    <rect width="410" height="390" rx="34" fill="#111827" stroke="#334155"/>
+    <rect x="34" y="34" width="76" height="76" rx="22" fill="url(#button)"/>
+    <text x="60" y="84" fill="#052e16" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="900">F</text>
+    <text x="130" y="66" fill="#f8fafc" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="850">Practice Snapshot</text>
+    <text x="130" y="94" fill="#94a3b8" font-family="Inter, Arial, sans-serif" font-size="15">Ready</text>
+    <rect x="34" y="146" width="342" height="70" rx="22" fill="#1f2937"/>
+    <text x="74" y="190" fill="#d1fae5" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800">TXT Capture Current Page</text>
+    <rect x="34" y="238" width="342" height="70" rx="22" fill="url(#button)"/>
+    <text x="86" y="282" fill="#052e16" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="900">ZIP Capture Whole Practice</text>
+    <text x="34" y="344" fill="#a7f3d0" font-family="Inter, Arial, sans-serif" font-size="15">Downloaded 6 pages • screenshot backups saved</text>
+  </g>
+</svg>

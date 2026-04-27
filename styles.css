@@ -2161,6 +2161,26 @@ section {
     margin-bottom: 40px;
 }
 
+.project-icon-custom {
+    width: 84px;
+    height: 84px;
+    border-radius: 22px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    margin-bottom: 1rem;
+    background: rgba(10, 18, 34, 0.72);
+    box-shadow:
+        0 18px 44px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.project-icon-custom img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
 .project-hero-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
@@ -2396,6 +2416,40 @@ section {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 24px;
+}
+
+.project-content > .container,
+.project-links-bar .container {
+    width: 100%;
+    min-width: 0;
+}
+
+.project-content > .container > .project-section,
+.project-detail-grid,
+.project-media-grid,
+.demo-grid,
+.features-grid,
+.glass-card {
+    min-width: 0;
+}
+
+.media-card {
+    overflow: hidden;
+}
+
+.media-card img {
+    width: 100%;
+    display: block;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(2, 6, 23, 0.72);
+}
+
+.media-card figcaption {
+    margin-top: 12px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
 }
 
 .media-placeholder {
@@ -7204,6 +7258,7 @@ a.leader-card:hover {
     font-weight: 600;
     margin-bottom: 1.5rem;
     color: var(--text-primary);
+    overflow-wrap: anywhere;
 }
 
 /* Lead Text */
