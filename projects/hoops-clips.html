@@ -24,7 +24,7 @@
     
     <link rel="icon" type="image/png" href="../assets/logo.png?v=20260202">
     <link rel="apple-touch-icon" sizes="180x180" href="../assets/logo.png?v=20260202">
-    <link rel="stylesheet" href="../styles.css?v=27">
+    <link rel="stylesheet" href="../styles.css?v=34">
     
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -34,6 +34,7 @@
       "name": "Hoops Clips",
       "description": "Hoops Clips — AI-powered basketball highlight detection by student tech team Atrak. Automatic clip generation from game footage using computer vision.",
       "url": "https://atrak.dev/projects/hoops-clips.html",
+      "sameAs": "https://hoopclips.com",
       "applicationCategory": "VideoApplication",
       "operatingSystem": "Linux, macOS, Windows",
       "softwareVersion": "1.0",
@@ -100,6 +101,7 @@
                             <span class="meta-item"><strong>Status:</strong> Beta</span>
                             <span class="meta-item"><strong>Completed:</strong> Nov 2025</span>
                             <span class="meta-item"><strong>Lead:</strong> <a class="meta-person-link" href="../team/charlie-han.html">Charlie Han</a></span>
+                            <span class="meta-item"><strong>Official Site:</strong> <a class="meta-person-link" href="https://hoopclips.com" target="_blank" rel="noopener noreferrer">hoopclips.com</a></span>
                             <span class="meta-item"><strong>Mac Installer:</strong> v1.0 (build 1)</span>
                         </div>
                         <div class="project-hero-badges">
@@ -107,6 +109,7 @@
                             <span class="hero-badge">R2Plus1D-18</span>
                             <span class="hero-badge">Docker</span>
                             <span class="hero-badge">GPU optional</span>
+                            <span class="hero-badge">Official site live</span>
                             <span class="hero-badge">macOS 11.5+</span>
                         </div>
                     </div>
@@ -147,6 +150,9 @@
         <section class="project-links-bar">
             <div class="container">
                 <div class="links-bar-inner hoops-links">
+                    <a href="https://hoopclips.com" class="link-btn" target="_blank" rel="noopener noreferrer" style="background: linear-gradient(135deg, #14f1ff 0%, #7C5CFF 100%); color: white; border: none;">
+                        <span class="link-icon">🌐</span> Official Site
+                    </a>
                     <a href="../apps/hoopsclips/" class="link-btn" style="background: linear-gradient(135deg, #7C5CFF 0%, #3b82f6 100%); color: white; border: none;">
                         <span class="link-icon">🏀</span> Try Web App
                     </a>
@@ -371,6 +377,10 @@ curl -X POST http://localhost:8787/api/ai/analyze \
                                 <div class="backend-row">
                                     <span class="backend-label">Minimum macOS</span>
                                     <span class="backend-value">11.5+</span>
+                                </div>
+                                <div class="backend-row">
+                                    <span class="backend-label">Product site</span>
+                                    <span class="backend-value"><a href="https://hoopclips.com" target="_blank" rel="noopener noreferrer">hoopclips.com</a></span>
                                 </div>
                                 <div class="backend-row">
                                     <span class="backend-label">Installer package</span>
@@ -671,6 +681,8 @@ uvicorn ai_server:app --host 0.0.0.0 --port 8787</code></pre>
                     </div>
                     <div class="footer-column">
                         <h4>Links</h4>
+                        <a href="https://hoopclips.com" target="_blank" rel="noopener noreferrer">Official Site</a>
+                        <a href="../apps/hoopsclips/">Web Demo</a>
                         <a href="../index.html?tab=apply#contact">Request Access</a>
                         <a href="../releases.html">Release Notes</a>
                     </div>
@@ -682,7 +694,7 @@ uvicorn ai_server:app --host 0.0.0.0 --port 8787</code></pre>
         </div>
     </footer>
 
-    <script src="../script.js?v=25"></script>
+    <script src="../script.js?v=34"></script>
     <script src="../last-updated.js?v=2"></script>
 </body>
 </html>
