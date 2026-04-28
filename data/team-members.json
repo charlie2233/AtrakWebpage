@@ -72,5 +72,29 @@
       "gradient": "linear-gradient(135deg, #333, #111)"
     },
     "status": "active"
+  },
+  {
+    "name": "Larry Ling",
+    "role": "Product",
+    "bio": "Archived Atrak team member. Product strategy, roadmap, and delivery.",
+    "traits": "Archived profile kept for team history.",
+    "hobbies": ["Product Strategy", "Planning"],
+    "favoriteFoods": [],
+    "stats": [
+      {
+        "value": "Roadmap",
+        "label": "Focus"
+      },
+      {
+        "value": "Archived",
+        "label": "Status"
+      }
+    ],
+    "social": {},
+    "avatar": {
+      "initials": "LL",
+      "gradient": "linear-gradient(135deg, #333, #111)"
+    },
+    "status": "archived"
   }
 ]
