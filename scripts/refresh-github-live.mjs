@@ -220,7 +220,7 @@ function projectDrops(repoMap) {
       asset: "downloads/classroom-ai-exporter/classroom-ai-exporter-extension-0.1.0-chrome.zip",
     },
     {
-      repo: "AtrakWebpage",
+      repo: "atrak-website",
       tag: "2026.04-project-hub",
       name: "Atrak project hub refresh — cards, blog, release cache",
       project: "index.html#projects",

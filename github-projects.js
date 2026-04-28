@@ -303,6 +303,7 @@ const INTERNAL_PROJECT_PAGES = {
     'DestinnyBasketballPage': 'projects/destiny-basketball.html',
     'rork-ten-seconds-vip-manager': 'projects/ten-seconds-vip-manager.html',
     'Easy_Java_Ide-for-competitions': 'projects/compide.html',
+    'atrak-website': 'index.html',
     'AtrakWebpage': 'index.html',
     'LunarWeb': 'index.html',
     'lifepage': 'projects/lifepage.html',
@@ -312,6 +313,13 @@ const INTERNAL_PROJECT_PAGES = {
 };
 
 const REPO_CARD_ENHANCEMENTS = {
+    'atrak-website': {
+        displayName: 'Atrak Website + Project Hub',
+        iconLabel: 'AW',
+        iconVariant: 'repo',
+        iconSub: 'WEB',
+        description: 'The public Atrak hub powering projects, weekly news, releases, blog posts, downloads, team pages, and GitHub-backed activity snapshots.'
+    },
     'AtrakWebpage': {
         displayName: 'Atrak Website + Project Hub',
         iconLabel: 'AW',
@@ -1594,7 +1602,7 @@ async function renderWeeklyHighlights() {
                 .filter(r => r && typeof r.pushed_at === 'string')
                 .slice()
                 .sort((a, b) => String(b.pushed_at).localeCompare(String(a.pushed_at)));
-            const nonSite = sorted.find(r => r && r.name && r.name !== 'AtrakWebpage' && r.name !== 'LunarWeb');
+            const nonSite = sorted.find(r => r && r.name && r.name !== 'atrak-website' && r.name !== 'AtrakWebpage' && r.name !== 'LunarWeb');
             return nonSite || sorted[0] || null;
         })();
 

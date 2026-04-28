@@ -1,52 +1,90 @@
 [
   {
     "type": "PushEvent",
+    "created_at": "2026-04-27T23:27:28Z",
+    "repo": {
+      "name": "charlie2233/atrak-website"
+    },
+    "payload": {
+      "ref": "refs/heads/main",
+      "before": "c83e0d1d0a2da191a011222ae0cd7952c2b9385f",
+      "head": "87ab379eae5787aaa562edbb5f572383a9c9096b",
+      "distinct_size": 9,
+      "commits": [
+        {
+          "sha": "87ab379eae5787aaa562edbb5f572383a9c9096b",
+          "message": "chore: link hoops clips official site",
+          "url": "https://github.com/charlie2233/atrak-website/commit/87ab379eae5787aaa562edbb5f572383a9c9096b"
+        },
+        {
+          "sha": "c83e0d1d0a2da191a011222ae0cd7952c2b9385f",
+          "message": "feat: refresh projects blog and releases from github",
+          "url": "https://github.com/charlie2233/atrak-website/commit/c83e0d1d0a2da191a011222ae0cd7952c2b9385f"
+        },
+        {
+          "sha": "796bbb5274e50fc1d262eb9190b0197dcc0fc196",
+          "message": "feat: add classroom and formative exporter projects",
+          "url": "https://github.com/charlie2233/atrak-website/commit/796bbb5274e50fc1d262eb9190b0197dcc0fc196"
+        },
+        {
+          "sha": "e4b9a273ddcdb9c8850ba58373d0923f2e16263c",
+          "message": "style: improve project card imagery",
+          "url": "https://github.com/charlie2233/atrak-website/commit/e4b9a273ddcdb9c8850ba58373d0923f2e16263c"
+        },
+        {
+          "sha": "9765b5bea53c3d8edccbeacfa79c426b57ef3466",
+          "message": "feat: enhance project cards",
+          "url": "https://github.com/charlie2233/atrak-website/commit/9765b5bea53c3d8edccbeacfa79c426b57ef3466"
+        },
+        {
+          "sha": "f7b983c32ea3506dfb7b15d86d2dbd5ed64d2855",
+          "message": "style: polish project slider UI",
+          "url": "https://github.com/charlie2233/atrak-website/commit/f7b983c32ea3506dfb7b15d86d2dbd5ed64d2855"
+        },
+        {
+          "sha": "94323060c1e63cdc9a90c4acbbca3768a34d8d9e",
+          "message": "feat: add project slider",
+          "url": "https://github.com/charlie2233/atrak-website/commit/94323060c1e63cdc9a90c4acbbca3768a34d8d9e"
+        },
+        {
+          "sha": "d2f9e9ea9b4436ea31e5ce128ff16190a68b1a16",
+          "message": "chore: update weekly logs and april release notes [skip ci]",
+          "url": "https://github.com/charlie2233/atrak-website/commit/d2f9e9ea9b4436ea31e5ce128ff16190a68b1a16"
+        },
+        {
+          "sha": "05abfeff3710f5e322e458f68aa9d39a05bac6a4",
+          "message": "fix: align github cache freshness",
+          "url": "https://github.com/charlie2233/atrak-website/commit/05abfeff3710f5e322e458f68aa9d39a05bac6a4"
+        }
+      ]
+    }
+  },
+  {
+    "type": "PushEvent",
+    "created_at": "2026-04-27T23:24:59Z",
+    "repo": {
+      "name": "charlie2233/atrak-website"
+    },
+    "payload": {
+      "ref": "refs/heads/main",
+      "before": "796bbb5274e50fc1d262eb9190b0197dcc0fc196",
+      "head": "c83e0d1d0a2da191a011222ae0cd7952c2b9385f",
+      "distinct_size": 0,
+      "commits": []
+    }
+  },
+  {
+    "type": "PushEvent",
     "created_at": "2026-04-27T23:08:12Z",
     "repo": {
-      "name": "charlie2233/AtrakWebpage"
+      "name": "charlie2233/atrak-website"
     },
     "payload": {
       "ref": "refs/heads/main",
       "before": "e4b9a273ddcdb9c8850ba58373d0923f2e16263c",
       "head": "796bbb5274e50fc1d262eb9190b0197dcc0fc196",
-      "distinct_size": 7,
-      "commits": [
-        {
-          "sha": "796bbb5274e50fc1d262eb9190b0197dcc0fc196",
-          "message": "feat: add classroom and formative exporter projects",
-          "url": "https://github.com/charlie2233/AtrakWebpage/commit/796bbb5274e50fc1d262eb9190b0197dcc0fc196"
-        },
-        {
-          "sha": "e4b9a273ddcdb9c8850ba58373d0923f2e16263c",
-          "message": "style: improve project card imagery",
-          "url": "https://github.com/charlie2233/AtrakWebpage/commit/e4b9a273ddcdb9c8850ba58373d0923f2e16263c"
-        },
-        {
-          "sha": "9765b5bea53c3d8edccbeacfa79c426b57ef3466",
-          "message": "feat: enhance project cards",
-          "url": "https://github.com/charlie2233/AtrakWebpage/commit/9765b5bea53c3d8edccbeacfa79c426b57ef3466"
-        },
-        {
-          "sha": "f7b983c32ea3506dfb7b15d86d2dbd5ed64d2855",
-          "message": "style: polish project slider UI",
-          "url": "https://github.com/charlie2233/AtrakWebpage/commit/f7b983c32ea3506dfb7b15d86d2dbd5ed64d2855"
-        },
-        {
-          "sha": "94323060c1e63cdc9a90c4acbbca3768a34d8d9e",
-          "message": "feat: add project slider",
-          "url": "https://github.com/charlie2233/AtrakWebpage/commit/94323060c1e63cdc9a90c4acbbca3768a34d8d9e"
-        },
-        {
-          "sha": "d2f9e9ea9b4436ea31e5ce128ff16190a68b1a16",
-          "message": "chore: update weekly logs and april release notes [skip ci]",
-          "url": "https://github.com/charlie2233/AtrakWebpage/commit/d2f9e9ea9b4436ea31e5ce128ff16190a68b1a16"
-        },
-        {
-          "sha": "05abfeff3710f5e322e458f68aa9d39a05bac6a4",
-          "message": "fix: align github cache freshness",
-          "url": "https://github.com/charlie2233/AtrakWebpage/commit/05abfeff3710f5e322e458f68aa9d39a05bac6a4"
-        }
-      ]
+      "distinct_size": 0,
+      "commits": []
     }
   },
   {
@@ -480,7 +518,7 @@
     "type": "PushEvent",
     "created_at": "2026-04-24T17:20:20Z",
     "repo": {
-      "name": "charlie2233/AtrakWebpage"
+      "name": "charlie2233/atrak-website"
     },
     "payload": {
       "ref": "refs/heads/main",
@@ -563,7 +601,7 @@
     "type": "PushEvent",
     "created_at": "2026-04-24T01:04:39Z",
     "repo": {
-      "name": "charlie2233/AtrakWebpage"
+      "name": "charlie2233/atrak-website"
     },
     "payload": {
       "ref": "refs/heads/main",
@@ -604,7 +642,7 @@
     "type": "PushEvent",
     "created_at": "2026-04-23T19:59:14Z",
     "repo": {
-      "name": "charlie2233/AtrakWebpage"
+      "name": "charlie2233/atrak-website"
     },
     "payload": {
       "ref": "refs/heads/main",
@@ -643,7 +681,7 @@
     "type": "PublicEvent",
     "created_at": "2026-01-23T07:57:33Z",
     "repo": {
-      "name": "charlie2233/AtrakWebpage"
+      "name": "charlie2233/atrak-website"
     },
     "payload": {}
   },
@@ -1431,30 +1469,5 @@
       "name": "charlie2233/RestaurantCommentValidation_Analysis"
     },
     "payload": {}
-  },
-  {
-    "type": "PullRequestEvent",
-    "created_at": "2026-04-07T21:46:57Z",
-    "repo": {
-      "name": "charlie2233/RestaurantCommentValidation_Analysis"
-    },
-    "payload": {
-      "action": "opened",
-      "number": 14,
-      "pull_request": {}
-    }
-  },
-  {
-    "type": "CreateEvent",
-    "created_at": "2026-04-07T20:52:15Z",
-    "repo": {
-      "name": "charlie2233/RestaurantCommentValidation_Analysis"
-    },
-    "payload": {
-      "ref": "codex/first-analyst-cycle",
-      "ref_type": "branch",
-      "description": "created by atrak.dev",
-      "master_branch": "main"
-    }
   }
 ]
