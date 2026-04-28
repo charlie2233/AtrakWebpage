@@ -50,30 +50,6 @@
     "status": "active"
   },
   {
-    "name": "Larry Ling",
-    "role": "Product",
-    "bio": "Product strategy, roadmap, and delivery. Turns ideas into clear specs and shippable plans.",
-    "traits": "",
-    "hobbies": ["Product Strategy", "Planning"],
-    "favoriteFoods": [],
-    "stats": [
-      {
-        "value": "Roadmap",
-        "label": "Focus"
-      },
-      {
-        "value": "Delivery",
-        "label": "Ops"
-      }
-    ],
-    "social": {},
-    "avatar": {
-      "initials": "LL",
-      "gradient": "linear-gradient(135deg, #333, #111)"
-    },
-    "status": "active"
-  },
-  {
     "name": "Caleb Zeng",
     "role": "Design",
     "bio": "UI/UX design and user research. Makes products beautiful and intuitive.",
@@ -98,4 +74,3 @@
     "status": "active"
   }
 ]
-
